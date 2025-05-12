@@ -1,4 +1,6 @@
 require('dotenv').config();
+// console.log('COINPAYMENTS_KEY from env:', process.env.COINPAYMENTS_KEY); // Debug line removed
+
 const express = require('express');
 const nocache = require("nocache");
 const morgan = require('morgan');

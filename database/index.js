@@ -5,6 +5,7 @@ const connection = {
     user: process.env.SQL_USER,
     database: process.env.SQL_DB,
     password: process.env.SQL_PASS,
+    port: process.env.SQL_PORT,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
