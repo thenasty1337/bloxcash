@@ -21,11 +21,17 @@ router.use('/notifications', notificationsRoute);
 
 router.get('/', isAuthed, async (req, res) => {
 
-    const [[user]] = await sql.query('SELECT id, role, username, balance, xp, anon FROM users WHERE id = ?', [req.userId]);
-    const [[{ notifications }]] = await sql.query('SELECT COUNT(*) as notifications FROM notifications WHERE userId = ? AND seen = 0', [req.userId]);
+    const [[user]] = await sql.query('SELECT id, role, username, balance, xp, anon FROM users WHERE id = ?', [req.user.id]);
+
+    if (!user) {
+        console.error(`User not found for authenticated request, userId: ${req.user.id}`);
+        return res.status(404).json({ error: 'USER_NOT_FOUND', message: 'User data could not be retrieved after authentication.' });
+    }
+
+    const [[{ notifications }]] = await sql.query('SELECT COUNT(*) as notifications FROM notifications WHERE userId = ? AND isRead = 0', [req.user.id]);
     user.notifications = notifications;
 
-    const rakebacks = await getUserRakebacks(req.userId);
+    const rakebacks = await getUserRakebacks(req.user.id);
     user.rewards = Object.values(rakebacks).filter(e => e.canClaim).length;
 
     res.json(user);

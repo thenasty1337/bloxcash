@@ -22,11 +22,14 @@ CREATE TABLE `users` (
     `serverSeed` VARCHAR(255), -- Current active server seed for user
     `nonce` BIGINT UNSIGNED NOT NULL DEFAULT 0, -- Nonce for provably fair systems
     `ip` VARCHAR(45), -- Last known IP address
+    `country` VARCHAR(255) NULL, -- User's country
     `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `lastLogout` TIMESTAMP NULL, -- Timestamp of last logout
     `email` VARCHAR(255) UNIQUE NULL,
     `robloxId` BIGINT UNSIGNED UNIQUE NULL,
+    `affiliateCode` VARCHAR(255) UNIQUE NULL, -- Unique code assigned to users for referrals
+    `affiliateEarningsOffset` DECIMAL(20, 8) NOT NULL DEFAULT 0.00000000, -- Tracks earnings already paid out/accounted for
     PRIMARY KEY (`id`),
     UNIQUE KEY `username_unique` (`username`)
 );
@@ -632,3 +635,65 @@ ALTER TABLE users DROP COLUMN proxy;
 
 -- Optional: After populating email for all users, make it NOT NULL
 -- ALTER TABLE users MODIFY COLUMN email VARCHAR(255) UNIQUE NOT NULL;
+
+-- Server Seeds (Provably Fair)
+CREATE TABLE `serverSeeds` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `userId` BIGINT UNSIGNED NOT NULL,
+    `seed` VARCHAR(255) NOT NULL, -- The actual server seed
+    `hashedSeed` VARCHAR(255), -- Optional: Hashed version shown before use
+    `nonce` BIGINT UNSIGNED NOT NULL DEFAULT 0, -- Roll counter for this seed pair
+    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `endedAt` TIMESTAMP NULL, -- Marks when this seed was rotated/became inactive
+    PRIMARY KEY (`id`),
+    KEY `userId_endedAt_idx` (`userId`, `endedAt`), -- Index for finding active seeds per user
+    CONSTRAINT `fk_serverSeeds_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
+);
+
+-- Client Seeds (Provably Fair)
+CREATE TABLE `clientSeeds` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `userId` BIGINT UNSIGNED NOT NULL,
+    `seed` VARCHAR(255) NOT NULL, -- The actual client seed
+    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `endedAt` TIMESTAMP NULL, -- Marks when this seed was rotated/became inactive
+    PRIMARY KEY (`id`),
+    KEY `userId_endedAt_idx` (`userId`, `endedAt`), -- Index for finding active seeds per user
+    CONSTRAINT `fk_clientSeeds_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
+);
+
+-- Rakeback Claims
+CREATE TABLE `rakebackClaims` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `userId` BIGINT UNSIGNED NOT NULL,
+    `type` VARCHAR(50) NOT NULL, -- e.g., 'instant', 'daily', 'weekly', 'monthly'
+    `amount` DECIMAL(20, 8) NOT NULL, -- Amount of rakeback claimed
+    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `userId_type_idx` (`userId`, `type`), -- Index for efficient lookups
+    CONSTRAINT `fk_rakebackClaims_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
+);
+
+-- Affiliate Claims (Tracking when users claim their earnings)
+CREATE TABLE `affiliateClaims` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `userId` BIGINT UNSIGNED NOT NULL, -- The user claiming their earnings
+    `amount` DECIMAL(20, 8) NOT NULL, -- The amount claimed
+    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `userId_createdAt_idx` (`userId`, `createdAt`), -- Index for the query in the error
+    CONSTRAINT `fk_affiliateClaims_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
+);
+
+-- Affiliates (Tracking referral relationships)
+CREATE TABLE `affiliates` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `userId` BIGINT UNSIGNED NOT NULL, -- The user who was referred
+    `affiliateId` BIGINT UNSIGNED NOT NULL, -- The user who referred (the affiliate)
+    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `userId_unique` (`userId`), -- A user can only be referred once
+    KEY `affiliateId_idx` (`affiliateId`), -- Index to quickly find users referred by someone
+    CONSTRAINT `fk_affiliates_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_affiliates_affiliateId` FOREIGN KEY (`affiliateId`) REFERENCES `users` (`id`) ON DELETE CASCADE
+);

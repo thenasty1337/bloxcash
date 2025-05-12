@@ -17,14 +17,13 @@ export async function api(path, method, body, notification = false, headers =  {
         let res = await fetch(path, {
             method,
             headers,
+            credentials: 'include',
             body,
         })
         let data = await res.json()
 
-        if (data.error && notification) {
-            toast.error(errors[data.error] || data.error)
-        } else if (data.error && data.error === 'DISABLED') {
-            toast.error(errors[data.error] || data.error)
+        if (data.error && data.error === 'DISABLED') {
+             toast.error(errors[data.error] || data.error)
         }
 
         return data
@@ -43,9 +42,16 @@ export async function authedAPI(path, method, body, notification = false) {
     return await api(path, method, body, notification, headers);
 }
 
-export async function fetchUser() {
-    let user = await authedAPI('/user', 'GET', null, false);
-    return user?.error ? null : user
+export async function fetchUser(mutateUser) {
+    let data = await api('/auth/me', 'GET', null, false);
+
+    if (data?.user) {
+        mutateUser(data.user);
+        return data.user;
+    } else {
+        mutateUser(null);
+        return null;
+    }
 }
 
 export function addDropdown(setValue) {

@@ -94,16 +94,17 @@ app.use(nocache());
 app.use(cookieParser());
 
 // Session Configuration
-app.use(session({
+const sessionMiddleware = session({
     secret: process.env.SESSION_SECRET || 'YOUR_SECRET_KEY',
     resave: false,
     saveUninitialized: false,
     cookie: { 
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7
+        maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
     } 
-}));
+});
+app.use(sessionMiddleware);
 
 // Passport Middleware Initialization
 app.use(passport.initialize());
@@ -249,7 +250,7 @@ async function start() {
         console.log('Listening on port ' + port);
     });
     
-    require('./socketio');
+    require('./socketio')(io, sessionMiddleware);
     io.attach(serverInstance, { cors: { origin: '*' } });
 
 }

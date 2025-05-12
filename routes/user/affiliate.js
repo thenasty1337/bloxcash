@@ -20,6 +20,11 @@ async function getAffiliateData(userId) {
     if (cachedAffiliates[userId]) return cachedAffiliates[userId];
 
     const [[user]] = await sql.query('SELECT affiliateCode, affiliateEarningsOffset FROM users WHERE id = ?', [userId]);
+
+    if (!user) {
+        throw new Error(`User not found with ID: ${userId}`);
+    }
+
     const { lastClaimDate, unclaimedEarnings, totalWagered, totalEarnings, users } = await getAffiliateInfo(userId, user.affiliateEarningsOffset);
 
     cachedAffiliates[userId] = {
@@ -43,7 +48,7 @@ async function getAffiliateData(userId) {
 
 router.get('/', isAuthed, async (req, res) => {
 
-    const data = await getAffiliateData(req.userId);
+    const data = await getAffiliateData(req.user.id);
 
     res.json({
         ...data,
@@ -57,7 +62,7 @@ const resultsPerPage = 6;
 
 router.get('/users', isAuthed, async (req, res) => {
 
-    const info = await getAffiliateData(req.userId);
+    const info = await getAffiliateData(req.user.id);
 
     let page = parseInt(req.query.page);
     page = !isNaN(page) && page > 0 ? page : 1;
@@ -90,9 +95,9 @@ router.post('/claim', [isAuthed, apiLimiter], async (req, res) => {
 
         await doTransaction(async (connection, commit) => {
 
-            const [[user]] = await connection.query('SELECT id, username, balance, affiliateEarningsOffset FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+            const [[user]] = await connection.query('SELECT id, username, balance, affiliateEarningsOffset FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
 
-            const { unclaimedEarnings } = await getAffiliateInfo(req.userId, user.affiliateEarningsOffset, connection);
+            const { unclaimedEarnings } = await getAffiliateInfo(req.user.id, user.affiliateEarningsOffset, connection);
             if (unclaimedEarnings < minClaim) return res.status(400).json({ error: 'NOT_ENOUGH_BETS' });
         
             const [result] = await connection.query('INSERT INTO affiliateClaims (userId, amount) VALUES (?, ?)', [user.id, unclaimedEarnings]);
@@ -101,7 +106,7 @@ router.post('/claim', [isAuthed, apiLimiter], async (req, res) => {
             await connection.query('INSERT INTO transactions (userId, amount, type, method, methodId) VALUES (?, ?, ?, ?, ?)', [user.id, unclaimedEarnings, 'in', 'affiliate', result.insertId]);
             await commit();
 
-            delete cachedAffiliates[req.userId];
+            delete cachedAffiliates[req.user.id];
             io.to(user.id).emit('balance', 'set', roundDecimal(user.balance + unclaimedEarnings));
 
             res.json({ success: true });
@@ -123,7 +128,7 @@ router.post('/', [isAuthed, apiLimiter], async (req, res) => {
     const code = req.body.code?.toLowerCase().trim();
     if (!code || typeof code != 'string' || code.length < 2 || code.length > 20 || !onlyLettersAndNumbers(code)) return res.status(400).json({ error: 'INVALID_CODE' });
 
-    const [[rbxUser]] = await sql.query('SELECT id, username, balance, robloxCookie, proxy FROM users WHERE id = ?', [req.userId]);
+    const [[rbxUser]] = await sql.query('SELECT id, username, balance, robloxCookie, proxy FROM users WHERE id = ?', [req.user.id]);
 
     const agent = getAgent(rbxUser.proxy);
     const instance = getRobloxApiInstance(agent, rbxUser.robloxCookie);
@@ -147,14 +152,14 @@ router.post('/', [isAuthed, apiLimiter], async (req, res) => {
     // const isPremium = data.includes('data-ispremiumuser="true"');
     // if (!isPremium) return res.status(400).json({ error: 'NOT_PREMIUM' });
 
-    let createdAt = creationDates[req.userId];
+    let createdAt = creationDates[req.user.id];
     
     if (!createdAt) {
 
         let resp;
 
         try {
-            resp = await instance(`https://www.roblox.com/users/${req.userId}/profile`);
+            resp = await instance(`https://www.roblox.com/users/${req.user.id}/profile`);
         } catch (e) {
             console.error(formatConsoleError(e));
             return res.status(400).json({ error: 'INVALID_ROBLOX_COOKIE' });
@@ -166,15 +171,15 @@ router.post('/', [isAuthed, apiLimiter], async (req, res) => {
     
         if (!createdAtStr) {
             // console.log(data);
-            // console.error(`Failed to get creation date for user ${req.userId}, roblox cookie probably invalid`);
+            // console.error(`Failed to get creation date for user ${req.user.id}, roblox cookie probably invalid`);
             return res.status(400).json({ error: 'INVALID_ROBLOX_COOKIE' });
         }
     
         createdAt = new Date(createdAtStr);
-        creationDates[req.userId] = createdAt;
+        creationDates[req.user.id] = createdAt;
 
         setTimeout(() => {
-            delete creationDates[req.userId];
+            delete creationDates[req.user.id];
         }, 60000 * 5);
     }
 
@@ -189,10 +194,10 @@ router.post('/', [isAuthed, apiLimiter], async (req, res) => {
             const [[affiliate]] = await connection.query('SELECT id, username FROM users WHERE LOWER(affiliateCode) = LOWER(?) FOR UPDATE', [code]);
             if (!affiliate) return res.status(404).json({ error: 'CODE_NOT_FOUND' });
     
-            const [[affiliated]] = await connection.query('SELECT userId FROM affiliates WHERE userId = ? OR ip = ?', [req.userId, req.headers['cf-connecting-ip']]);
+            const [[affiliated]] = await connection.query('SELECT userId FROM affiliates WHERE userId = ? OR ip = ?', [req.user.id, req.headers['cf-connecting-ip']]);
             if (affiliated?.userId) return res.status(400).json({ error: 'ALREADY_AFFILIATED' });
     
-            const [[user]] = await connection.query('SELECT id, username, balance, accountLock, sponsorLock, createdAt FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+            const [[user]] = await connection.query('SELECT id, username, balance, accountLock, sponsorLock, createdAt FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
             if (user.accountLock || user.sponsorLock) return res.status(400).json({ error: 'ACCOUNT_LOCKED' });
             
             if (user.id == affiliate.id) return res.status(400).json({ error: 'CANT_REDEEM_OWN_CODE' });
@@ -223,7 +228,7 @@ router.post('/', [isAuthed, apiLimiter], async (req, res) => {
 
 router.get('/usedCode', isAuthed, async (req, res) => {
 
-    const [[user]] = await sql.query('SELECT users.affiliateCode FROM users JOIN affiliates ON affiliates.affiliateId = users.id WHERE affiliates.userId = ?', [req.userId]);
+    const [[user]] = await sql.query('SELECT users.affiliateCode FROM users JOIN affiliates ON affiliates.affiliateId = users.id WHERE affiliates.userId = ?', [req.user.id]);
     if (!user) return res.json({ code: null });
 
     res.json({ code: user.affiliateCode });
@@ -234,7 +239,7 @@ const blacklistedCodes = ['free', 'clash', '123', '1234', 'blox', 'rblxwild', 'b
 
 router.post('/code', [isAuthed, apiLimiter], async (req, res) => {
 
-    const [[user]] = await sql.query('SELECT affiliateCodeLock FROM users WHERE id = ?', [req.userId]);
+    const [[user]] = await sql.query('SELECT affiliateCodeLock FROM users WHERE id = ?', [req.user.id]);
     if (user.affiliateCodeLock) return res.status(400).json({ error: 'CODE_LOCKED' });
 
     const code = req.body.code?.toLowerCase().trim();
@@ -245,16 +250,16 @@ router.post('/code', [isAuthed, apiLimiter], async (req, res) => {
         
         await doTransaction(async (connection, commit) => {
 
-            const [[user]] = await connection.query('SELECT id, username, balance, accountLock, sponsorLock, createdAt FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+            const [[user]] = await connection.query('SELECT id, username, balance, accountLock, sponsorLock, createdAt FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
             if (user.accountLock || user.sponsorLock) return res.status(400).json({ error: 'ACCOUNT_LOCKED' });
     
             const [[affiliate]] = await connection.query('SELECT id, username FROM users WHERE LOWER(affiliateCode) = LOWER(?) FOR UPDATE', [code]);
             if (affiliate) return res.status(400).json({ error: 'CODE_ALREADY_EXISTS' });
         
-            await connection.query('UPDATE users SET affiliateCode = ? WHERE id = ?', [code, req.userId]);
+            await connection.query('UPDATE users SET affiliateCode = ? WHERE id = ?', [code, req.user.id]);
             await commit();
     
-            delete cachedAffiliates[req.userId];
+            delete cachedAffiliates[req.user.id];
             res.json({ success: true });
             sendLog('affiliate', `*${user.username}* (\`${user.id}\`) set his code to \`${code}\`.`);
 

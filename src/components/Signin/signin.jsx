@@ -21,9 +21,12 @@ function SignIn(props) {
 
     async function handleAuthSubmit(e) {
         e.preventDefault()
-        if (!agree()) {
-            return createNotification('error', 'You must agree to the Terms of Service.')
+        
+        // Check for ToS agreement ONLY if in Signup mode
+        if (mode() === 1 && !agree()) {
+            return createNotification('error', 'You must agree to the Terms of Service to sign up.')
         }
+        
         setIsLoading(true)
 
         const endpoint = mode() === 0 ? '/auth/login' : '/auth/signup';
@@ -119,7 +122,7 @@ function SignIn(props) {
                                 </div>
                             </Show>
 
-                            <button type='submit' disabled={isLoading() || (mode() === 1 && !agree())} class='bevel-gold signin'>
+                            <button type='submit' disabled={isLoading()} class='bevel-gold signin'>
                                 {isLoading() ? 'Processing...' : (mode() === 0 ? 'SIGN IN' : 'SIGN UP')}
                             </button>
                         </form>
