@@ -1,9 +1,8 @@
-import {createSignal, onCleanup} from "solid-js";
+import {createSignal, onCleanup, Show} from "solid-js";
 import {A, useSearchParams} from "@solidjs/router";
 import {api, authedAPI, createNotification, fetchUser, getJWT} from "../../util/api";
 import {useUser} from "../../contexts/usercontextprovider";
 import Toggle from "../Toggle/toggle";
-import RobloxMFA from "../MFA/robloxmfa";
 
 function SignIn(props) {
 
@@ -11,100 +10,50 @@ function SignIn(props) {
     const [agree, setAgree] = createSignal(false)
     const [mode, setMode] = createSignal(0)
 
-    const [security, setSecurity] = createSignal('')
     const [username, setUsername] = createSignal('')
+    const [email, setEmail] = createSignal('')
     const [password, setPassword] = createSignal('')
+    const [rememberMe, setRememberMe] = createSignal(false)
 
     const [user, { mutateUser }] = useUser()
 
-    const [isLoggingIn, setIsLoggingIn] = createSignal(false)
-    const [twoFactorOpen, setTwoFactorOpen] = createSignal(false)
-    const [captchaOpen, setCaptchaOpen] = createSignal(false)
+    const [isLoading, setIsLoading] = createSignal(false)
 
-    const [loginId, setLoginId] = createSignal(null)
-    const [blob, setBlob] = createSignal(null)
-
-    window.addEventListener('message', handleIFrameMessage)
-
-    async function handleIFrameMessage(event) {
-        let data = event.data
-        if (!data || data.type !== 'captcha') return
-
-        let loginRes = await api('/auth/login/captcha', 'POST', JSON.stringify({
-            loginId: loginId(),
-            captchaToken: data.token
-        }), true)
-        handleLoginData(loginRes)
-
-        setCaptchaOpen(false)
-    }
-
-    async function handleLoginData(data, stayOpenOnFail) {
-        if (!data || data.error) { return cancelLogin(stayOpenOnFail) }
-
-        if (data.phase && data.phase === 'CAPTCHA') {
-            setLoginId(data.loginId)
-            setBlob(data.captcha.dxBlob)
-            setCaptchaOpen(true)
-            setTwoFactorOpen(false)
-            setIsLoggingIn(true)
-            return false
+    async function handleAuthSubmit(e) {
+        e.preventDefault()
+        if (!agree()) {
+            return createNotification('error', 'You must agree to the Terms of Service.')
         }
+        setIsLoading(true)
 
-        if (data.phase && data.phase === '2FA') {
-            setIsLoggingIn(true)
-            setTwoFactorOpen(true)
-            setCaptchaOpen(false)
-            return false
-        }
+        const endpoint = mode() === 0 ? '/auth/login' : '/auth/signup';
+        const payload = mode() === 0 
+            ? { email: email(), password: password() } 
+            : { username: username(), email: email(), password: password() };
 
-        if (data.token) {
+        try {
+            let data = await api(endpoint, 'POST', JSON.stringify(payload), true)
 
-            const d = new Date(Date.now() + data.expiresIn * 1000);
-            document.cookie = `jwt=${data.token}; expires=${d.toUTCString()};`
-
-            if (props?.ws() && props?.ws()?.connected) {
-                props?.ws().emit('auth', getJWT())
+            if (data?.error) {
+                createNotification('error', data.message || 'An error occurred.')
+            } else if (data?.user) {
+                createNotification('success', mode() === 0 ? 'Successfully logged in!' : 'Successfully signed up!')
+                await fetchUser(mutateUser)
+                if (props.close) props.close();
+            } else {
+                createNotification('error', 'An unexpected error occurred.')
             }
-
-            let user = await fetchUser()
-            mutateUser(user)
-
-            // AFFILIATES
-            let code = localStorage.getItem('aff')
-            if (code) {
-                let res = await authedAPI('/user/affiliate', 'POST', JSON.stringify({
-                    code: code
-                }), true)
-
-                if (res.success) {
-                    createNotification('success', `Successfully redeemed affiliate code ${code}.`)
-                }
-                localStorage.removeItem('aff')
-            }
-
-            close(false)
+        } catch (e) {
+            console.error("Auth Error:", e);
+            createNotification('error', 'Failed to connect to server.')
+        } finally {
+            setIsLoading(false)
         }
-
-        cancelLogin()
-        return true
-    }
-
-    function cancelLogin(stayOpenOnFail) {
-        if (stayOpenOnFail) return
-
-        setCaptchaOpen(false)
-        setTwoFactorOpen(false)
-        setIsLoggingIn(false)
-        setLoginId(null)
-        setBlob(null)
     }
 
     function close() {
         setSearchParams({ modal: null })
     }
-
-    onCleanup(() => window.removeEventListener('message', handleIFrameMessage))
 
     return (
         <>
@@ -113,62 +62,67 @@ function SignIn(props) {
                     <p class='close bevel' onClick={() => close()}>X</p>
 
                     <div class='content'>
-                        <h2>SIGN IN</h2>
+                        <h2>{mode() === 0 ? 'SIGN IN' : 'SIGN UP'}</h2>
                         <h1>WELCOME TO <span class='gold'>BLOXCLASH</span></h1>
 
                         <div class='bar'/>
 
                         <div class='options'>
-                            <button class={'bevel option ' + (mode() === 0 ? 'active' : '')} onClick={() => setMode(0)}>CREDENTIALS</button>
-                            <button class={'bevel option ' + (mode() === 1 ? 'active' : '')} onClick={() => setMode(1)}>.ROBLOSECURITY</button>
+                            <button class={'bevel option ' + (mode() === 0 ? 'active' : '')} onClick={() => setMode(0)}>LOGIN</button>
+                            <button class={'bevel option ' + (mode() === 1 ? 'active' : '')} onClick={() => setMode(1)}>SIGN UP</button>
                         </div>
 
-                        {mode() === 0 ? (
-                          <>
-                              <p class='label'>ROBLOX USERNAME</p>
-                              <input type='text' placeholder='Enter your username' class='credentials' value={username()} onChange={(e) => setUsername(e.target.value)}/>
+                        <form class='w-full flex flex-col items-center gap-3 z-10 mt-4' onSubmit={handleAuthSubmit}>
+                            <Show when={mode() === 1}>
+                                <p class='label'>USERNAME</p>
+                                <input
+                                    type='text'
+                                    placeholder='Enter your username'
+                                    class='credentials'
+                                    value={username()}
+                                    onInput={(e) => setUsername(e.target.value)}
+                                    required={mode() === 1}
+                                />
+                            </Show>
 
-                              <p class='label'>PASSWORD</p>
-                              <input type='password' placeholder='Enter your password' class='credentials' value={password()} onChange={(e) => setPassword(e.target.value)}/>
-                          </>
-                        ) : (
-                            <>
-                                <p class='label'>FILL IN YOUR .ROBLOSECURITY COOKIE</p>
-                                <input type='text' placeholder='Enter your cookie' class='credentials' value={security()} onInput={(e) => setSecurity(e.target.value)}/>
-                            </>
-                        )}
+                            <p class='label'>EMAIL</p>
+                            <input
+                                type='email'
+                                placeholder='Enter your email'
+                                class='credentials'
+                                value={email()}
+                                onInput={(e) => setEmail(e.target.value)}
+                                required
+                            />
 
-                        <div class='tos'>
-                            <Toggle active={agree()} toggle={() => setAgree(!agree())}/>
-                            <p>By checking this box you agree to our <A href='/docs/tos' class='white bold strip'>Terms & Conditions</A></p>
-                        </div>
+                            <p class='label'>PASSWORD</p>
+                            <input
+                                type='password'
+                                placeholder='Enter your password'
+                                class='credentials'
+                                value={password()}
+                                onInput={(e) => setPassword(e.target.value)}
+                                required
+                            />
 
-                        <button class='bevel-gold signin' onClick={async () => {
-                            if (!agree()) return createNotification('error', 'You must accept our Terms and Conditions and Privacy Policy')
-                            if (isLoggingIn()) return
+                            <Show when={mode() === 0}>
+                                <div class='tos'>
+                                    <Toggle active={rememberMe()} toggle={() => setRememberMe(!rememberMe())}/>
+                                    <p>Remember Me</p>
+                                </div>
+                            </Show>
 
-                            let data
+                            <Show when={mode() === 1}>
+                                <div class='tos'>
+                                    <Toggle active={agree()} toggle={() => setAgree(!agree())}/>
+                                    <p>By checking this box you agree to our <A href='/docs/tos' class='white bold strip'>Terms & Conditions</A></p>
+                                </div>
+                            </Show>
 
-                            setIsLoggingIn(true)
-
-                            if (mode() === 0) {
-                                data = await api('/auth/login', 'POST', JSON.stringify({
-                                    username: username(),
-                                    password: password()
-                                }), true)
-                            } else if (mode() === 1) {
-                                data = await api('/auth/login/cookie', 'POST', JSON.stringify({
-                                    cookie: security(),
-                                }), true)
-                            }
-                            handleLoginData(data)
-                        }}>SIGN IN</button>
-
-                        <div class='disclaimer'>
-                            In order for <span class='gold bold'>BloxClash.com</span> to operate correctly, we require access to your Roblox account login cookie.
-                            <br/><br/>
-                            While normally asking for such would be considered malicious, we assure you that <span class='bold'>BloxClash</span> not only will protect your security but never use it without your permission!
-                        </div>
+                            <button type='submit' disabled={isLoading() || (mode() === 1 && !agree())} class='bevel-gold signin'>
+                                {isLoading() ? 'Processing...' : (mode() === 0 ? 'SIGN IN' : 'SIGN UP')}
+                            </button>
+                        </form>
                     </div>
 
                     <div class='art'>
@@ -180,26 +134,6 @@ function SignIn(props) {
                     </div>
                 </div>
             </div>
-
-            {twoFactorOpen() && (
-                <RobloxMFA close={cancelLogin} complete={async (code) => {
-                    let loginRes = await api('/auth/login/2fa', 'POST', JSON.stringify({
-                        loginId: loginId(),
-                        code
-                    }), true)
-                    let response = handleLoginData(loginRes, true)
-                }}/>
-            )}
-
-            {captchaOpen() && (
-                <div class='modal' onClick={cancelLogin}>
-                    <div class='captcha-container' onClick={(e) => e.stopPropagation()}>
-                        <p>Solve the Captcha</p>
-                        <iframe src={`${import.meta.env.VITE_SERVER_URL}/auth/iframe?blob=${encodeURIComponent(blob())}`} width='310px' height='295px'/>
-                        <div id='captcha-div'/>
-                    </div>
-                </div>
-            )}
 
             <style jsx>{`
                 .modal {
@@ -379,7 +313,7 @@ function SignIn(props) {
                   font-family: 'Geogrotesque Wide';
                   font-weight: 700;
                   font-size: 14px;
-                  text-align: center;
+                  text-align: left;
                   color: #ADA3EF;
                   
                   margin: 20px 0 10px 0;

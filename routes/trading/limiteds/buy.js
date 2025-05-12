@@ -10,7 +10,7 @@ const { getCurrentUser, getInventory, cachedInventories } = require('../../../ut
 const { getAgent } = require('../../../utils/proxies');
 const io = require('../../../socketio/server');
 const { enabledFeatures, checkAccountLock, depositBonus } = require('../../admin/config');
-const { marketplaceListings, checkTradeSettings, buy2FAs: pending2fas, adurite } = require('./functions');
+const { marketplaceListings, checkTradeSettings, buy2FAs: pending2fas } = require('./functions');
 const { cryptoData } = require('../crypto/deposit/functions');
 
 const buying = {};
@@ -43,174 +43,19 @@ router.post('/', isAuthed, apiLimiter, async (req, res) => {
 
 });
 
-async function handleAduriteBuy(user, cachedListing, dummyItem) {
-
-    let cachedPrice = cachedListing.price;
-    let withdrawalId = false;
-    let txId = false;
-
-    try {
-
-        await doTransaction(async (connection, commit) => {
-
-            const [balResult] = await connection.query('UPDATE users SET balance = balance - ? WHERE id = ? AND balance >= ?', [cachedPrice, user.id, cachedPrice]);
-            if (balResult.affectedRows != 1) return { error: 'INSUFFICIENT_BALANCE' };
-
-            const [aduriteResult] = await connection.query('INSERT INTO adurite (aduriteId, userId, robuxAmount) VALUES (?, ?, ?)', [cachedListing.adurite, user.id, cachedPrice]);
-            withdrawalId = aduriteResult.insertId;
-            
-            const [txResult] = await connection.query('INSERT INTO transactions (userId, amount, type, method, methodId) VALUES (?, ?, ?, ?, ?)', [user.id, cachedPrice, 'out', 'adurite', aduriteResult.insertId]);
-            txId = txResult.insertId;
-
-            await commit();
-
-        });
-
-    } catch (e) {
-        console.error(e);
-        return { error: 'UNKNOWN_ERROR' };
-    }
-
-    async function failed(price, err) {
-
-        try {
-            await doTransaction(async (connection, commit) => {
-
-                await connection.query('UPDATE users SET balance = balance + ? WHERE id = ?', [price, user.id]);
-                await connection.query('UPDATE adurite SET status = ? WHERE id = ?', ['failed', withdrawalId]);
-                await connection.query('DELETE FROM transactions WHERE id = ?', [txId]);
-    
-                await commit();
-    
-            });
-        } catch (e) {
-            console.error(e);
-            return { error: 'UNKNOWN_ERROR' };
-        }
-        
-        return { error: err || 'UNKNOWN_ERROR' };
-
-    }
-
-    const reserveResponse = await adurite({
-        url: '/reserve-item',
-        method: "POST",
-        timeout: 30000,
-        data: {
-            "chosen_item_id": +cachedListing.adurite,
-            "user_id": +user.id
-        }
-    });
-
-    const reserveData = reserveResponse.data;
-
-    if (!reserveData.ok) {
-        console.log(`Failed to reserve adurite item`, reserveData, reserveResponse.status);
-        return await failed(cachedPrice);
-    }
-
-    delete marketplaceListings[cachedListing.id];
-    const price = Math.ceil(+reserveData.data.price / cryptoData.robuxRate.usd * cryptoData.robuxRate.robux);
-
-    try {
-        const suc = await doTransaction(async (connection, commit) => {
-
-            await connection.query('UPDATE adurite SET robuxAmount = ?, fiatAmount = ?, status = ?, reservationId = ? WHERE id = ?', [price, +reserveData.data.price, 'reserved', reserveData.data.tracking_id, withdrawalId]);
-
-            if (price != cachedPrice) {
-                await connection.query('UPDATE transactions SET amount = ? WHERE id = ?', [price, txId]);
-                
-                const diff = price - cachedPrice;
-                
-                if (diff > 0) {
-                    const [balRes] = await connection.query('UPDATE users SET balance = balance - ? WHERE id = ? AND balance >= ?', [diff, user.id, diff]);
-                    if (balRes.affectedRows != 1) return false;
-                } else {
-                    await connection.query('UPDATE users SET balance = balance + ? WHERE id = ?', [Math.abs(diff), user.id]);
-                }
-            }
-
-            await commit();
-            return true;
-
-        });
-
-        if (!suc) {
-            console.log(`Failed to update adurite price`);
-            return await failed(cachedPrice);
-        }
-    } catch (e) {
-        console.error(e);
-        return await failed(cachedPrice);
-    }
-
-    let buyResp = false;
-
-    try {
-        buyResp = await adurite({
-            url: '/purchase-item',
-            method: "POST",
-            timeout: 30000,
-            data: {
-                "tracking_id": reserveData.data.tracking_id,
-                "user_id": +user.id,
-                "small_item_uaid": dummyItem.userAssetId
-            }
-        });
-    } catch (e) {
-        console.error(`Failed to buy adurite item err`, e);
-        return await failed(price);
-    }
-
-    buyData = buyResp.data;
-
-    if (!buyData.ok) {
-        console.log(`Failed to buy adurite item`, buyData, buyResp.status);
-        return await failed(price, buyData.exception_code == 'INSUFFICIENT_BALANCE' && 'LISTING_UNAVAILABLE');
-    }
-
-    // console.log(buyData);
-
-    try {
-
-        await doTransaction(async (connection, commit) => {
-
-            await connection.query('UPDATE adurite SET status = ? WHERE id = ?', ['completed', withdrawalId]);
-            await connection.query('UPDATE transactions SET type = ? WHERE id = ?', ['withdraw', txId]);
-            await newNotification(user.id, 'withdraw-completed', { amount: price, txId }, connection);
-
-            await commit();
-
-        });
-
-    } catch (e) {
-        console.error(e);
-        return { error: 'UNKNOWN_ERROR' };
-    }
-
-    sendLog('market', `*${user.username}* (\`${user.id}\`) bought Adurite listing \`${cachedListing.adurite}\` (\`${withdrawalId}\`) for :robux: R$${price} ($${reserveData.data.price}usd).`);
-    return { success: true };
-
-}
-
 async function handleBuy(userId, listingId) {
 
-    const cachedListing = marketplaceListings[listingId] || adurite.listings[listingId];
+    const cachedListing = marketplaceListings[listingId];
     if (!cachedListing) return { error: 'LISTING_REMOVED' };
 
     let listing = false;
     let items = false;
 
-    if (!cachedListing.adurite) {
-        [[listing]] = await sql.query('SELECT id, sellerId FROM marketplaceListings WHERE id = ? AND buyerId IS NULL AND status = ?', [listingId, 'active']);
-        if (!listing) return { error: 'LISTING_REMOVED' };
+    [[listing]] = await sql.query('SELECT id, sellerId FROM marketplaceListings WHERE id = ? AND buyerId IS NULL AND status = ?', [listingId, 'active']);
+    if (!listing) return { error: 'LISTING_REMOVED' };
 
-        if (listing.sellerId == userId) return { error: 'CANNOT_BUY_OWN_LISTING' };
-        [items] = await sql.query('SELECT * FROM marketplaceListingItems WHERE marketplaceListingId = ?', [listing.id]);
-    } else {
-        if (adurite.balance < cachedListing.usd) return { error: 'LISTING_UNAVAILABLE' };
-        listing = {};
-    }
+    if (listing.sellerId == userId) return { error: 'CANNOT_BUY_OWN_LISTING' };
+    [items] = await sql.query('SELECT * FROM marketplaceListingItems WHERE marketplaceListingId = ?', [listing.id]);
 
     const [[buyer]] = await sql.query('SELECT id, username, robloxCookie, proxy, accountLock, sponsorLock, balance, xp, verified, perms FROM users WHERE id = ?', [userId]);
 
@@ -260,10 +105,6 @@ async function handleBuy(userId, listingId) {
     const dummyItem = inventory.filter(i => i.price < Math.min(200, listing.total) && !i.isOnHold).sort((a, b) => a.price - b.price)[0];
 
     if (!dummyItem) return { error: 'MISSING_DUMMY_ITEM' };
-
-    if (cachedListing.adurite) {
-        return await handleAduriteBuy(buyer, cachedListing, dummyItem);
-    }
 
     const [[seller]] = await sql.query('SELECT id, username, robloxCookie, proxy FROM users WHERE id = ?', [listing.sellerId]);
     if (!seller) return { error: 'SELLER_NOT_FOUND' };
@@ -615,7 +456,6 @@ router.post('/2fa', isAuthed, apiLimiter, async (req, res) => {
 
     const pending2fa = pending2fas[req.userId];
 
-    // console.log(pending2fa?.challengeId, req.body.challengeId);
     if (pending2fa?.challengeId != req.body.challengeId) return res.status(400).json({ error: 'EXPIRED_CHALLENGE' });
 
     const code = req.body.code;

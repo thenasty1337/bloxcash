@@ -108,14 +108,15 @@ function Roulette(props) {
 
     async function startCountdown(duration = config().betTime) {
 
-        setTimeLeft(Math.max(0, duration))
+        const nonNegativeDuration = Math.max(0, duration || 0);
+        setTimeLeft(nonNegativeDuration)
         let lastDate = Date.now()
 
-        bar.animate([
+        bar?.animate([
             {width: '100%'},
             {width: '0%'}
         ], {
-            duration: timeLeft(),
+            duration: nonNegativeDuration,
             easing: 'linear',
             fill: 'forwards'
         })

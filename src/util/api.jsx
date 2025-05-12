@@ -14,7 +14,7 @@ export function createNotification(type, message, options) {
 
 export async function api(path, method, body, notification = false, headers =  { 'Content-Type': 'application/json' }) {
     try {
-        let res = await fetch(`${import.meta.env.VITE_SERVER_URL}${path}`, {
+        let res = await fetch(path, {
             method,
             headers,
             body,
@@ -35,11 +35,16 @@ export async function api(path, method, body, notification = false, headers =  {
 }
 
 export async function authedAPI(path, method, body, notification = false) {
-    return await api(path, method, body, notification, { 'Authorization': getJWT(), 'Content-Type': 'application/json' })
+    const jwt = getJWT();
+    const headers = { 'Content-Type': 'application/json' };
+    if (jwt) {
+        headers['Authorization'] = jwt;
+    }
+    return await api(path, method, body, notification, headers);
 }
 
 export async function fetchUser() {
-    let user = await api('/user', 'GET', null, false, { 'Authorization': getJWT() })
+    let user = await authedAPI('/user', 'GET', null, false);
     return user?.error ? null : user
 }
 

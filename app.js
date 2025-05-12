@@ -9,6 +9,11 @@ const path = require('path');
 const rfs = require('rotating-file-stream');
 const io = require('./socketio/server');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcrypt');
+const { sql } = require('./database');
 
 const app = express();
 app.disable('x-powered-by');
@@ -87,6 +92,65 @@ app.use(bodyParser.urlencoded({
 
 app.use(nocache());
 app.use(cookieParser());
+
+// Session Configuration
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'YOUR_SECRET_KEY',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    } 
+}));
+
+// Passport Middleware Initialization
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Passport Local Strategy Configuration
+passport.use(new LocalStrategy(
+    { usernameField: 'email' }, 
+    async (email, password, done) => {
+        try {
+            const [[user]] = await sql.query('SELECT id, email, username, passwordHash, perms, banned FROM users WHERE email = ?', [email]);
+
+            if (!user) {
+                return done(null, false, { message: 'Incorrect email or password.' });
+            }
+
+            if (user.banned) {
+                return done(null, false, { message: 'Account is banned.' });
+            }
+
+            const match = await bcrypt.compare(password, user.passwordHash);
+            if (!match) {
+                return done(null, false, { message: 'Incorrect email or password.' });
+            }
+
+            const { passwordHash, ...userWithoutHash } = user;
+            return done(null, userWithoutHash);
+
+        } catch (err) {
+            return done(err);
+        }
+    }
+));
+
+// Passport User Serialization/Deserialization
+passport.serializeUser((user, done) => {
+    done(null, user.id); 
+});
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const [[user]] = await sql.query('SELECT id, email, username, perms, banned FROM users WHERE id = ?', [id]);
+        done(null, user || false);
+    } catch (err) {
+        done(err, false);
+    }
+});
 
 const authRoute = require('./routes/auth');
 const userRoute = require('./routes/user');

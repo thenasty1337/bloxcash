@@ -4,6 +4,7 @@ const { cryptoData } = require('../crypto/deposit/functions');
 
 const axios = require('axios');
 
+/* Remove adurite instance
 const adurite = axios.create({
     baseURL: 'https://aduriteintegration.com/api/v1',
     validateStatus: () => {
@@ -15,9 +16,10 @@ const adurite = axios.create({
         'Accept-Encoding': 'gzip, deflate, decompress'
     }
 });
+*/
 
 const marketplaceListings = {};
-adurite.listings = {};
+// adurite.listings = {}; // Remove this line
 
 async function cacheListings() {
     
@@ -64,6 +66,7 @@ async function cacheListings() {
 
 }
 
+/* Remove updateAduriteListings function
 async function updateAduriteListings() {
 
     const [
@@ -119,8 +122,9 @@ async function updateAduriteListings() {
     setTimeout(updateAduriteListings, 1000 * 30);
 
 }
+*/
 
-updateAduriteListings();
+// updateAduriteListings(); // Ensure this is removed or commented out
 
 async function checkTradeSettings(instance) {
     const { data: userSettings } = await instance('https://apis.roblox.com/user-settings-api/v1/user-settings', {
@@ -152,6 +156,6 @@ module.exports = {
     buy2FAs,
     marketplaceListings,
     checkTradeSettings,
-    cacheListings,
-    adurite
+    cacheListings
+    // adurite // Ensure this is removed or commented out
 }

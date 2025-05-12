@@ -10,7 +10,7 @@ export function WebsocketProvider(props) {
 
     async function connectSocket() {
 
-        let tempWs = io(import.meta.env.VITE_SOCKET_URL + '', { transports: ['websocket', 'polling'], reconnection: true, reconnectionDelay: 1000, reconnectionAttempts: 10})
+        let tempWs = io({ transports: ['websocket', 'polling'], reconnection: true, reconnectionDelay: 1000, reconnectionAttempts: 10});
 
         tempWs.on('connect', () => {
             console.log('Connected to WS')
@@ -24,7 +24,7 @@ export function WebsocketProvider(props) {
             mutate(null)
             let retrying = setInterval(() => {
                 tempWs.removeAllListeners()
-                tempWs = io(import.meta.env.VITE_SERVER_URL, { transports: ['websocket', 'polling'], reconnection: true, reconnectionDelay: 1000, reconnectionAttempts: 10})
+                tempWs = io({ transports: ['websocket', 'polling'], reconnection: true, reconnectionDelay: 1000, reconnectionAttempts: 10});
                 mutate(tempWs)
                 clearInterval(retrying)
             }, 1000)

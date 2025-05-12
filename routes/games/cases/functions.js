@@ -18,9 +18,28 @@ async function cacheCases() {
         INNER JOIN caseVersions cv ON c.id = cv.caseId AND cv.endedAt IS NULL
     `);
 
+    // Handle case where no active cases are found
+    if (!cases || cases.length === 0) {
+        console.log('No active cases found. Skipping item fetch.');
+        // Clear cached cases or handle as appropriate
+        Object.keys(cachedCases).forEach(key => delete cachedCases[key]);
+        setTimeout(cacheCases, 1000 * 60 * 60 * 1); // Reschedule cache update
+        return; 
+    }
+
+    const activeCaseVersionIds = cases.map(e => e.revId);
+
     const [items] = await sql.query(`
         SELECT id, robloxId, name, img, price, rangeFrom, rangeTo, caseVersionId FROM caseItems WHERE caseVersionId IN(?) ORDER BY price DESC;
-    `, [cases.map(e => e.revId)]);
+    `, [activeCaseVersionIds]);
+
+    // Clear potentially stale cases before updating
+    const activeSlugs = new Set(cases.map(c => c.slug));
+    Object.keys(cachedCases).forEach(slug => {
+        if (!activeSlugs.has(slug)) {
+            delete cachedCases[slug];
+        }
+    });
 
     for (const caseInfo of cases) {
 
