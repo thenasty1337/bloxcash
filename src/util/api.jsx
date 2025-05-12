@@ -46,10 +46,14 @@ export async function fetchUser(mutateUser) {
     let data = await api('/auth/me', 'GET', null, false);
 
     if (data?.user) {
-        mutateUser(data.user);
+        if (mutateUser) {
+            mutateUser(data.user);
+        }
         return data.user;
     } else {
-        mutateUser(null);
+        if (mutateUser) {
+            mutateUser(null);
+        }
         return null;
     }
 }

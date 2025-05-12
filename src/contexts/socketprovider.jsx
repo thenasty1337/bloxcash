@@ -1,6 +1,8 @@
-import {createContext, useContext, createResource} from "solid-js";
+import {createContext, useContext, createResource, createEffect} from "solid-js";
 import io from "socket.io-client";
 import {getJWT} from "../util/api";
+import { useAuthStore } from "../stores/authStore";
+import { useUser } from "../contexts/usercontextprovider";
 
 const WebsocketContext = createContext();
 
@@ -27,8 +29,13 @@ export function WebsocketProvider(props) {
 
         tempWs.on('connect', () => {
             console.log('Connected to WS');
-            // Remove JWT auth emit - session cookie handles auth now
-            // tempWs.emit('auth', getJWT()) 
+            // Session cookie will handle auth automatically,
+            // but we also emit 'auth' to refresh socket state
+            const state = useAuthStore.getState();
+            if (state.isAuthenticated) {
+                tempWs.emit('auth');
+                console.log('Emitting auth with session cookie');
+            }
             mutate(tempWs)
         })
 

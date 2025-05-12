@@ -15,6 +15,8 @@ import Freecoins from "./components/Freecoins/freecoins";
 import Rakeback from "./components/Rakeback/rakeback";
 import AML from "./components/Documentation/aml";
 import UserModal from "./components/UserPopup/userpopup";
+import { AuthInitializer } from "./components/AuthInitializer";
+import { AuthStoreSync } from "./components/AuthStoreSync";
 
 const Admin = lazy(() => import('./pages/admin'))
 const AdminDashboard = lazy(() => import('./components/Admin/dashboard'))
@@ -138,6 +140,8 @@ function App() {
 
   return (
     <>
+      <AuthInitializer />
+      <AuthStoreSync />
       {!hasFetched() ? (
         <LoadingScreen/>
       ) : (
