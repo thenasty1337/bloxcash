@@ -17,7 +17,7 @@ router.post('/2fa', apiLimiter, async (req, res) => {
     const jwt = getReqToken(req);
     if (authorizedAdmins[jwt]) return res.json({ error: 'ALREADY_AUTHORIZED' });
 
-    const [[user]] = await sql.query('SELECT id, username, 2fa, role FROM users WHERE id = ?', [req.userId]);
+    const [[user]] = await sql.query('SELECT id, username, 2fa, role FROM users WHERE id = ?', [req.user.id]);
     if (!user || !adminRoles.includes(user.role)) return res.json({ error: 'UNAUTHORIZED' });
 
     if (!user['2fa']) {
@@ -26,7 +26,7 @@ router.post('/2fa', apiLimiter, async (req, res) => {
             name: `BloxClash (${user.username})`
         });
 
-        await sql.query('UPDATE users SET 2fa = ? WHERE id = ?', [secret.base32, req.userId]);
+        await sql.query('UPDATE users SET 2fa = ? WHERE id = ?', [secret.base32, req.user.id]);
 
         return res.json({
             secret: secret.otpauth_url
@@ -46,7 +46,7 @@ router.post('/2fa', apiLimiter, async (req, res) => {
         delete authorizedAdmins[jwt];
     }, 1000 * 60 * 30);
 
-    sendLog('admin', `[\`${req.userId}\`] *${user.username}* logged into admin panel.`);
+    sendLog('admin', `[\`${req.user.id}\`] *${user.username}* logged into admin panel.`);
     return res.json({ success: true });
 
 });
@@ -63,7 +63,7 @@ router.get('/unpossess', async (req, res) => {
 
 router.use(async (req, res, next) => {
 
-    const [[user]] = await sql.query('SELECT id, role, username, perms FROM users WHERE id = ?', [req.userId]);
+    const [[user]] = await sql.query('SELECT id, role, username, perms FROM users WHERE id = ?', [req.user.id]);
     if (!user || !adminRoles.includes(user.role)) return res.json({ error: 'UNAUTHORIZED' });
 
     if (!authorizedAdmins[getReqToken(req)]) {

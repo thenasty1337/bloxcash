@@ -34,7 +34,7 @@ async function joinJackpot(req, res) {
 
         await doTransaction(async (connection, commit) => {
 
-            const [[user]] = await connection.query('SELECT id, username, role, sponsorLock, balance, xp, anon FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+            const [[user]] = await connection.query('SELECT id, username, role, sponsorLock, balance, xp, anon FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
             if (user.sponsorLock) return res.json({ error: 'SPONSOR_LOCK' });
 
             if (user.balance < amount) {
@@ -45,7 +45,7 @@ async function joinJackpot(req, res) {
             let userIds = [];
 
             for (const bet of jackpot.bets) {
-                if (bet.user.id == req.userId) {
+                if (bet.user.id == req.user.id) {
                     userBets += bet.amount;
                 }
                 userIds.push(bet.user.id);
@@ -56,7 +56,7 @@ async function joinJackpot(req, res) {
             }
 
             const xp = roundDecimal(amount * xpMultiplier);
-            await connection.query('UPDATE users SET balance = balance - ?, xp = xp + ? WHERE id = ?', [amount, xp, req.userId]);
+            await connection.query('UPDATE users SET balance = balance - ?, xp = xp + ? WHERE id = ?', [amount, xp, req.user.id]);
             await connection.query('SELECT id FROM jackpot WHERE id = ? FOR UPDATE', [jackpot.round.id]);
 
             const ticketsFrom = jackpot.round.amount * 100;

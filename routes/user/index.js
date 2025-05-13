@@ -43,7 +43,7 @@ router.post('/anon', isAuthed, async (req, res) => {
     const enabled = req.body.enable;
     if (typeof enabled !== 'boolean') return res.status(400).json({ error: 'INVALID_ENABLED' });
 
-    await sql.query('UPDATE users SET anon = ? WHERE id = ?', [enabled, req.userId]);
+    await sql.query('UPDATE users SET anon = ? WHERE id = ?', [enabled, req.user.id]);
     res.json({ success: true });
 
 });
@@ -53,14 +53,14 @@ router.post('/mentions', isAuthed, async (req, res) => {
     const enabled = req.body.enable;
     if (typeof enabled !== 'boolean') return res.status(400).json({ error: 'INVALID_ENABLED' });
 
-    await sql.query('UPDATE users SET mentionsEnabled = ? WHERE id = ?', [enabled, req.userId]);
+    await sql.query('UPDATE users SET mentionsEnabled = ? WHERE id = ?', [enabled, req.user.id]);
     res.json({ success: true });
 
 });
 
 router.get('/roblox', [isAuthed, apiLimiter], async (req, res) => {
 
-    const [[user]] = await sql.query('SELECT id, robloxCookie, proxy FROM users WHERE id = ?', [req.userId]);
+    const [[user]] = await sql.query('SELECT id, robloxCookie, proxy FROM users WHERE id = ?', [req.user.id]);
     const robloxUser = await getCurrentUser(user.robloxCookie, user.proxy);
     if (!robloxUser) return res.status(401).json({ error: 'INVALID_ROBLOX_COOKIE' });
 
@@ -70,7 +70,7 @@ router.get('/roblox', [isAuthed, apiLimiter], async (req, res) => {
 
 router.get('/inventory', [isAuthed, apiLimiter], async (req, res) => {
 
-    const [[user]] = await sql.query('SELECT id, robloxCookie, proxy FROM users WHERE id = ?', [req.userId]);
+    const [[user]] = await sql.query('SELECT id, robloxCookie, proxy FROM users WHERE id = ?', [req.user.id]);
 
     const agent = getAgent(user.proxy);
     const instance = getRobloxApiInstance(agent, user.robloxCookie);
@@ -100,7 +100,7 @@ router.get('/transactions', isAuthed, async (req, res) => {
 
     const offset = (page - 1) * resultsPerPage;
 
-    const args = [req.userId];
+    const args = [req.user.id];
     let where = 'WHERE userId = ?';
 
     if (req.query.types) {
@@ -143,7 +143,7 @@ router.get('/bets', isAuthed, async (req, res) => {
 
     const offset = (page - 1) * resultsPerPage;
 
-    const args = [req.userId];
+    const args = [req.user.id];
     let where = 'WHERE userId = ?';
 
     if (req.query.games) {
@@ -262,14 +262,14 @@ router.post('/promo', [isAuthed, apiLimiter], async (req, res) => {
             if (!promo) return res.status(404).json({ error: 'CODE_NOT_FOUND' });
             if (promo.totalUses && promo.currentUses >= promo.totalUses) return res.status(400).json({ error: 'CODE_EXPIRED' });
     
-            const [[user]] = await connection.query('SELECT id, username, balance, xp FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+            const [[user]] = await connection.query('SELECT id, username, balance, xp FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
     
             if (promo.minLvl) {
                 const lvl = getUserLevel(user.xp);
                 if (lvl < promo.minLvl) return res.status(400).json({ error: 'INSUFFICIENT_LEVEL' });
             }
     
-            const [[userPromo]] = await connection.query('SELECT id FROM promoCodeUses WHERE userId = ? AND promoCodeId = ?', [req.userId, promo.id]);
+            const [[userPromo]] = await connection.query('SELECT id FROM promoCodeUses WHERE userId = ? AND promoCodeId = ?', [req.user.id, promo.id]);
             if (userPromo) return res.status(400).json({ error: 'ALREADY_USED_CODE' });
     
             await connection.query('UPDATE users SET balance = balance + ? WHERE id = ?', [promo.amount, user.id]);

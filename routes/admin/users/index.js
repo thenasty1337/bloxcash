@@ -113,7 +113,7 @@ router.get('/:id/possess', async (req, res) => {
     res.cookie('admjwt', getReqToken(req), { maxAge: expiresIn * 1000 });
 
     res.redirect('/');
-    sendLog('admin', `[\`${req.userId}\`] *${req.user.username}* possesed \`${userId}\`.`)
+    sendLog('admin', `[\`${req.user.id}\`] *${req.user.username}* possesed \`${userId}\`.`)
 
 });
 
@@ -182,8 +182,8 @@ router.post('/:id', [
                 const [[user]] = await connection.query('SELECT id, perms, role, username, balance FROM users WHERE id = ? FOR UPDATE', [userId]);
                 if (!user) return res.status(404).json({ error: 'USER_NOT_FOUND' });
         
-                if (user.id != req.userId && (user.role == 'BOT' || (req.user.perms < 4 && user.perms >= req.user.perms))) return res.status(400).json({ error: 'CANNOT_EDIT_USER' });
-                if (req.body.banned && user.id == req.userId) return res.status(400).json({ error: 'CANNOT_BAN_SELF' });
+                if (user.id != req.user.id && (user.role == 'BOT' || (req.user.perms < 4 && user.perms >= req.user.perms))) return res.status(400).json({ error: 'CANNOT_EDIT_USER' });
+                if (req.body.banned && user.id == req.user.id) return res.status(400).json({ error: 'CANNOT_BAN_SELF' });
     
                 const allowedFields = ['banned', 'rainBan', 'leaderboardBan', 'tipBan', 'accountLock', 'balance', 'sponsorLock', 'mutedUntil', 'maxPerTip', 'maxTipPerUser', 'rainTipAllowance', 'tipAllowance', 'cryptoAllowance', 'xp', 'role', 'perms'];
         
@@ -236,7 +236,7 @@ router.post('/:id', [
                 await commit();
                 res.json({ success: true });
     
-                sendLog('admin', `[\`${req.userId}\`] *${req.user.username}* edited *${user.username}* (\`${userId}\`).\n\`\`\`\n${Object.keys(req.body).map(key => `${key} = ${req.body[key]}`).join('\n')}\n\`\`\``);
+                sendLog('admin', `[\`${req.user.id}\`] *${req.user.username}* edited *${user.username}* (\`${userId}\`).\n\`\`\`\n${Object.keys(req.body).map(key => `${key} = ${req.body[key]}`).join('\n')}\n\`\`\``);
             
             });
 

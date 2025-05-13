@@ -30,10 +30,10 @@ router.post('/create', isAuthed, apiLimiter, async (req, res) => {
 
         await doTransaction(async (connection, commit) => {
 
-            const [[user]] = await connection.query('SELECT id, username, balance, role, xp FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+            const [[user]] = await connection.query('SELECT id, username, balance, role, xp FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
 
             if (!user) {
-                console.error(`Coinflip create failed: User not found for id ${req.userId}`);
+                console.error(`Coinflip create failed: User not found for id ${req}`);
                 return res.status(404).json({ error: 'USER_NOT_FOUND' });
             }
 
@@ -123,12 +123,12 @@ async function joinCoinflip(req, res, bot = false) {
             let user;
 
             if (bot) {
-                if (coinflip.ownerId != req.userId) return res.status(403).json({ error: 'FORBIDDEN' });
+                if (coinflip.ownerId != req.user.id) return res.status(403).json({ error: 'FORBIDDEN' });
                 [[user]] = await connection.query('SELECT id, username, xp, role, anon FROM users WHERE role = ? LIMIT 1', ['BOT']);
                 if (!user) return res.status(500).json({ error: 'NO_BOTS_AVAILABLE' });
             } else {
-                if ((coinflip.fire || coinflip.ice) == req.userId) return res.json({ error: 'ALREADY_JOINED' });
-                [[user]] = await connection.query('SELECT id, username, role, balance, xp, anon FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+                if ((coinflip.fire || coinflip.ice) == req.user.id) return res.json({ error: 'ALREADY_JOINED' });
+                [[user]] = await connection.query('SELECT id, username, role, balance, xp, anon FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
 
                 if (user.balance < coinflip.amount) {
                     return res.json({ error: 'INSUFFICIENT_BALANCE' });

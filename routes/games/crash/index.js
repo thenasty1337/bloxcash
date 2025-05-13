@@ -20,7 +20,7 @@ router.use((req, res, next) => {
 router.post('/bet', isAuthed, apiLimiter, async (req, res) => {
 
     if (crash.round.startedAt) return res.json({ error: 'ALREADY_STARTED' });
-    if (crash.bets.find(bet => bet.user.id === req.userId)) return res.json({ error: 'ALREADY_JOINED' });
+    if (crash.bets.find(bet => bet.user.id === req.user.id)) return res.json({ error: 'ALREADY_JOINED' });
 
     const amount = roundDecimal(req.body.amount);
 
@@ -38,14 +38,14 @@ router.post('/bet', isAuthed, apiLimiter, async (req, res) => {
 
         await doTransaction(async (connection, commit) => {
 
-            const [[user]] = await connection.query('SELECT id, username, role, balance, xp, anon FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+            const [[user]] = await connection.query('SELECT id, username, role, balance, xp, anon FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
 
             if (user.balance < amount) {
                 return res.json({ error: 'INSUFFICIENT_BALANCE' });
             }
     
             const xp = roundDecimal(amount * xpMultiplier);
-            await connection.query('UPDATE users SET balance = balance - ?, xp = xp + ? WHERE id = ?', [amount, xp, req.userId]);
+            await connection.query('UPDATE users SET balance = balance - ?, xp = xp + ? WHERE id = ?', [amount, xp, req.user.id]);
     
             const [crashBetResult] = await connection.query('INSERT INTO crashBets (userId, roundId, amount, autoCashoutPoint) VALUES (?, ?, ?, ?)', [user.id, crash.round.id, amount, autoCashoutPoint]);
             const [betResult] = await connection.query('INSERT INTO bets (userId, amount, edge, game, gameId, completed) VALUES (?, ?, ?, ?, ?, ?)', [user.id, amount, roundDecimal(amount * 0.075), 'crash', crashBetResult.insertId, false]);
@@ -91,7 +91,7 @@ router.post('/cashout', isAuthed, apiLimiter, async (req, res) => {
     if (!crash.round.startedAt) return res.json({ error: 'NOT_STARTED' });
     if (crash.round.endedAt) return res.json({ error: 'ALREADY_ENDED' });
 
-    const bet = crash.bets.find(bet => bet.user.id === req.userId);
+    const bet = crash.bets.find(bet => bet.user.id === req.user.id);
     if (!bet) return res.json({ error: 'NOT_JOINED' });
 
     const currentPoint = crash.round.currentMultiplier;
@@ -107,7 +107,7 @@ router.post('/cashout', isAuthed, apiLimiter, async (req, res) => {
 
         const user = await doTransaction(async (connection, commit) => {
 
-            const [[user]] = await connection.query('SELECT id, username, balance, xp, anon FROM users WHERE id = ?', [req.userId]);
+            const [[user]] = await connection.query('SELECT id, username, balance, xp, anon FROM users WHERE id = ?', [req.user.id]);
 
             await connection.query('UPDATE users SET balance = balance + ? WHERE id = ?', [bet.winnings, user.id]);
             await connection.query('UPDATE bets SET completed = 1, winnings = ? WHERE game = ? AND gameId = ?', [bet.winnings, 'crash', bet.id]);

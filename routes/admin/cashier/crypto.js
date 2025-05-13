@@ -188,7 +188,7 @@ router.post('/accept/:id', async (req, res) => {
         }
     
         await sql.query('UPDATE cryptoWithdraws SET exchangeId = ?, status = ? WHERE id = ?', [withdrawId, 'sent', id]);
-        sendLog('cryptoWithdraws', `Withdraw #${id} was approved by *${req.user.username}* (\`${req.userId}\`) - :robux:R$${transaction.robuxAmount} (${transaction.fiatAmount}usd - ${transaction.cryptoAmount} ${transaction.currency})`);
+        sendLog('cryptoWithdraws', `Withdraw #${id} was approved by *${req.user.username}* (\`${req.user.id}\`) - :robux:R$${transaction.robuxAmount} (${transaction.fiatAmount}usd - ${transaction.cryptoAmount} ${transaction.currency})`);
 
         return res.json({ success: true });
 
@@ -221,7 +221,7 @@ router.post('/deny/:id', async (req, res) => {
             await commit();
 
             io.to(transaction.userId).emit('balance', 'add', transaction.robuxAmount);
-            sendLog('cryptoWithdraws', `Crypto withdraw rejected by *${req.user.username}* (\`${req.userId}\`) - :robux:R$${transaction.robuxAmount} (#${id})`);
+            sendLog('cryptoWithdraws', `Crypto withdraw rejected by *${req.user.username}* (\`${req.user.id}\`) - :robux:R$${transaction.robuxAmount} (#${id})`);
             res.json({ success: true });
 
         });

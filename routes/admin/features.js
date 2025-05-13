@@ -20,7 +20,7 @@ router.post('/:id', async (req, res) => {
     enabledFeatures[feature] = enable;
     await sql.query('UPDATE features SET enabled = ? WHERE id = ?', [enable, feature]);
 
-    sendLog('admin', `[\`${req.userId}\`] *${req.user.username}* ${enable ? 'enabled' : 'disabled'} feature \`${feature}\`.`);
+    sendLog('admin', `[\`${req.user.id}\`] *${req.user.username}* ${enable ? 'enabled' : 'disabled'} feature \`${feature}\`.`);
     res.json({ success: true });
 
 });

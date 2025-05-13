@@ -15,7 +15,7 @@ router.use(isAuthed);
 
 router.get('/', async (req, res) => {
 
-    const [[activeGame]] = await sql.query('SELECT actions, amount FROM blackjack WHERE endedAt IS NULL AND userId = ?', [req.userId]);
+    const [[activeGame]] = await sql.query('SELECT actions, amount FROM blackjack WHERE endedAt IS NULL AND userId = ?', [req.user.id]);
     if (!activeGame) return res.json({ activeGame: false });
 
 
@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
 
         await doTransaction(async (connection, commit) => {
 
-            const [[activeGame]] = await connection.query('SELECT id FROM blackjack WHERE userId = ? AND endedAt IS NULL FOR UPDATE', [req.userId]);
+            const [[activeGame]] = await connection.query('SELECT id FROM blackjack WHERE userId = ? AND endedAt IS NULL FOR UPDATE', [req.user.id]);
             if (activeGame) return res.status(400).json({ error: 'BLACKJACK_GAME_ACTIVE' });
     
             const [[user]] = await connection.query(`
@@ -44,7 +44,7 @@ router.post('/', async (req, res) => {
                 INNER JOIN serverSeeds ss ON u.id = ss.userId AND ss.endedAt IS NULL
                 INNER JOIN clientSeeds cs ON u.id = cs.userId AND cs.endedAt IS NULL
                 WHERE u.id = ? FOR UPDATE
-            `,[req.userId]);
+            `,[req.user.id]);
     
             if (!user) return res.status(404).json({ error: 'UNKNOWN_ERROR' });
             if (amount > user.balance) return res.status(400).json({ error: 'INSUFFICIENT_BALANCE' });
@@ -55,7 +55,7 @@ router.post('/', async (req, res) => {
             if (nonceIncrease.affectedRows != 1) return res.status(404).json({ error: 'UNKNOWN_ERROR' });
     
             const xp = roundDecimal(amount * xpMultiplier);
-            await connection.query('UPDATE users SET balance = balance - ?, xp = xp + ? WHERE id = ?', [amount, xp, req.userId]);
+            await connection.query('UPDATE users SET balance = balance - ?, xp = xp + ? WHERE id = ?', [amount, xp, req.user.id]);
     
             const hands = getHands(user.serverSeed, user.clientSeed, nonce, []);
             const playerValue = getValueFromHand(hands.playerHands[0]);
@@ -80,10 +80,10 @@ router.post('/', async (req, res) => {
     
                 const [result] = await connection.query(
                     'INSERT INTO blackjack (userId, amount, clientSeedId, serverSeedId, nonce, payout, endedAt) VALUES (?, ?, ?, ?, ?, ?, NOW())',
-                    [req.userId, amount, user.csId, user.ssId, nonce, payout]
+                    [req.user.id, amount, user.csId, user.ssId, nonce, payout]
                 );
     
-                await connection.query('UPDATE users SET balance = balance + ? WHERE id = ?', [payout, req.userId]);
+                await connection.query('UPDATE users SET balance = balance + ? WHERE id = ?', [payout, req.user.id]);
     
                 game.id = result.insertId;
                 game.endedAt = new Date();
@@ -93,7 +93,7 @@ router.post('/', async (req, res) => {
                 
                 const [result] = await connection.query(
                     'INSERT INTO blackjack (userId, amount, clientSeedId, serverSeedId, nonce) VALUES (?, ?, ?, ?, ?)',
-                    [req.userId, amount, user.csId, user.ssId, nonce]
+                    [req.user.id, amount, user.csId, user.ssId, nonce]
                 );
     
                 game.id = result.insertId;
@@ -101,11 +101,11 @@ router.post('/', async (req, res) => {
             }
     
             const edge = roundDecimal(amount * houseEdge);
-            await connection.query('INSERT INTO bets (userId, amount, winnings, edge, game, gameId, completed) VALUES (?, ?, ?, ?, ?, ?, ?)', [req.userId, amount, game.payout, edge, 'blackjack', game.id, game.endedAt ? 1 : 0]);
+            await connection.query('INSERT INTO bets (userId, amount, winnings, edge, game, gameId, completed) VALUES (?, ?, ?, ?, ?, ?, ?)', [req.user.id, amount, game.payout, edge, 'blackjack', game.id, game.endedAt ? 1 : 0]);
             await xpChanged(user.id, user.xp, roundDecimal(user.xp + xp), connection);
     
             await commit();                
-            io.to(req.userId).emit('balance', 'set', roundDecimal(user.balance - amount + game.payout));
+            io.to(req.user.id).emit('balance', 'set', roundDecimal(user.balance - amount + game.payout));
 
             if (game.endedAt) {
                 newBets([{
@@ -211,7 +211,7 @@ router.post('/hit', async (req, res) => {
             INNER JOIN clientSeeds cs ON b.clientSeedId = cs.id
             INNER JOIN serverSeeds ss ON b.serverSeedId = ss.id
             WHERE b.endedAt IS NULL AND b.userId = ?
-            `, [req.userId]
+            `, [req.user.id]
         );
 
         if (!activeGame) return res.status(400).json({ error: 'NO_BLACKJACK_GAME_ACTIVE' });

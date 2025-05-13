@@ -16,7 +16,7 @@ const tokens = {};
 
 router.get('/', isAuthed, async (req, res) => {
 
-    const discordAuth = await getExistingAuth(req.userId, true);
+    const discordAuth = await getExistingAuth(req.user.id, true);
     if (!discordAuth) return res.json({ status: 'NOT_LINKED' });
 
     res.json({
@@ -28,11 +28,11 @@ router.get('/', isAuthed, async (req, res) => {
 
 router.post('/link', isAuthed, async (req, res) => {
 
-    const discordAuth = await getExistingAuth(req.userId, true);
+    const discordAuth = await getExistingAuth(req.user.id, true);
     if (discordAuth) return res.status(400).json({ error: 'ALREADY_LINKED' });
 
     const token = crypto.randomUUID();
-    tokens[token] = req.userId;
+    tokens[token] = req.user.id;
 
     res.json({ url: `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirect)}&response_type=code&scope=${scopes.join('%20')}&state=${token}` });
 
@@ -44,11 +44,11 @@ router.post('/link', isAuthed, async (req, res) => {
 
 router.post('/unlink', isAuthed, async (req, res) => {
 
-    const discordAuth = await getExistingAuth(req.userId, true);
+    const discordAuth = await getExistingAuth(req.user.id, true);
     if (!discordAuth) return res.json({ status: 'UNLINKED' }); // res.json({ status: 'NOT_LINKED' });
 
-    await sql.query('DELETE FROM discordAuths WHERE userId = ?', [req.userId]);
-    sendLog('rain', `<@${discordAuth.discordId}> unlinked of BloxClash accountId \`${req.userId}\``);
+    await sql.query('DELETE FROM discordAuths WHERE userId = ?', [req.user.id]);
+    sendLog('rain', `<@${discordAuth.discordId}> unlinked of BloxClash accountId \`${req.user.id}\``);
 
     res.json({ status: 'UNLINKED' });
 

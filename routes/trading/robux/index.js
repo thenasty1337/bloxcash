@@ -20,7 +20,7 @@ router.post('/deposit', [isAuthed, apiLimiter], async (req, res) => {
     if (amount < 10) return res.status(400).json({ error: 'MIN_ROBUX_DEPOSIT' });
     if (amount > 100000) return res.status(400).json({ error: 'AMOUNT_TOO_HIGH' });
 
-    const [[user]] = await sql.query('SELECT id, username, robloxCookie, proxy, balance FROM users WHERE id = ?', [req.userId]);
+    const [[user]] = await sql.query('SELECT id, username, robloxCookie, proxy, balance FROM users WHERE id = ?', [req.user.id]);
 
     const robloxUser = await getCurrentUser(user.robloxCookie, user.proxy);
     if (!robloxUser) return res.status(401).json({ error: 'INVALID_ROBLOX_COOKIE' });
@@ -65,7 +65,7 @@ router.post('/withdraw', [isAuthed, apiLimiter], async (req, res) => {
         return res.status(400).json({ error: 'MAX_UNFILLED' });
     }
 
-    const [[{ robloxCookie, proxy }]] = await sql.query('SELECT robloxCookie, proxy FROM users WHERE id = ?', [req.userId]);
+    const [[{ robloxCookie, proxy }]] = await sql.query('SELECT robloxCookie, proxy FROM users WHERE id = ?', [req.user.id]);
 
     const robloxUser = await getCurrentUser(robloxCookie, proxy);
     if (!robloxUser) return res.status(401).json({ error: 'INVALID_ROBLOX_COOKIE' });
@@ -74,7 +74,7 @@ router.post('/withdraw', [isAuthed, apiLimiter], async (req, res) => {
 
         await doTransaction(async (connection, commit) => {
 
-            const [[user]] = await connection.query('SELECT id, xp, username, robloxCookie, proxy, balance, accountLock, sponsorLock, verified, perms FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+            const [[user]] = await connection.query('SELECT id, xp, username, robloxCookie, proxy, balance, accountLock, sponsorLock, verified, perms FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
             if (user.balance < amount) return res.status(400).json({ error: 'INSUFFICIENT_BALANCE' });
     
             user.accountLock = await checkAccountLock(user);
@@ -142,13 +142,13 @@ router.get('/transactions', isAuthed, async (req, res) => {
 
     const offset = (page - 1) * resultsPerPage;
 
-    const [[{ total }]] = await sql.query('SELECT COUNT(*) as total FROM robuxExchanges WHERE userId = ?', [req.userId]);
+    const [[{ total }]] = await sql.query('SELECT COUNT(*) as total FROM robuxExchanges WHERE userId = ?', [req.user.id]);
     if (!total) return res.json({ page: 1, pages: 0, total: 0, data: [] });
 
     const pages = Math.ceil(total / resultsPerPage);
 
     if (page > pages) return res.status(404).json({ error: 'PAGE_NOT_FOUND' });
-    const [data] = await sql.query('SELECT id, filledAmount, totalAmount, status, operation, createdAt, modifiedAt FROM robuxExchanges WHERE userId = ? ORDER BY id DESC LIMIT ? OFFSET ?', [req.userId, resultsPerPage, offset]);
+    const [data] = await sql.query('SELECT id, filledAmount, totalAmount, status, operation, createdAt, modifiedAt FROM robuxExchanges WHERE userId = ? ORDER BY id DESC LIMIT ? OFFSET ?', [req.user.id, resultsPerPage, offset]);
 
     data.forEach(e => {
 
@@ -182,7 +182,7 @@ router.post('/cancel/:id', [isAuthed, apiLimiter], async (req, res) => {
             const [[transaction]] = await connection.query('SELECT id, userId, status, operation, totalAmount, filledAmount FROM robuxExchanges WHERE id = ? FOR UPDATE', [id]);
 
             if (!transaction) return res.status(404).json({ error: 'TRANSACTION_NOT_FOUND' });
-            if (transaction.userId != req.userId) return res.status(403).json({ error: 'TRANSACTION_NOT_FOUND' });
+            if (transaction.userId != req.user.id) return res.status(403).json({ error: 'TRANSACTION_NOT_FOUND' });
             if (transaction.status != 'pending') return res.status(400).json({ error: 'TRANSACTION_NOT_PENDING' });
 
             if (robuxExchange.currentTransactions.includes(id)) return res.status(400).json({ error: 'TRANSACTION_IN_PROGRESS' });
@@ -205,7 +205,7 @@ router.post('/cancel/:id', [isAuthed, apiLimiter], async (req, res) => {
             await commit();
 
             res.json({ success: true });
-            sendLog('robuxExchange', `Robux exchange cancelled by \`${req.userId}\` - :robux:R$${unfilledAmount} ${transaction.operation} (#${id})`);
+            sendLog('robuxExchange', `Robux exchange cancelled by \`${req.user.id}\` - :robux:R$${unfilledAmount} ${transaction.operation} (#${id})`);
         
         });
 

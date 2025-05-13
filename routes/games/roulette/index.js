@@ -39,7 +39,7 @@ router.post('/bet', isAuthed, apiLimiter, async (req, res) => {
 
         await doTransaction(async (connection, commit) => {
 
-            const [[user]] = await connection.query('SELECT id, username, balance, xp, perms, sponsorLock, anon FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+            const [[user]] = await connection.query('SELECT id, username, balance, xp, perms, sponsorLock, anon FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
 
             if (user.balance < amount) {
                 return res.json({ error: 'INSUFFICIENT_BALANCE' });

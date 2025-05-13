@@ -25,7 +25,7 @@ router.post('/redeem', [isAuthed, apiLimiter], async (req, res) => {
             const [[giftCard]] = await connection.query('SELECT id, amount, usd FROM giftCards WHERE code = ? AND redeemedAt IS NULL FOR UPDATE', [code]);
             if (!giftCard) return res.status(400).json({ error: 'INVALID_CODE' });
         
-            const [[user]] = await connection.query('SELECT id, username, balance FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+            const [[user]] = await connection.query('SELECT id, username, balance FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
             await connection.query('UPDATE giftCards SET redeemedAt = NOW(), redeemedBy = ? WHERE id = ?', [user.id, giftCard.id]);
         
             let amount = giftCard.usd ? roundDecimal((giftCard.amount / cryptoData.robuxRate.usd) * cryptoData.robuxRate.robux) : giftCard.amount;
@@ -33,7 +33,7 @@ router.post('/redeem', [isAuthed, apiLimiter], async (req, res) => {
             
             if (depositBonus) {
                 const bonus = roundDecimal(amount * depositBonus);
-                await connection.query('INSERT INTO transactions (userId, amount, type, method, methodId) VALUES (?, ?, ?, ?, ?)', [req.userId, bonus, 'in', 'deposit-bonus', txResult.insertId]);
+                await connection.query('INSERT INTO transactions (userId, amount, type, method, methodId) VALUES (?, ?, ?, ?, ?)', [req.user.id, bonus, 'in', 'deposit-bonus', txResult.insertId]);
                 amount = roundDecimal(amount + bonus);
             }
             

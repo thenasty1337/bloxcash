@@ -66,7 +66,7 @@ router.post('/', apiLimiter, isAuthed, async (req, res) => {
     // return res.json({ error: 'DISABLED' });
 
     const dataToEncrypt = {
-        userId: crypto.randomUUID() // req.userId
+        userId: crypto.randomUUID() // req.user.id
     };
 
     const signature = buildSignature(dataToEncrypt, process.env.ZEBRA_API_KEY);
@@ -115,7 +115,7 @@ router.post('/', apiLimiter, isAuthed, async (req, res) => {
         return res.status(400).json({ error: 'UNKNOWN_ERROR' });
     }
 
-    await sql.query('INSERT INTO cardDeposits (orderId, fiatAmount, userId) VALUES (?, ?, ?)', [orderId, amount, req.userId]);
+    await sql.query('INSERT INTO cardDeposits (orderId, fiatAmount, userId) VALUES (?, ?, ?)', [orderId, amount, req.user.id]);
     res.json({ url: stripeRes.data.url });
 
 });

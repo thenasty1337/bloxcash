@@ -59,10 +59,10 @@ router.post('/add', async (req, res) => {
     const existing = Object.values(bannedPhrases).find(e => e.toLowerCase() == phrase.toLowerCase());
     if (existing) return res.status(400).json({ error: 'PHRASE_ALREADY_EXISTS' });
 
-    const [{ insertId }] = await sql.query('INSERT INTO bannedPhrases (phrase, addedBy) VALUES (?, ?)', [phrase, req.userId]);
+    const [{ insertId }] = await sql.query('INSERT INTO bannedPhrases (phrase, addedBy) VALUES (?, ?)', [phrase, req.user.id]);
     bannedPhrases[insertId] = phrase;
     
-    sendLog('admin', `[\`${req.userId}\`] *${req.user.username}* added a new banned phrase: \`${phrase}\``);
+    sendLog('admin', `[\`${req.user.id}\`] *${req.user.username}* added a new banned phrase: \`${phrase}\``);
     res.json({ success: true });
 
 });
@@ -78,7 +78,7 @@ router.post('/:id/remove', async (req, res) => {
     await sql.query('DELETE FROM bannedPhrases WHERE id = ?', [phraseId]);
     delete bannedPhrases[phraseId];
 
-    sendLog('admin', `[\`${req.userId}\`] *${req.user.username}* removed a banned phrase: \`${phrase.phrase}\` (\`${phraseId}\`)`);
+    sendLog('admin', `[\`${req.user.id}\`] *${req.user.username}* removed a banned phrase: \`${phrase.phrase}\` (\`${phraseId}\`)`);
     res.json({ success: true });
 
 });

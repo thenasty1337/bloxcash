@@ -32,13 +32,13 @@ router.get('/transactions', isAuthed, async (req, res) => {
 
     const offset = (page - 1) * resultsPerPage;
 
-    const [[{ total }]] = await sql.query('SELECT COUNT(*) as total FROM cryptoDeposits WHERE userId = ?', [req.userId]);
+    const [[{ total }]] = await sql.query('SELECT COUNT(*) as total FROM cryptoDeposits WHERE userId = ?', [req.user.id]);
     if (!total) return res.json({ page: 1, pages: 0, total: 0, data: [] });
 
     const pages = Math.ceil(total / resultsPerPage);
 
     if (page > pages) return res.status(404).json({ error: 'PAGE_NOT_FOUND' });
-    const [data] = await sql.query('SELECT txId, currency, cryptoAmount, fiatAmount, robuxAmount, status, createdAt, modifiedAt FROM cryptoDeposits WHERE userId = ? ORDER BY id DESC LIMIT ? OFFSET ?', [req.userId, resultsPerPage, offset]);
+    const [data] = await sql.query('SELECT txId, currency, cryptoAmount, fiatAmount, robuxAmount, status, createdAt, modifiedAt FROM cryptoDeposits WHERE userId = ? ORDER BY id DESC LIMIT ? OFFSET ?', [req.user.id, resultsPerPage, offset]);
     
     res.json({
         page,
@@ -63,7 +63,7 @@ router.post('/wallet', isAuthed, apiLimiter, async (req, res) => {
 
     try {
 
-        const [[wallet]] = await sql.query('SELECT address FROM cryptoWallets WHERE userId = ? AND currency = ?', [req.userId, currencyId]);
+        const [[wallet]] = await sql.query('SELECT address FROM cryptoWallets WHERE userId = ? AND currency = ?', [req.user.id, currencyId]);
         let address = wallet?.address;
     
         if (!address) {
@@ -75,7 +75,7 @@ router.post('/wallet', isAuthed, apiLimiter, async (req, res) => {
             address = newWallet.address;
             if (!address) return res.status(500).json({ error: 'INTERNAL_ERROR' });
             
-            await sql.query('INSERT INTO cryptoWallets (userId, currency, address) VALUES (?, ?, ?)', [req.userId, currencyId, address]);
+            await sql.query('INSERT INTO cryptoWallets (userId, currency, address) VALUES (?, ?, ?)', [req.user.id, currencyId, address]);
     
         }
 

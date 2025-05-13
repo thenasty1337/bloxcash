@@ -38,7 +38,7 @@ router.post('/create', isAuthed, apiLimiter, async (req, res) => {
 
     if (gamemode == 'group') {
         if (teams != 1) {
-            sendLog('battle', `\`${req.userId}\` tried to perform RblxWild's exploit.`)
+            sendLog('battle', `\`${req.user.id}\` tried to perform RblxWild's exploit.`)
             return res.status(400).json({ error: 'INVALID_GAMEMODE', m: 'Are you serious?!' });
         }
         if (playersPerTeam < 2 || playersPerTeam > 4) return res.status(400).json({ error: 'INVALID_GAMEMODE' });
@@ -82,7 +82,7 @@ router.post('/create', isAuthed, apiLimiter, async (req, res) => {
 
         await doTransaction(async (connection, commit) => {
 
-            const [[user]] = await connection.query('SELECT id, username, xp, balance, role, sponsorLock, perms FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+            const [[user]] = await connection.query('SELECT id, username, xp, balance, role, sponsorLock, perms FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
             if (cost > user.balance) return res.status(400).json({ error: 'INSUFFICIENT_BALANCE' });
             
             if (user.sponsorLock && fundingPercentage != 0) return res.status(400).json({ error: 'SPONSOR_LOCK_FUNDING' });
@@ -208,8 +208,8 @@ async function joinBattle(req, res, bot = false) {
                 let user;
 
                 if (bot) {
-                    // console.log(battle.ownerId, req.userId)
-                    if (battle.ownerId != req.userId) return res.status(403).json({ error: 'FORBIDDEN' });
+                    // console.log(battle.ownerId, req.user.id)
+                    if (battle.ownerId != req.user.id) return res.status(403).json({ error: 'FORBIDDEN' });
                     [[user]] = await connection.query('SELECT id, username, xp, role, anon FROM users WHERE id NOT IN(?) AND role = ? LIMIT 1', [players.map(e => e.id), 'BOT']);
                     if (!user) return res.status(500).json({ error: 'NO_BOTS_AVAILABLE' });
 
@@ -220,7 +220,7 @@ async function joinBattle(req, res, bot = false) {
 
                     if (battle.privKey && battle.privKey != req.body.privKey) return res.status(400).json({ error: 'INVALID_PRIV_KEY' });
 
-                    [[user]] = await connection.query('SELECT id, username, xp, balance, role, anon, perms, sponsorLock FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+                    [[user]] = await connection.query('SELECT id, username, xp, balance, role, anon, perms, sponsorLock FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
                     if (user.balance < battle.entryPrice) return res.status(400).json({ error: 'INSUFFICIENT_BALANCE' });
 
                     const level = getUserLevel(user.xp);

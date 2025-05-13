@@ -90,7 +90,7 @@ async function setRain(req, res, amount) {
             io.emit('rain:pot', rain.amount);
         
             res.json({ success: true });
-            sendLog('admin', `[\`${req.userId}\`] *${req.user.username}* ${amount > 0 ? 'added' : 'substracted'} :robux: R$${Math.abs(amount)} ${amount > 0 ? 'to' : 'from'} the rain pot.`);
+            sendLog('admin', `[\`${req.user.id}\`] *${req.user.username}* ${amount > 0 ? 'added' : 'substracted'} :robux: R$${Math.abs(amount)} ${amount > 0 ? 'to' : 'from'} the rain pot.`);
         
         });
 

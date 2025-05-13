@@ -11,7 +11,7 @@ const { rakebackTypes, getUserRakebacks, cachedRakebacks, startDate } = require(
 
 router.get('/', [isAuthed, apiLimiter], async (req, res) => {
 
-    const userRakebacks = await getUserRakebacks(req.userId);
+    const userRakebacks = await getUserRakebacks(req.user.id);
     res.json({
         serverTime: Date.now(),
         ...userRakebacks
@@ -30,14 +30,14 @@ router.post('/claim', [isAuthed, apiLimiter], async (req, res) => {
 
         await doTransaction(async (connection, commit) => {
 
-            const [[user]] = await connection.query('SELECT id, username, balance FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+            const [[user]] = await connection.query('SELECT id, username, balance FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
 
-            const [[lastClaim]] = await connection.query('SELECT id, createdAt FROM rakebackClaims WHERE userId = ? AND type = ? ORDER BY id DESC LIMIT 1', [req.userId, type]);
+            const [[lastClaim]] = await connection.query('SELECT id, createdAt FROM rakebackClaims WHERE userId = ? AND type = ? ORDER BY id DESC LIMIT 1', [req.user.id, type]);
             const lastClaimDate = lastClaim?.createdAt || startDate;
     
             if (Date.now() - lastClaimDate < rakebackTypes[type].cooldown) return res.status(400).json({ error: 'COOLDOWN' });
     
-            const [[unclaimed]] = await connection.query('SELECT SUM(edge) as total FROM bets WHERE userId = ? AND createdAt > ? AND completed = 1', [req.userId, lastClaimDate]);
+            const [[unclaimed]] = await connection.query('SELECT SUM(edge) as total FROM bets WHERE userId = ? AND createdAt > ? AND completed = 1', [req.user.id, lastClaimDate]);
             const houseEdge = unclaimed.total || 0;
             const rakeback = roundDecimal(houseEdge * rakebackTypes[type].percentage / 100);
     

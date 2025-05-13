@@ -9,7 +9,7 @@ const apiLimiter = rateLimit({
 	message: { error: 'SLOW_DOWN' },
 	standardHeaders: false,
 	legacyHeaders: false,
-    keyGenerator: (req, res) => req.userId
+    keyGenerator: (req, res) => req.user.id
 });
 
 const { newBets } = require('../../../socketio/bets');
@@ -25,7 +25,7 @@ router.use(isAuthed);
 
 router.get('/', async (req, res) => {
 
-    const [[activeGame]] = await sql.query('SELECT minesCount, revealedTiles, amount FROM mines WHERE endedAt IS NULL AND userId = ?', [req.userId]);
+    const [[activeGame]] = await sql.query('SELECT minesCount, revealedTiles, amount FROM mines WHERE endedAt IS NULL AND userId = ?', [req.user.id]);
     if (!activeGame) return res.json({ activeGame: false });
 
     activeGame.revealedTiles = JSON.parse(activeGame.revealedTiles);
@@ -50,7 +50,7 @@ router.post('/start', apiLimiter, async (req, res) => {
     try {
 
         await doTransaction(async (connection, commit) => {
-            const [[activeGame]] = await connection.query('SELECT id FROM mines WHERE userId = ? AND endedAt IS NULL FOR UPDATE', [req.userId]);
+            const [[activeGame]] = await connection.query('SELECT id FROM mines WHERE userId = ? AND endedAt IS NULL FOR UPDATE', [req.user.id]);
             if (activeGame) return res.status(400).json({ error: 'MINES_GAME_ACTIVE' });
 
             const [[user]] = await connection.query(`
@@ -58,7 +58,7 @@ router.post('/start', apiLimiter, async (req, res) => {
                 INNER JOIN serverSeeds ss ON u.id = ss.userId AND ss.endedAt IS NULL
                 INNER JOIN clientSeeds cs ON u.id = cs.userId AND cs.endedAt IS NULL
                 WHERE u.id = ? FOR UPDATE
-            `,[req.userId]);
+            `,[req.user.id]);
 
             if (!user) return res.status(404).json({ error: 'UNKNOWN_ERROR' });
             if (amount > user.balance) return res.status(400).json({ error: 'INSUFFICIENT_BALANCE' });
@@ -70,19 +70,19 @@ router.post('/start', apiLimiter, async (req, res) => {
             if (nonceIncrease.affectedRows != 1) return res.status(404).json({ error: 'UNKNOWN_ERROR' });
 
             const xp = roundDecimal(amount * xpMultiplier);
-            await connection.query('UPDATE users SET balance = balance - ?, xp = xp + ? WHERE id = ?', [amount, xp, req.userId]);
+            await connection.query('UPDATE users SET balance = balance - ?, xp = xp + ? WHERE id = ?', [amount, xp, req.user.id]);
             const [result] = await connection.query(
                 'INSERT INTO mines (userId, amount, clientSeedId, serverSeedId, nonce, minesCount, mines, revealedTiles) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-                [req.userId, amount, user.csId, user.ssId, nonce, minesCount, JSON.stringify(minePositions), '[]']
+                [req.user.id, amount, user.csId, user.ssId, nonce, minesCount, JSON.stringify(minePositions), '[]']
             );
 
             const edge = roundDecimal(amount * houseEdge);
-            await connection.query('INSERT INTO bets (userId, amount, winnings, edge, game, gameId, completed) VALUES (?, ?, ?, ?, ?, ?, ?)', [req.userId, amount, 0, edge, 'mines', result.insertId, 0]);
+            await connection.query('INSERT INTO bets (userId, amount, winnings, edge, game, gameId, completed) VALUES (?, ?, ?, ?, ?, ?, ?)', [req.user.id, amount, 0, edge, 'mines', result.insertId, 0]);
 
             await xpChanged(user.id, user.xp, roundDecimal(user.xp + xp), connection);
             await commit();
 
-            io.to(req.userId).emit('balance', 'set', roundDecimal(user.balance - amount));
+            io.to(req.user.id).emit('balance', 'set', roundDecimal(user.balance - amount));
             res.json({ success: true });
         });
 
@@ -104,7 +104,7 @@ router.post('/reveal', apiLimiter, async (req, res) => {
 
         await doTransaction(async (connection, commit) => {
 
-            const [[activeGame]] = await connection.query('SELECT id, mines, revealedTiles, amount, minesCount FROM mines WHERE endedAt IS NULL AND userId = ? FOR UPDATE', [req.userId]);
+            const [[activeGame]] = await connection.query('SELECT id, mines, revealedTiles, amount, minesCount FROM mines WHERE endedAt IS NULL AND userId = ? FOR UPDATE', [req.user.id]);
             if (!activeGame) return res.status(400).json({ error: 'NO_MINES_GAME_ACTIVE' });
     
             const revealedTiles = JSON.parse(activeGame.revealedTiles);
@@ -120,7 +120,7 @@ router.post('/reveal', apiLimiter, async (req, res) => {
                 await connection.query('UPDATE mines SET endedAt = NOW(), payout = 0, revealedTiles = ? WHERE id = ?', [JSON.stringify(revealedTiles), activeGame.id]);
                 await connection.query('UPDATE bets SET winnings = 0, completed = 1 WHERE game = ? AND gameId = ?', ['mines', activeGame.id]);
             
-                const [[user]] = await connection.query('SELECT id, username, role, xp, anon FROM users WHERE id = ?', [req.userId]);
+                const [[user]] = await connection.query('SELECT id, username, role, xp, anon FROM users WHERE id = ?', [req.user.id]);
                 await commit();
     
                 newBets([{
@@ -160,7 +160,7 @@ router.post('/cashout', apiLimiter, async (req, res) => {
     try {
 
         await doTransaction(async (connection, commit) => {
-            const [[activeGame]] = await connection.query('SELECT id, mines, revealedTiles, minesCount, amount FROM mines WHERE endedAt IS NULL AND userId = ? FOR UPDATE', [req.userId]);
+            const [[activeGame]] = await connection.query('SELECT id, mines, revealedTiles, minesCount, amount FROM mines WHERE endedAt IS NULL AND userId = ? FOR UPDATE', [req.user.id]);
             if (!activeGame) return res.status(400).json({ error: 'NO_MINES_GAME_ACTIVE' });
 
             const revealedTiles = JSON.parse(activeGame.revealedTiles);
@@ -189,13 +189,13 @@ async function doPayout(connection, commit, activeGame, multiplier, payout, req,
 
     await connection.query('UPDATE bets SET winnings = ?, completed = 1 WHERE game = ? AND gameId = ?', [payout, 'mines', activeGame.id]);
 
-    const [[user]] = await connection.query('SELECT id, username, balance, role, xp, anon FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+    const [[user]] = await connection.query('SELECT id, username, balance, role, xp, anon FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
 
     const balance = roundDecimal(user.balance + payout);
-    await connection.query('UPDATE users SET balance = ? WHERE id = ?', [balance, req.userId]);
+    await connection.query('UPDATE users SET balance = ? WHERE id = ?', [balance, req.user.id]);
     await commit();
 
-    io.to(req.userId).emit('balance', 'set', balance);
+    io.to(req.user.id).emit('balance', 'set', balance);
 
     newBets([{
         user: user,

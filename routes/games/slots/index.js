@@ -151,7 +151,7 @@ router.post('/embed/:slug', isAuthed, async (req, res) => {
         }
 
         const token = crypto.randomUUID();
-        hacksawTokens[token] = req.userId;
+        hacksawTokens[token] = req.user.id;
 
         const params = new URLSearchParams({
             language: 'en',

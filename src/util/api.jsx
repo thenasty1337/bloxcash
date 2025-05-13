@@ -25,8 +25,10 @@ export async function api(path, method, body, notification = false, headers =  {
         })
         let data = await res.json()
 
-        if (data.error && data.error === 'DISABLED') {
-             toast.error(errors[data.error] || data.error)
+        if (data.error && notification) {
+            toast.error(errors[data.error] || data.error)
+        } else if (data.error && data.error === 'DISABLED') {
+            toast.error(errors[data.error] || data.error)
         }
 
         return data
@@ -78,10 +80,10 @@ export function getRandomNumber(min, max, chance) {
 }
 
 export function getJWT() {
-    return document.cookie.split("; ").find((row) => row.startsWith("jwt="))?.split("=")[1] || ''
+    return document.cookie.split("; ").find((row) => row.startsWith("token="))?.split("=")[1] || ''
 }
 
 export function logout() {
-    document.cookie = `jwt= ; SameSite=Lax; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT`
+    document.cookie = `token= ; SameSite=Lax; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT`
     window.location.reload()
 }

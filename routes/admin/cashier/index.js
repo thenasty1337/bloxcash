@@ -125,7 +125,7 @@ router.post('/remove/:id', async (req, res) => {
             await connection.query('UPDATE robuxExchanges SET status = ? WHERE id = ?', ['cancelled', id]);
             await commit();
     
-            sendLog('admin', `Robux exchange cancelled by *${req.user.username}* (\`${req.userId}\`) - :robux:R$${unfilledAmount} ${transaction.operation} (#${id})`);
+            sendLog('admin', `Robux exchange cancelled by *${req.user.username}* (\`${req.user.id}\`) - :robux:R$${unfilledAmount} ${transaction.operation} (#${id})`);
             res.json({ success: true });
 
         });
@@ -160,7 +160,7 @@ router.post('/createGiftCards', async (req, res) => {
 
     await sql.query('INSERT INTO giftCards (code, amount, usd) VALUES ?', [values]);
 
-    sendLog('admin', `[\`${req.userId}\`] *${req.user.username}* created \`${quantity}\` gift cards of $\`${amount}\`usd each`);
+    sendLog('admin', `[\`${req.user.id}\`] *${req.user.username}* created \`${quantity}\` gift cards of $\`${amount}\`usd each`);
     res.json({ success: true, codes, amount });
 
 });

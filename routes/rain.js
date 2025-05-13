@@ -21,17 +21,17 @@ router.use((req, res, next) => {
 
 router.post('/join', [isAuthed, apiLimiter], async (req, res) => {
 
-    const linkedDiscord = await getExistingAuth(req.userId, true);
+    const linkedDiscord = await getExistingAuth(req.user.id, true);
     if (!linkedDiscord) return res.status(400).json({ error: 'NOT_LINKED' });
 
     // if (!discordClient.bloxClashGuild?.members.cache.has(linkedDiscord.user.id)) {
     //     discordClient.bloxClashGuild?.members.add(linkedDiscord.discordId, { accessToken: linkedDiscord.token });
     // }
 
-    const [[userWagered]] = await sql.query('SELECT SUM(amount) AS wagered FROM bets WHERE userId = ? AND completed = 1 AND createdAt > DATE_SUB(NOW(), INTERVAL 30 DAY)', [req.userId]);
+    const [[userWagered]] = await sql.query('SELECT SUM(amount) AS wagered FROM bets WHERE userId = ? AND completed = 1 AND createdAt > DATE_SUB(NOW(), INTERVAL 30 DAY)', [req.user.id]);
     if (userWagered.wagered < 2500) return res.status(400).json({ error: 'NOT_ENOUGH_WAGERED' });
 
-    const [[lastWeekDeposits]] = await sql.query('SELECT COALESCE(SUM(amount), 0) as sum FROM transactions WHERE userId = ? AND type = ? AND createdAt > ?', [req.userId, 'deposit', new Date(Date.now() - 14 * 24 * 60 * 60 * 1000)]);
+    const [[lastWeekDeposits]] = await sql.query('SELECT COALESCE(SUM(amount), 0) as sum FROM transactions WHERE userId = ? AND type = ? AND createdAt > ?', [req.user.id, 'deposit', new Date(Date.now() - 14 * 24 * 60 * 60 * 1000)]);
     if (lastWeekDeposits.sum < 200) return res.status(400).json({ error: 'INSUFFICIENT_DEPOSITS' });
 
     // console.log(req.body);
@@ -63,24 +63,24 @@ router.post('/join', [isAuthed, apiLimiter], async (req, res) => {
 
     if (rains.system.joinable) {
 
-        // if (rains.system.users.includes(req.userId)) return res.status(400).json({ error: 'ALREADY_JOINED_RAIN' });
+        // if (rains.system.users.includes(req.user.id)) return res.status(400).json({ error: 'ALREADY_JOINED_RAIN' });
         rain = rains.system;
 
     } else if (rains.user?.joinable) {
 
-        if (rains.user.host.id == req.userId) return res.status(400).json({ error: 'CANNOT_JOIN_OWN_RAIN' });
+        if (rains.user.host.id == req.user.id) return res.status(400).json({ error: 'CANNOT_JOIN_OWN_RAIN' });
         rain = rains.user;
     
     } else {
         return res.status(404).json({ error: 'RAIN_NOT_FOUND' });
     }
 
-    if (rain.users.includes(req.userId)) return res.status(400).json({ error: 'ALREADY_JOINED_RAIN' });
+    if (rain.users.includes(req.user.id)) return res.status(400).json({ error: 'ALREADY_JOINED_RAIN' });
 
     try {
 
         await doTransaction(async (connection, commit, rollback) => {
-            const [[user]] = await connection.query('SELECT id, username, sponsorLock, rainBan, accountLock, balance, verified, xp, ip FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+            const [[user]] = await connection.query('SELECT id, username, sponsorLock, rainBan, accountLock, balance, verified, xp, ip FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
             if (user.sponsorLock) return res.status(400).json({ error: 'SPONSOR_LOCK' });
     
             user.accountLock = await checkAccountLock(user);
@@ -89,13 +89,13 @@ router.post('/join', [isAuthed, apiLimiter], async (req, res) => {
             const [[multi]] = await connection.query('SELECT users.id FROM rainUsers JOIN users ON users.id = rainUsers.userId WHERE rainUsers.rainId = ? AND users.ip = ?', [rain.id, user.ip]);
             if (multi) return res.status(400).json({ error: 'ALREADY_JOINED_RAIN' });
             
-            const [userRains] = await connection.query('SELECT rainId FROM rainUsers WHERE userId = ? AND DATE(createdAt) = CURDATE()', [req.userId]);
+            const [userRains] = await connection.query('SELECT rainId FROM rainUsers WHERE userId = ? AND DATE(createdAt) = CURDATE()', [req.user.id]);
             if (userRains.length >= 24) {
                 sendLog('rain', `*${user.username}* (\`${user.id}\`) tried to join rain #${rain.id} but he has already joined more than 24 rains today.`);
                 return res.status(400).json({ error: 'JOINED_TOO_MANY_RAINS' });
             }
         
-            await connection.query('INSERT INTO rainUsers (rainId, userId) VALUES (?, ?)', [rain.id, req.userId]);
+            await connection.query('INSERT INTO rainUsers (rainId, userId) VALUES (?, ?)', [rain.id, req.user.id]);
             
             await commit();
             rain.users.push(user.id);
@@ -122,7 +122,7 @@ router.post('/tip', [isAuthed, apiLimiter], async (req, res) => {
 
         await doTransaction(async (connection, commit, rollback) => {
             
-            const [[user]] = await connection.query('SELECT id, username, role, xp, balance, rainBan, verified, tipBan, accountLock, sponsorLock, rainTipAllowance FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+            const [[user]] = await connection.query('SELECT id, username, role, xp, balance, rainBan, verified, tipBan, accountLock, sponsorLock, rainTipAllowance FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
 
             const level = getUserLevel(user.xp);
             if (level < 5) return res.status(400).json({ error: 'LEVEL_REQUIREMENT_RAIN' });

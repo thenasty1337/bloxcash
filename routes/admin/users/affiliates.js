@@ -126,7 +126,7 @@ router.post('/:id/lock', async (req, res) => {
 
     await sql.query('UPDATE users SET affiliateCodeLock = ? WHERE id = ?', [lock, userId]);
 
-    sendLog('admin', `[\`${req.userId}\`] *${req.user.username}* affiliate code ${lock ? 'locked' : 'unlocked'} user \`${userId}\`.`)
+    sendLog('admin', `[\`${req.user.id}\`] *${req.user.username}* affiliate code ${lock ? 'locked' : 'unlocked'} user \`${userId}\`.`)
     res.json({ success: true });
 
 });
@@ -136,7 +136,7 @@ router.post('/:id/clear', async (req, res) => {
     const userId = req.params.id;
     await sql.query('DELETE FROM affiliates WHERE affiliateId = ?', [userId]);
 
-    sendLog('admin', `[\`${req.userId}\`] *${req.user.username}* cleared affiliate data for user \`${userId}\`.`);
+    sendLog('admin', `[\`${req.user.id}\`] *${req.user.username}* cleared affiliate data for user \`${userId}\`.`);
     res.json({ success: true });
 
 });
@@ -146,7 +146,7 @@ router.post('/:id/removeCode', async (req, res) => {
     const userId = req.params.id;
     await sql.query('UPDATE users SET affiliateCode = NULL WHERE id = ?', [userId]);
 
-    sendLog('admin', `[\`${req.userId}\`] *${req.user.username}* removed affiliate code for user \`${userId}\`.`);
+    sendLog('admin', `[\`${req.user.id}\`] *${req.user.username}* removed affiliate code for user \`${userId}\`.`);
     res.json({ success: true });
 
 });
@@ -166,7 +166,7 @@ router.post('/:id/setCode', async (req, res) => {
             await connection.query('UPDATE users SET affiliateCode = ? WHERE id = ?', [code, userId]);
             await commit();
     
-            sendLog('admin', `[\`${req.userId}\`] *${req.user.username}* set affiliate code \`${code}\` for user \`${userId}\`.`);
+            sendLog('admin', `[\`${req.user.id}\`] *${req.user.username}* set affiliate code \`${code}\` for user \`${userId}\`.`);
             res.json({ success: true });
         });
 
@@ -222,7 +222,7 @@ router.post('/:id/earnings', async (req, res) => {
 
         });
 
-        sendLog('admin', `[\`${req.userId}\`] *${req.user.username}* set affiliate earnings for user \`${userId}\` to :robux:\`R$${earnings}\`.`);
+        sendLog('admin', `[\`${req.user.id}\`] *${req.user.username}* set affiliate earnings for user \`${userId}\` to :robux:\`R$${earnings}\`.`);
         res.json({ success: true });
 
     } catch (e) {

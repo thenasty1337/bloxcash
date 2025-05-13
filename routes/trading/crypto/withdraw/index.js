@@ -39,13 +39,13 @@ router.get('/transactions', isAuthed, async (req, res) => {
 
     const offset = (page - 1) * resultsPerPage;
 
-    const [[{ total }]] = await sql.query('SELECT COUNT(*) as total FROM cryptoWithdraws WHERE userId = ?', [req.userId]);
+    const [[{ total }]] = await sql.query('SELECT COUNT(*) as total FROM cryptoWithdraws WHERE userId = ?', [req.user.id]);
     if (!total) return res.json({ page: 1, pages: 0, total: 0, data: [] });
 
     const pages = Math.ceil(total / resultsPerPage);
 
     if (page > pages) return res.status(404).json({ error: 'PAGE_NOT_FOUND' });
-    const [data] = await sql.query('SELECT id, txId, chain, currency, cryptoAmount, fiatAmount, robuxAmount, status, createdAt, modifiedAt FROM cryptoWithdraws WHERE userId = ? ORDER BY id DESC LIMIT ? OFFSET ?', [req.userId, resultsPerPage, offset]);
+    const [data] = await sql.query('SELECT id, txId, chain, currency, cryptoAmount, fiatAmount, robuxAmount, status, createdAt, modifiedAt FROM cryptoWithdraws WHERE userId = ? ORDER BY id DESC LIMIT ? OFFSET ?', [req.user.id, resultsPerPage, offset]);
     
     res.json({
         page,
@@ -93,7 +93,7 @@ router.post('/', isAuthed, apiLimiter, async (req, res) => {
 
         await doTransaction(async (connection, commit) => {
 
-            const [[user]] = await connection.query('SELECT id, xp, username, balance, accountLock, sponsorLock, verified, perms, cryptoAllowance FROM users WHERE id = ? FOR UPDATE', [req.userId]);
+            const [[user]] = await connection.query('SELECT id, xp, username, balance, accountLock, sponsorLock, verified, perms, cryptoAllowance FROM users WHERE id = ? FOR UPDATE', [req.user.id]);
             if (user.balance < robuxAmount) return res.status(400).json({ error: 'INSUFFICIENT_BALANCE' });
     
             user.accountLock = await checkAccountLock(user);
@@ -190,7 +190,7 @@ router.post('/cancel/:id', isAuthed, apiLimiter, async (req, res) => {
 
         await doTransaction(async (connection, commit) => {
 
-            const [[transaction]] = await connection.query('SELECT cw.id, username, robuxAmount, userId, status FROM cryptoWithdraws cw JOIN users u ON u.id = cw.userId WHERE cw.id = ? AND userId = ? FOR UPDATE', [id, req.userId]);
+            const [[transaction]] = await connection.query('SELECT cw.id, username, robuxAmount, userId, status FROM cryptoWithdraws cw JOIN users u ON u.id = cw.userId WHERE cw.id = ? AND userId = ? FOR UPDATE', [id, req.user.id]);
 
             if (!transaction) return res.status(404).json({ error: 'TRANSACTION_NOT_FOUND' });
             if (transaction.status != 'pending') return res.status(400).json({ error: 'TRANSACTION_NOT_PENDING' });
@@ -202,7 +202,7 @@ router.post('/cancel/:id', isAuthed, apiLimiter, async (req, res) => {
             await connection.query('UPDATE cryptoWithdraws SET status = ? WHERE id = ?', ['cancelled', id]);
             await commit();
 
-            sendLog('cryptoWithdraws', `Crypto withdraw cancelled by *${transaction.username}* (\`${req.userId}\`) - :robux:R$${transaction.robuxAmount} (#${id})`);
+            sendLog('cryptoWithdraws', `Crypto withdraw cancelled by *${transaction.username}* (\`${req.user.id}\`) - :robux:R$${transaction.robuxAmount} (#${id})`);
             res.json({ success: true });
 
         });
