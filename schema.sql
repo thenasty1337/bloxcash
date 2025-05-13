@@ -5,12 +5,12 @@
 CREATE TABLE `users` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `username` VARCHAR(255) NOT NULL,
+    `email` VARCHAR(255) UNIQUE NULL,
     `balance` DECIMAL(20, 8) NOT NULL DEFAULT 0.00000000,
     `xp` BIGINT UNSIGNED NOT NULL DEFAULT 0,
     `perms` INT NOT NULL DEFAULT 0, -- Permission level (e.g., 0: user, 1: mod, 2: admin)
-    `passwordHash` VARCHAR(255) NOT NULL, -- For standard username/password login
-    `robloxCookie` TEXT, -- Consider encryption at application level
-    `proxy` VARCHAR(255),
+    `passwordHash` VARCHAR(255) NOT NULL,
+    `robloxId` BIGINT UNSIGNED UNIQUE NULL,
     `accountLock` BOOLEAN NOT NULL DEFAULT FALSE,
     `sponsorLock` BOOLEAN NOT NULL DEFAULT FALSE,
     `banned` BOOLEAN NOT NULL DEFAULT FALSE, -- Added for explicit bans
@@ -24,12 +24,18 @@ CREATE TABLE `users` (
     `ip` VARCHAR(45), -- Last known IP address
     `country` VARCHAR(255) NULL, -- User's country
     `mutedUntil` TIMESTAMP NULL, -- Timestamp when user's chat mute expires
+    `tipBan` BOOLEAN NOT NULL DEFAULT FALSE, -- Prevent user from tipping
+    `rainBan` BOOLEAN NOT NULL DEFAULT FALSE, -- Prevent user from joining/tipping rain
+    `maxPerTip` DECIMAL(20, 8) NULL, -- Max amount user can send in a single tip
+    `maxTipPerUser` DECIMAL(20, 8) NULL, -- Max amount user can send to a specific user (period?)
+    `tipAllowance` DECIMAL(20, 8) NULL, -- Total tip allowance (period?)
+    `rainTipAllowance` DECIMAL(20, 8) NULL, -- Total rain tip allowance (period?)
+    `cryptoAllowance` DECIMAL(20, 8) NULL, -- Crypto withdrawal allowance (period?)
     `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `lastLogout` TIMESTAMP NULL, -- Timestamp of last logout
-    `email` VARCHAR(255) UNIQUE NULL,
-    `robloxId` BIGINT UNSIGNED UNIQUE NULL,
     `affiliateCode` VARCHAR(255) UNIQUE NULL, -- Unique code assigned to users for referrals
+    `affiliateCodeLock` BOOLEAN NOT NULL DEFAULT FALSE, -- Prevent affiliate code changes
     `affiliateEarningsOffset` DECIMAL(20, 8) NOT NULL DEFAULT 0.00000000, -- Tracks earnings already paid out/accounted for
     `mentionsEnabled` BOOLEAN NOT NULL DEFAULT TRUE, -- Whether user can be mentioned in chat
     PRIMARY KEY (`id`),
@@ -283,6 +289,7 @@ CREATE TABLE `battleOpenings` ( -- Links case openings to battles
 -- Game: Coinflip
 CREATE TABLE `coinflips` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `ownerId` BIGINT UNSIGNED NOT NULL, -- User who created the coinflip
     `fire` BIGINT UNSIGNED, -- userId of player on fire side
     `ice` BIGINT UNSIGNED, -- userId of player on ice side
     `amount` DECIMAL(20, 8) NOT NULL,
@@ -294,8 +301,22 @@ CREATE TABLE `coinflips` (
     `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `startedAt` TIMESTAMP NULL,
     PRIMARY KEY (`id`),
+    CONSTRAINT `fk_coinflips_ownerId` FOREIGN KEY (`ownerId`) REFERENCES `users` (`id`) ON DELETE CASCADE, -- Added FK for ownerId
     CONSTRAINT `fk_coinflips_fire` FOREIGN KEY (`fire`) REFERENCES `users` (`id`) ON DELETE SET NULL,
     CONSTRAINT `fk_coinflips_ice` FOREIGN KEY (`ice`) REFERENCES `users` (`id`) ON DELETE SET NULL
+);
+
+-- Table for Rain Tips (Contributions)
+CREATE TABLE `rainTips` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `userId` BIGINT UNSIGNED NOT NULL, -- User who tipped
+    `rainId` BIGINT UNSIGNED NOT NULL, -- Rain the tip was for
+    `amount` DECIMAL(20, 8) NOT NULL, -- Amount tipped
+    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    KEY `rainId_userId_idx` (`rainId`, `userId`), -- Index for the query causing the error
+    CONSTRAINT `fk_rainTips_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_rainTips_rainId` FOREIGN KEY (`rainId`) REFERENCES `rains` (`id`) ON DELETE CASCADE
 );
 
 -- General Bets Log (for various games)
@@ -360,6 +381,7 @@ CREATE TABLE `cryptoWithdraws` (
     `status` VARCHAR(50) NOT NULL DEFAULT 'pending', -- e.g., 'pending', 'sending', 'sent', 'completed', 'failed', 'admin_review'
     `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `modifiedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Added column
     PRIMARY KEY (`id`),
     KEY `status_idx` (`status`), -- Add index for status lookups
     KEY `exchangeId_idx` (`exchangeId`), -- Add index for exchangeId lookups
@@ -502,221 +524,8 @@ CREATE TABLE `crash` (
     `publicSeed` VARCHAR(255), -- Seed shown before round starts (if used)
     `crashPoint` DECIMAL(10, 2), -- Multiplier where it crashed, NULL until ended
     `status` VARCHAR(50) NOT NULL DEFAULT 'pending', -- e.g., 'pending', 'betting', 'running', 'completed'
-    `createdAt` TIMESTAMP NULL, -- Set when betting starts
-    `startedAt` TIMESTAMP NULL, -- Set when multiplier starts increasing
-    `endedAt` TIMESTAMP NULL, -- Set when the round crashes
+    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `startedAt` TIMESTAMP NULL,
+    `endedAt` TIMESTAMP NULL,
     PRIMARY KEY (`id`)
-);
-
--- Game: Crash Bets
-CREATE TABLE `crashBets` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, -- This ID seems used in the general 'bets' table as gameId
-    `userId` BIGINT UNSIGNED NOT NULL,
-    `roundId` BIGINT UNSIGNED NOT NULL, -- FK to crash.id
-    `amount` DECIMAL(20, 8) NOT NULL, -- Amount bet
-    `autoCashoutPoint` DECIMAL(10, 2), -- Target multiplier for auto-cashout
-    `cashoutPoint` DECIMAL(10, 2), -- Actual multiplier cashed out at (NULL if crashed)
-    `winnings` DECIMAL(20, 8), -- Amount won (NULL if crashed)
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `roundId_userId_idx` (`roundId`, `userId`), -- Index for fetching bets for a round/user
-    CONSTRAINT `fk_crashBets_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_crashBets_roundId` FOREIGN KEY (`roundId`) REFERENCES `crash` (`id`) ON DELETE CASCADE
-);
-
--- Game: Mines
-CREATE TABLE `mines` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
-    `amount` DECIMAL(20, 8) NOT NULL, -- Bet amount
-    `clientSeedId` BIGINT UNSIGNED NOT NULL,
-    `serverSeedId` BIGINT UNSIGNED NOT NULL,
-    `nonce` BIGINT UNSIGNED NOT NULL,
-    `minesCount` INT UNSIGNED NOT NULL, -- Number of mines in the game
-    `mines` JSON NOT NULL, -- Array of mine positions
-    `revealedTiles` JSON NOT NULL, -- Array of revealed tile positions
-    `payout` DECIMAL(20, 8), -- Amount paid out if won
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `endedAt` TIMESTAMP NULL, -- NULL for active games
-    PRIMARY KEY (`id`),
-    KEY `userId_endedAt_idx` (`userId`, `endedAt`), -- For finding active games per user
-    CONSTRAINT `fk_mines_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_mines_clientSeedId` FOREIGN KEY (`clientSeedId`) REFERENCES `clientSeeds` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_mines_serverSeedId` FOREIGN KEY (`serverSeedId`) REFERENCES `serverSeeds` (`id`) ON DELETE CASCADE
-);
-
--- Game: Jackpot Rounds
-CREATE TABLE `jackpot` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `serverSeed` VARCHAR(255) NOT NULL,
-    `clientSeed` VARCHAR(255), -- EOS Block Hash revealed after roll
-    `EOSBlock` BIGINT, -- EOS block number for commit
-    `amount` DECIMAL(20, 8) NOT NULL DEFAULT 0.00000000, -- Total value of bets in the round
-    `ticket` INT UNSIGNED, -- Winning ticket number (0 to totalAmount * 100 - 1)
-    `winnerBet` BIGINT UNSIGNED, -- FK to jackpotBets.id
-    `status` VARCHAR(50) NOT NULL DEFAULT 'pending', -- e.g., 'pending', 'betting', 'rolling', 'completed'
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- When the round was created/opened
-    `countStartedAt` TIMESTAMP NULL, -- When countdown timer starts (after min players reached)
-    `rolledAt` TIMESTAMP NULL, -- When the winner was determined
-    `endedAt` TIMESTAMP NULL, -- When the round fully completed (after animation)
-    PRIMARY KEY (`id`),
-    KEY `winnerBet_idx` (`winnerBet`)
-    -- Cannot add FK constraint to jackpotBets.id directly here due to cyclical dependency possibility.
-    -- Manage this relationship at the application level or using triggers if needed.
-);
-
--- Game: Jackpot Bets
-CREATE TABLE `jackpotBets` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT, -- This ID seems used in the general 'bets' table as gameId and in jackpot.winnerBet
-    `userId` BIGINT UNSIGNED NOT NULL,
-    `jackpotId` BIGINT UNSIGNED NOT NULL, -- FK to jackpot.id
-    `amount` DECIMAL(20, 8) NOT NULL, -- Amount bet by user
-    `ticketsFrom` INT UNSIGNED NOT NULL, -- Starting ticket number for this bet
-    `ticketsTo` INT UNSIGNED NOT NULL, -- Ending ticket number for this bet
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `jackpotId_idx` (`jackpotId`),
-    KEY `userId_idx` (`userId`),
-    CONSTRAINT `fk_jackpotBets_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_jackpotBets_jackpotId` FOREIGN KEY (`jackpotId`) REFERENCES `jackpot` (`id`) ON DELETE CASCADE
-);
-
--- Cryptocurrency Definitions and Rates
-CREATE TABLE `cryptos` (
-    `id` VARCHAR(50) NOT NULL, -- Primary key, e.g., 'BTC', 'ETH', 'USDT.ERC20'
-    `name` VARCHAR(100) NOT NULL, -- Full name, e.g., 'Bitcoin', 'Ethereum'
-    `coingeckoId` VARCHAR(100) NOT NULL, -- ID used for CoinGecko API, e.g., 'bitcoin', 'ethereum'
-    `price` DECIMAL(20, 8), -- Current price in USD
-    `confirmations` INT UNSIGNED, -- Required confirmations for deposit (from CoinPayments)
-    `explorer` VARCHAR(255), -- Blockchain explorer URL template (from CoinPayments)
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
-);
-
--- Leaderboard Instances
-CREATE TABLE `leaderboards` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `type` VARCHAR(50) NOT NULL, -- e.g., 'daily', 'weekly'
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Start time of the leaderboard period
-    `endedAt` TIMESTAMP NULL, -- End time of the leaderboard period
-    PRIMARY KEY (`id`),
-    KEY `type_endedAt_idx` (`type`, `endedAt`) -- Index for finding active leaderboards by type
-);
-
--- Leaderboard Results per User
-CREATE TABLE `leaderboardUsers` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `leaderboardId` BIGINT UNSIGNED NOT NULL, -- FK to leaderboards.id
-    `userId` BIGINT UNSIGNED NOT NULL, -- FK to users.id
-    `position` INT UNSIGNED NOT NULL, -- User's final rank
-    `totalWagered` DECIMAL(20, 8) NOT NULL, -- Total amount wagered during the period
-    `amountWon` DECIMAL(20, 8) NOT NULL, -- Prize amount won
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- When the results were recorded
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `leaderboardId_userId_unique` (`leaderboardId`, `userId`), -- User can only appear once per leaderboard
-    CONSTRAINT `fk_leaderboardUsers_leaderboardId` FOREIGN KEY (`leaderboardId`) REFERENCES `leaderboards` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_leaderboardUsers_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
-);
-
--- Banned Phrases (for Chat Moderation)
-CREATE TABLE `bannedPhrases` (
-    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `phrase` VARCHAR(255) NOT NULL,
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `phrase_unique` (`phrase`) -- Ensure phrases are not duplicated
-);
-
--- Feature Flags
-CREATE TABLE `features` (
-    `id` VARCHAR(100) NOT NULL, -- Feature key/name, e.g., 'deposits', 'withdrawals', 'gameX'
-    `enabled` BOOLEAN NOT NULL DEFAULT FALSE,
-    `description` TEXT, -- Optional description of the feature
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`)
-);
-
--- --- Modifications for Passport.js Authentication ---
-
--- Correct ALTER statements:
-
--- 1. Add email column (essential for standard auth)
-ALTER TABLE users ADD COLUMN email VARCHAR(255) UNIQUE NULL AFTER username;
-
--- 2. Add robloxId column (to optionally store the old Roblox ID for migration)
-ALTER TABLE users ADD COLUMN robloxId BIGINT UNSIGNED UNIQUE NULL AFTER passwordHash;
-
--- 3. Modify passwordHash to be NOT NULL
--- IMPORTANT: This requires handling existing NULLs first.
-ALTER TABLE users MODIFY COLUMN passwordHash VARCHAR(255) NOT NULL;
-
--- 4. Drop Roblox-specific columns
-ALTER TABLE users DROP COLUMN robloxCookie;
-ALTER TABLE users DROP COLUMN proxy;
-
--- Optional: After populating email for all users, make it NOT NULL
--- ALTER TABLE users MODIFY COLUMN email VARCHAR(255) UNIQUE NOT NULL;
-
--- Server Seeds (Provably Fair)
-CREATE TABLE `serverSeeds` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
-    `seed` VARCHAR(255) NOT NULL, -- The actual server seed
-    `hashedSeed` VARCHAR(255), -- Optional: Hashed version shown before use
-    `nonce` BIGINT UNSIGNED NOT NULL DEFAULT 0, -- Roll counter for this seed pair
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `endedAt` TIMESTAMP NULL, -- Marks when this seed was rotated/became inactive
-    PRIMARY KEY (`id`),
-    KEY `userId_endedAt_idx` (`userId`, `endedAt`), -- Index for finding active seeds per user
-    CONSTRAINT `fk_serverSeeds_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
-);
-
--- Client Seeds (Provably Fair)
-CREATE TABLE `clientSeeds` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
-    `seed` VARCHAR(255) NOT NULL, -- The actual client seed
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `endedAt` TIMESTAMP NULL, -- Marks when this seed was rotated/became inactive
-    PRIMARY KEY (`id`),
-    KEY `userId_endedAt_idx` (`userId`, `endedAt`), -- Index for finding active seeds per user
-    CONSTRAINT `fk_clientSeeds_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
-);
-
--- Rakeback Claims
-CREATE TABLE `rakebackClaims` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
-    `type` VARCHAR(50) NOT NULL, -- e.g., 'instant', 'daily', 'weekly', 'monthly'
-    `amount` DECIMAL(20, 8) NOT NULL, -- Amount of rakeback claimed
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `userId_type_idx` (`userId`, `type`), -- Index for efficient lookups
-    CONSTRAINT `fk_rakebackClaims_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
-);
-
--- Affiliate Claims (Tracking when users claim their earnings)
-CREATE TABLE `affiliateClaims` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL, -- The user claiming their earnings
-    `amount` DECIMAL(20, 8) NOT NULL, -- The amount claimed
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    KEY `userId_createdAt_idx` (`userId`, `createdAt`), -- Index for the query in the error
-    CONSTRAINT `fk_affiliateClaims_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
-);
-
--- Affiliates (Tracking referral relationships)
-CREATE TABLE `affiliates` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL, -- The user who was referred
-    `affiliateId` BIGINT UNSIGNED NOT NULL, -- The user who referred (the affiliate)
-    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `userId_unique` (`userId`), -- A user can only be referred once
-    KEY `affiliateId_idx` (`affiliateId`), -- Index to quickly find users referred by someone
-    CONSTRAINT `fk_affiliates_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_affiliates_affiliateId` FOREIGN KEY (`affiliateId`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );

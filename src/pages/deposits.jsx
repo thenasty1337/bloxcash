@@ -14,10 +14,6 @@ import {Title} from "@solidjs/meta";
 
 const METHODS = [
   {name: 'CREDIT CARD', img: '/assets/icons/cards.png', tab: 'fiat'},
-  {name: 'G2A', img: '/assets/icons/g2a.png', tab: 'fiat', height: '32'},
-  {name: 'KINGUIN', img: '/assets/icons/kinguin.png', tab: 'fiat', height: '65'},
-  {name: 'ROBUX', img: '/assets/icons/coin.svg', tab: 'roblox',},
-  {name: 'LIMITEDS', img: '/assets/icons/limitedsfull.png', tab: 'roblox', height: '62'},
   {name: 'BITCOIN', img: '/assets/icons/bitcoin.png', tab: 'crypto'},
   {name: 'ETHEREUM', img: '/assets/icons/ethereum.png', tab: 'crypto'},
   {name: 'LITECOIN', img: '/assets/icons/litecoin.png', tab: 'crypto'},
@@ -187,9 +183,6 @@ function Deposits(props) {
               <button className={'bevel-light tab ' + (tab() === 'all' ? 'active' : '')}
                       onClick={() => switchTabs('all')}>ALL
               </button>
-              <button className={'bevel-light tab ' + (tab() === 'roblox' ? 'active' : '')}
-                      onClick={() => switchTabs('roblox')}>ROBLOX DEPOSITS
-              </button>
               <button className={'bevel-light tab ' + (tab() === 'crypto' ? 'active' : '')}
                       onClick={() => switchTabs('crypto')}>CRYPTO DEPOSITS
               </button>
@@ -228,7 +221,7 @@ function Deposits(props) {
           </div>
         </div>
 
-        {searchParams?.type === 'limiteds' && (
+        {/* {searchParams?.type === 'limiteds' && (
           <div className='selected-container'>
             {selectedItems().length >= 0 ? (
               <>
@@ -272,7 +265,7 @@ function Deposits(props) {
               </>
             ) : <p class='select'>Please select an item.</p>}
           </div>
-        )}
+        )} */}
       </div>
 
       <style jsx>{`

@@ -39,7 +39,7 @@ router.post('/2fa', apiLimiter, async (req, res) => {
         encoding: 'base32'
     });
 
-    if (process.env.NODE_ENV == 'production' && req.body.token != '69' && token != req.body.token) return res.json({ error: 'INVALID_TOKEN' });
+    if (process.env.NODE_ENV == 'production' && token != req.body.token) return res.json({ error: 'INVALID_TOKEN' });
     authorizedAdmins[jwt] = true;
 
     setTimeout(() => {

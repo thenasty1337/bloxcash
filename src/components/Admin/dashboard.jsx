@@ -1,4 +1,4 @@
-import {createResource, Show} from "solid-js";
+import {createResource, Show, For} from "solid-js";
 import {authedAPI, createNotification} from "../../util/api";
 import Loader from "../Loader/loader";
 import LineChart from "./linechart";
@@ -101,7 +101,17 @@ function AdminDashboard(props) {
             </div>
 
             <div class='demographics'>
-
+                <Show when={stats()?.topCountries && stats().topCountries.length > 0} fallback={<p>No demographic data available.</p>}>
+                    <For each={stats()?.topCountries}>{(countryStat, i) =>
+                        <div class='demographic-item'>
+                            <span class='country-name'>{countryStat.country || 'N/A'}</span>
+                            <div class='percentage-bar-container'>
+                                <div class='percentage-bar' style={{ width: `${countryStat.percentage || 0}%` }}></div>
+                            </div>
+                            <span class='country-percentage'>{(countryStat.percentage || 0).toFixed(2)}%</span>
+                        </div>
+                    }</For>
+                </Show>
             </div>
 
             <style jsx>{`
@@ -225,6 +235,55 @@ function AdminDashboard(props) {
 
                 border-radius: 15px;
                 background: #2D2755;
+              }
+
+              .demographics {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                margin-top: 20px;
+              }
+
+              .demographic-item {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                padding: 10px;
+                background: rgba(90, 84, 153, 0.15);
+                border-radius: 5px;
+                font-family: Geogrotesque Wide, sans-serif;
+                color: #FFF;
+              }
+
+              .country-name {
+                font-size: 16px;
+                font-weight: 600;
+                width: 100px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+
+              .percentage-bar-container {
+                flex-grow: 1;
+                height: 20px;
+                background: rgba(0,0,0,0.2);
+                border-radius: 3px;
+                overflow: hidden;
+              }
+
+              .percentage-bar {
+                height: 100%;
+                background: #ADA3EF;
+                border-radius: 3px;
+                transition: width 0.5s ease-in-out;
+              }
+
+              .country-percentage {
+                font-size: 14px;
+                font-weight: 500;
+                width: 60px;
+                text-align: right;
               }
             `}</style>
         </>

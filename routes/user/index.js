@@ -4,9 +4,7 @@ const router = express.Router();
 const { sql, doTransaction } = require('../../database');
 
 const { isAuthed, apiLimiter } = require('../auth/functions');
-const { roundDecimal, getUserLevel, sendLog, getRobloxApiInstance } = require('../../utils');
-const { getCurrentUser, getInventory, getThumbnails } = require('../../utils/roblox');
-const { getAgent } = require('../../utils/proxies');
+const { roundDecimal, getUserLevel, sendLog } = require('../../utils');
 const io = require('../../socketio/server');
 const { enabledFeatures, checkAccountLock } = require('../admin/config');
 const { getUserRakebacks } = require('./rakeback/functions');
@@ -58,40 +56,9 @@ router.post('/mentions', isAuthed, async (req, res) => {
 
 });
 
-router.get('/roblox', [isAuthed, apiLimiter], async (req, res) => {
-
-    const [[user]] = await sql.query('SELECT id, robloxCookie, proxy FROM users WHERE id = ?', [req.user.id]);
-    const robloxUser = await getCurrentUser(user.robloxCookie, user.proxy);
-    if (!robloxUser) return res.status(401).json({ error: 'INVALID_ROBLOX_COOKIE' });
-
-    res.json(robloxUser);
-
-});
-
-router.get('/inventory', [isAuthed, apiLimiter], async (req, res) => {
-
-    const [[user]] = await sql.query('SELECT id, robloxCookie, proxy FROM users WHERE id = ?', [req.user.id]);
-
-    const agent = getAgent(user.proxy);
-    const instance = getRobloxApiInstance(agent, user.robloxCookie);
-    
-    let inventory = await getInventory(user.id, instance);
-    if (!inventory) return res.status(401).json({ error: 'INVALID_ROBLOX_COOKIE' });
-
-    const [userListings] = await sql.query('SELECT id FROM marketplaceListings WHERE sellerId = ? AND status = ?', [user.id, 'active']);
-
-    if (userListings.length) {
-        const [listedItems] = await sql.query('SELECT userAssetId FROM marketplaceListingItems WHERE marketplaceListingId IN(?)', [userListings.map(e => e.id)]);
-        inventory = inventory.filter(item => !listedItems.some(e => e.userAssetId == item.userAssetId));
-    }
-
-    res.json(inventory);
-
-});
-
 const resultsPerPage = 10;
 const allowedTypes = ['deposit', 'withdraw', 'in', 'out'];
-const allowedMethods = ['rakeback', 'robux', 'tip', 'promo', 'affiliate', 'giftcard', 'crypto', 'rain'];
+const allowedMethods = ['rakeback', 'tip', 'promo', 'affiliate', 'giftcard', 'crypto', 'rain'];
 
 router.get('/transactions', isAuthed, async (req, res) => {
 
@@ -169,57 +136,6 @@ router.get('/bets', isAuthed, async (req, res) => {
     });
 
 });
-
-const botImgs = {
-    'bot1': '/public/bot1.png',
-    'bot2': '/public/bot2.png',
-    'bot3': '/public/bot3.png'
-}
-
-const defaultImg = 'https://tr.rbxcdn.com/e83624bf6ec47637373080d0d4a8be30/420/420/AvatarHeadshot/Png';
-const cachedImgs = {};
-
-router.get('/:id/img', async (req, res) => {
-    
-    const userId = req.params.id;
-
-    if (botImgs[userId]) return res.redirect(process.env.BASE_URL + botImgs[userId]);
-
-    const cached = cachedImgs[userId];
-    if (cached) return res.redirect(cached.url);
-
-    if (isNaN(parseInt(userId))) return res.status(400).json({ error: 'INVALID_USER_ID' });
-
-    try {
-
-        const data = await getThumbnails([
-            {
-                "requestId": `${userId}:undefined:AvatarHeadshot:420x420:null:regular`,
-                "type": "AvatarHeadShot",
-                "targetId": userId,
-                "format": null,
-                "size": "420x420"
-            }
-        ]);
-
-        const url = data?.data?.[0]?.imageUrl;
-        if (!url) return res.redirect(defaultImg);
-
-        cachedImgs[userId] = { url, expires: Date.now() + 1000 * 60 * 60 };
-    
-        res.redirect(url);
-
-    } catch (e) {
-        res.redirect(defaultImg);
-    }
-        
-});
-
-setInterval(() => {
-    for (const [userId, data] of Object.entries(cachedImgs)) {
-        if (data.expires < Date.now()) delete cachedImgs[userId];
-    }
-}, 1000 * 60 * 60);
 
 router.get('/:id/profile', async (req, res) => {
 

@@ -1,5 +1,4 @@
 const { sql, doTransaction } = require('../../database');
-const { items } = require('../../utils/roblox/items');
 const io = require('../../socketio/server');
 const { enabledFeatures } = require('../admin/config');
 const { sendLog } = require('../../utils');
@@ -45,14 +44,7 @@ async function cacheLeaderboards() {
 
     if (first) {
         
-        const sorted = Object.values(items).sort((a, b) => b.price - a.price);
         for (let i = 0; i < types.length; i++) {
-
-            leaderboards[types[i]].items = {};
-
-            for (let j = 0; j < 3; j++) {
-                leaderboards[types[i]].items[j + 1] = sorted.find(item => item.price <= leaderboards[types[i]].rewards[j + 1])?.img;
-            }
 
             await cronLeaderboard(types[i]);
             if (!leaderboards[types[i]].cache) await cacheLeaderboard(types[i]);

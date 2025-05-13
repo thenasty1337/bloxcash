@@ -8,7 +8,6 @@ const { roundDecimal, getRobloxApiInstance, sendLog, formatConsoleError } = requ
 const io = require('../../socketio/server');
 const { enabledFeatures } = require('../admin/config');
 const { getAgent } = require('../../utils/proxies');
-// const { getCurrentUser } = require('../../utils/roblox');
 
 const cheerio = require('cheerio');
 

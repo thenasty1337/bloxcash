@@ -44,24 +44,6 @@ router.get('/', async (req, res) => {
     const newUsersMap = {};
     newUsers.forEach(e => newUsersMap[toDateString(e.date)] = e.total);
 
-    const [robuxDeposits] = await sql.query(`
-        SELECT DATE(createdAt) as date, SUM(amount) as total
-        FROM gamePassTxs WHERE DATE(createdAt) >= ? AND DATE(createdAt) <= ? 
-        GROUP BY date ORDER BY date DESC
-    `, [dayFrom, dayTo]);
-
-    const robuxDepositsMap = {};
-    robuxDeposits.forEach(e => robuxDepositsMap[toDateString(e.date)] = e.total);
-
-    const [limitedsDeposits] = await sql.query(`
-        SELECT DATE(modifiedAt) as date, SUM(boughtPrice) as total
-        FROM marketplaceListings WHERE DATE(modifiedAt) >= ? AND DATE(modifiedAt) <= ? AND boughtPrice IS NOT NULL
-        GROUP BY date ORDER BY date DESC
-    `, [dayFrom, dayTo]);
-
-    const limitedsDepositsMap = {};
-    limitedsDeposits.forEach(e => limitedsDepositsMap[toDateString(e.date)] = e.total);
-
     const [cryptoDeposits] = await sql.query(`
         SELECT DATE(createdAt) as date, SUM(fiatAmount) as total
         FROM cryptoDeposits WHERE DATE(createdAt) >= ? AND DATE(createdAt) <= ?
@@ -115,11 +97,7 @@ router.get('/', async (req, res) => {
         const day = toDateString(dayFromMs - i * msInDay);
 
         const newUsersCount = newUsersMap[day] || 0;
-
-        const robuxDepositsCount = robuxDepositsMap[day] || 0;
-        const limitedsDepositsCount = limitedsDepositsMap[day] || 0;
-
-        const giftCardDepositsCount = giftCardDepositsMap[day] || 0; // roundDecimal((giftCardDepositsMap[day] || 0) / cryptoData.robuxRate.robux * cryptoData.robuxRate.usd);
+        const giftCardDepositsCount = giftCardDepositsMap[day] || 0; // roundDecimal((giftCardDepositsMap[day] || 0) / cryptoData.robuxRate.robux / cryptoData.robuxRate.usd);
         const cryptoDepositsCount = (cryptoDepositsMap[day] || 0);
         const cryptoWithdrawsCount = (cryptoWithdrawsMap[day] || 0);
         const creditCardDepositsCount = creditCardDepositsMap[day] || 0;
@@ -128,8 +106,6 @@ router.get('/', async (req, res) => {
         days.push({
             date: day,
             npc: newUsersCount,
-            robuxDeposits: robuxDepositsCount,
-            limitedsDeposits: limitedsDepositsCount,
             cryptoDeposits: cryptoDepositsCount,
             cryptoWithdraws: cryptoWithdrawsCount,
             giftCardDeposits: giftCardDepositsCount,

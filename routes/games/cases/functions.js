@@ -148,7 +148,7 @@ function mapItem(e) {
     return {
         id: e.id,
         name: e.name,
-        img: e.img ? e.img : `/items/${e.robloxId}/img`,
+        img: e.img,
         price: e.price,
         probability: +getItemProbability(e.rangeFrom, e.rangeTo).toFixed(3) // roundDecimal(getItemProbability(e.rangeFrom, e.rangeTo), 3)
     }

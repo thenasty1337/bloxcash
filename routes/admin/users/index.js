@@ -58,42 +58,13 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
 
-    const userId = req.params.id;
-    
-    const [[user]] = await sql.query(
-        `SELECT id, username, xp, role, balance, banned, tipBan, leaderboardBan, rainBan, accountLock, sponsorLock, maxPerTip, maxTipPerUser, tipAllowance, rainTipAllowance, cryptoAllowance, mutedUntil, discordId FROM users
+    if (isNaN(req.params.id)) return res.status(400).json({ error: 'INVALID_ID' });
+
+    const [[user]] = await sql.query(`SELECT users.id, username, xp, role, balance, banned, tipBan, leaderboardBan, rainBan, accountLock, sponsorLock, maxPerTip, maxTipPerUser, tipAllowance, rainTipAllowance, cryptoAllowance, mutedUntil, discordId FROM users
         LEFT JOIN discordAuths ON discordAuths.userId = users.id
-        WHERE id = ?`,
-        [userId]
-    );
+        WHERE users.id = ?`, [req.params.id]);
 
     if (!user) return res.status(404).json({ error: 'USER_NOT_FOUND' });
-
-    const [[wagered]] = await sql.query('SELECT SUM(amount) AS wagered FROM bets WHERE userId = ? AND completed = 1', [userId]);
-    user.wagered = wagered.wagered || 0;
-
-    const [[result]] = await sql.query(`
-        SELECT 
-        SUM(CASE WHEN type = 'deposit' THEN amount ELSE 0 END) as deposits,
-        SUM(CASE WHEN type = 'withdraw' THEN amount ELSE 0 END) as withdraws
-        FROM transactions 
-        WHERE userId = ? AND type IN ('deposit', 'withdraw')
-    `, [userId]);
-  
-    user.deposits = result.deposits || 0;
-    user.withdraws = result.withdraws || 0;
-    
-    if (user.mutedUntil) {
-        user.muteSeconds = Math.round((user.mutedUntil - Date.now()) / 1000);
-        if (user.muteSeconds < 0) {
-            user.muteSeconds = null;
-        }
-    } else {
-        user.muteSeconds = null;
-    }
-
-    delete user.mutedUntil;
-
     res.json(user);
 
 });

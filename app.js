@@ -100,7 +100,7 @@ passport.use(new LocalStrategy(
     { usernameField: 'email' }, 
     async (email, password, done) => {
         try {
-            const [[user]] = await sql.query('SELECT id, email, username, passwordHash, perms, banned FROM users WHERE email = ?', [email]);
+            const [[user]] = await sql.query('SELECT id, email, username, passwordHash, perms, banned, balance, xp, role FROM users WHERE email = ?', [email]);
 
             if (!user) {
                 return done(null, false, { message: 'Incorrect email or password.' });
@@ -131,7 +131,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
     try {
-        const [[user]] = await sql.query('SELECT id, email, username, perms, banned FROM users WHERE id = ?', [id]);
+        const [[user]] = await sql.query('SELECT id, email, username, perms, banned, balance, xp, role FROM users WHERE id = ?', [id]);
         done(null, user || false);
     } catch (err) {
         done(err, false);
@@ -140,7 +140,6 @@ passport.deserializeUser(async (id, done) => {
 
 const authRoute = require('./routes/auth');
 const userRoute = require('./routes/user');
-const itemsRoute = require('./routes/items');
 const tradingRoute = require('./routes/trading');
 const discordRoute = require('./routes/discord');
 const rainRoute = require('./routes/rain');
@@ -160,7 +159,6 @@ const fairnessRoute = require('./routes/fairness');
 
 app.use('/auth', authRoute);
 app.use('/user', userRoute);
-app.use('/items', itemsRoute);
 app.use('/trading', tradingRoute);
 app.use('/discord', discordRoute);
 app.use('/rain', rainRoute);
@@ -193,8 +191,6 @@ const { cacheJackpot } = require('./routes/games/jackpot/functions');
 const { cacheRoulette } = require('./routes/games/roulette/functions');
 const { cacheCoinflips } = require('./routes/games/coinflip/functions');
 const { cacheChannels } = require('./socketio/chat/functions');
-const { cacheItems } = require('./utils/roblox/items');
-const { cacheListings } = require('./routes/trading/limiteds/functions');
 const { cacheAdmin } = require('./routes/admin/config');
 const { cacheSlots } = require('./routes/games/slots/functions');
 const { cacheSurveys } = require('./routes/surveys/functions');
@@ -202,9 +198,6 @@ const { cacheLeaderboards } = require('./routes/leaderboard/functions');
 
 async function start() {
 
-    await Promise.all([
-        cacheItems()
-    ])
 
     const promises = [
         cacheBets,
@@ -219,7 +212,6 @@ async function start() {
         cacheRoulette,
         cacheCoinflips,
         cacheChannels,
-        cacheListings,
         cacheAdmin,
         cacheSlots,
         cacheSurveys,
