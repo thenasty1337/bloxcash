@@ -251,8 +251,30 @@ async function start() {
         console.log('Listening on port ' + port);
     });
     
+    // Set up Socket.IO with proper configuration
+    io.attach(serverInstance, { 
+        cors: { 
+            origin: process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : true,
+            methods: ["GET", "POST"],
+            credentials: true,
+            allowedHeaders: ["X-Requested-With", "Content-Type", "Authorization"]
+        },
+        cookie: {
+            httpOnly: false,
+            sameSite: 'none',
+            secure: process.env.NODE_ENV === 'production'
+        },
+        allowRequest: (req, callback) => {
+            // Log cookie for debugging
+            console.log('Socket connection request with cookie:', 
+                req.headers.cookie ? req.headers.cookie.substring(0, 30) + '...' : 'NO COOKIE');
+            // Always allow the request
+            callback(null, true);
+        }
+    });
+    
+    // Initialize socket.io handlers AFTER attaching
     require('./socketio')(io, sessionMiddleware);
-    io.attach(serverInstance, { cors: { origin: '*' } });
 
 }
 

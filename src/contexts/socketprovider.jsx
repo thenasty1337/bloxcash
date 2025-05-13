@@ -7,8 +7,22 @@ import { useUser } from "../contexts/usercontextprovider";
 const WebsocketContext = createContext();
 
 export function WebsocketProvider(props) {
-
-    const [ws, { mutate }] = createResource(connectSocket), socket = [ws]
+    const [user] = useUser();
+    const [ws, { mutate, refetch }] = createResource(connectSocket), socket = [ws];
+    
+    // Refetch socket connection when user state changes
+    createEffect(() => {
+        if (user()) {
+            console.log("User authenticated, reconnecting socket");
+            // Allow some time for session to be properly established
+            setTimeout(() => {
+                if (ws()) {
+                    ws().disconnect();
+                }
+                refetch();
+            }, 300);
+        }
+    });
 
     async function connectSocket() {
 
@@ -19,24 +33,49 @@ export function WebsocketProvider(props) {
         }
 
         // Connect to the specific backend URL
+        // Force the browser to include credentials with all requests
+        document.cookie = document.cookie + "; SameSite=None; Secure";
+        
+        console.log("Current cookies:", document.cookie);
+        
         let tempWs = io(serverUrl, { 
-            transports: ['websocket', 'polling'], 
+            transports: ['polling', 'websocket'], // Start with polling to ensure cookies are sent
             reconnection: true, 
             reconnectionDelay: 1000, 
             reconnectionAttempts: 10,
-            withCredentials: true // Important: Send cookies with the connection
+            withCredentials: true, // Important: Send cookies with the connection
+            extraHeaders: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
         });
 
         tempWs.on('connect', () => {
             console.log('Connected to WS');
-            // Session cookie will handle auth automatically,
-            // but we also emit 'auth' to refresh socket state
+            
+            // Get current user from both contexts to ensure we're authenticated
             const state = useAuthStore.getState();
-            if (state.isAuthenticated) {
+            const currentUser = user();
+            const userId = currentUser?.id || state.user?.id;
+            
+            console.log('Auth state on connect:', { 
+                zustandAuth: state.isAuthenticated, 
+                solidUser: currentUser ? true : false,
+                userId: userId
+            });
+            
+            // We only use session-based authentication for security
+            // Never send user IDs directly as that could be manipulated
+            tempWs.emit('auth');
+            console.log('Emitting auth request - using session only for security');
+            
+            // Add a slight delay to ensure the server has processed the initial connection
+            setTimeout(() => {
+                // Re-attempt authentication after a delay
                 tempWs.emit('auth');
-                console.log('Emitting auth with session cookie');
-            }
-            mutate(tempWs)
+                console.log('Re-emitting auth request');
+            }, 500);
+            
+            mutate(tempWs);
         })
 
         tempWs.on('disconnect', (reason) => {
@@ -62,6 +101,16 @@ export function WebsocketProvider(props) {
         tempWs.on('connect_error', (err) => {
             console.error('WS connection error:', err.message);
             // Optionally mutate to null or show error state after several failed attempts
+        });
+
+        // Handle auth response
+        tempWs.on('auth', (response) => {
+            console.log('Socket auth response:', response);
+            if (response.success) {
+                console.log('Socket authenticated successfully with ID:', response.userId);
+            } else {
+                console.warn('Socket authentication failed:', response.error);
+            }
         });
 
     }

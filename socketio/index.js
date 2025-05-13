@@ -15,20 +15,57 @@ const { discordClient, discordIds } = require('../discord/index');
 const { rewards: surveysRewards } = require('../routes/surveys/functions');
 
 // Wrap Express middleware for Socket.IO
-const wrap = middleware => (socket, next) => middleware(socket.request, {}, next);
+const wrap = middleware => (socket, next) => {
+    // Create a dummy response object
+    const res = {
+        setHeader: () => {},
+        getHeader: () => {},
+        writeHead: () => {},
+        end: () => {}
+    };
+    
+    // Handle session middleware properly
+    middleware(socket.request, res, () => {
+        next();
+    });
+};
 
 module.exports = (ioInstance, sessionMiddleware) => {
+    // Important: Clear any previous middleware
+    ioInstance.use((socket, next) => {
+        // Ensure cookies are parsed
+        if (socket.request.headers.cookie) {
+            console.log("Socket has cookies:", socket.request.headers.cookie.substring(0, 30) + "...");
+        } else {
+            console.log("Socket has NO cookies");
+        }
+        next();
+    });
+    
+    // Apply session middleware
     ioInstance.use(wrap(sessionMiddleware));
     ioInstance.use(wrap(passport.initialize()));
     ioInstance.use(wrap(passport.session()));
 
     // Authentication check middleware for sockets
     ioInstance.use((socket, next) => {
+        // Log the full user object for debugging
+        console.log("Socket.request.user:", socket.request.user);
+        
+        // Also check the session explicitly
+        if (socket.request.session && socket.request.session.passport) {
+            console.log("Socket session passport data:", socket.request.session.passport);
+        } else {
+            console.log("Socket has no session passport data");
+        }
+        
         if (socket.request.user) {
             socket.userId = socket.request.user.id;
+            console.log(`Socket auth middleware: User authenticated as ID ${socket.userId}`);
             next();
         } else {
             socket.userId = null;
+            console.log("Socket auth middleware: No authenticated user");
             next();
         }
     });
@@ -84,16 +121,33 @@ module.exports = (ioInstance, sessionMiddleware) => {
 
         newSocket(socket);
 
-        socket.on('auth', function(token_or_data) {
+        socket.on('auth', async function(userData) {
+            // Log auth attempt for debugging
+            console.log('Socket auth attempt:', { 
+                hasUser: socket.request.user ? true : false,
+                userId: socket.request.user?.id || null,
+                socketUserId: socket.userId,
+                manualUserId: userData?.userId
+            });
+
+            // First try to authenticate with session
             if (socket.request.user && socket.request.user.id) {
                 socket.userId = socket.request.user.id;
                 socket.emit('auth', { success: true, userId: socket.userId });
                 if (!socket.rooms.has(socket.userId)) {
                     socket.join(socket.userId);
                 }
-            } else {
-                socket.emit('auth', { error: 'UNAUTHENTICATED' });
+                console.log('Socket authenticated with session for user:', socket.userId);
+                return;
             }
+            
+            // SECURITY NOTE: We should NOT allow manual authentication with just a user ID
+            // This would create a security vulnerability where anyone could impersonate any user
+            // We only authenticate via the session, which has already been verified by Passport
+            
+            // If we reach here, authentication failed
+            socket.emit('auth', { error: 'UNAUTHENTICATED' });
+            console.log('Socket authentication failed: No user in request or manual auth');
         });
 
         socket.on('bets:subscribe', async (type) => {

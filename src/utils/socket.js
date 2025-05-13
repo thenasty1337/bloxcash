@@ -10,7 +10,14 @@ const socket = io(serverUrl, {
   autoConnect: true,
   reconnection: true,
   reconnectionDelay: 1000,
-  reconnectionAttempts: 5
+  reconnectionAttempts: 5,
+  transportOptions: {
+    polling: {
+      extraHeaders: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    }
+  }
 });
 
 // Handle reconnection with auth check

@@ -522,6 +522,27 @@ CREATE TABLE `crashBets` (
     CONSTRAINT `fk_crashBets_roundId` FOREIGN KEY (`roundId`) REFERENCES `crash` (`id`) ON DELETE CASCADE
 );
 
+-- Game: Mines
+CREATE TABLE `mines` (
+    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `userId` BIGINT UNSIGNED NOT NULL,
+    `amount` DECIMAL(20, 8) NOT NULL, -- Bet amount
+    `clientSeedId` BIGINT UNSIGNED NOT NULL,
+    `serverSeedId` BIGINT UNSIGNED NOT NULL,
+    `nonce` BIGINT UNSIGNED NOT NULL,
+    `minesCount` INT UNSIGNED NOT NULL, -- Number of mines in the game
+    `mines` JSON NOT NULL, -- Array of mine positions
+    `revealedTiles` JSON NOT NULL, -- Array of revealed tile positions
+    `payout` DECIMAL(20, 8), -- Amount paid out if won
+    `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `endedAt` TIMESTAMP NULL, -- NULL for active games
+    PRIMARY KEY (`id`),
+    KEY `userId_endedAt_idx` (`userId`, `endedAt`), -- For finding active games per user
+    CONSTRAINT `fk_mines_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_mines_clientSeedId` FOREIGN KEY (`clientSeedId`) REFERENCES `clientSeeds` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_mines_serverSeedId` FOREIGN KEY (`serverSeedId`) REFERENCES `serverSeeds` (`id`) ON DELETE CASCADE
+);
+
 -- Game: Jackpot Rounds
 CREATE TABLE `jackpot` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
