@@ -10,12 +10,16 @@ import {addDropdown, logout} from "../../util/api";
 import {useWebsocket} from "../../contexts/socketprovider";
 import Countup from "../Countup/countup";
 import Notifications from "./notifications";
+import MobileNav from "./mobilenav";
+import WalletModal from "../Modals/WalletModal";
+import { Show } from "solid-js";
 
 function NavBar(props) {
 
     const [searchParams, setSearchParams] = useSearchParams()
     const [userDropdown, setUserDropdown] = createSignal(false)
-    const [balanceDropdown, setBalanceDropdown] = createSignal(false)
+    const [showMobileNav, setShowMobileNav] = createSignal(false)
+    const [showWalletModal, setShowWalletModal] = createSignal(false)
     const [wagered, setWagered] = createSignal(0)
     const [ws] = useWebsocket()
 
@@ -102,30 +106,9 @@ function NavBar(props) {
                                     </p>
                                 </div>
 
-                                <button class='deposit-button' onClick={() => setBalanceDropdown(!balanceDropdown())}>
-                                    <img src='/assets/icons/wallet.svg' alt='Market'/>
+                                <button class='deposit-button' onClick={() => setShowWalletModal(true)}>
+                                    <img src='/assets/icons/wallet.svg' alt='Wallet'/>
                                 </button>
-
-                                <div class={'deposit-dropdown ' + (balanceDropdown() ? 'active' : '')}>
-                                    <div class='decoration-arrow'/>
-                                    <div class='dropdown-links'>
-                                        <A href='/deposit' class='user-dropdown-link gold'
-                                           onClick={() => setBalanceDropdown(false)}>
-                                            <img src='/assets/icons/coin.svg' height='16'/>
-                                            Deposit
-                                        </A>
-                                        <A href='/withdraw' class='user-dropdown-link'
-                                           onClick={() => setBalanceDropdown(false)}>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="11"
-                                                 viewBox="0 0 14 11" fill="none">
-                                                <path
-                                                    d="M14 3.79815C14.0003 3.85957 13.9886 3.92045 13.9654 3.97731C13.9421 4.03417 13.9079 4.08588 13.8647 4.12949L11.0647 6.92948C11.0211 6.97273 10.9693 7.00695 10.9125 7.03018C10.8556 7.0534 10.7947 7.06517 10.7333 7.06482C10.6727 7.06556 10.6124 7.05446 10.556 7.03215C10.47 6.99684 10.3966 6.93667 10.345 6.85935C10.2935 6.78203 10.2662 6.69108 10.2667 6.59815V5.19815H6.06667C5.9429 5.19815 5.8242 5.14899 5.73668 5.06147C5.64917 4.97395 5.6 4.85525 5.6 4.73149V2.86482C5.6 2.74105 5.64917 2.62236 5.73668 2.53484C5.8242 2.44732 5.9429 2.39816 6.06667 2.39816H10.2667V0.998157C10.267 0.905863 10.2948 0.815756 10.3464 0.739231C10.398 0.662705 10.4711 0.603198 10.5565 0.568232C10.6419 0.533267 10.7358 0.524415 10.8263 0.542795C10.9167 0.561174 10.9997 0.605961 11.0647 0.671491L13.8647 3.47149C13.9509 3.55841 13.9995 3.67573 14 3.79815ZM7.93333 6.13148H3.73334V4.73149C3.73288 4.63935 3.70516 4.54942 3.65367 4.47302C3.60218 4.39661 3.52923 4.33716 3.444 4.30215C3.35902 4.26642 3.26535 4.25665 3.17482 4.27409C3.0843 4.29153 3.00096 4.3354 2.93534 4.40015L0.135341 7.20015C0.0920897 7.24376 0.0578713 7.29547 0.0346478 7.35233C0.0114244 7.40918 -0.000347283 7.47007 7.79999e-06 7.53148C-0.000347283 7.5929 0.0114244 7.65378 0.0346478 7.71064C0.0578713 7.7675 0.0920897 7.81921 0.135341 7.86282L2.93534 10.6628C2.97894 10.7061 3.03066 10.7403 3.08751 10.7635C3.14437 10.7867 3.20525 10.7985 3.26667 10.7981C3.32789 10.7997 3.38862 10.7869 3.444 10.7608C3.52923 10.7258 3.60218 10.6664 3.65367 10.5899C3.70516 10.5135 3.73288 10.4236 3.73334 10.3315V8.93148H7.93333C8.0571 8.93148 8.1758 8.88231 8.26332 8.7948C8.35083 8.70728 8.4 8.58858 8.4 8.46482V6.59815C8.4 6.47438 8.35083 6.35568 8.26332 6.26817C8.1758 6.18065 8.0571 6.13148 7.93333 6.13148Z"
-                                                    fill="#ADA3EF"/>
-                                            </svg>
-                                            Withdraw
-                                        </A>
-                                    </div>
-                                </div>
                             </div>
                         )}
 
@@ -182,6 +165,12 @@ function NavBar(props) {
 
                 <BottomNavBar chat={props.chat} setChat={props.setChat}/>
             </div>
+
+            <MobileNav show={showMobileNav} close={() => setShowMobileNav(false)}/>
+            <Notifications/>
+            <Show when={showWalletModal()}>
+                <WalletModal show={showWalletModal()} close={() => setShowWalletModal(false)} />
+            </Show>
 
             <style jsx>{`
               .navbar-container {
@@ -362,52 +351,6 @@ function NavBar(props) {
                 font-size: 14px;
 
                 cursor: pointer;
-              }
-
-              .deposit-dropdown {
-                position: absolute !important;
-                top: 64px;
-                right: 0;
-
-                width: 100%;
-                max-width: 180px;
-
-                max-height: 0px;
-                overflow: hidden;
-                transition: max-height .3s;
-              }
-
-              .deposit-dropdown.active {
-                max-height: 100px;
-              }
-
-              .decoration-arrow {
-                width: 13px;
-                height: 9px;
-
-                top: 3px;
-                background: #26214A;
-                position: absolute;
-                right: 0;
-
-                border-left: 1px solid #3A336D;
-                border-right: 1px solid #3A336D;
-                border-top: 1px solid #3A336D;
-
-                clip-path: polygon(0% 100%, 100% 0%, 100% 100%);
-              }
-
-              .dropdown-links {
-                width: 100%;
-                background: #26214A;
-                border: 1px solid #3A336D;
-                margin-top: 10px;
-                padding: 10px;
-                border-radius: 5px;
-
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
               }
 
               .user-container {

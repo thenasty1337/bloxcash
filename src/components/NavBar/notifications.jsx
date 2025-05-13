@@ -55,7 +55,7 @@ function Notifications(props) {
         <div className='bell'>
           <img src='/assets/icons/bell.svg' height='18' width='23' alt=''/>
 
-          {user().notifications > 0 && (
+          {user() && typeof user().notifications === 'number' && user().notifications > 0 && (
             <div className='alert'>
               <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -66,7 +66,7 @@ function Notifications(props) {
                   fill="#CC2B2B"/>
               </svg>
 
-              <p>{user().notifications}</p>
+              <p>{user()?.notifications}</p>
             </div>
           )}
 

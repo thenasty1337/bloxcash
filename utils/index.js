@@ -220,25 +220,25 @@ function mapUser(user) {
 }
 
 const slackWebhooks = {
-	bets: 'https://hooks.slack.com/services/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',
-	highBets: 'https://hooks.slack.com/services/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',
-	robuxExchange: 'https://hooks.slack.com/services/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',
-	cryptoDeposits: 'https://hooks.slack.com/services/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',
-    cryptoWithdraws: 'https://hooks.slack.com/services/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',
-    cardDeposits: 'https://hooks.slack.com/services/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',
-	giftCards: 'https://hooks.slack.com/services/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',
-	market: 'https://hooks.slack.com/services/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',
-	rain: 'https://hooks.slack.com/services/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',
-	rakeback: 'https://hooks.slack.com/services/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',
-	leaderboard: 'https://hooks.slack.com/services/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',
-	admin: 'https://hooks.slack.com/services/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',
-	tips: 'https://hooks.slack.com/services/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',
-	battles: 'https://hooks.slack.com/services/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',
-	dev: 'https://hooks.slack.com/services/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',
-	promo: 'https://hooks.slack.com/services/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',
-	affiliate: 'https://hooks.slack.com/services/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',
-    surveys: 'https://hooks.slack.com/services/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',
-    earn: 'https://hooks.slack.com/services/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'
+	bets: 'https://hooks.test.com/services/T05GQQ5E6AG/B05K5AFB3M2/Pwtl4g1bVjYnFzUGJ9cGWt0I',
+	highBets: 'https://hooks.test.com/services/T05GQQ5E6AG/B05RU7ETZAT/IpMULA10bEx4HwOVLrclBnpz',
+	robuxExchange: 'https://hooks.test.com/services/T05GQQ5E6AG/B05JSFLJ64X/3rBFbfWq5k7naDb8cJ1ezxZ9',
+	cryptoDeposits: 'https://hooks.test.com/services/T05GQQ5E6AG/B05JSFKK823/FJREStJqd2WSej45MXJvLZfA',
+    cryptoWithdraws: 'https://hooks.test.com/services/T05GQQ5E6AG/B060D75H5EX/xGecgVPOUVKt9tdy4TwscY6q',
+    cardDeposits: 'https://hooks.test.com/services/T05GQQ5E6AG/B05VARSNUEQ/WWZv70QodWOblvtdBZt68dJB',
+	giftCards: 'https://hooks.test.com/services/T05GQQ5E6AG/B05K722V4US/FsT9WktklqBfunBM1lL5nImK',
+	market: 'https://hooks.test.com/services/T05GQQ5E6AG/B05KKLSTRCH/56jqPg48EF0c1PdK3M1LMIv0',
+	rain: 'https://hooks.test.com/services/T05GQQ5E6AG/B05K9F6LKE0/wIwkNa067LJk7tjFBroVoTTW',
+	rakeback: 'https://hooks.test.com/services/T05GQQ5E6AG/B05K9F7LEFN/VPgoVZt6h2QhBF6V1MbDeDEc',
+	leaderboard: 'https://hooks.test.com/services/T05GQQ5E6AG/B05RNF99YTB/JyKPfRm86Ak9hePqHzuQh0Oh',
+	admin: 'https://hooks.test.com/services/T05GQQ5E6AG/B05S8NB215Y/MvrOZGjNbpv05668gOckHg7g',
+	tips: 'https://hooks.test.com/services/T05GQQ5E6AG/B05S5QXHY7P/dkZP6D8ZGR0tt9zQ1Qb0A1Xe',
+	battles: 'https://hooks.test.com/services/T05GQQ5E6AG/B05T3ES3RL0/T5PEEtAMM6Y3rYoY6OuP3Qt6',
+	dev: 'https://hooks.test.com/services/T05GQQ5E6AG/B05ST6B3P6D/DI5jh140UlulGFwdTejGVjfA',
+	promo: 'https://hooks.test.com/services/T05GQQ5E6AG/B05TKL9E8P6/CY2nojMPnsc8EmqT1Nxqx07W',
+	affiliate: 'https://hooks.test.com/services/T05GQQ5E6AG/B05TKLDN45S/bRsaUpQytGQyC75tmP2rbZGP',
+    surveys: 'https://hooks.test.com/services/T05GQQ5E6AG/B05VARW4Y3W/kDeYKTuDvNeRFcw0TN8QOKfd',
+    earn: 'https://hooks.test.com/services/T05GQQ5E6AG/B05P96JDJ0G/oMgeEHabbNsOpXTd1fdJZYwP'
 }
 
 async function sendLog(channel, message) {
