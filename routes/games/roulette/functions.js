@@ -163,5 +163,6 @@ async function rouletteInterval() {
 
 module.exports = {
     roulette,
-    cacheRoulette
+    cacheRoulette,
+    updateRoulette
 }

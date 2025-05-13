@@ -39,12 +39,10 @@ export async function api(path, method, body, notification = false, headers =  {
 }
 
 export async function authedAPI(path, method, body, notification = false) {
-    const jwt = getJWT();
-    const headers = { 'Content-Type': 'application/json' };
-    if (jwt) {
-        headers['Authorization'] = jwt;
-    }
-    return await api(path, method, body, notification, headers);
+    // Session authentication is handled automatically by the browser
+    // credentials: 'include' ensures cookies are sent with the request
+    // No need to set Authorization header for session-based auth
+    return await api(path, method, body, notification);
 }
 
 export async function fetchUser(mutateUser) {
@@ -80,7 +78,9 @@ export function getRandomNumber(min, max, chance) {
 }
 
 export function getJWT() {
-    return document.cookie.split("; ").find((row) => row.startsWith("token="))?.split("=")[1] || ''
+    // For session authentication, we simply need to check if there's any cookie
+    // The actual session verification happens server-side
+    return document.cookie.length > 0 ? 'session' : '';
 }
 
 export function logout() {

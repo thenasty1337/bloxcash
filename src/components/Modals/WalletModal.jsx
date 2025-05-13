@@ -31,6 +31,7 @@ function WalletModal(props) {
   const [depositCurrencyImg, setDepositCurrencyImg] = createSignal('');
   
   const [depositCurrencyDropdownOpen, setDepositCurrencyDropdownOpen] = createSignal(false);
+  const [addressCopied, setAddressCopied] = createSignal(false);
   addDropdown(setDepositCurrencyDropdownOpen);
 
   const [selectedDepositCurrencyApiId, setSelectedDepositCurrencyApiId] = createSignal(DEPOSIT_CRYPTO_METHODS[1].apiId);
@@ -160,9 +161,19 @@ function WalletModal(props) {
     setDepositCurrencyDropdownOpen(false);
   }
 
+  function formatAddressForDisplay(address) {
+    if (!address || address.length < 11) return address;
+    const firstPart = address.substring(0, 6);
+    const lastPart = address.substring(address.length - 4);
+    const middlePart = address.substring(6, address.length - 4);
+    return { firstPart, middlePart, lastPart };
+  }
+
   function copyDepositAddress() {
       if (depositAddress()) {
         navigator.clipboard.writeText(`${depositAddress()}`);
+        setAddressCopied(true);
+        setTimeout(() => setAddressCopied(false), 2000);
       }
   }
   // --- End of CryptoDeposit Content --- 
@@ -436,16 +447,66 @@ function WalletModal(props) {
                     <div style={{"margin-top": "20px"}}>
                         <label class='input-label'>Deposit Address ({selectedDepositCurrencyApiId()})</label>
                         <div class='input deposit-address-display'>
-                            <span class='address-text'>{depositAddress()}</span>
-                            <button class='copy' onClick={copyDepositAddress}>{/* SVG */}</button>
+                            <div class='address-text'>
+                              <Show when={depositAddress()} keyed>
+                                {(address) => {
+                                  const { firstPart, middlePart, lastPart } = formatAddressForDisplay(address);
+                                  return (
+                                    <>
+                                      <span class='address-highlight'>{firstPart}</span>
+                                      <span>{middlePart}</span>
+                                      <span class='address-highlight'>{lastPart}</span>
+                                    </>
+                                  );
+                                }}
+                              </Show>
+                            </div>
+                            <button class='copy' onClick={copyDepositAddress}>
+                                <Show when={!addressCopied()} fallback={
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="copy-success">
+                                        <path d="M20 6L9 17l-5-5"></path>
+                                    </svg>
+                                }>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </Show>
+                            </button>
                         </div>
                         <div class='deposit-qr-and-info'>
-                            <Show when={depositAddress()}><QRCodeSVG value={depositAddress()} size={132} class='qr'/></Show>
-                            <div class='deposit-instructions'>
-                                <p>Send only <span class='gold'>{depositCurrencyName()} ({selectedDepositCurrencyApiId()})</span> to this address.</p>
-                                {/* TODO: Make min deposit dynamic if API provides it */}
-                                <p>Minimum deposit: <span class='gold'>$10.00 USD</span></p> 
-                                <p>Required confirmations: <span class='gold'>{depositConfirmations()}</span></p>
+                            <div class='qr-code-container'>
+                                <Show when={depositAddress()}><QRCodeSVG value={depositAddress()} size={132} class='qr'/></Show>
+                            </div>
+                            <div class='deposit-instructions-container'>
+                                <div class='deposit-instruction-item'>
+                                    <div class='instruction-icon'>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ADA3EF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                        </svg>
+                                    </div>
+                                    <p>Send only <span class='gold'>{depositCurrencyName()} ({selectedDepositCurrencyApiId()})</span> to this address.</p>
+                                </div>
+                                <div class='deposit-instruction-item'>
+                                    <div class='instruction-icon'>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ADA3EF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                                        </svg>
+                                    </div>
+                                    <p>Minimum deposit: <span class='gold'>$10.00 USD</span></p>
+                                </div>
+                                <div class='deposit-instruction-item'>
+                                    <div class='instruction-icon'>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ADA3EF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                            <path d="M9 12l2 2 4-4"></path>
+                                        </svg>
+                                    </div>
+                                    <p>Required confirmations: <span class='gold'>{depositConfirmations()}</span></p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -455,7 +516,7 @@ function WalletModal(props) {
                 </Show>
 
                 
-                <div class='bar' style={{margin: '25px 0'}}/>
+                <div class='bar' style={{margin: '15px 0 0 0'}}/>
                 <div class='disclaimer deposit-warning-box'>
                      <p class='disclaimer-text bold-text red-text'>Only deposit <Show when={depositCurrencyName()} fallback={<span>the selected currency</span>}><span class='gold'>{depositCurrencyName()} ({selectedDepositCurrencyApiId()})</span></Show> over the correct network. Sending other tokens may result in loss of funds.</p>
                 </div>
@@ -463,66 +524,209 @@ function WalletModal(props) {
             </Show>
             <Show when={activeTab() === 'withdraw'}>
               <div class='crypto-withdraw-content-wrapper'>
-                <div class='modal-section-header' style={{"margin-bottom": "10px"}}>
+                <div class='modal-section-header' style={{"margin-bottom": "15px"}}>
                     <p class='type'>Withdraw Crypto</p>
+                    <div class="bar"></div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#59E878" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <polyline points="19 12 12 19 5 12"></polyline>
+                    </svg>
                 </div>
                 
                 <Show when={!withdrawCryptoTypes.loading && withdrawCryptoTypes()} fallback={<Loader/>}>
                     <>
-                        <div class='withdraw-dropdowns'>
-                            <div class={`dropdown-wrapper ${withdrawCurrencyDropdown() ? 'active' : ''}`} onClick={(e) => { setWithdrawCurrencyDropdown(!withdrawCurrencyDropdown()); e.stopPropagation(); }}>
-                                <p>Currency: </p>
-                                <Show when={withdrawSymbol()} fallback={<p class='white bold'>Select</p>}>
-                                  <img src={`${import.meta.env.VITE_SERVER_URL}/public/cryptos/${withdrawSymbol()}.png`} height='18' alt={withdrawSymbol()}/>
-                                  <p class='white bold'>{withdrawSymbol()}</p>
-                                </Show>
-                                <img class='arrow' src='/assets/icons/dropdownarrow.svg' alt=''/>
-                                <div class='dropdown-container modal-dropdown-options' onClick={(e) => e.stopPropagation()}>
-                                    <For each={withdrawCryptoTypes()}>{(crypto) =>
-                                        <p class='option' onClick={() => { changeWithdrawCrypto(crypto?.id); setWithdrawCurrencyDropdown(false); }}>
-                                            <img src={`${import.meta.env.VITE_SERVER_URL}/public/cryptos/${crypto.id}.png`} height='18' alt={crypto.id}/> {crypto?.id}
-                                        </p>
-                                    }</For>
-                                </div>
-                            </div>
-
-                            <div class={`dropdown-wrapper ${withdrawNetworkDropdown() ? 'active' : ''}`} onClick={(e) => { setWithdrawNetworkDropdown(!withdrawNetworkDropdown()); e.stopPropagation(); }}>
-                                <p>Network: </p>
-                                <Show when={withdrawChain()?.id} fallback={<p class='white bold'>Select</p>}>
-                                   <p class='white bold'>{withdrawChain()?.id}</p>
-                                </Show>
-                                <img class='arrow' src='/assets/icons/dropdownarrow.svg' alt=''/>
-                                <div class='dropdown-container modal-dropdown-options' onClick={(e) => e.stopPropagation()}>
-                                    <For each={availableWithdrawChains()}>{(chainOpt) =>
-                                        <p class='option' onClick={() => { setWithdrawChain(chainOpt); setWithdrawNetworkDropdown(false); }}>{chainOpt?.id}</p>
-                                    }</For>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class='inputs modal-inputs-flex-column'>
-                            <div class='input withdraw-address-input margin-top-15'>
-                                <p>AMOUNT IN $ USD:</p>
-                                <input class='thin' type='number' placeholder="0.00" value={withdrawDollars()} onInput={(e) => convertWithdrawAmounts(0, e.target.valueAsNumber, 0)}/>
-                            </div>
+                        <div style={{
+                            "background": "linear-gradient(140deg, rgba(73, 66, 119, 0.4) 0%, rgba(44, 41, 82, 0.4) 100%)",
+                            "border-radius": "12px",
+                            "padding": "18px",
+                            "border": "1px solid rgba(75, 72, 135, 0.6)",
+                            "margin-bottom": "20px"
+                        }}>
+                            <p style={{
+                                "color": "#ADA3EF",
+                                "font-size": "13px",
+                                "font-weight": "600",
+                                "margin-bottom": "12px"
+                            }}>Select Currency & Network</p>
                             
-                            <div class='input withdraw-address-input'>
-                                <p>YOUR {withdrawSymbol()} ADDRESS:</p>
-                                <input class='thin' placeholder={`Enter your ${withdrawSymbol()} address`} value={withdrawAddressInput()} onInput={(e) => setWithdrawAddressInput(e.target.value)}/>
+                            <div class='withdraw-dropdowns'>
+                                <div class={`dropdown-wrapper ${withdrawCurrencyDropdown() ? 'active' : ''}`} 
+                                     onClick={(e) => { setWithdrawCurrencyDropdown(!withdrawCurrencyDropdown()); e.stopPropagation(); }}
+                                     style={{
+                                         "background": "#322F5F",
+                                         "border": "1px solid #524893",
+                                         "border-radius": "8px",
+                                         "box-shadow": "0 2px 4px rgba(0,0,0,0.1)"
+                                     }}>
+                                    <p style={{"font-size": "13px"}}>Currency: </p>
+                                    <Show when={withdrawSymbol()} fallback={<p class='white bold'>Select</p>}>
+                                      <img src={`${import.meta.env.VITE_SERVER_URL}/public/cryptos/${withdrawSymbol()}.png`} height='18' alt={withdrawSymbol()}/>
+                                      <p class='white bold'>{withdrawSymbol()}</p>
+                                    </Show>
+                                    <img class='arrow' src='/assets/icons/dropdownarrow.svg' alt=''/>
+                                    <div class='dropdown-container modal-dropdown-options' onClick={(e) => e.stopPropagation()}
+                                         style={{
+                                             "box-shadow": "0 4px 12px rgba(0,0,0,0.2)",
+                                             "border": "1px solid #524893",
+                                             "border-radius": "0 0 8px 8px"
+                                         }}>
+                                        <For each={withdrawCryptoTypes()}>{(crypto) =>
+                                            <p class='option' onClick={() => { changeWithdrawCrypto(crypto?.id); setWithdrawCurrencyDropdown(false); }}
+                                              style={{"transition": "background 0.2s ease"}}>
+                                                <img src={`${import.meta.env.VITE_SERVER_URL}/public/cryptos/${crypto.id}.png`} height='18' alt={crypto.id}/> {crypto?.id}
+                                            </p>
+                                        }</For>
+                                    </div>
+                                </div>
+
+                                <div class={`dropdown-wrapper ${withdrawNetworkDropdown() ? 'active' : ''}`} 
+                                     onClick={(e) => { setWithdrawNetworkDropdown(!withdrawNetworkDropdown()); e.stopPropagation(); }}
+                                     style={{
+                                         "background": "#322F5F",
+                                         "border": "1px solid #524893",
+                                         "border-radius": "8px",
+                                         "box-shadow": "0 2px 4px rgba(0,0,0,0.1)"
+                                     }}>
+                                    <p style={{"font-size": "13px"}}>Network: </p>
+                                    <Show when={withdrawChain()?.id} fallback={<p class='white bold'>Select</p>}>
+                                       <p class='white bold'>{withdrawChain()?.id}</p>
+                                    </Show>
+                                    <img class='arrow' src='/assets/icons/dropdownarrow.svg' alt=''/>
+                                    <div class='dropdown-container modal-dropdown-options' onClick={(e) => e.stopPropagation()}
+                                         style={{
+                                             "box-shadow": "0 4px 12px rgba(0,0,0,0.2)",
+                                             "border": "1px solid #524893",
+                                             "border-radius": "0 0 8px 8px"
+                                         }}>
+                                        <For each={availableWithdrawChains()}>{(chainOpt) =>
+                                            <p class='option' onClick={() => { setWithdrawChain(chainOpt); setWithdrawNetworkDropdown(false); }}
+                                              style={{"transition": "background 0.2s ease"}}>
+                                              {chainOpt?.id}
+                                            </p>
+                                        }</For>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <button class='bevel-gold submit-withdraw-button' onClick={handleCryptoWithdraw} disabled={withdrawDollars() <= 0 || !withdrawAddressInput() || !withdrawChain()?.id}>
+                        {/* Amount and Address Input Container */}
+                        <div class='withdraw-input-fields-container' style={{
+                            "background": "linear-gradient(140deg, #322F5F 0%, #2C2952 100%)",
+                            "border-radius": "12px",
+                            "padding": "20px",
+                            "border": "1px solid #423B78",
+                            "box-shadow": "0 4px 12px rgba(0,0,0,0.1)"
+                        }}>
+                            {/* Amount Input */}
+                            <div>
+                                <label class='input-label' style={{ "margin-bottom": "8px", "display": "block", "color": "#ADA3EF", "font-size": "14px", "font-weight": "600" }}>
+                                    Amount in USD
+                                </label>
+                                <div class='input withdraw-input' style={{
+                                    "height": "45px", 
+                                    "background": "#383165", 
+                                    "border": "1px solid #6258AB", 
+                                    "border-radius": "6px", 
+                                    "padding": "0 12px",
+                                    "display": "flex",
+                                    "align-items": "center"
+                                }}>
+                                    <div style={{ "color": "#ADA3EF", "font-size": "13px", "font-weight": "600" }}>$</div>
+                                    <input
+                                        type='number'
+                                        placeholder="0.00"
+                                        value={withdrawDollars()}
+                                        onInput={(e) => convertWithdrawAmounts(0, e.target.valueAsNumber || 0, 0)}
+                                        style={{
+                                            "background": "transparent", "border": "none", "outline": "none",
+                                            "color": "white", "font-size": "15px", "font-weight": "600",
+                                            "text-align": "left", "flex-grow": "1", "height": "100%",
+                                            "margin-left": "8px"
+                                        }}
+                                    />
+                                    <span style={{ "color": "#ADA3EF", "font-size": "13px", "font-weight": "600", "margin-left": "auto" }}>USD</span>
+                                </div>
+                                
+                                <div style={{
+                                    "display": "flex", 
+                                    "justify-content": "space-between",
+                                    "margin-top": "8px",
+                                    "padding": "0 5px"
+                                }}>
+                                    <span style={{ "color": "#9489DB", "font-size": "12px" }}>
+                                        <img src='/assets/icons/coin.svg' height='10' alt="Robux" style={{ "vertical-align": "middle", "margin-right": "3px" }} />
+                                        {formatNumber(withdrawRobux())} Robux
+                                    </span>
+                                    <span style={{ "color": "#9489DB", "font-size": "12px" }}>
+                                        Network fee: <span style={{"color": "white"}}>{formatNumber( ( (withdrawChain()?.fee || 0) * withdrawPrice() ) / (withdrawRates()?.usd || 3.5) * (withdrawRates()?.robux || 1000) )} <img src='/assets/icons/coin.svg' height='10' alt="Robux" style={{ "vertical-align": "middle", "margin-left": "2px" }} /></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Address Input */}
+                            <div style={{ "margin-top": "20px" }}>
+                                <label class='input-label' style={{ "margin-bottom": "8px", "display": "block", "color": "#ADA3EF", "font-size": "14px", "font-weight": "600" }}>
+                                    Your {withdrawSymbol() || 'Crypto'} Address
+                                    <Show when={withdrawChain()?.id}>
+                                        <span style={{ "font-weight": "normal", "color": "#9489DB", "margin-left": "6px", "font-size": "0.9em" }}>
+                                            ({withdrawChain().id} Network)
+                                        </span>
+                                    </Show>
+                                </label>
+                                <div class='input withdraw-input' style={{
+                                    "height": "45px", 
+                                    "background": "#383165", 
+                                    "border": "1px solid #6258AB", 
+                                    "border-radius": "6px", 
+                                    "padding": "0 12px",
+                                    "display": "flex",
+                                    "align-items": "center"
+                                }}>
+                                    <input
+                                        type='text'
+                                        class='white-placeholder'
+                                        placeholder={`Enter your ${withdrawSymbol() || 'selected currency'} address`}
+                                        value={withdrawAddressInput()}
+                                        onInput={(e) => setWithdrawAddressInput(e.target.value)}
+                                        style={{
+                                            "background": "transparent", "border": "none", "outline": "none",
+                                            "color": "white", "font-size": "13px", "font-weight": "400",
+                                            "text-align": "left", "flex-grow": "1", "height": "100%"
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <button 
+                            class='bevel-gold submit-withdraw-button' 
+                            onClick={handleCryptoWithdraw} 
+                            disabled={withdrawDollars() <= 0 || !withdrawAddressInput() || !withdrawChain()?.id}
+                            style={{
+                                "margin-top": "20px",
+                                "height": "40px",
+                                "border-radius": "6px",
+                                "font-size": "14px",
+                                "letter-spacing": "0.5px",
+                                "transition": "all 0.2s ease",
+                                "box-shadow": "0 4px 8px rgba(0,0,0,0.2)",
+                                "width": "100%",
+                                "max-width": "200px",
+                                "margin-left": "auto",
+                                "margin-right": "auto",
+                                "display": "flex",
+                                "align-items": "center",
+                                "justify-content": "center",
+                                "gap": "5px"
+                            }}
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
                             SUBMIT WITHDRAWAL
                         </button>
-
-                        <div class='disclaimer withdraw-disclaimer'>
-                            <p class='disclaimer-text'>
-                                Network fees will be deducted. Average network fees are <span class='white'>${formatNumber( (withdrawChain()?.fee || 0) * withdrawPrice() )}</span>
-                                &nbsp;<span class='bold white noto'>(<img src='/assets/icons/coin.svg' height='12'/> {formatNumber( ( (withdrawChain()?.fee || 0) * withdrawPrice() ) / (withdrawRates()?.usd || 3.5) * (withdrawRates()?.robux || 1000) )} )</span>.
-                                Minimum withdrawal: <span class='white'>${formatNumber( (withdrawChain()?.min || 0) * withdrawPrice() )}</span>
-                            </p>
-                        </div>
                     </>
                 </Show>
               </div>
@@ -747,15 +951,38 @@ function WalletModal(props) {
             padding: unset;
             background: unset;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .copy:hover {
+            background: rgba(173, 163, 239, 0.1);
         }
 
         .copy svg {
-            fill: #776EB0;
-            transition: all .1s;
+            fill: none;
+            stroke: #776EB0;
+            transition: all .2s;
         }
 
-        .copy:active svg {
-            fill: #ADA3EF;
+        .copy:hover svg {
+            stroke: #ADA3EF;
+        }
+
+        .copy .copy-success {
+            stroke: #59E878;
+            animation: checkmark-appear 0.3s ease-out;
+        }
+
+        @keyframes checkmark-appear {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         .conversions-container {
@@ -965,16 +1192,117 @@ function WalletModal(props) {
         .bold-text { font-weight: bold; }
         .red-text { color: #FC4747; }
         .deposit-address-display { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #272248; border: 1px solid #423B78; border-radius: 3px; }
-        .address-text { color: #FFF; font-weight: 400; word-break: break-all; margin-right: 10px; }
-        .deposit-qr-and-info { display: flex; align-items: center; gap: 20px; margin-top: 20px; }
-        .deposit-qr-and-info .qr { border: 5px solid white; border-radius: 5px; }
-        .deposit-instructions { color: #ADA3EF; font-size: 12px; line-height: 1.6; }
-        .deposit-instructions .gold { color: #FFC107; font-weight: 600; }
-        .coin-calculator { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-        .calculator-input { display: flex; align-items: center; background: #272248 !important; flex: 1; border: 1px solid #423B78; border-radius:3px; padding:0 10px; height: 40px; }
-        .calculator-input .currency-label-calc { padding-right: 8px; color: #FFF; font-weight: 600; }
-        .calculator-input input { text-align: right; padding-right: 5px; background:transparent; border:none; color: white; height:100%; flex-grow:1; }
-        .arrow-swap { flex-shrink: 0; /* SVG styles if needed */ }
+        .address-text { 
+            color: #FFF; 
+            font-weight: 400; 
+            word-break: break-all; 
+            margin-right: 10px;
+            display: flex;
+            flex-wrap: nowrap;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .address-highlight {
+            color: #FFC107;
+            font-weight: 700;
+            text-shadow: 0 0 1px rgba(255, 193, 7, 0.2);
+            letter-spacing: 0.5px;
+        }
+
+        .deposit-qr-and-info {
+            display: flex;
+            align-items: stretch;
+            gap: 25px;
+            margin-top: 20px;
+            background: linear-gradient(140deg, #322F5F 0%, #2C2952 100%);
+            border-radius: 12px;
+            padding: 18px;
+            border: 1px solid #423B78;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .qr-code-container {
+            background: white;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .qr-code-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(140deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 100%);
+            pointer-events: none;
+        }
+        
+        .qr-code-container .qr {
+            border: none;
+            border-radius: 0;
+        }
+        
+        .deposit-instructions-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 14px;
+            flex: 1;
+        }
+        
+        .deposit-instruction-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .deposit-instruction-item:nth-child(1) { animation-delay: 0.1s; }
+        .deposit-instruction-item:nth-child(2) { animation-delay: 0.2s; }
+        .deposit-instruction-item:nth-child(3) { animation-delay: 0.3s; }
+        
+        .instruction-icon {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(173, 163, 239, 0.1);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.1);
+        }
+        
+        .instruction-icon svg {
+            width: 14px;
+            height: 14px;
+        }
+        
+        .deposit-instruction-item p {
+            color: #ADA3EF;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 0;
+        }
+        
+        .deposit-instruction-item .gold {
+            color: #FFC107;
+            font-weight: 600;
+        }
+
         .deposit-warning-box { background: rgba(252, 71, 71, 0.1); border: 1px solid rgba(252, 71, 71, 0.3); padding: 15px; border-radius: 5px; margin-top: 15px; }
         .deposit-warning-box .disclaimer-text .gold { color: #FFC107; }
         .dropdown-wrapper { background: #383165; /* ... other styles */ }
@@ -1131,6 +1459,32 @@ function WalletModal(props) {
         .input.crypto-input input {
             text-align: right;
             font-size: 14px;
+        }
+
+        .white-placeholder::placeholder {
+          color: rgba(255, 255, 255, 0.7);
+          opacity: 1;
+        }
+        
+        /* For Firefox */
+        .white-placeholder::-moz-placeholder {
+          color: rgba(255, 255, 255, 0.7);
+          opacity: 1;
+        }
+        
+        /* For Internet Explorer */
+        .white-placeholder:-ms-input-placeholder {
+          color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* For Edge */
+        .white-placeholder::-ms-input-placeholder {
+          color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* For WebKit browsers like Chrome and Safari */
+        .white-placeholder::-webkit-input-placeholder {
+          color: rgba(255, 255, 255, 0.7);
         }
       `}</style>
     </>

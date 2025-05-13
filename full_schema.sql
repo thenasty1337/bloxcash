@@ -1353,6 +1353,38 @@ LOCK TABLES `roulette` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `rouletteBets`
+--
+
+DROP TABLE IF EXISTS `rouletteBets`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rouletteBets` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `userId` CHAR(26) NOT NULL,
+  `roundId` bigint unsigned NOT NULL,
+  `color` int NOT NULL,
+  `amount` decimal(20,8) NOT NULL,
+  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `roundId_idx` (`roundId`),
+  KEY `userId_idx` (`userId`),
+  CONSTRAINT `fk_rouletteBets_roundId` FOREIGN KEY (`roundId`) REFERENCES `roulette` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_rouletteBets_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rouletteBets`
+--
+
+LOCK TABLES `rouletteBets` WRITE;
+/*!40000 ALTER TABLE `rouletteBets` DISABLE KEYS */;
+/*!40000 ALTER TABLE `rouletteBets` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `serverSeeds`
 --
 
@@ -1372,6 +1404,15 @@ CREATE TABLE `serverSeeds` (
   CONSTRAINT `fk_serverSeeds_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `serverSeeds`
+--
+
+LOCK TABLES `serverSeeds` WRITE;
+/*!40000 ALTER TABLE `serverSeeds` DISABLE KEYS */;
+/*!40000 ALTER TABLE `serverSeeds` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `slots`

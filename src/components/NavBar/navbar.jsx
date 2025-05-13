@@ -92,18 +92,13 @@ function NavBar(props) {
 
                         {props.user && (
                             <div class='balance-container'>
-                                <div class='balance-hover'>
+                                <div class='balance-display'>
                                     <div className='robux'>
-                                        <img className='coin' src='/assets/icons/coin.svg' height='18'/>
+                                        <span className='gold'>$</span>
                                         <p>
                                             <Countup end={props?.user?.balance} gray={true}/>
                                         </p>
                                     </div>
-
-                                    <p className='fiat'>
-                                        <span class='gold'>$ </span><Countup end={props?.user?.balance / 1000 * 3.5}
-                                                                             gray={true}/>
-                                    </p>
                                 </div>
 
                                 <button class='deposit-button' onClick={() => setShowWalletModal(true)}>
@@ -167,7 +162,7 @@ function NavBar(props) {
             </div>
 
             <MobileNav show={showMobileNav} close={() => setShowMobileNav(false)}/>
-            <Notifications/>
+          
             <Show when={showWalletModal()}>
                 <WalletModal show={showWalletModal()} close={() => setShowWalletModal(false)} />
             </Show>
@@ -249,23 +244,13 @@ function NavBar(props) {
                 position: relative;
               }
 
-              .balance-hover {
+              .balance-display {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 position: relative;
 
                 width: 100%;
-
-                cursor: pointer;
-              }
-
-              .balance-hover:hover .robux {
-                opacity: 0;
-              }
-
-              .balance-hover:hover .fiat {
-                opacity: 1;
               }
               
               .rewards-wrapper {
@@ -318,15 +303,6 @@ function NavBar(props) {
               .robux {
                 display: flex;
                 gap: 8px;
-              }
-
-              .fiat, .robux {
-                transition: opacity .3s;
-              }
-
-              .fiat {
-                position: absolute;
-                opacity: 0;
               }
 
               .cents {

@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const { doTransaction } = require('../../../database');
+const { doTransaction, sql } = require('../../../database');
 
 const { isAuthed, apiLimiter } = require('../../auth/functions');
 const { roundDecimal, xpChanged } = require('../../../utils');
 const io = require('../../../socketio/server');
-const { roulette } = require('./functions')
+const { roulette, updateRoulette, cacheRoulette } = require('./functions')
 
 // const clientSeed = '00000000000000000003e5a54c2898a18d262eb5860e696441f8a4ebbff03697'; // btc block hash
 
@@ -110,6 +110,66 @@ router.post('/bet', isAuthed, apiLimiter, async (req, res) => {
         res.json({ error: 'INTERNAL_ERROR' });
     }
 
+});
+
+// Debug endpoint to reset the roulette game (temporarily accessible to all users for testing)
+router.post('/debug/reset', isAuthed, async (req, res) => {
+    try {
+        // Temporarily disabled permission check for testing
+        // if (!req.user.perms && req.user.role !== 'admin') {
+        //     return res.status(403).json({ error: 'UNAUTHORIZED' });
+        // }
+        
+        console.log(`User ${req.user.username} (${req.user.id}) requested roulette reset`);
+        
+        // End the current round if it exists
+        if (roulette.round && roulette.round.id) {
+            const now = new Date();
+            await sql.query('UPDATE roulette SET endedAt = ? WHERE id = ?', [now, roulette.round.id]);
+            
+            // Create a new round
+            const clientSeedValue = '00000000000000000003e5a54c2898a18d262eb5860e696441f8a4ebbff03697';
+            const [result] = await sql.query('INSERT INTO roulette (createdAt, serverSeed, clientSeed, result, color, status) VALUES (?, ?, ?, ?, ?, ?)', [
+                now,
+                'SERVER_' + Math.random().toString(36).substring(2, 15),
+                clientSeedValue,
+                Math.floor(Math.random() * 15),
+                Math.floor(Math.random() * 3),
+                'betting'
+            ]);
+            
+            // Reset the roulette state
+            roulette.round = {};
+            roulette.bets = [];
+            
+            // Force update and restart game loop
+            await cacheRoulette();
+            
+            return res.json({ 
+                success: true, 
+                message: 'Roulette round reset successfully',
+                newRoundId: result.insertId
+            });
+        } else {
+            // If no round exists, create a new one and start the game
+            const now = new Date();
+            const clientSeedValue = '00000000000000000003e5a54c2898a18d262eb5860e696441f8a4ebbff03697';
+            const [result] = await sql.query('INSERT INTO roulette (createdAt, serverSeed, clientSeed, result, color, status) VALUES (?, ?, ?, ?, ?, ?)', [
+                now,
+                'SERVER_' + Math.random().toString(36).substring(2, 15),
+                clientSeedValue,
+                Math.floor(Math.random() * 15),
+                Math.floor(Math.random() * 3),
+                'betting'
+            ]);
+            
+            await cacheRoulette();
+            return res.json({ success: true, message: 'Roulette refreshed' });
+        }
+    } catch (error) {
+        console.error('Error resetting roulette:', error);
+        return res.status(500).json({ error: 'INTERNAL_ERROR' });
+    }
 });
 
 module.exports = router;

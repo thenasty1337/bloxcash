@@ -1,4 +1,4 @@
-import {createEffect, createSignal, For} from "solid-js";
+import {createEffect, createSignal, For, Show} from "solid-js";
 import RouletteSpinner from "../components/Roulette/roulettespinner";
 import RouletteIcon from "../components/Roulette/rouletteicons";
 import {useWebsocket} from "../contexts/socketprovider";
@@ -7,6 +7,7 @@ import RouletteBetControls from "../components/Roulette/betcontrols";
 import RouletteColor from "../components/Roulette/roulettecolor";
 import {subscribeToGame, unsubscribeFromGames} from "../util/socket";
 import {Meta, Title} from "@solidjs/meta";
+import {authedAPI, createNotification} from "../util/api";
 
 function Roulette(props) {
 
@@ -30,11 +31,15 @@ function Roulette(props) {
 
     const [ws] = useWebsocket()
 
+    const [showDebug, setShowDebug] = createSignal(false);
+
     createEffect(() => {
         if (ws() && ws().connected && !hasConnected) {
             unsubscribeFromGames(ws())
             subscribeToGame(ws(), 'roulette')
             ws().on('roulette:set', (data) => {
+                console.log('Roulette data from server:', data)
+                
                 let stats = { green: 0, red: 0, gold: 0 }
                 let last10 = []
 
@@ -54,6 +59,7 @@ function Roulette(props) {
                 setBets(data.bets)
 
                 let timeLeftToRoll = new Date(data.round.createdAt).getTime() + data.config.betTime - Date.now()
+                console.log('Time left to roll:', timeLeftToRoll, 'Current round state:', data.round)
                 startCountdown(timeLeftToRoll)
             })
 
@@ -79,6 +85,8 @@ function Roulette(props) {
             })
 
             ws().on('roulette:roll', (roll) => {
+                console.log('Roll event received:', roll)
+                
                 let prev10 = last10()
                 let newLast100 = last100()
 
@@ -88,14 +96,15 @@ function Roulette(props) {
                 prev10.unshift(roll?.result)
                 prev10 = prev10.slice(0, 10)
 
+                setState('ROLLING')
+                setRound(roll)
+
                 setTimeout(() => {
                     setStats(calculateStats(newLast100))
                     setLast100(newLast100)
                     setLast10(prev10)
                     setState('WINNERS')
                 }, 5000)
-
-                setRound(roll)
             })
 
             hasConnected = true
@@ -142,6 +151,22 @@ function Roulette(props) {
         return stats
     }
 
+    // Function to manually request a new round (admin/debug only)
+    async function requestNewRound() {
+        try {
+            const result = await authedAPI('/roulette/debug/reset', 'POST', null, false);
+            if (result.success) {
+                createNotification('success', 'Sent request to restart roulette round');
+            } else {
+                createNotification('error', result.error || 'Failed to restart round');
+                console.error('Reset failed:', result);
+            }
+        } catch (err) {
+            console.error('Error requesting new round:', err);
+            createNotification('error', 'Error requesting new round');
+        }
+    }
+
     return (
         <>
             <Title>BloxClash | Roulette</Title>
@@ -149,6 +174,22 @@ function Roulette(props) {
             <Meta name='description' content='Bet On Roulette And Win Free Robux on BloxClash! Play On Red, Green And Gold To Win 14x Multiplier'></Meta>
 
             <div class='roulette-container fadein'>
+                {/* Debug panel visible to all users for testing */}
+                <div class="debug-controls">
+                    <button class="debug-toggle" onClick={() => setShowDebug(!showDebug())}>
+                        {showDebug() ? 'Hide Debug' : 'Show Debug'}
+                    </button>
+                    
+                    <Show when={showDebug()}>
+                        <div class="debug-panel">
+                            <p>Round ID: {round()?.id || 'None'}</p>
+                            <p>State: {state() || 'Betting'}</p>
+                            <p>TimeLeft: {Math.round(timeLeft() / 1000)}s</p>
+                            <button class="debug-action" onClick={requestNewRound}>Force New Round</button>
+                        </div>
+                    </Show>
+                </div>
+                
                 <div class='roulette-header'>
                     <p class='desc'>PREVIOUS 10 ROLLS</p>
 
@@ -191,11 +232,11 @@ function Roulette(props) {
                 <RouletteBetControls bet={bet()} setBet={setBet} user={props.user}/>
 
                 <div class='colors'>
-                    <RouletteColor color='green' amount={bet()} bets={bets()} round={round()} state={state()}/>
+                    <RouletteColor color='green' amount={bet()} bets={bets()} round={round()} state={state()} timeLeft={timeLeft()}/>
 
-                    <RouletteColor color='gold' amount={bet()} bets={bets()} round={round()} state={state()}/>
+                    <RouletteColor color='gold' amount={bet()} bets={bets()} round={round()} state={state()} timeLeft={timeLeft()}/>
 
-                    <RouletteColor color='red' amount={bet()} bets={bets()} round={round()} state={state()}/>
+                    <RouletteColor color='red' amount={bet()} bets={bets()} round={round()} state={state()} timeLeft={timeLeft()}/>
                 </div>
             </div>
 
@@ -384,6 +425,48 @@ function Roulette(props) {
                   flex-direction: column;
                   gap: 36px;
                 }
+              }
+
+              .debug-controls {
+                  position: absolute;
+                  top: 10px;
+                  right: 10px;
+                  z-index: 1000;
+              }
+              
+              .debug-toggle {
+                  background: #2B2750;
+                  color: #ADA3EF;
+                  border: 1px solid #5D4FBE;
+                  border-radius: 4px;
+                  padding: 5px 10px;
+                  cursor: pointer;
+                  font-size: 12px;
+              }
+              
+              .debug-panel {
+                  margin-top: 5px;
+                  background: rgba(43, 39, 80, 0.9);
+                  border: 1px solid #5D4FBE;
+                  border-radius: 4px;
+                  padding: 10px;
+                  color: #FFF;
+                  font-size: 12px;
+              }
+              
+              .debug-panel p {
+                  margin: 5px 0;
+              }
+              
+              .debug-action {
+                  background: #C53852;
+                  color: white;
+                  border: none;
+                  border-radius: 4px;
+                  padding: 5px 10px;
+                  margin-top: 5px;
+                  cursor: pointer;
+                  font-size: 12px;
               }
             `}</style>
         </>
