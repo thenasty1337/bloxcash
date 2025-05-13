@@ -31,6 +31,7 @@ CREATE TABLE `users` (
     `robloxId` BIGINT UNSIGNED UNIQUE NULL,
     `affiliateCode` VARCHAR(255) UNIQUE NULL, -- Unique code assigned to users for referrals
     `affiliateEarningsOffset` DECIMAL(20, 8) NOT NULL DEFAULT 0.00000000, -- Tracks earnings already paid out/accounted for
+    `mentionsEnabled` BOOLEAN NOT NULL DEFAULT TRUE, -- Whether user can be mentioned in chat
     PRIMARY KEY (`id`),
     UNIQUE KEY `username_unique` (`username`)
 );

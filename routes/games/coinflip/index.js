@@ -32,6 +32,11 @@ router.post('/create', isAuthed, apiLimiter, async (req, res) => {
 
             const [[user]] = await connection.query('SELECT id, username, balance, role, xp FROM users WHERE id = ? FOR UPDATE', [req.userId]);
 
+            if (!user) {
+                console.error(`Coinflip create failed: User not found for id ${req.userId}`);
+                return res.status(404).json({ error: 'USER_NOT_FOUND' });
+            }
+
             if (user.balance < amount) {
                 return res.json({ error: 'INSUFFICIENT_BALANCE' });
             }
