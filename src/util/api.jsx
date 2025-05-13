@@ -1,6 +1,8 @@
 import {toast} from "solid-toast";
 import {errors} from "../resources/errors";
 
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export const dropdowns = []
 
 export function createNotification(type, message, options) {
@@ -14,7 +16,8 @@ export function createNotification(type, message, options) {
 
 export async function api(path, method, body, notification = false, headers =  { 'Content-Type': 'application/json' }) {
     try {
-        let res = await fetch(path, {
+        const fullPath = path.startsWith('http') ? path : `${API_BASE_URL}${path.startsWith('/') ? path : '/' + path}`;
+        let res = await fetch(fullPath, {
             method,
             headers,
             credentials: 'include',

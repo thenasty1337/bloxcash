@@ -14,37 +14,21 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 const { sql } = require('./database');
+const cors = require('cors');
 
 const app = express();
 app.disable('x-powered-by');
 
-if (process.env.NODE_ENV == 'development') {
-
-    app.use((req, res, next) => {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "*");
-        res.header("Access-Control-Allow-Methods", "*");
-        res.header('Access-Control-Max-Age', '7200');
-        next();
-    });
-
-} else {
-
-    app.use((req, res, next) => {
-        if (req.path.startsWith('/slots/hacksaw')) {
-            res.header("Access-Control-Allow-Origin", "https://static-live.hacksawgaming.com");
-            res.header("Access-Control-Allow-Headers", "*");
-            res.header("Access-Control-Allow-Methods", "*");
-            res.header('Access-Control-Max-Age', '7200');
-        }
-        next();
-    });
-
-}
-
-app.options('*', (req, res) => {
-    res.sendStatus(204);
-});
+// --- CORS Configuration ---
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : /* Add your production frontend URL here */ true,
+  credentials: true, // Important for cookies/sessions
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
+// Handle preflight requests for all routes
+app.options('*', cors(corsOptions));
+// --- End CORS Configuration ---
 
 app.set('view engine', 'ejs');
 app.use('/public', express.static(path.join(__dirname, 'public')));

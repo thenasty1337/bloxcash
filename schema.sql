@@ -23,6 +23,7 @@ CREATE TABLE `users` (
     `nonce` BIGINT UNSIGNED NOT NULL DEFAULT 0, -- Nonce for provably fair systems
     `ip` VARCHAR(45), -- Last known IP address
     `country` VARCHAR(255) NULL, -- User's country
+    `mutedUntil` TIMESTAMP NULL, -- Timestamp when user's chat mute expires
     `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updatedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `lastLogout` TIMESTAMP NULL, -- Timestamp of last logout
