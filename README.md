@@ -19,12 +19,29 @@
 
 ---
 
+## Project Structure
+
+The project is organized into two main directories:
+
+- **`/backend`**: Express.js server providing API endpoints and WebSocket connections
+  - `app.js` - Main server entry point
+  - `routes/` - API endpoints
+  - `database/` - Database connection and queries
+  - `socketio/` - WebSocket implementation
+  - `views/` - EJS templates
+
+- **`/frontend`**: SolidJS frontend application
+  - `src/` - Source code
+  - `public/` - Static assets
+  - `index.html` - HTML template
+
+---
+
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js and npm
-- PHP (for local server setup)
+- Node.js (v16+) and npm
 
 ### Installation
 
@@ -34,30 +51,37 @@
     cd bloxcash
     ```
 
-2. **Install Dependencies**:
+2. **Install Backend Dependencies**:
     ```bash
+    cd backend
     npm install
     ```
 
-3. **Environment Configuration**:
-   - Copy `.env.example` to `.env` and fill in all required environment variables.
-
-4. **Database Setup**:
-   - Import the initial database schema from the `database` folder.
-
-5. **Start Development Server**:
+3. **Install Frontend Dependencies**:
     ```bash
-    npm run dev
+    cd ../frontend
+    npm install
     ```
 
----
+4. **Environment Configuration**:
+   - Create `.env` in the backend directory and add required environment variables.
 
-## Project Structure
+5. **Database Setup**:
+   - Import the database schema from `backend/full_schema.sql`.
 
-- **`/api`**: PHP scripts handling backend API requests.
-- **`/public`**: Static assets like images and CSS files.
-- **`/views`**: Frontend templates and HTML.
-- **`/src`**: Core application code and utilities.
+6. **Start Development Servers**:
+   
+   Backend:
+    ```bash
+    cd backend
+    npm run dev
+    ```
+   
+   Frontend:
+    ```bash
+    cd frontend
+    npm run dev
+    ```
 
 ---
 

@@ -1,0 +1,26 @@
+# Dependencies
+/node_modules
+
+# Environment
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# IDE
+/.vscode
+/.idea
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# Misc
+.DS_Store 
