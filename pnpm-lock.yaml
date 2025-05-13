@@ -134,6 +134,9 @@ importers:
       solid-js:
         specifier: ^1.7.6
         version: 1.7.6
+      solid-qr-code:
+        specifier: ^0.1.11
+        version: 0.1.11(solid-js@1.7.6)
       solid-styled:
         specifier: ^0.8.1
         version: 0.8.1(@babel/core@7.22.5)(solid-js@1.7.6)
@@ -146,6 +149,9 @@ importers:
       text-to-svg:
         specifier: ^3.1.5
         version: 3.1.5
+      ulid:
+        specifier: ^3.0.0
+        version: 3.0.0
       ws:
         specifier: ^8.13.0
         version: 8.18.2
@@ -2161,6 +2167,12 @@ packages:
   solid-js@1.7.6:
     resolution: {integrity: sha512-DXVOTjUh/bIAhE0fIqu3ezGLyQaez7v8EOw3uPLIi87DmLjg+hsuCAgKyNIZ+o4jUetOk3ZORccvJmE1yZUk8g==}
 
+  solid-qr-code@0.1.11:
+    resolution: {integrity: sha512-8TpELeuK6OoPz5TfJaycsna63IivaSr6Y34qU79eYDF+SRTowO9os8gpElNvNe2FFROZuMZpf28jgmn9gV20Eg==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      solid-js: ^1.8.0
+
   solid-refresh@0.5.3:
     resolution: {integrity: sha512-Otg5it5sjOdZbQZJnvo99TEBAr6J7PQ5AubZLNU6szZzg3RQQ5MX04oteBIIGDs0y2Qv8aXKm9e44V8z+UnFdw==}
     peerDependencies:
@@ -2307,6 +2319,10 @@ packages:
   uid-safe@2.1.5:
     resolution: {integrity: sha512-KPHm4VL5dDXKz01UuEd88Df+KzynaohSL9fBh096KWAxSKZQDI2uBrVqtvRM4rwrIrRRKsdLNML/lnaaVSRioA==}
     engines: {node: '>= 0.8'}
+
+  ulid@3.0.0:
+    resolution: {integrity: sha512-yvZYdXInnJve6LdlPIuYmURdS2NP41ZoF4QW7SXwbUKYt53+0eDAySO+rGSvM2O/ciuB/G+8N7GQrZ1mCJpuqw==}
+    hasBin: true
 
   undici-types@6.21.0:
     resolution: {integrity: sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==}
@@ -4655,6 +4671,10 @@ snapshots:
       csstype: 3.1.2
       seroval: 0.5.1
 
+  solid-qr-code@0.1.11(solid-js@1.7.6):
+    dependencies:
+      solid-js: 1.7.6
+
   solid-refresh@0.5.3(solid-js@1.7.6):
     dependencies:
       '@babel/generator': 7.22.5
@@ -4827,6 +4847,8 @@ snapshots:
   uid-safe@2.1.5:
     dependencies:
       random-bytes: 1.0.0
+
+  ulid@3.0.0: {}
 
   undici-types@6.21.0: {}
 

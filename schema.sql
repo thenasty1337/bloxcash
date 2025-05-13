@@ -3,7 +3,7 @@
 
 -- Core User Table
 CREATE TABLE `users` (
-    `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `id` CHAR(26) NOT NULL,
     `username` VARCHAR(255) NOT NULL,
     `email` VARCHAR(255) UNIQUE NULL,
     `balance` DECIMAL(20, 8) NOT NULL DEFAULT 0.00000000,
@@ -45,7 +45,7 @@ CREATE TABLE `users` (
 -- Transactions Log
 CREATE TABLE `transactions` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
+    `userId` CHAR(26) NOT NULL,
     `amount` DECIMAL(20, 8) NOT NULL,
     `type` VARCHAR(50) NOT NULL, -- e.g., 'in', 'out', 'deposit', 'withdraw'
     `method` VARCHAR(50) NOT NULL, -- e.g., 'rain', 'promo', 'tip', 'robux', 'crypto', 'limiteds', 'survey-chargeback', 'deposit-bonus', 'adurite'
@@ -61,7 +61,7 @@ CREATE TABLE `transactions` (
 -- Rains
 CREATE TABLE `rains` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `host` BIGINT UNSIGNED, -- Null for system rains
+    `host` CHAR(26) NULL,
     `amount` DECIMAL(20, 8) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `endedAt` TIMESTAMP NULL,
@@ -72,7 +72,7 @@ CREATE TABLE `rains` (
 CREATE TABLE `rainUsers` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `rainId` BIGINT UNSIGNED NOT NULL,
-    `userId` BIGINT UNSIGNED NOT NULL,
+    `userId` CHAR(26) NOT NULL,
     `amount` DECIMAL(20, 8), -- Amount received by this user from this rain
     `joinedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
@@ -84,7 +84,7 @@ CREATE TABLE `rainUsers` (
 -- Chat Messages
 CREATE TABLE `chatMessages` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `senderId` BIGINT UNSIGNED, -- Null for system messages
+    `senderId` CHAR(26) NULL,
     `channelId` VARCHAR(50) DEFAULT NULL, -- e.g., 'global', 'VIP', or NULL for system/direct messages
     `type` VARCHAR(50) NOT NULL, -- e.g., 'user', 'system', 'rain-end'
     `content` TEXT NOT NULL, -- Can be JSON for structured messages
@@ -100,7 +100,7 @@ CREATE TABLE `chatMessages` (
 -- Surveys
 CREATE TABLE `surveys` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
+    `userId` CHAR(26) NOT NULL,
     `provider` VARCHAR(50) NOT NULL, -- e.g., 'lootably', 'cpx'
     `transactionId` VARCHAR(255) NOT NULL, -- Provider's transaction ID
     `robux` DECIMAL(20, 8) NOT NULL,
@@ -120,7 +120,7 @@ CREATE TABLE `surveys` (
 CREATE TABLE `adurite` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `aduriteId` VARCHAR(255) NOT NULL, -- ID from Adurite system
-    `userId` BIGINT UNSIGNED NOT NULL,
+    `userId` CHAR(26) NOT NULL,
     `robuxAmount` DECIMAL(20, 8) NOT NULL,
     `fiatAmount` DECIMAL(20, 8),
     `status` VARCHAR(50) NOT NULL, -- e.g., 'pending', 'reserved', 'failed', 'completed'
@@ -134,8 +134,8 @@ CREATE TABLE `adurite` (
 -- Marketplace (User-to-User Limiteds Trading)
 CREATE TABLE `marketplaceListings` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `sellerId` BIGINT UNSIGNED NOT NULL,
-    `buyerId` BIGINT UNSIGNED,
+    `sellerId` CHAR(26) NOT NULL,
+    `buyerId` CHAR(26) NULL,
     `robloxTradeId` VARCHAR(255),
     `status` VARCHAR(50) NOT NULL DEFAULT 'active', -- e.g., 'active', 'completed', 'cancelled'
     `price` DECIMAL(20, 8) NOT NULL, -- Total price of all items in listing
@@ -162,7 +162,7 @@ CREATE TABLE `marketplaceListingItems` (
 -- Robux Exchange (Deposits/Withdrawals via Game Passes)
 CREATE TABLE `robuxExchanges` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
+    `userId` CHAR(26) NOT NULL,
     `operation` VARCHAR(50) NOT NULL, -- 'deposit' or 'withdraw'
     `totalAmount` DECIMAL(20, 2) NOT NULL, -- Robux amount
     `filledAmount` DECIMAL(20, 2) NOT NULL DEFAULT 0.00,
@@ -238,7 +238,7 @@ CREATE TABLE `caseItems` (
 
 CREATE TABLE `caseOpenings` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
+    `userId` CHAR(26) NOT NULL,
     `caseVersionId` BIGINT UNSIGNED NOT NULL,
     `rollId` BIGINT UNSIGNED NOT NULL, -- FK to fairRolls
     `caseItemId` BIGINT UNSIGNED NOT NULL, -- The item won
@@ -268,7 +268,7 @@ CREATE TABLE `battles` (
 CREATE TABLE `battlePlayers` ( -- Users participating in a battle
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     `battleId` BIGINT UNSIGNED NOT NULL,
-    `userId` BIGINT UNSIGNED NOT NULL,
+    `userId` CHAR(26) NOT NULL,
     `team` VARCHAR(50), -- If team-based battles
     PRIMARY KEY (`id`),
     UNIQUE KEY `battleId_userId_unique` (`battleId`, `userId`),
@@ -289,9 +289,9 @@ CREATE TABLE `battleOpenings` ( -- Links case openings to battles
 -- Game: Coinflip
 CREATE TABLE `coinflips` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `ownerId` BIGINT UNSIGNED NOT NULL, -- User who created the coinflip
-    `fire` BIGINT UNSIGNED, -- userId of player on fire side
-    `ice` BIGINT UNSIGNED, -- userId of player on ice side
+    `ownerId` CHAR(26) NOT NULL,
+    `fire` CHAR(26) NULL,
+    `ice` CHAR(26) NULL,
     `amount` DECIMAL(20, 8) NOT NULL,
     `serverSeed` VARCHAR(255) NOT NULL,
     `clientSeed` VARCHAR(255),
@@ -309,8 +309,8 @@ CREATE TABLE `coinflips` (
 -- Table for Rain Tips (Contributions)
 CREATE TABLE `rainTips` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL, -- User who tipped
-    `rainId` BIGINT UNSIGNED NOT NULL, -- Rain the tip was for
+    `userId` CHAR(26) NOT NULL,
+    `rainId` BIGINT UNSIGNED NOT NULL,
     `amount` DECIMAL(20, 8) NOT NULL, -- Amount tipped
     `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
@@ -322,7 +322,7 @@ CREATE TABLE `rainTips` (
 -- General Bets Log (for various games)
 CREATE TABLE `bets` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
+    `userId` CHAR(26) NOT NULL,
     `game` VARCHAR(50) NOT NULL, -- e.g., 'coinflip', 'roulette', 'slots', 'battles'
     `gameId` BIGINT UNSIGNED NOT NULL, -- ID of the specific game instance (e.g., coinflipId, rouletteRoundId)
     `amount` DECIMAL(20, 8) NOT NULL, -- Bet amount
@@ -340,7 +340,7 @@ CREATE TABLE `bets` (
 -- Crypto Deposits
 CREATE TABLE `cryptoWallets` ( -- User's deposit wallets
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
+    `userId` CHAR(26) NOT NULL,
     `currency` VARCHAR(10) NOT NULL, -- e.g., 'BTC', 'ETH', 'LTC'
     `address` VARCHAR(255) NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -351,7 +351,7 @@ CREATE TABLE `cryptoWallets` ( -- User's deposit wallets
 
 CREATE TABLE `cryptoDeposits` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
+    `userId` CHAR(26) NOT NULL,
     `currency` VARCHAR(10) NOT NULL,
     `cryptoAmount` DECIMAL(36, 18) NOT NULL, -- High precision for crypto
     `fiatAmount` DECIMAL(20, 2), -- USD or other fiat equivalent at time of deposit
@@ -369,7 +369,7 @@ CREATE TABLE `cryptoDeposits` (
 -- Crypto Withdrawals
 CREATE TABLE `cryptoWithdraws` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
+    `userId` CHAR(26) NOT NULL,
     `currency` VARCHAR(10) NOT NULL,
     `chain` VARCHAR(50), -- e.g. 'ERC20', 'TRC20', 'BTC'
     `address` VARCHAR(255) NOT NULL,
@@ -391,7 +391,7 @@ CREATE TABLE `cryptoWithdraws` (
 -- Discord Integration / Earn System
 CREATE TABLE `discordAuths` ( -- Linking Discord accounts to platform accounts
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
+    `userId` CHAR(26) NOT NULL,
     `discordId` VARCHAR(255) NOT NULL,
     `discordUsername` VARCHAR(255),
     `discordAvatar` VARCHAR(255),
@@ -436,7 +436,7 @@ CREATE TABLE `promoCodes` (
 
 CREATE TABLE `promoCodeUses` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
+    `userId` CHAR(26) NOT NULL,
     `promoCodeId` BIGINT UNSIGNED NOT NULL,
     `usedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
@@ -460,7 +460,7 @@ CREATE TABLE `slots` ( -- General slot machine definitions
 
 CREATE TABLE `hacksawSessions` ( -- User sessions for Hacksaw slots
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
+    `userId` CHAR(26) NOT NULL,
     `sessionId` VARCHAR(255) NOT NULL, -- Session ID from Hacksaw
     `gameId` VARCHAR(255) NOT NULL, -- Provider's game ID (references slots.providerGameId)
     `balance` DECIMAL(20, 8) NOT NULL, -- Session balance in provider's currency (e.g. cents)
@@ -491,7 +491,7 @@ CREATE TABLE `roulette` ( -- Stores each round of roulette
 -- Notifications
 CREATE TABLE `notifications` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
+    `userId` CHAR(26) NOT NULL,
     `type` VARCHAR(100) NOT NULL, -- e.g., 'deposit-completed', 'withdraw-completed', 'tip-received'
     `data` JSON, -- Content of the notification
     `isRead` BOOLEAN NOT NULL DEFAULT FALSE,
@@ -503,15 +503,15 @@ CREATE TABLE `notifications` (
 -- User Seeds (for provably fair system)
 CREATE TABLE `userSeeds` (
     `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    `userId` BIGINT UNSIGNED NOT NULL,
+    `userId` CHAR(26) NOT NULL,
     `serverSeed` VARCHAR(255) NOT NULL,
     `clientSeed` VARCHAR(255) NOT NULL,
     `hashedServerSeed` VARCHAR(255), -- If you store hashed version publicly
     `isActive` BOOLEAN NOT NULL DEFAULT FALSE, -- If this is the current active seed pair
     `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
-    -- Partial unique index constraint (MySQL 8.0.13+)
-    UNIQUE KEY `user_active_seed_unique` (`userId`, `isActive`) WHERE (`isActive` IS TRUE),
+    -- Partial unique index constraint (MySQL 8.0.13+) - Removing WHERE clause for compatibility
+    UNIQUE KEY `user_active_seed_unique` (`userId`, `isActive`),
     -- Keep a regular index on userId for lookups
     KEY `userId_idx` (`userId`),
     CONSTRAINT `fk_userSeeds_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE

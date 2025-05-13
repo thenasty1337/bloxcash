@@ -1,4 +1,5 @@
 import {createResource, createSignal, Show} from "solid-js";
+import { QRCodeSVG } from "solid-qr-code";
 import {authedAPI} from "../../util/api";
 import Loader from "../Loader/loader";
 
@@ -120,9 +121,13 @@ function CryptoDeposit(props) {
                         </div>
 
                         <div className='conversions-container'>
-                            <img
-                                src={`https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=${address()}&choe=UTF-8&chld=L|2`}
-                                className='qr' alt=''/>
+                            <Show when={address()}>
+                                <QRCodeSVG
+                                    value={address()}
+                                    size={132}
+                                    class='qr'
+                                />
+                            </Show>
 
                             <div className='conversions'>
                                 <div className='input'>
