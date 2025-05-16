@@ -28,90 +28,141 @@ function Roulette(props) {
         red: 0,
         gold: 0
     })
+    
+    // Track the latest processed round ID to prevent processing outdated events
+    const [latestProcessedRoundId, setLatestProcessedRoundId] = createSignal(0)
 
     const [ws] = useWebsocket()
 
     const [showDebug, setShowDebug] = createSignal(false);
+    
+    // Function to properly set up event listeners
+    function setupSocketListeners(socket) {
+        // First remove any existing listeners to prevent duplicates
+        socket.off('roulette:set');
+        socket.off('roulette:bets');
+        socket.off('roulette:bet:update');
+        socket.off('roulette:new');
+        socket.off('roulette:roll');
+        
+        // Then add our listeners
+        socket.on('roulette:set', (data) => {
+            console.log('Roulette data from server:', data)
+            
+            let stats = { green: 0, red: 0, gold: 0 }
+            let last10 = []
 
+            for (let i = 0; i < data.last.length; i++) {
+                let color = numberToColor(data.last[i])
+                stats[color]++
+
+                if (i < 10) {
+                    last10.push(data.last[i])
+                }
+            }
+
+            setStats(stats)
+            setLast100(data.last)
+            setLast10(last10)
+            setConfig(data.config)
+            setBets(data.bets)
+
+            let timeLeftToRoll = new Date(data.round.createdAt).getTime() + data.config.betTime - Date.now()
+            console.log('Time left to roll:', timeLeftToRoll, 'Current round state:', data.round)
+            startCountdown(timeLeftToRoll)
+        });
+
+        socket.on('roulette:bets', (b) => {
+            setBets(bets => [...b, ...bets])
+        });
+
+        socket.on('roulette:bet:update', (b) => {
+            let curBets = bets()
+            let betIndex = curBets?.findIndex(bet => bet.id === b.id)
+            if (betIndex < 0) return
+
+            let newBet = curBets[betIndex]
+            newBet.amount = b.amount
+
+            setBets([...curBets.slice(0, betIndex), {...newBet}, ...curBets.slice(betIndex + 1)])
+        });
+
+        socket.on('roulette:new', (roll) => {
+            setBets([])
+            setState('')
+            startCountdown()
+            
+            // Update our tracking to handle the new round
+            if (roll && roll.id && roll.id > latestProcessedRoundId()) {
+                console.log(`New round started: ${roll.id}`);
+            }
+        });
+
+        socket.on('roulette:roll', (roll) => {
+            // Skip duplicate roll events or outdated rounds
+            if (!roll || !roll.id || roll.id <= latestProcessedRoundId()) {
+                console.log(`Ignoring outdated roll event for round ${roll?.id} - already processed up to ${latestProcessedRoundId()}`);
+                return;
+            }
+            
+            // Log full details of the received roll data including types
+            console.log(`Processing roll event for round ${roll.id}:`, {
+                id: roll.id,
+                result: roll.result,
+                resultType: typeof roll.result,
+                color: roll.color,
+                colorType: typeof roll.color,
+                fullObject: JSON.stringify(roll)
+            });
+            
+            // Ensure we're using numeric values throughout
+            const processedRoll = {
+                id: Number(roll.id),
+                result: Number(roll.result),
+                color: Number(roll.color)
+            };
+            
+            // Update our tracking of the latest processed round
+            setLatestProcessedRoundId(processedRoll.id);
+            
+            let prev10 = last10()
+            let newLast100 = last100()
+
+            // Use the numeric result value
+            newLast100.unshift(processedRoll.result)
+            newLast100 = newLast100.slice(0, 100)
+
+            prev10.unshift(processedRoll.result)
+            prev10 = prev10.slice(0, 10)
+
+            setState('ROLLING')
+            // Store the properly typed values in the round state
+            setRound(processedRoll)
+
+            setTimeout(() => {
+                setStats(calculateStats(newLast100))
+                setLast100(newLast100)
+                setLast10(prev10)
+                setState('WINNERS')
+            }, 5000)
+        });
+    }
+    
     createEffect(() => {
         if (ws() && ws().connected && !hasConnected) {
             unsubscribeFromGames(ws())
             subscribeToGame(ws(), 'roulette')
-            ws().on('roulette:set', (data) => {
-                console.log('Roulette data from server:', data)
-                
-                let stats = { green: 0, red: 0, gold: 0 }
-                let last10 = []
-
-                for (let i = 0; i < data.last.length; i++) {
-                    let color = numberToColor(data.last[i])
-                    stats[color]++
-
-                    if (i < 10) {
-                        last10.push(data.last[i])
-                    }
-                }
-
-                setStats(stats)
-                setLast100(data.last)
-                setLast10(last10)
-                setConfig(data.config)
-                setBets(data.bets)
-
-                let timeLeftToRoll = new Date(data.round.createdAt).getTime() + data.config.betTime - Date.now()
-                console.log('Time left to roll:', timeLeftToRoll, 'Current round state:', data.round)
-                startCountdown(timeLeftToRoll)
-            })
-
-            ws().on('roulette:bets', (b) => {
-                setBets(bets => [...b, ...bets])
-            })
-
-            ws().on('roulette:bet:update', (b) => {
-                let curBets = bets()
-                let betIndex = curBets?.findIndex(bet => bet.id === b.id)
-                if (betIndex < 0) return
-
-                let newBet = curBets[betIndex]
-                newBet.amount = b.amount
-
-                setBets([...curBets.slice(0, betIndex), {...newBet}, ...curBets.slice(betIndex + 1)])
-            })
-
-            ws().on('roulette:new', (roll) => {
-                setBets([])
-                setState('')
-                startCountdown()
-            })
-
-            ws().on('roulette:roll', (roll) => {
-                console.log('Roll event received:', roll)
-                
-                let prev10 = last10()
-                let newLast100 = last100()
-
-                newLast100.unshift(roll?.result)
-                newLast100 = newLast100.slice(0, 100)
-
-                prev10.unshift(roll?.result)
-                prev10 = prev10.slice(0, 10)
-
-                setState('ROLLING')
-                setRound(roll)
-
-                setTimeout(() => {
-                    setStats(calculateStats(newLast100))
-                    setLast100(newLast100)
-                    setLast10(prev10)
-                    setState('WINNERS')
-                }, 5000)
-            })
-
-            hasConnected = true
+            
+            // Setup socket listeners
+            setupSocketListeners(ws());
+            
+            hasConnected = true;
         }
 
         if (!ws() || !ws().connected) {
-            hasConnected = false
+            hasConnected = false;
+            // Reset our state tracking when disconnected
+            setLatestProcessedRoundId(0);
         }
     })
 

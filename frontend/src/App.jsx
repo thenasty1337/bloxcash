@@ -88,13 +88,56 @@ function App() {
 
   createEffect(() => {
     if (ws() && ws().connected) {
+      // First remove any existing listeners to prevent duplicates
+      ws().off('balance');
+      ws().off('balance:update');
+      
+      // Handle the legacy balance event (keeping this for compatibility)
       ws().on('balance', (type, amount, delay) => {
+        console.log(`💰 Legacy balance update received: ${type} ${amount}`, { currentBalance: user()?.balance });
+        
         if (type === 'set') {
-          setTimeout(() => setBalance(amount), +delay || 0)
+          console.log(`💰 Setting balance to: ${amount}`);
+          setTimeout(() => {
+            setBalance(amount);
+            console.log(`💰 Balance updated to: ${amount}`);
+          }, +delay || 0);
         }
 
         if (type === 'add') {
-          setTimeout(() => setBalance(user()?.balance + amount), +delay || 0)
+          const newBalance = (user()?.balance || 0) + amount;
+          console.log(`💰 Adding ${amount} to balance. New balance will be: ${newBalance}`);
+          setTimeout(() => {
+            setBalance(newBalance);
+            console.log(`💰 Balance updated to: ${newBalance}`);
+          }, +delay || 0);
+        }
+      });
+      
+      // Handle the new balance:update event (new format with user filtering)
+      ws().on('balance:update', (data) => {
+        console.log(`💰 New balance update received:`, data);
+        
+        // Only process updates for the current user
+        if (user() && data.userId === user().id) {
+          console.log(`💰 Processing balance update for current user`);
+          
+          if (data.type === 'set') {
+            console.log(`💰 Setting balance to: ${data.amount}`);
+            setTimeout(() => {
+              setBalance(data.amount);
+              console.log(`💰 Balance updated to: ${data.amount}`);
+            }, +data.delay || 0);
+          }
+  
+          if (data.type === 'add') {
+            const newBalance = (user()?.balance || 0) + data.amount;
+            console.log(`💰 Adding ${data.amount} to balance. New balance will be: ${newBalance}`);
+            setTimeout(() => {
+              setBalance(newBalance);
+              console.log(`💰 Balance updated to: ${newBalance}`);
+            }, +data.delay || 0);
+          }
         }
       })
 

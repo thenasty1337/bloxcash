@@ -1,6 +1,6 @@
 import {createSignal, onCleanup, Show} from "solid-js";
 import {A, useSearchParams} from "@solidjs/router";
-import {api, authedAPI, createNotification, fetchUser, getJWT} from "../../util/api";
+import {api, authedAPI, createNotification, fetchUser} from "../../util/api";
 import {useUser} from "../../contexts/usercontextprovider";
 import Toggle from "../Toggle/toggle";
 

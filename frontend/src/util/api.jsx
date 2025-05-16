@@ -1,5 +1,7 @@
 import {toast} from "solid-toast";
 import {errors} from "../resources/errors";
+import authStore from "../stores/authStore";
+import { disconnectSocket } from "../utils/socket";
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -77,13 +79,20 @@ export function getRandomNumber(min, max, chance) {
     return Math.floor(chance.random() * range) + min;
 }
 
-export function getJWT() {
-    // For session authentication, we simply need to check if there's any cookie
-    // The actual session verification happens server-side
-    return document.cookie.length > 0 ? 'session' : '';
-}
-
 export function logout() {
-    document.cookie = `token= ; SameSite=Lax; Secure; expires=Thu, 01 Jan 1970 00:00:00 GMT`
-    window.location.reload()
+    // Use the auth store's logout function which handles JWT token revocation
+    
+    // First disconnect the socket
+    disconnectSocket();
+    
+    // Then logout via the API
+    authStore.logout().then(() => {
+        console.log('Successfully logged out');
+        // Reload the page to reset the UI state
+        window.location.reload();
+    }).catch(err => {
+        console.error('Logout error:', err);
+        // Force page reload even if logout API call fails
+        window.location.reload();
+    });
 }

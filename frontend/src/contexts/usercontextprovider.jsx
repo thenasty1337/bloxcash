@@ -1,4 +1,5 @@
-import {api, authedAPI, createNotification, fetchUser, getJWT} from "../util/api";
+import {api, authedAPI, createNotification, fetchUser} from "../util/api";
+import authStore from "../stores/authStore";
 import {createContext, createResource, createSignal, useContext} from "solid-js";
 
 const UserContext = createContext();
@@ -40,8 +41,8 @@ export function UserProvider(props) {
     }]
 
     async function getUser() {
-        let jwt = getJWT()
-        if (!jwt || jwt?.length < 1) {
+        // Check authentication status directly from authStore
+        if (!authStore.isAuthenticated) {
             setFetched(true)
             return null
         }

@@ -1,122 +1,187 @@
-import {createContext, useContext, createResource, createEffect} from "solid-js";
+import {createContext, useContext, createSignal, createEffect} from "solid-js";
 import io from "socket.io-client";
-import {getJWT} from "../util/api";
 import authStore from "../stores/authStore";
 import { useUser } from "../contexts/usercontextprovider";
 
 const WebsocketContext = createContext();
 
-export function WebsocketProvider(props) {
-    const [user] = useUser();
-    const [ws, { mutate, refetch }] = createResource(connectSocket), socket = [ws];
+// SINGLETON SOCKET MANAGER
+// This ensures we only ever have one socket connection across the entire app
+const SocketManager = (() => {
+    // Private variables
+    let instance = null;
+    let connectionAttempts = 0;
+    let authenticated = false;
     
-    // Refetch socket connection when user state changes
+    // Create a single usable socket instance
+    const createSocket = (serverUrl) => {
+        console.log('📱 Creating new singleton socket connection');
+        
+        // If we already have an instance and it's connected, return it
+        if (instance && instance.connected) {
+            console.log('📱 Reusing existing socket connection');
+            return instance;
+        }
+        
+        // Clean up any previous instance
+        if (instance) {
+            console.log('📱 Cleaning up previous socket instance');
+            try {
+                instance.disconnect();
+                instance.removeAllListeners();
+            } catch (e) {
+                console.error('Error cleaning up socket:', e);
+            }
+        }
+        
+        // Create new socket instance - without custom headers that cause CORS issues
+        instance = io(serverUrl, {
+            transports: ['polling', 'websocket'],
+            reconnection: true,
+            reconnectionDelay: 1000,
+            reconnectionAttempts: 10,
+            withCredentials: true
+            // Removed custom headers that were causing CORS issues
+        });
+        
+        console.log('📱 New socket instance created');
+        return instance;
+    };
+    
+    // Return the public API
+    return {
+        getSocket: (serverUrl) => {
+            if (!serverUrl) return null;
+            return instance || createSocket(serverUrl);
+        },
+        disconnect: () => {
+            if (instance) {
+                console.log('📱 Manually disconnecting socket');
+                instance.disconnect();
+                instance = null;
+                connectionAttempts = 0;
+                authenticated = false;
+            }
+        },
+        isAuthenticated: () => authenticated,
+        setAuthenticated: (value) => {
+            authenticated = value;
+        },
+        increaseAttempt: () => connectionAttempts++,
+        getAttempts: () => connectionAttempts,
+        resetAttempts: () => connectionAttempts = 0
+    };
+})();
+
+export function WebsocketProvider(props) {
+    // Use a signal instead of a resource for more control
+    const [ws, setWs] = createSignal(null);
+    const [user] = useUser();
+    
+    // Setup the connection once when the component mounts
+    // Use an effect that only runs once
     createEffect(() => {
-        if (user()) {
-            console.log("User authenticated, reconnecting socket");
-            // Allow some time for session to be properly established
-            setTimeout(() => {
-                if (ws()) {
-                    ws().disconnect();
-                }
-                refetch();
-            }, 300);
+        const serverUrl = import.meta.env.VITE_SERVER_URL;
+        if (!serverUrl) {
+            console.error('VITE_SERVER_URL environment variable is not set!');
+            return;
+        }
+        
+        // Get or create a socket connection
+        const socket = SocketManager.getSocket(serverUrl);
+        if (!socket) return;
+        
+        // Setup listeners only once
+        setupSocketListeners(socket);
+        
+        // Update the signal with our socket
+        setWs(socket);
+    });
+    
+    // Only reconnect on authentication state changes
+    createEffect(() => {
+        const isAuthenticated = user()?.id ? true : false;
+        const wasAuthenticated = SocketManager.isAuthenticated();
+        
+        // Only reconnect if auth state actually changed
+        if (isAuthenticated !== wasAuthenticated) {
+            console.log('📱 Auth state changed:', isAuthenticated ? 'authenticated' : 'logged out');
+            SocketManager.setAuthenticated(isAuthenticated);
+            
+            // If the current socket exists, authenticate it
+            const socket = ws();
+            if (socket && socket.connected && isAuthenticated) {
+                socket.emit('auth');
+            }
         }
     });
 
-    async function connectSocket() {
-
-        const serverUrl = import.meta.env.VITE_SERVER_URL; // Use VITE_SERVER_URL again
-        if (!serverUrl) {
-            console.error('VITE_SERVER_URL environment variable is not set!'); // Correct error message
-            return; // Prevent connection attempt if URL is missing
+    // Function to set up listeners on the socket
+    function setupSocketListeners(socket) {
+        // Skip if this socket already has listeners
+        if (socket._listenersInitialized) {
+            return;
         }
-
-        // Connect to the specific backend URL
-        // Force the browser to include credentials with all requests
-        document.cookie = document.cookie + "; SameSite=None; Secure";
         
-        console.log("Current cookies:", document.cookie);
+        // Set flag to avoid duplicate listeners
+        socket._listenersInitialized = true;
         
-        let tempWs = io(serverUrl, { 
-            transports: ['polling', 'websocket'], // Start with polling to ensure cookies are sent
-            reconnection: true, 
-            reconnectionDelay: 1000, 
-            reconnectionAttempts: 10,
-            withCredentials: true, // Important: Send cookies with the connection
-            extraHeaders: {
-                'X-Requested-With': 'XMLHttpRequest',
-            }
-        });
-
-        tempWs.on('connect', () => {
-            console.log('Connected to WS');
+        // Set up connect event
+        socket.on('connect', () => {
+            console.log('📱 Socket connected');
             
-            // Get current user from both contexts to ensure we're authenticated
+            // Reset connection attempts on successful connect
+            SocketManager.resetAttempts();
+            
+            // Send auth when connected if user is logged in
             const currentUser = user();
-            // Use our new SolidJS-based auth store
-            const userId = currentUser?.id || authStore.user?.id;
-            
-            console.log('Auth state on connect:', { 
-                jwtAuth: authStore.isAuthenticated, 
-                solidUser: currentUser ? true : false,
-                userId: userId
-            });
-            
-            // We now use cookie-based JWT authentication for security
-            // The cookies are automatically sent with the socket connection
-            tempWs.emit('auth');
-            console.log('Emitting auth request - using JWT cookies for security');
-            
-            // Add a slight delay to ensure the server has processed the initial connection
-            setTimeout(() => {
-                // Re-attempt authentication after a delay
-                tempWs.emit('auth');
-                console.log('Re-emitting auth request');
-            }, 500);
-            
-            mutate(tempWs);
-        })
-
-        tempWs.on('disconnect', (reason) => {
-            // Reconnect logic needs to use the serverUrl as well
-            if (reason !== 'io server disconnect' && reason !== 'transport close') { // Handle more disconnect reasons
-                 console.log('WS disconnected:', reason);
-                 // Consider adding exponential backoff or clearer retry logic here
-                 // The current setInterval logic might cause issues
-                 // For now, just ensure reconnection attempts use the correct URL
-                 // mutate(null); // Maybe not mutate to null immediately? Let socket.io handle retries
-                 return; 
+            if (currentUser?.id) {
+                console.log('📱 User authenticated, sending auth request');
+                socket.emit('auth');
             }
-            
-            // Simplified reconnect handling - rely on socket.io's built-in reconnection
-            console.log('WS disconnected, attempting reconnect:', reason);
-            // mutate(null) // Avoid immediate mutation to allow library reconnection
-            
-            // Remove the complex setInterval logic, let socket.io handle reconnection attempts
-            // let retrying = setInterval(() => { ... }, 1000)
-        })
-
-        // Add connection error handling
-        tempWs.on('connect_error', (err) => {
-            console.error('WS connection error:', err.message);
-            // Optionally mutate to null or show error state after several failed attempts
         });
-
+        
+        // Set up disconnect event
+        socket.on('disconnect', (reason) => {
+            console.log('📱 Socket disconnected:', reason);
+            // No need to manage reconnect - let socket.io handle it
+        });
+        
+        // Set up connection error handling
+        socket.on('connect_error', (err) => {
+            console.error('📱 Socket connection error:', err.message);
+            SocketManager.increaseAttempt();
+            
+            // After too many attempts, consider alternative actions
+            if (SocketManager.getAttempts() > 5) {
+                console.warn('📱 Multiple connection failures, consider refreshing the page');
+            }
+        });
+        
         // Handle auth response
-        tempWs.on('auth', (response) => {
-            console.log('Socket auth response:', response);
+        socket.on('auth', (response) => {
+            console.log('📱 Socket auth response:', response);
             if (response.success) {
-                console.log('Socket authenticated successfully with ID:', response.userId);
+                console.log('📱 Socket authenticated with ID:', response.userId);
+                SocketManager.setAuthenticated(true);
             } else {
-                console.warn('Socket authentication failed:', response.error);
+                console.warn('📱 Socket authentication failed:', response.error);
+                SocketManager.setAuthenticated(false);
+                
+                // Attempt auth again only once
+                if (!socket._authRetried && user()?.id) {
+                    socket._authRetried = true;
+                    setTimeout(() => socket.emit('auth'), 1000);
+                }
             }
         });
-
     }
 
+    // Return socket as a getter function to ensure latest value
+    const socketValue = [() => ws()];
+    
     return (
-        <WebsocketContext.Provider value={socket}>
+        <WebsocketContext.Provider value={socketValue}>
             {props.children}
         </WebsocketContext.Provider>
     );

@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client';
-import { useAuthStore } from '../stores/authStore';
+import authStore from '../stores/authStore';
 
 // Get server URL from environment or use default
 const serverUrl = import.meta.env.VITE_SERVER_URL || '/';
@@ -22,19 +22,28 @@ const socket = io(serverUrl, {
 
 // Handle reconnection with auth check
 socket.on('reconnect', () => {
-  // For Solid.js compatibility, get the current state this way
-  const state = useAuthStore.getState();
-  if (state.isAuthenticated && state.user) {
+  // Check authentication status directly from the store
+  if (authStore.isAuthenticated && authStore.user) {
     socket.emit('auth');
+    console.log('Socket reconnected, sent auth request');
   }
 });
 
 // Function to refresh socket connection when auth state changes
 export const refreshSocketConnection = () => {
-  const state = useAuthStore.getState();
-  if (state.isAuthenticated) {
-    socket.disconnect().connect();
-  }
+  console.log('Refreshing socket connection');
+  // Force disconnect and reconnect the socket
+  socket.disconnect();
+  // Use setTimeout to ensure disconnect is completed before reconnecting
+  setTimeout(() => socket.connect(), 100);
+  return socket;
 };
+
+// Function specifically for logout to ensure socket is properly disconnected
+export const disconnectSocket = () => {
+  console.log('Disconnecting socket due to logout');
+  socket.disconnect();
+};
+
 
 export default socket; 

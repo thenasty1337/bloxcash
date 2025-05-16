@@ -1,5 +1,6 @@
 import Avatar from "../Level/avatar";
-import {authedAPI, createNotification, getJWT} from "../../util/api";
+import {authedAPI, createNotification} from "../../util/api";
+import authStore from "../../stores/authStore";
 import {createEffect, createSignal, For} from "solid-js";
 
 const iconName = {
@@ -53,8 +54,8 @@ function RouletteColor(props) {
                 <button class={'color ' + props.color} onClick={async () => {
                     if (props?.amount < 1) return
 
-                    const jwt = getJWT();
-                    if (!jwt) {
+                    const isAuthenticated = authStore.isAuthenticated;
+                    if (!isAuthenticated) {
                         createNotification('error', 'Please log in to place a bet.');
                         return; 
                     }

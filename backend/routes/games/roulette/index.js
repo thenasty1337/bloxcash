@@ -45,9 +45,17 @@ router.post('/bet', isAuthed, apiLimiter, async (req, res) => {
                 return res.json({ error: 'INSUFFICIENT_BALANCE' });
             }
     
+            // Update DB: Deduct bet amount and add XP
             const xp = roundDecimal(amount * xpMultiplier);
             await connection.query('UPDATE users SET balance = balance - ?, xp = xp + ? WHERE id = ?', [amount, xp, user.id]);
             await xpChanged(user.id, user.xp, roundDecimal(user.xp + xp), connection);
+            
+            // Get the updated user balance after deduction
+            const [[updatedUser]] = await connection.query('SELECT balance FROM users WHERE id = ?', [user.id]);
+            
+            // Send immediate balance update via socket
+            console.log(`Sending balance update after bet: user ${user.id}, new balance ${updatedUser.balance}`);
+            io.to(user.id).emit('balance', 'set', updatedUser.balance);
    
             if (color != 0) {
                 const oppositeExists = roulette.bets.find(bet => bet.user.id === user.id && bet.color === (color == 1 ? 2 : 1));
@@ -71,6 +79,10 @@ router.post('/bet', isAuthed, apiLimiter, async (req, res) => {
                 await commit();
 
                 existing.amount += amount;
+                
+                // Log user bet with detailed information
+                const colorNames = ['gold', 'green', 'red'];
+                console.log(`👤 ${user.username} increased bet to ${existing.amount.toFixed(2)} on ${colorNames[color]} (round ID: ${roulette.round.id})`);
     
                 io.to('roulette').emit('roulette:bet:update', {
                     id: existing.id,
@@ -94,6 +106,10 @@ router.post('/bet', isAuthed, apiLimiter, async (req, res) => {
                     color,
                     amount
                 };
+                
+                // Log user bet with detailed information
+                const colorNames = ['gold', 'green', 'red'];
+                console.log(`👤 ${user.username} placed new bet of ${amount.toFixed(2)} on ${colorNames[color]} (round ID: ${roulette.round.id})`);
             
                 roulette.bets.push(bet);
                 io.to('roulette').emit('roulette:bets', [bet]);
