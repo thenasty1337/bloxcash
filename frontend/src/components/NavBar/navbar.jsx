@@ -116,8 +116,11 @@ function NavBar(props) {
                                         <Circularprogress progress={progressToNextLevel(props?.user?.xp || 0)}>
                                             <div class='avatar'>
                                                 <img
-                                                    src={`${import.meta.env.VITE_SERVER_URL}/user/${props.user?.id}/img`}
-                                                    width='31' height='31'/>
+    src={props.user?.avatar ? props.user.avatar : '/assets/icons/anon.svg'}
+    width='31' height='31'
+    alt='User avatar'
+    onError={e => { e.currentTarget.src = '/assets/icons/anon.svg'; }}
+/>
                                             </div>
                                         </Circularprogress>
                                     </div>
@@ -130,9 +133,12 @@ function NavBar(props) {
                                         <div class='avatar-wrapper'>
                                             <Circularprogress progress={progressToNextLevel(props?.user?.xp || 0)}>
                                                 <div class='avatar'>
-                                                    <img
-                                                        src={`${import.meta.env.VITE_SERVER_URL}/user/${props.user?.id}/img`}
-                                                        width='31' height='31'/>
+                                                <img
+    src={props.user?.avatar ? props.user.avatar : '/assets/icons/anon.svg'}
+    width='31' height='31'
+    alt='User avatar'
+    onError={e => { e.currentTarget.src = '/assets/icons/anon.svg'; }}
+/>
                                                 </div>
                                             </Circularprogress>
                                         </div>
