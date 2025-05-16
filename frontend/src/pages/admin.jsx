@@ -10,6 +10,7 @@ const URL_TO_PAGE = {
     '/admin/cashier': 'CASHIER',
     '/admin/rain': 'RAIN',
     '/admin/statsbook': 'STATSBOOK',
+    '/admin/cases': 'CASES',
     '/admin/settings': 'SETTINGS'
 }
 
@@ -64,6 +65,7 @@ function Admin(props) {
                                 <A href='/admin/cashier' class='admin-link'>CASHIER</A>
                                 <A href='/admin/rain' class='admin-link'>RAIN</A>
                                 <A href='/admin/statsbook' class='admin-link'>STATSBOOK</A>
+                                <A href='/admin/cases' class='admin-link'>CASES</A>
                                 <A href='/admin/settings' class='admin-link'>SETTINGS</A>
                             </div>
                         </div>

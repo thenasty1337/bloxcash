@@ -560,7 +560,7 @@ function WalletModal(props) {
                                      }}>
                                     <p style={{"font-size": "13px"}}>Currency: </p>
                                     <Show when={withdrawSymbol()} fallback={<p class='white bold'>Select</p>}>
-                                      <img src={`${import.meta.env.VITE_SERVER_URL}/public/cryptos/${withdrawSymbol()}.png`} height='18' alt={withdrawSymbol()}/>
+                                      <img src={`/cryptos/${withdrawSymbol().toUpperCase()}.png`} height='18' alt={withdrawSymbol()}/>
                                       <p class='white bold'>{withdrawSymbol()}</p>
                                     </Show>
                                     <img class='arrow' src='/assets/icons/dropdownarrow.svg' alt=''/>
@@ -573,7 +573,7 @@ function WalletModal(props) {
                                         <For each={withdrawCryptoTypes()}>{(crypto) =>
                                             <p class='option' onClick={() => { changeWithdrawCrypto(crypto?.id); setWithdrawCurrencyDropdown(false); }}
                                               style={{"transition": "background 0.2s ease"}}>
-                                                <img src={`${import.meta.env.VITE_SERVER_URL}/public/cryptos/${crypto.id}.png`} height='18' alt={crypto.id}/> {crypto?.id}
+                                                <img src={`/cryptos/${crypto.id.toUpperCase()}.png`} height='18' alt={crypto.id}/> {crypto?.id}
                                             </p>
                                         }</For>
                                     </div>
@@ -655,10 +655,10 @@ function WalletModal(props) {
                                 }}>
                                     <span style={{ "color": "#9489DB", "font-size": "12px" }}>
                                         <img src='/assets/icons/coin.svg' height='10' alt="Robux" style={{ "vertical-align": "middle", "margin-right": "3px" }} />
-                                        {formatNumber(withdrawRobux())} Robux
+                                       {withdrawCryptoValue()} {withdrawSymbol()}
                                     </span>
                                     <span style={{ "color": "#9489DB", "font-size": "12px" }}>
-                                        Network fee: <span style={{"color": "white"}}>{formatNumber( ( (withdrawChain()?.fee || 0) * withdrawPrice() ) / (withdrawRates()?.usd || 3.5) * (withdrawRates()?.robux || 1000) )} <img src='/assets/icons/coin.svg' height='10' alt="Robux" style={{ "vertical-align": "middle", "margin-left": "2px" }} /></span>
+                                        Network fee: <span style={{"color": "white"}}>${formatNumber( ( (withdrawChain()?.fee || 0) * withdrawPrice() ) )} USD</span>
                                     </span>
                                 </div>
                             </div>

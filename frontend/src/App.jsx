@@ -27,6 +27,7 @@ const AdminCashier = lazy(() => import('./components/Admin/cashier'))
 const AdminRain = lazy(() => import('./components/Admin/rain'))
 const AdminStatsbook = lazy(() => import('./components/Admin/statsbook'))
 const AdminSettings = lazy(() => import('./components/Admin/settings'))
+const AdminCases = lazy(() => import('./components/Admin/cases'))
 
 const Mines = lazy(() => import('./pages/mines'))
 const Crash = lazy(() => import('./pages/crash'))
@@ -399,6 +400,12 @@ function App() {
                           <Route path='/statsbook' element={
                             <Suspense fallback={<Loader/>}>
                               <AdminStatsbook/>
+                            </Suspense>
+                          }/>
+
+                          <Route path='/cases' element={
+                            <Suspense fallback={<Loader/>}>
+                              <AdminCases/>
                             </Suspense>
                           }/>
 

@@ -39,43 +39,43 @@ mexc.interceptors.request.use((config) => {
 });
 
 const chainsConfig = {
-    'BTC': {
+    'Bitcoin(BTC)': {
         validator: 'btc',
         explorer: 'https://www.blockchain.com/explorer/transactions/btc/{id}'
     },
-    'BEP20(BSC)': {
+    'BNB Smart Chain(BEP20)': {
         validator: 'eth',
         explorer: 'https://bscscan.com/tx/{id}'
     },
-    'ERC20': {
+    'Ethereum(ERC20)': {
         validator: 'eth',
         explorer: 'https://etherscan.io/tx/{id}'
     },
-    'Arbitrum One': {
+    'Arbitrum One(ARB)': {
         validator: 'eth',
         explorer: 'https://arbiscan.io/tx/{id}'
     },
-    'OP': {
+    'Optimism(OP)': {
         validator: 'eth',
         explorer: 'https://optimistic.etherscan.io/tx/{id}'
     },
-    'LTC': {
+    'Litecoin(LTC)': {
         validator: 'ltc',
         explorer: 'https://blockchair.com/litecoin/transaction/{id}'
     },
-    'ALGO': {
+    'Algorand(ALGO)': {
         validator: 'algo',
         explorer: 'https://algoexplorer.io/tx/{id}'
     },
-    'MATIC': {
+    'Polygon(MATIC)': {
         validator: 'matic',
         explorer: 'https://polygonscan.com/tx/{id}'
     },
-    'TRC20': {
+    'Tron(TRC20)': {
         validator: 'trx',
         explorer: 'https://tronscan.org/#/transaction/{id}'
     },
-    'DOGE': {
+    'Dogecoin(DOGE)': {
         validator: 'doge',
         explorer: 'https://blockchair.com/dogecoin/transaction/{id}'
     }
@@ -94,7 +94,18 @@ async function cacheWithdrawalCoins() {
         mexc(`/api/v3/ticker/price`)
     ]);
 
-    // console.log(prices);
+    // Debug: Check what networks are available for each coin
+    for (const currency of data) {
+        if (withdrawalCoins[currency.coin]) {
+            console.log(`${currency.coin} networks:`, currency.networkList.map(n => ({
+                network: n.network,
+                enabled: n.withdrawEnable,
+                chainMatch: !!chainsConfig[n.network]
+            })));
+        }
+    }
+
+    console.log(prices);
 
     for (const currency of data) {
 

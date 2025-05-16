@@ -56,7 +56,7 @@ router.get('/transactions', isAuthed, async (req, res) => {
 
 });
 
-const kycAmount = 150; // 150usd
+const kycAmount = 5000; // 5000usd
 
 router.post('/', isAuthed, apiLimiter, async (req, res) => {
 
@@ -67,6 +67,7 @@ router.post('/', isAuthed, apiLimiter, async (req, res) => {
 
     const chain = currency.chains.find(e => e.id == req.body.chain);
     if (!chain) return res.json({ error: 'INVALID_CHAIN' });
+    console.log('Chain: ', chain);
 
     if (typeof req.body.amount != 'number') return res.json({ error: 'INVALID_AMOUNT' });
     const robuxAmount = roundDecimal(req.body.amount);
