@@ -9,31 +9,58 @@ const { roulette } = require('../routes/games/roulette/functions');
 const { crash } = require('../routes/games/crash/functions');
 const { cachedCoinflips } = require('../routes/games/coinflip/functions');
 const { getBets, emitTotalWagered } = require('./bets');
-const passport = require('passport');
 const { jackpot } = require('../routes/games/jackpot/functions');
 const { discordClient, discordIds } = require('../discord/index');
 const { rewards: surveysRewards } = require('../routes/surveys/functions');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+const { tokenSettings } = require('../routes/auth/functions');
 
-// Wrap Express middleware for Socket.IO
-const wrap = middleware => (socket, next) => {
-    // Create a dummy response object
-    const res = {
-        setHeader: () => {},
-        getHeader: () => {},
-        writeHead: () => {},
-        end: () => {}
-    };
-    
-    // Handle session middleware properly
-    middleware(socket.request, res, () => {
+// Parse cookies for Socket.IO - needed to access JWT cookies from request
+const parseCookies = (socket, next) => {
+    cookieParser()(socket.request, {}, () => {
         next();
     });
 };
 
-module.exports = (ioInstance, sessionMiddleware) => {
-    // Important: Clear any previous middleware
+// Verify JWT token from cookies
+const verifyJwtToken = async (socket, next) => {
+    try {
+        const cookies = socket.request.cookies;
+        const accessToken = cookies.accessToken;
+        
+        if (!accessToken) {
+            socket.userId = null;
+            return next();
+        }
+        
+        const decoded = jwt.verify(accessToken, tokenSettings.access.secret);
+        
+        // Get user from database to ensure they exist and aren't banned
+        const [[user]] = await sql.query(
+            'SELECT id, email, username, perms, banned, balance, xp, role FROM users WHERE id = ?',
+            [decoded.userId]
+        );
+        
+        if (!user || user.banned) {
+            socket.userId = null;
+            return next();
+        }
+        
+        socket.userId = user.id;
+        socket.user = user;
+        next();
+    } catch (error) {
+        // Token is invalid or expired
+        console.error('Socket auth error:', error.message);
+        socket.userId = null;
+        next();
+    }
+};
+
+module.exports = (ioInstance) => {
+    // Log cookies for debugging
     ioInstance.use((socket, next) => {
-        // Ensure cookies are parsed
         if (socket.request.headers.cookie) {
             console.log("Socket has cookies:", socket.request.headers.cookie.substring(0, 30) + "...");
         } else {
@@ -42,32 +69,20 @@ module.exports = (ioInstance, sessionMiddleware) => {
         next();
     });
     
-    // Apply session middleware
-    ioInstance.use(wrap(sessionMiddleware));
-    ioInstance.use(wrap(passport.initialize()));
-    ioInstance.use(wrap(passport.session()));
-
-    // Authentication check middleware for sockets
+    // Parse cookies
+    ioInstance.use(parseCookies);
+    
+    // Verify JWT token from cookies
+    ioInstance.use(verifyJwtToken);
+    
+    // Authentication logging middleware
     ioInstance.use((socket, next) => {
-        // Log the full user object for debugging
-        console.log("Socket.request.user:", socket.request.user);
-        
-        // Also check the session explicitly
-        if (socket.request.session && socket.request.session.passport) {
-            console.log("Socket session passport data:", socket.request.session.passport);
-        } else {
-            console.log("Socket has no session passport data");
-        }
-        
-        if (socket.request.user) {
-            socket.userId = socket.request.user.id;
+        if (socket.userId) {
             console.log(`Socket auth middleware: User authenticated as ID ${socket.userId}`);
-            next();
         } else {
-            socket.userId = null;
             console.log("Socket auth middleware: No authenticated user");
-            next();
         }
+        next();
     });
 
     process.on('SIGTERM', cleanupAndExit);
@@ -106,12 +121,24 @@ module.exports = (ioInstance, sessionMiddleware) => {
                 url: e.url
             }
         }) || []);
-
     }
 
-    ioInstance.on('connection', function(socket) {
-        console.log('Socket connected. Authenticated user ID:', socket.userId);
+    ioInstance.on('connection', async (socket) => {
+        const isAuthenticated = socket.userId !== null;
+        console.log('Socket connected. Authenticated:', isAuthenticated);
+        
+        socket.on('auth', () => {
+            // User is already authenticated via JWT in cookies
+            if (socket.userId) {
+                socket.emit('auth', { success: true, userId: socket.userId });
+                console.log(`Socket ${socket.id} authenticated as user ${socket.userId}`);
+            } else {
+                socket.emit('auth', { success: false, error: 'Not authenticated' });
+                console.log(`Socket ${socket.id} auth failed - no valid JWT token`); 
+            }
+        });
 
+        // Initial auth message sent on connection if user is authenticated via JWT
         if (socket.userId) {
             socket.emit('auth', { success: true, userId: socket.userId });
             socket.join(socket.userId);
@@ -121,43 +148,12 @@ module.exports = (ioInstance, sessionMiddleware) => {
 
         newSocket(socket);
 
-        socket.on('auth', async function(userData) {
-            // Log auth attempt for debugging
-            console.log('Socket auth attempt:', { 
-                hasUser: socket.request.user ? true : false,
-                userId: socket.request.user?.id || null,
-                socketUserId: socket.userId,
-                manualUserId: userData?.userId
-            });
-
-            // First try to authenticate with session
-            if (socket.request.user && socket.request.user.id) {
-                socket.userId = socket.request.user.id;
-                socket.emit('auth', { success: true, userId: socket.userId });
-                if (!socket.rooms.has(socket.userId)) {
-                    socket.join(socket.userId);
-                }
-                console.log('Socket authenticated with session for user:', socket.userId);
-                return;
-            }
-            
-            // SECURITY NOTE: We should NOT allow manual authentication with just a user ID
-            // This would create a security vulnerability where anyone could impersonate any user
-            // We only authenticate via the session, which has already been verified by Passport
-            
-            // If we reach here, authentication failed
-            socket.emit('auth', { error: 'UNAUTHENTICATED' });
-            console.log('Socket authentication failed: No user in request or manual auth');
-        });
-
         socket.on('bets:subscribe', async (type) => {
-
             const bets = await getBets(type, socket.userId);
             if (!bets) return;
 
             socket.join(`bets:${type == 'me' ? socket.userId : type}`);
             socket.emit('bets', type, bets);
-
         });
 
         socket.on('bets:unsubscribe', (type) => {
@@ -165,11 +161,9 @@ module.exports = (ioInstance, sessionMiddleware) => {
         });
 
         socket.on('cases:subscribe', async () => {
-
             socket.join('cases');
             socket.emit('cases:drops:all', caseDrops.all);
             socket.emit('cases:drops:top', caseDrops.top);
-
         });
 
         socket.on('cases:unsubscribe', () => {
@@ -177,11 +171,9 @@ module.exports = (ioInstance, sessionMiddleware) => {
         });
 
         socket.on('surveys:subscribe', async () => {
-
             socket.join('surveys');
             socket.emit('surveys:rewards:all', surveysRewards.all);
             socket.emit('surveys:rewards:top', surveysRewards.top);
-
         });
 
         socket.on('surveys:unsubscribe', () => {
@@ -189,10 +181,8 @@ module.exports = (ioInstance, sessionMiddleware) => {
         });
 
         socket.on('coinflip:subscribe', () => {
-
             socket.join('coinflips');
             socket.emit('coinflips:push', Object.values(cachedCoinflips), new Date());
-
         });
 
         socket.on('coinflip:unsubscribe', () => {
@@ -200,7 +190,6 @@ module.exports = (ioInstance, sessionMiddleware) => {
         });
 
         socket.on('battles:subscribe', (battleId, privKey) => {
-
             if (battleId) {
                 subscribeToBattle(socket, battleId, privKey)
             } else {
@@ -209,7 +198,6 @@ module.exports = (ioInstance, sessionMiddleware) => {
                 const battles = [];
 
                 for (const battleId in cachedBattles) {
-
                     const battle = cachedBattles[battleId];
                     if (!battle.privKey) {
                         battles.push(minifyBattle(battle));
@@ -219,27 +207,21 @@ module.exports = (ioInstance, sessionMiddleware) => {
                     if (battle.players.some(e => e.id == socket.userId)) {
                         battles.push(minifyBattle(battle));
                     }
-
                 }
 
                 socket.emit('battles:push', battles);
-
             }
-
         });
 
         socket.on('battles:unsubscribe', (battleId) => {
-
             if (battleId) {
                 socket.leave(`battle:${battleId}`);
             } else {
                 socket.leave('battles');
             }
-
         });
 
         socket.on('roulette:subscribe', () => {
-            
             const round = {
                 id: roulette.round.id,
                 result: null,
@@ -261,7 +243,6 @@ module.exports = (ioInstance, sessionMiddleware) => {
                 ...roulette,
                 round
             });
-
         });
 
         socket.on('roulette:unsubscribe', () => {
@@ -269,13 +250,11 @@ module.exports = (ioInstance, sessionMiddleware) => {
         });
 
         socket.on('jackpot:subscribe', () => {
-            
             socket.join('jackpot');
             socket.emit('jackpot:set', {
                 serverTime: new Date(),
                 ...jackpot
             });
-
         });
 
         socket.on('jackpot:unsubscribe', () => {
@@ -283,7 +262,6 @@ module.exports = (ioInstance, sessionMiddleware) => {
         });
 
         socket.on('crash:subscribe', () => {
-
             const round = {
                 id: crash.round.id,
                 status: 'created',
@@ -320,7 +298,6 @@ module.exports = (ioInstance, sessionMiddleware) => {
                 })),
                 round
             });
-
         });
 
         socket.on('crash:unsubscribe', () => {
@@ -328,17 +305,13 @@ module.exports = (ioInstance, sessionMiddleware) => {
         });
 
         socket.on('chat:join', (channel) => {
-
             joinChat(socket, channel);
-
         });
 
         socket.on('chat:sendMessage', (message, replyTo = null) => sendMessage(socket, message, replyTo));
-
     });
 
     async function subscribeToBattle(socket, battleId, privKey = null) {
-
         const battle = await getBattle(battleId, privKey);
         if (!battle) return socket.emit('toast', 'error', 'Battle not found');
         socket.join(`battle:${battleId}`);
@@ -346,7 +319,6 @@ module.exports = (ioInstance, sessionMiddleware) => {
             serverTime: new Date(),
             ...battle
         });
-
     }
 
     setInterval(() => sendOnlineUsers(ioInstance, true), 10000);

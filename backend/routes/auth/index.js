@@ -1,45 +1,76 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-const passport = require('passport');
 const { ulid } = require('ulid');
 
 const router = express.Router();
 
 const { sql } = require('../../database');
-const { apiLimiter } = require('./functions');
+const { 
+    apiLimiter, 
+    loginLimiter,
+    generateTokens,
+    setAuthCookies,
+    clearAuthCookies,
+    authenticate,
+    revokeRefreshToken,
+    revokeAllUserTokens,
+    refreshTokens
+} = require('./functions');
 const { formatConsoleError } = require('../../utils');
 const { createUserSeeds } = require('../../fairness');
 
 const saltRounds = 10;
 
-router.post('/login', apiLimiter, (req, res, next) => {
-    if (!req.body.email || !req.body.password) {
-        return res.status(400).json({ error: 'MISSING_CREDENTIALS' });
-    }
+// Login endpoint
+router.post('/login', loginLimiter, async (req, res) => {
+    try {
+        if (!req.body.email || !req.body.password) {
+            return res.status(400).json({ error: 'MISSING_CREDENTIALS' });
+        }
 
-    passport.authenticate('local', (err, user, info) => {
-        if (err) { 
-            console.error(formatConsoleError(err));
-            return res.status(500).json({ error: 'SERVER_ERROR'}); 
-        }
-        if (!user) { 
-            const errorCode = info.message === 'Account is banned.' ? 'ACCOUNT_BANNED' : 'INVALID_CREDENTIALS';
-            return res.status(401).json({ error: errorCode, message: info.message || 'Login failed.' }); 
-        }
-        
-        req.logIn(user, (err) => {
-            if (err) { 
-                console.error(formatConsoleError(err));
-                return res.status(500).json({ error: 'SESSION_ERROR'}); 
-            }
-            
-            const { passwordHash, ...userInfo } = user;
-            return res.json({ 
-                message: 'Login successful', 
-                user: userInfo 
+        // Find the user
+        const [[user]] = await sql.query(
+            'SELECT id, email, username, passwordHash, perms, banned, balance, xp, role FROM users WHERE email = ?', 
+            [req.body.email]
+        );
+
+        if (!user) {
+            return res.status(401).json({ 
+                error: 'INVALID_CREDENTIALS', 
+                message: 'Incorrect email or password.' 
             });
+        }
+
+        if (user.banned) {
+            return res.status(401).json({ 
+                error: 'ACCOUNT_BANNED', 
+                message: 'Account is banned.' 
+            });
+        }
+
+        // Verify password
+        const match = await bcrypt.compare(req.body.password, user.passwordHash);
+        if (!match) {
+            return res.status(401).json({ 
+                error: 'INVALID_CREDENTIALS', 
+                message: 'Incorrect email or password.' 
+            });
+        }
+
+        // Generate tokens and set cookies
+        const { accessToken, refreshToken } = await generateTokens(user);
+        setAuthCookies(res, accessToken, refreshToken);
+
+        // Return user data (without passwordHash)
+        const { passwordHash, ...userInfo } = user;
+        return res.json({ 
+            message: 'Login successful', 
+            user: userInfo 
         });
-    })(req, res, next);
+    } catch (error) {
+        console.error('Login Error:', formatConsoleError(error));
+        res.status(500).json({ error: 'SERVER_ERROR' });
+    }
 });
 
 router.post('/signup', apiLimiter, async (req, res) => {
@@ -88,12 +119,13 @@ router.post('/signup', apiLimiter, async (req, res) => {
 
         await createUserSeeds(newUser.id);
 
-        req.logIn(newUser, (err) => {
-            if (err) {
-                console.error('Error logging in after signup:', formatConsoleError(err));
-                return res.status(201).json({ message: 'Signup successful, but auto-login failed.', user: newUser }); 
-            }
-            return res.status(201).json({ message: 'Signup successful', user: newUser });
+        // Generate tokens and set cookies for automatic login
+        const { accessToken, refreshToken } = await generateTokens(newUser);
+        setAuthCookies(res, accessToken, refreshToken);
+
+        return res.status(201).json({ 
+            message: 'Signup successful', 
+            user: newUser 
         });
 
     } catch (error) {
@@ -105,21 +137,77 @@ router.post('/signup', apiLimiter, async (req, res) => {
     }
 });
 
-router.post('/logout', (req, res, next) => {
-    req.logout(function(err) {
-        if (err) { 
-            console.error('Logout Error:', formatConsoleError(err));
-            return res.status(500).json({ error: 'LOGOUT_FAILED'}); 
+// Logout endpoint
+router.post('/logout', async (req, res) => {
+    try {
+        // Get the refresh token from cookies
+        const refreshToken = req.cookies.refreshToken;
+        
+        // If there's a token, revoke it in the database
+        if (refreshToken) {
+            await revokeRefreshToken(refreshToken);
         }
+        
+        // Clear cookies
+        clearAuthCookies(res);
+        
         res.json({ message: 'Logout successful' });
-    });
+    } catch (error) {
+        console.error('Logout Error:', formatConsoleError(error));
+        res.status(500).json({ error: 'LOGOUT_FAILED' });
+    }
 });
 
-router.get('/me', (req, res) => {
-    if (req.isAuthenticated()) {
-        res.json({ user: req.user }); 
-    } else {
-        res.status(401).json({ error: 'UNAUTHENTICATED'});
+// Get current user info
+router.get('/me', authenticate, (req, res) => {
+    // User is already authenticated by the middleware
+    res.json({ user: req.user });
+});
+
+// Refresh token endpoint
+router.post('/refresh-token', async (req, res) => {
+    try {
+        const refreshToken = req.cookies.refreshToken;
+        
+        if (!refreshToken) {
+            return res.status(401).json({ 
+                error: 'UNAUTHENTICATED', 
+                message: 'No refresh token provided' 
+            });
+        }
+        
+        // This throws an error if token is invalid
+        const { accessToken, refreshToken: newRefreshToken } = await refreshTokens(refreshToken);
+        
+        // Set new cookies
+        setAuthCookies(res, accessToken, newRefreshToken);
+        
+        res.json({ message: 'Token refreshed successfully' });
+    } catch (error) {
+        console.error('Token refresh error:', formatConsoleError(error));
+        
+        // Clear cookies on failure
+        clearAuthCookies(res);
+        
+        res.status(401).json({ 
+            error: 'INVALID_TOKEN', 
+            message: 'Invalid or expired refresh token' 
+        });
+    }
+});
+
+// Revoke all tokens (logout from all devices)
+router.post('/revoke-all', authenticate, async (req, res) => {
+    try {
+        await revokeAllUserTokens(req.user.id);
+        
+        // Clear current session cookies
+        clearAuthCookies(res);
+        
+        res.json({ message: 'Successfully logged out from all devices' });
+    } catch (error) {
+        console.error('Token revocation error:', formatConsoleError(error));
+        res.status(500).json({ error: 'SERVER_ERROR' });
     }
 });
 

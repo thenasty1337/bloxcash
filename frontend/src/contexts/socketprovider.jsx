@@ -1,7 +1,7 @@
 import {createContext, useContext, createResource, createEffect} from "solid-js";
 import io from "socket.io-client";
 import {getJWT} from "../util/api";
-import { useAuthStore } from "../stores/authStore";
+import authStore from "../stores/authStore";
 import { useUser } from "../contexts/usercontextprovider";
 
 const WebsocketContext = createContext();
@@ -53,20 +53,20 @@ export function WebsocketProvider(props) {
             console.log('Connected to WS');
             
             // Get current user from both contexts to ensure we're authenticated
-            const state = useAuthStore.getState();
             const currentUser = user();
-            const userId = currentUser?.id || state.user?.id;
+            // Use our new SolidJS-based auth store
+            const userId = currentUser?.id || authStore.user?.id;
             
             console.log('Auth state on connect:', { 
-                zustandAuth: state.isAuthenticated, 
+                jwtAuth: authStore.isAuthenticated, 
                 solidUser: currentUser ? true : false,
                 userId: userId
             });
             
-            // We only use session-based authentication for security
-            // Never send user IDs directly as that could be manipulated
+            // We now use cookie-based JWT authentication for security
+            // The cookies are automatically sent with the socket connection
             tempWs.emit('auth');
-            console.log('Emitting auth request - using session only for security');
+            console.log('Emitting auth request - using JWT cookies for security');
             
             // Add a slight delay to ensure the server has processed the initial connection
             setTimeout(() => {

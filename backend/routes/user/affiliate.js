@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { sql, doTransaction } = require('../../database');
 
-const { isAuthed, apiLimiter } = require('../auth/functions');
+const { authenticate, apiLimiter } = require('../auth/functions');
 const { roundDecimal, getRobloxApiInstance, sendLog, formatConsoleError } = require('../../utils');
 const io = require('../../socketio/server');
 const { enabledFeatures } = require('../admin/config');
@@ -45,7 +45,7 @@ async function getAffiliateData(userId) {
 
 }
 
-router.get('/', isAuthed, async (req, res) => {
+router.get('/', authenticate, async (req, res) => {
 
     const data = await getAffiliateData(req.user.id);
 
@@ -59,7 +59,7 @@ router.get('/', isAuthed, async (req, res) => {
 
 const resultsPerPage = 6;
 
-router.get('/users', isAuthed, async (req, res) => {
+router.get('/users', authenticate, async (req, res) => {
 
     const info = await getAffiliateData(req.user.id);
 
@@ -88,7 +88,7 @@ router.use((req, res, next) => {
     next();
 });
 
-router.post('/claim', [isAuthed, apiLimiter], async (req, res) => {
+router.post('/claim', [authenticate, apiLimiter], async (req, res) => {
 
     try {
 
@@ -122,7 +122,7 @@ router.post('/claim', [isAuthed, apiLimiter], async (req, res) => {
 
 const creationDates = {};
 
-router.post('/', [isAuthed, apiLimiter], async (req, res) => {
+router.post('/', [authenticate, apiLimiter], async (req, res) => {
     
     const code = req.body.code?.toLowerCase().trim();
     if (!code || typeof code != 'string' || code.length < 2 || code.length > 20 || !onlyLettersAndNumbers(code)) return res.status(400).json({ error: 'INVALID_CODE' });
@@ -225,7 +225,7 @@ router.post('/', [isAuthed, apiLimiter], async (req, res) => {
 
 });
 
-router.get('/usedCode', isAuthed, async (req, res) => {
+router.get('/usedCode', authenticate, async (req, res) => {
 
     const [[user]] = await sql.query('SELECT users.affiliateCode FROM users JOIN affiliates ON affiliates.affiliateId = users.id WHERE affiliates.userId = ?', [req.user.id]);
     if (!user) return res.json({ code: null });
@@ -236,7 +236,7 @@ router.get('/usedCode', isAuthed, async (req, res) => {
 
 const blacklistedCodes = ['free', 'clash', '123', '1234', 'blox', 'rblxwild', 'bloxflip', 'rbxgold', 'betbux', 'freebux', 'bux'];
 
-router.post('/code', [isAuthed, apiLimiter], async (req, res) => {
+router.post('/code', [authenticate, apiLimiter], async (req, res) => {
 
     const [[user]] = await sql.query('SELECT affiliateCodeLock FROM users WHERE id = ?', [req.user.id]);
     if (user.affiliateCodeLock) return res.status(400).json({ error: 'CODE_LOCKED' });

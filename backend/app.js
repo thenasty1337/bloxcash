@@ -9,12 +9,8 @@ const path = require('path');
 const rfs = require('rotating-file-stream');
 const io = require('./socketio/server');
 const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcrypt');
-const { sql } = require('./database');
 const cors = require('cors');
+const { sql } = require('./database');
 
 const app = express();
 app.disable('x-powered-by');
@@ -77,66 +73,7 @@ app.use(bodyParser.urlencoded({
 app.use(nocache());
 app.use(cookieParser());
 
-// Session Configuration
-const sessionMiddleware = session({
-    secret: process.env.SESSION_SECRET || 'YOUR_SECRET_KEY',
-    resave: false,
-    saveUninitialized: false,
-    cookie: { 
-        secure: process.env.NODE_ENV === 'production',
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-        sameSite: 'lax'
-    } 
-});
-app.use(sessionMiddleware);
-
-// Passport Middleware Initialization
-app.use(passport.initialize());
-app.use(passport.session());
-
-// Passport Local Strategy Configuration
-passport.use(new LocalStrategy(
-    { usernameField: 'email' }, 
-    async (email, password, done) => {
-        try {
-            const [[user]] = await sql.query('SELECT id, email, username, passwordHash, perms, banned, balance, xp, role FROM users WHERE email = ?', [email]);
-
-            if (!user) {
-                return done(null, false, { message: 'Incorrect email or password.' });
-            }
-
-            if (user.banned) {
-                return done(null, false, { message: 'Account is banned.' });
-            }
-
-            const match = await bcrypt.compare(password, user.passwordHash);
-            if (!match) {
-                return done(null, false, { message: 'Incorrect email or password.' });
-            }
-
-            const { passwordHash, ...userWithoutHash } = user;
-            return done(null, userWithoutHash);
-
-        } catch (err) {
-            return done(err);
-        }
-    }
-));
-
-// Passport User Serialization/Deserialization
-passport.serializeUser((user, done) => {
-    done(null, user.id); 
-});
-
-passport.deserializeUser(async (id, done) => {
-    try {
-        const [[user]] = await sql.query('SELECT id, email, username, perms, banned, balance, xp, role FROM users WHERE id = ?', [id]);
-        done(null, user || false);
-    } catch (err) {
-        done(err, false);
-    }
-});
+// No session or Passport initialization - using JWT instead
 
 const authRoute = require('./routes/auth');
 const userRoute = require('./routes/user');
@@ -235,22 +172,24 @@ async function start() {
             credentials: true,
             allowedHeaders: ["X-Requested-With", "Content-Type", "Authorization"]
         },
+        // Important for JWT cookies
         cookie: {
-            httpOnly: false,
-            sameSite: 'none',
-            secure: process.env.NODE_ENV === 'production'
+            httpOnly: true,  // Allow httpOnly cookies
+            sameSite: 'strict',  // More secure sameSite setting
+            secure: process.env.NODE_ENV === 'production'  // Secure in production
         },
         allowRequest: (req, callback) => {
             // Log cookie for debugging
             console.log('Socket connection request with cookie:', 
                 req.headers.cookie ? req.headers.cookie.substring(0, 30) + '...' : 'NO COOKIE');
-            // Always allow the request
+            // Always allow the request - authentication happens in the middleware
             callback(null, true);
         }
     });
     
     // Initialize socket.io handlers AFTER attaching
-    require('./socketio')(io, sessionMiddleware);
+    // We no longer need to pass sessionMiddleware since we're using JWT now
+    require('./socketio')(io);
 
 }
 
