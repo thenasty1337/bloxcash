@@ -162,7 +162,13 @@ router.post('/reveal', apiLimiter, async (req, res) => {
                 if (!activeGame.mines) {
                     throw new Error('Mines data is missing from active game.');
                 }
-                minePositions = JSON.parse(activeGame.mines);
+                // Check if mines is a comma-separated string and convert it to a proper array
+                if (typeof activeGame.mines === 'string' && activeGame.mines.includes(',') && !activeGame.mines.includes('[')) {
+                    minePositions = activeGame.mines.split(',').map(num => parseInt(num.trim(), 10));
+                } else {
+                    // Try standard JSON parsing if it appears to be JSON format
+                    minePositions = JSON.parse(activeGame.mines);
+                }
             } catch (e) {
                 console.error(`Failed to parse mines for active game (ID: ${activeGame.id}, User: ${req.user.id}, Value: ${activeGame.mines}):`, e);
                 // Rollback transaction implicitly by throwing error
@@ -273,7 +279,22 @@ async function doPayout(connection, commit, activeGame, multiplier, payout, req,
         game: 'mines'
     }]);
 
-    res.json({ success: true, payout, multiplier, minePositions: JSON.parse(activeGame.mines) });
+    // Parse mine positions with the same approach as we use elsewhere
+    let minePositions;
+    try {
+        // Check if mines is a comma-separated string and convert it to a proper array
+        if (typeof activeGame.mines === 'string' && activeGame.mines.includes(',') && !activeGame.mines.includes('[')) {
+            minePositions = activeGame.mines.split(',').map(num => parseInt(num.trim(), 10));
+        } else {
+            // Try standard JSON parsing if it appears to be JSON format
+            minePositions = JSON.parse(activeGame.mines);
+        }
+    } catch (e) {
+        console.error(`Failed to parse mines during payout (ID: ${activeGame.id}, Value: ${activeGame.mines}):`, e);
+        minePositions = [];
+    }
+    
+    res.json({ success: true, payout, multiplier, minePositions });
 
 }
 

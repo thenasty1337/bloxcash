@@ -87,73 +87,93 @@ function App() {
   })
 
   createEffect(() => {
-    if (ws() && ws().connected) {
-      // First remove any existing listeners to prevent duplicates
-      ws().off('balance');
-      ws().off('balance:update');
+    const socket = ws();
+    if (!socket) return;
+    
+    // Check initial connection state
+    if (socket.connected) {
+      console.log('WebSocket connected immediately');
+      setupBalanceListeners(socket);
+    }
+    
+    // Also listen for future connections/reconnections
+    socket.on('connect', () => {
+      console.log('WebSocket connected via event');
+      setupBalanceListeners(socket);
+    });
+  });
+  
+  // Separate function to set up balance listeners to avoid code duplication
+  function setupBalanceListeners(socket) {
+    // First remove any existing listeners to prevent duplicates
+    socket.off('balance');
+    socket.off('balance:update');
+    socket.off('xp');
+    socket.off('coinflip:own:started');
       
-      // Handle the legacy balance event (keeping this for compatibility)
-      ws().on('balance', (type, amount, delay) => {
-        console.log(`💰 Legacy balance update received: ${type} ${amount}`, { currentBalance: user()?.balance });
-        
-        if (type === 'set') {
-          console.log(`💰 Setting balance to: ${amount}`);
-          setTimeout(() => {
-            setBalance(amount);
-            console.log(`💰 Balance updated to: ${amount}`);
-          }, +delay || 0);
-        }
+    // Handle the legacy balance event (keeping this for compatibility)
+    socket.on('balance', (type, amount, delay) => {
+      console.log(`💰 Legacy balance event: ${type} ${amount}`);
+      
+      if(type === 'add') {
+        setBalance(prev => Number(prev) + Number(amount));
+      } else if (type === 'set') {
+        setBalance(Number(amount));
+      } else if (type === 'subtract') {
+        setBalance(prev => Math.max(0, Number(prev) - Number(amount)));
+      }
 
-        if (type === 'add') {
-          const newBalance = (user()?.balance || 0) + amount;
-          console.log(`💰 Adding ${amount} to balance. New balance will be: ${newBalance}`);
+      // Only show notifications for add/subtract, not for set operations
+      if (type !== 'set') {
+        setTimeout(() => {
+          // Format the notification properly
+          const prefix = type === 'add' ? '+' : '-';
+          createNotification(`${prefix}$${amount}`, type === 'add' ? 'success' : 'error');
+        }, delay ?? 1);
+      }
+    });
+
+    // Handle the new balance:update event (new format with user filtering)
+    socket.on('balance:update', (data) => {
+      console.log(`💰 New balance update received:`, data);
+      
+      // Only process updates for the current user
+      if (user() && data.userId === user().id) {
+        console.log(`💰 Processing balance update for current user`);
+        
+        if (data.type === 'set') {
+          console.log(`💰 Setting balance to: ${data.amount}`);
+          setTimeout(() => {
+            setBalance(data.amount);
+            console.log(`💰 Balance updated to: ${data.amount}`);
+          }, +data.delay || 0);
+        }
+  
+        if (data.type === 'add') {
+          const newBalance = (user()?.balance || 0) + data.amount;
+          console.log(`💰 Adding ${data.amount} to balance. New balance will be: ${newBalance}`);
           setTimeout(() => {
             setBalance(newBalance);
             console.log(`💰 Balance updated to: ${newBalance}`);
-          }, +delay || 0);
+          }, +data.delay || 0);
         }
-      });
-      
-      // Handle the new balance:update event (new format with user filtering)
-      ws().on('balance:update', (data) => {
-        console.log(`💰 New balance update received:`, data);
-        
-        // Only process updates for the current user
-        if (user() && data.userId === user().id) {
-          console.log(`💰 Processing balance update for current user`);
-          
-          if (data.type === 'set') {
-            console.log(`💰 Setting balance to: ${data.amount}`);
-            setTimeout(() => {
-              setBalance(data.amount);
-              console.log(`💰 Balance updated to: ${data.amount}`);
-            }, +data.delay || 0);
-          }
-  
-          if (data.type === 'add') {
-            const newBalance = (user()?.balance || 0) + data.amount;
-            console.log(`💰 Adding ${data.amount} to balance. New balance will be: ${newBalance}`);
-            setTimeout(() => {
-              setBalance(newBalance);
-              console.log(`💰 Balance updated to: ${newBalance}`);
-            }, +data.delay || 0);
-          }
-        }
-      })
+      }
+    });
 
-      ws().on('xp', (xp) => {
-        setXP(xp)
-      })
+    // Handle XP updates
+    socket.on('xp', (xp) => {
+      setXP(xp);
+    });
 
-      ws().on('coinflip:own:started', (flip) => {
-        if (!user()) return
-        let isCreator = flip[flip.ownerSide]?.id === user()?.id
-        let creatorWon = flip.winnerSide === flip.ownerSide
+    // Handle coinflips
+    socket.on('coinflip:own:started', (flip) => {
+      if (!user()) return;
+      let isCreator = flip[flip.ownerSide]?.id === user()?.id;
+      let creatorWon = flip.winnerSide === flip.ownerSide;
 
-        if ((isCreator && !creatorWon) || (!isCreator && creatorWon)) return
-      })
-    }
-  })
+      if ((isCreator && !creatorWon) || (!isCreator && creatorWon)) return;
+    });
+  }
 
   createEffect(async () => {
     try {

@@ -1,4 +1,5 @@
 import {createEffect} from "solid-js";
+import Avatar from "../Level/avatar";
 
 function JackpotUser(props) {
 
@@ -51,7 +52,7 @@ function JackpotUser(props) {
         <>
             <div class={'jackpot-user ' + (props?.won ? 'won big ' : '')} ref={jpUser}>
                 <p class='percent'>{((props?.percent || 0) * 100)?.toFixed(2)}%</p>
-                <img src={props?.id ? `${import.meta.env.VITE_SERVER_URL}/user/${props?.id}/img` : '/assets/icons/anon.png'} alt='' height='48' width='48'/>
+                <Avatar id={props?.id || '?'} xp={props?.xp} height={48} />
                 <div class='bar' style={{background: props?.color}}/>
             </div>
 

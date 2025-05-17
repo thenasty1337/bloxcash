@@ -1,4 +1,5 @@
 import Level from "../Level/level";
+import Avatar from "../Level/avatar";
 import {getCents} from "../../util/balance";
 import {authedAPI, getRandomNumber} from "../../util/api";
 import {createEffect, createSignal} from "solid-js";
@@ -47,8 +48,13 @@ function CoinflipModal(props) {
               </div>
 
               <div class='avatar-container'>
-                <img class={'avatar ' + (isLoser(props?.cf?.ownerSide) ? 'gray' : '')} src={`${import.meta.env.VITE_SERVER_URL}/user/${creator?.id}/img`}
-                     height='90' width='90' alt=''/>
+                <div class={isLoser(props?.cf?.ownerSide) ? 'gray' : ''}>
+                  <Avatar 
+                    id={creator?.id}
+                    xp={creator?.xp}
+                    height={90}
+                  />
+                </div>
 
                 <img class={'coin ' + (isLoser(props?.cf?.ownerSide) ? 'gray' : '')} src={`/assets/icons/${props?.cf?.ownerSide}coin.svg`} height='35' width='35'
                      alt={props?.cf?.ownerSide}/>
@@ -75,8 +81,13 @@ function CoinflipModal(props) {
 
               <div class='avatar-container'>
                 {opponent() ? (
-                  <img class={'avatar ' + (isLoser(opponentCoin) ? 'gray' : '')} src={`${import.meta.env.VITE_SERVER_URL}/user/${opponent().id}/img`}
-                       height='90' width='90' alt=''/>
+                  <div class={isLoser(opponentCoin) ? 'gray' : ''}>
+                    <Avatar 
+                      id={opponent().id}
+                      xp={opponent().xp}
+                      height={90}
+                    />
+                  </div>
                 ) : (
                   <p class='nouser'>?</p>
                 )}

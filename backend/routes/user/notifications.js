@@ -11,7 +11,15 @@ router.get('/', [isAuthed, apiLimiter], async (req, res) => {
     const [notifications] = await sql.query('SELECT id, type, content FROM notifications WHERE userId = ? AND isRead = 0 ORDER BY id DESC', [req.user.id]);
     await sql.query('UPDATE notifications SET isRead = 1 WHERE userId = ?', [req.user.id]);
 
-    notifications.forEach(e => e.content = JSON.parse(e.content));
+    notifications.forEach(e => {
+        try {
+            e.content = JSON.parse(e.content);
+        } catch (error) {
+            console.error(`Failed to parse notification content: ${error.message}`);
+            // Provide a fallback object to prevent further errors
+            e.content = { parseError: true, originalContent: e.content };
+        }
+    });
     io.to(req.user.id).emit('notifications', 'set', 0);
     res.json(notifications);
 
