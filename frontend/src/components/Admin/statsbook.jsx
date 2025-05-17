@@ -84,13 +84,6 @@ function AdminStatsbook(props) {
                         <p>NPC</p>
                     </div>
 
-                    <div className='table-column'>
-                        <p>LIMITEDS</p>
-                    </div>
-
-                    <div className='table-column'>
-                        <p>ROBUX</p>
-                    </div>
 
                     <div className='table-column'>
                         <p>GIFTCARDS</p>
@@ -125,23 +118,7 @@ function AdminStatsbook(props) {
                                     <p>{stat?.npc}</p>
                                 </div>
 
-                                <div className='table-column'>
-                                    <NumberPrefix amount={stat?.limitedsDeposits}/>
-                                    <img src='/assets/icons/coin.svg' height='15' width='16' alt=''/>
-                                    <p className='white'>{(stat?.limitedsDeposits || 0)?.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    })}</p>
-                                </div>
-
-                                <div className='table-column'>
-                                    <NumberPrefix amount={stat?.robuxDeposits}/>
-                                    <img src='/assets/icons/coin.svg' height='15' width='16' alt=''/>
-                                    <p className='white'>{(stat?.robuxDeposits || 0)?.toLocaleString(undefined, {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    })}</p>
-                                </div>
+                              
 
                                 <div className='table-column'>
                                     <p className={getColor(stat?.giftCardDeposits)}>${(stat?.giftCardDeposits || 0)?.toLocaleString(undefined, {
