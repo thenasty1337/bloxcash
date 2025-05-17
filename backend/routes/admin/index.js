@@ -83,6 +83,7 @@ const cashierRoute = require('./cashier');
 const statsbookRoute = require('./statsbook');
 const dashboardRoute = require('./dashboard');
 const casesRoute = require('./cases');
+const spinshieldRoute = require('./spinshield');
 
 router.use('/users', usersRoute);
 router.use('/phrases', phrasesRoute);
@@ -92,5 +93,6 @@ router.use('/cashier', cashierRoute);
 router.use('/statsbook', statsbookRoute);
 router.use('/dashboard', dashboardRoute);
 router.use('/cases', casesRoute);
+router.use('/spinshield', spinshieldRoute);
 
 module.exports = router;

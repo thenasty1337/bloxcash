@@ -28,6 +28,7 @@ const AdminRain = lazy(() => import('./components/Admin/rain'))
 const AdminStatsbook = lazy(() => import('./components/Admin/statsbook'))
 const AdminSettings = lazy(() => import('./components/Admin/settings'))
 const AdminCases = lazy(() => import('./components/Admin/cases'))
+const AdminSpinShield = lazy(() => import('./components/Admin/spinshield'))
 
 const Mines = lazy(() => import('./pages/mines'))
 const Crash = lazy(() => import('./pages/crash'))
@@ -474,6 +475,12 @@ function App() {
                           <Route path='/settings' element={
                             <Suspense fallback={<Loader/>}>
                               <AdminSettings/>
+                            </Suspense>
+                          }/>
+
+                          <Route path='/spinshield' element={
+                            <Suspense fallback={<Loader/>}>
+                              <AdminSpinShield/>
                             </Suspense>
                           }/>
                         </Route>

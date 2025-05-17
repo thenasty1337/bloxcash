@@ -5,6 +5,7 @@ const { body, validationResult } = require('express-validator');
 const { bannedUsers, sponsorLockedUsers } = require('../config');
 const { roundDecimal, sendLog } = require('../../../utils');
 const { generateJwtToken, expiresIn, getReqToken } = require('../../auth/functions');
+const { isValid } = require('ulid');
 
 router.use('/affiliates', require('./affiliates'));
 const { sql, doTransaction } = require('../../../database');
@@ -58,7 +59,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
 
-    if (isNaN(req.params.id)) return res.status(400).json({ error: 'INVALID_ID' });
+    if (!isValid(req.params.id)) return res.status(400).json({ error: 'INVALID_ID' });
 
     const [[user]] = await sql.query(`SELECT users.id, username, xp, role, balance, banned, tipBan, leaderboardBan, rainBan, accountLock, sponsorLock, maxPerTip, maxTipPerUser, tipAllowance, rainTipAllowance, cryptoAllowance, mutedUntil, discordId FROM users
         LEFT JOIN discordAuths ON discordAuths.userId = users.id

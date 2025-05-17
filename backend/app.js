@@ -93,6 +93,8 @@ const blackjackRoute = require('./routes/games/blackjack');
 const adminRoute = require('./routes/admin');
 const surveysRoute = require('./routes/surveys');
 const fairnessRoute = require('./routes/fairness');
+const spinshieldRoute = require('./routes/spinshield');
+const spinshieldGamesRoute = require('./routes/spinshield-games');
 
 app.use('/auth', authRoute);
 app.use('/user', userRoute);
@@ -112,6 +114,8 @@ app.use('/blackjack', blackjackRoute);
 app.use('/admin', adminRoute);
 app.use('/surveys', surveysRoute);
 app.use('/fairness', fairnessRoute);
+app.use('/spinshield', spinshieldRoute);
+app.use('/games', spinshieldGamesRoute);
 
 app.get('/', (req, res) => {
     res.send('Hey, hi :)');

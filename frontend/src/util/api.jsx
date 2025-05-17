@@ -19,11 +19,14 @@ export function createNotification(type, message, options) {
 export async function api(path, method, body, notification = false, headers =  { 'Content-Type': 'application/json' }) {
     try {
         const fullPath = path.startsWith('http') ? path : `${API_BASE_URL}${path.startsWith('/') ? path : '/' + path}`;
+        // Properly stringify body if it's an object
+        const processedBody = body && typeof body === 'object' ? JSON.stringify(body) : body;
+        
         let res = await fetch(fullPath, {
             method,
             headers,
             credentials: 'include',
-            body,
+            body: processedBody,
         })
         let data = await res.json()
 
