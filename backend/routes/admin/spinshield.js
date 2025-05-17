@@ -7,7 +7,7 @@ const { sendLog } = require('../../utils');
 // Get SpinShield settings
 router.get('/settings', async (req, res) => {
     try {
-        const [settings] = await sql.query('SELECT id, api_login, endpoint, callback_url, active, created_at, updated_at FROM spinshield_settings ORDER BY id DESC LIMIT 1');
+        const [settings] = await sql.query('SELECT id, api_login, endpoint, callback_url, salt_key, active, created_at, updated_at FROM spinshield_settings ORDER BY id DESC LIMIT 1');
         
         // Don't return api_password for security
         return res.json({ settings: settings[0] || {} });
