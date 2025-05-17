@@ -184,35 +184,36 @@ const TransactionsTab = (props) => {
   };
 
   return (
-    <div class="transactions-tab">
-      <div class="tab-header">
-        <h2 class="tab-title">Transactions</h2>
-        <div class="tab-stats">
-          <div class="stat-card">
-            <div class="stat-value">{stats().totalTransactions}</div>
-            <div class="stat-label">Transactions</div>
+    <div class="games-container-in">
+      <div class="games-header">
+        <h2 class="games-title">Transactions</h2>
+        <div class="stats-container" style="display: flex; gap: 15px;">
+          <div class="stat-item" style="background: #312A5E; padding: 8px 15px; border-radius: 5px; text-align: center;">
+            <div style="color: #ADA3EF; font-size: 12px;">Transactions</div>
+            <div style="color: white; font-weight: bold;">{stats().totalTransactions}</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-value">{stats().totalDebits}</div>
-            <div class="stat-label">Bets</div>
+          <div class="stat-item" style="background: #312A5E; padding: 8px 15px; border-radius: 5px; text-align: center;">
+            <div style="color: #ADA3EF; font-size: 12px;">Bets</div>
+            <div style="color: white; font-weight: bold;">{stats().totalDebits}</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-value">{stats().totalCredits}</div>
-            <div class="stat-label">Wins</div>
+          <div class="stat-item" style="background: #312A5E; padding: 8px 15px; border-radius: 5px; text-align: center;">
+            <div style="color: #ADA3EF; font-size: 12px;">Wins</div>
+            <div style="color: white; font-weight: bold;">{stats().totalCredits}</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-value" style={{
-              color: stats().netAmount >= 0 ? "var(--success)" : "var(--danger)"
+          <div class="stat-item" style="background: #312A5E; padding: 8px 15px; border-radius: 5px; text-align: center;">
+            <div style="color: #ADA3EF; font-size: 12px;">{stats().netAmount >= 0 ? "Player Profit" : "House Edge"}</div>
+            <div style={{
+              color: stats().netAmount >= 0 ? "#59E878" : "#FF5252",
+              fontWeight: "bold"
             }}>
               {formatAmount(Math.abs(stats().netAmount), "USD")}
             </div>
-            <div class="stat-label">{stats().netAmount >= 0 ? "Player Profit" : "House Edge"}</div>
           </div>
         </div>
       </div>
       
       <div class="filters-container">
-        <div class="search-filter">
+        <div class="search-container">
           <input 
             type="text" 
             placeholder="Search by Game ID, User ID, Round ID..." 
@@ -220,117 +221,111 @@ const TransactionsTab = (props) => {
             onInput={handleSearch}
             class="search-input"
           />
+          <button 
+            class="search-button" 
+            onClick={() => handleSearch({ target: { value: searchTerm() } })}
+            disabled={loading()}
+          >
+            🔍
+          </button>
         </div>
         
-        <div class="date-filter">
-          <div class="date-input-group">
-            <label>From:</label>
+        <div class="filter-selects">
+          <div class="filter-group">
+            <label class="filter-label">Transaction Type</label>
+            <select 
+              class="filter-select" 
+              value={actionFilter()} 
+              onChange={(e) => handleActionFilter(e.target.value)}
+            >
+              <option value="all">All</option>
+              <option value="debit">Bets</option>
+              <option value="credit">Wins</option>
+              <option value="balance">Balance</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label class="filter-label">From Date</label>
             <input 
               type="date" 
+              class="filter-select" 
               value={dateRange().from} 
               onChange={(e) => handleDateChange("from", e.target.value)}
             />
           </div>
-          <div class="date-input-group">
-            <label>To:</label>
+          
+          <div class="filter-group">
+            <label class="filter-label">To Date</label>
             <input 
               type="date" 
+              class="filter-select" 
               value={dateRange().to} 
               onChange={(e) => handleDateChange("to", e.target.value)}
             />
           </div>
+          
+          <div class="filter-group small">
+            <label class="filter-label">Sort Order</label>
+            <select 
+              class="filter-select" 
+              value={sortOrder()} 
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          </div>
         </div>
         
-        <div class="action-filter">
+        <div class="feature-filters">
           <button 
-            class={`filter-btn ${actionFilter() === "all" ? "active" : ""}`}
-            onClick={() => handleActionFilter("all")}
+            class="bevel-button cancel" 
+            style="padding: 6px 12px; font-size: 12px;"
+            onClick={resetFilters}
           >
-            All
-          </button>
-          <button 
-            class={`filter-btn ${actionFilter() === "balance" ? "active" : ""}`}
-            onClick={() => handleActionFilter("balance")}
-          >
-            Balance
-          </button>
-          <button 
-            class={`filter-btn ${actionFilter() === "debit" ? "active" : ""}`}
-            onClick={() => handleActionFilter("debit")}
-          >
-            Bets
-          </button>
-          <button 
-            class={`filter-btn ${actionFilter() === "credit" ? "active" : ""}`}
-            onClick={() => handleActionFilter("credit")}
-          >
-            Wins
+            Reset Filters
           </button>
         </div>
-        
-        <button class="reset-btn" onClick={resetFilters}>
-          Reset Filters
-        </button>
       </div>
       
-      <Show when={!loading()} fallback={<div class="loading">Loading transactions...</div>}>
-        <Show when={filteredTransactions().length > 0} fallback={<div class="no-data">No transactions found</div>}>
+      <Show when={!loading()} fallback={
+        <div class="games-loading">
+          <div class="spinner"></div>
+          <p>Loading transactions...</p>
+        </div>
+      }>
+        <Show when={filteredTransactions().length > 0} fallback={
+          <div class="empty-games-message">
+            <p>No transactions found. Try adjusting your filters.</p>
+          </div>
+        }>
           <div class="table-container">
-            <table class="data-table transactions-table">
+            <table class="games-table">
               <thead>
                 <tr>
-                  <th onClick={() => handleSort("id")} class={sortField() === "id" ? sortOrder() : ""}>
-                    ID
-                  </th>
-                  <th onClick={() => handleSort("user_id")} class={sortField() === "user_id" ? sortOrder() : ""}>
-                    User
-                  </th>
-                  <th onClick={() => handleSort("game_id")} class={sortField() === "game_id" ? sortOrder() : ""}>
-                    Game
-                  </th>
-                  <th onClick={() => handleSort("round_id")} class={sortField() === "round_id" ? sortOrder() : ""}>
-                    Round
-                  </th>
-                  <th onClick={() => handleSort("action")} class={sortField() === "action" ? sortOrder() : ""}>
-                    Type
-                  </th>
-                  <th onClick={() => handleSort("amount")} class={sortField() === "amount" ? sortOrder() : ""}>
-                    Amount
-                  </th>
-                  <th onClick={() => handleSort("balance_before")} class={sortField() === "balance_before" ? sortOrder() : ""}>
-                    Before
-                  </th>
-                  <th onClick={() => handleSort("balance_after")} class={sortField() === "balance_after" ? sortOrder() : ""}>
-                    After
-                  </th>
-                  <th onClick={() => handleSort("created_at")} class={sortField() === "created_at" ? sortOrder() : ""}>
-                    Date
-                  </th>
-                  <th>Free Spin</th>
+                  <th onClick={() => handleSort("user_id")}>User ID</th>
+                  <th onClick={() => handleSort("game_id")}>Game ID</th>
+                  <th onClick={() => handleSort("round_id")}>Round ID</th>
+                  <th onClick={() => handleSort("action")}>Type</th>
+                  <th onClick={() => handleSort("amount")}>Amount</th>
+                  <th onClick={() => handleSort("balance_before")}>Balance Before</th>
+                  <th onClick={() => handleSort("balance_after")}>Balance After</th>
+                  <th onClick={() => handleSort("created_at")}>Timestamp</th>
                 </tr>
               </thead>
               <tbody>
                 <For each={paginatedTransactions()}>
                   {(tx) => (
-                    <tr class={tx.is_freespin ? "freespin-row" : ""}>
-                      <td>{tx.id}</td>
+                    <tr>
                       <td title={tx.user_id}>{tx.user_id.substring(0, 8)}...</td>
-                      <td title={tx.game_id}>{tx.game_id.substring(0, 10)}...</td>
-                      <td title={tx.round_id}>{tx.round_id ? tx.round_id.substring(0, 6) + "..." : "N/A"}</td>
+                      <td title={tx.game_id}>{tx.game_id ? tx.game_id.substring(0, 10) + '...' : 'N/A'}</td>
+                      <td title={tx.round_id}>{tx.round_id ? tx.round_id.substring(0, 8) + '...' : 'N/A'}</td>
                       <td>{formatAction(tx.action)}</td>
-                      <td style={{ color: tx.action === "credit" ? "var(--success)" : tx.action === "debit" ? "var(--danger)" : "inherit" }}>
-                        {formatAmount(tx.amount, tx.currency)}
-                      </td>
+                      <td>{formatAmount(tx.amount, tx.currency)}</td>
                       <td>{formatAmount(tx.balance_before, tx.currency)}</td>
                       <td>{formatAmount(tx.balance_after, tx.currency)}</td>
                       <td>{formatDate(tx.created_at)}</td>
-                      <td>
-                        {tx.is_freespin ? (
-                          <span class="badge free-spin-badge" title="Free Spin Transaction">
-                            <i class="fas fa-gift"></i> Free
-                          </span>
-                        ) : ""}
-                      </td>
                     </tr>
                   )}
                 </For>
@@ -338,24 +333,39 @@ const TransactionsTab = (props) => {
             </table>
           </div>
           
-          {/* Pagination */}
-          <div class="pagination">
+          <div class="pagination-controls">
             <button 
-              class="pagination-btn" 
-              disabled={currentPage() === 1}
+              class="pagination-button" 
+              disabled={currentPage() === 1 || loading()}
+              onClick={() => setCurrentPage(1)}
+            >
+              &lt;&lt;
+            </button>
+            <button 
+              class="pagination-button" 
+              disabled={currentPage() === 1 || loading()}
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
             >
-              Previous
+              &lt;
             </button>
+            
             <span class="pagination-info">
               Page {currentPage()} of {totalPages()}
             </span>
+            
             <button 
-              class="pagination-btn" 
-              disabled={currentPage() === totalPages()}
+              class="pagination-button" 
+              disabled={currentPage() === totalPages() || loading()}
               onClick={() => setCurrentPage(prev => Math.min(totalPages(), prev + 1))}
             >
-              Next
+              &gt;
+            </button>
+            <button 
+              class="pagination-button" 
+              disabled={currentPage() === totalPages() || loading()}
+              onClick={() => setCurrentPage(totalPages())}
+            >
+              &gt;&gt;
             </button>
           </div>
         </Show>

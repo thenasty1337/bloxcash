@@ -325,64 +325,75 @@ const FreespinsTab = (props) => {
   };
 
   return (
-    <div class="freespins-tab">
-      <div class="tab-header">
-        <h2 class="tab-title">Free Spins Management</h2>
-        <button class="add-btn" onClick={toggleAddForm}>
-          {showAddForm() ? "Cancel" : "+ Add Free Spins"}
+    <div class="games-container-in">
+      <div class="games-header">
+        <h2 class="games-title">Free Spins</h2>
+        <button
+          onClick={() => setShowAddForm(!showAddForm())}
+          class="bevel-button"
+          style="font-size: 14px; padding: 8px 15px;"
+        >
+          {showAddForm() ? "Cancel" : "Add Free Spins"}
         </button>
       </div>
-      
+
       {/* Add Free Spins Form */}
       <Show when={showAddForm()}>
-        <div class="add-freespins-form">
-          <h3>Add Free Spins to User</h3>
-          <form onSubmit={submitAddFreespins}>
-            <div class="form-row">
-              <div class="form-group">
-                <label>User</label>
-                <div class="search-input-container">
-                  <input 
-                    type="text" 
-                    placeholder="Search for user..." 
-                    value={userSearchTerm()} 
-                    onInput={handleUserSearch}
+        <div class="filters-container" style="padding-bottom: 20px;">
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            submitAddFreespins(e);
+          }}>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+              <div class="filter-group">
+                <label class="filter-label">User</label>
+                <div style="position: relative;">
+                  <input
+                    type="text"
                     class="search-input"
+                    placeholder="Search by username or ID..."
+                    value={userSearchTerm()}
+                    onInput={handleUserSearch}
                   />
                   <Show when={userSearchResults().length > 0}>
-                    <div class="search-results">
+                    <div style="position: absolute; z-index: 10; background: #1E1A3A; width: 100%; max-height: 200px; overflow-y: auto; border: 1px solid #4A4581; border-top: none; border-radius: 0 0 5px 5px;">
                       <For each={userSearchResults()}>
                         {(user) => (
-                          <div class="search-result-item" onClick={() => selectUser(user)}>
-                            {user.username}
+                          <div
+                            onClick={() => selectUser(user)}
+                            style="padding: 8px 10px; cursor: pointer; border-bottom: 1px solid #4A4581; color: #ADA3EF;"
+                            onMouseOver={(e) => e.currentTarget.style.background = "#312A5E"}
+                            onMouseOut={(e) => e.currentTarget.style.background = "transparent"}
+                          >
+                            {user.username} (ID: {user.id})
                           </div>
                         )}
                       </For>
                     </div>
                   </Show>
                 </div>
-                <Show when={addFormData().userId}>
-                  <div class="selected-item">
-                    Selected: <strong>{addFormData().userName}</strong>
-                  </div>
-                </Show>
               </div>
-              
-              <div class="form-group">
-                <label>Game</label>
-                <div class="search-input-container">
-                  <input 
-                    type="text" 
-                    placeholder="Search for game..." 
-                    value={gameSearchTerm()} 
-                    onInput={handleGameSearch}
+
+              <div class="filter-group">
+                <label class="filter-label">Game</label>
+                <div style="position: relative;">
+                  <input
+                    type="text"
                     class="search-input"
+                    placeholder="Search by game name..."
+                    value={gameSearchTerm()}
+                    onInput={handleGameSearch}
                   />
                   <Show when={gameSearchResults().length > 0}>
-                    <div class="search-results">
+                    <div style="position: absolute; z-index: 10; background: #1E1A3A; width: 100%; max-height: 200px; overflow-y: auto; border: 1px solid #4A4581; border-top: none; border-radius: 0 0 5px 5px;">
                       <For each={gameSearchResults()}>
                         {(game) => (
-                          <div class="search-result-item" onClick={() => selectGame(game)}>
+                          <div
+                            onClick={() => selectGame(game)}
+                            style="padding: 8px 10px; cursor: pointer; border-bottom: 1px solid #4A4581; color: #ADA3EF;"
+                            onMouseOver={(e) => e.currentTarget.style.background = "#312A5E"}
+                            onMouseOut={(e) => e.currentTarget.style.background = "transparent"}
+                          >
                             {game.game_name} ({game.provider})
                           </div>
                         )}
@@ -390,63 +401,62 @@ const FreespinsTab = (props) => {
                     </div>
                   </Show>
                 </div>
-                <Show when={addFormData().gameId}>
-                  <div class="selected-item">
-                    Selected: <strong>{addFormData().gameName}</strong>
-                  </div>
-                </Show>
               </div>
-            </div>
-            
-            <div class="form-row">
-              <div class="form-group">
-                <label>Number of Free Spins</label>
-                <input 
-                  type="number" 
-                  min="1" 
-                  max="1000" 
-                  value={addFormData().freespinsCount} 
-                  onInput={(e) => updateFormField("freespinsCount", e.target.value)}
-                  required
+
+              <div class="filter-group">
+                <label class="filter-label">Number of Free Spins</label>
+                <input
+                  type="number"
+                  class="filter-select"
+                  min="1"
+                  max="100"
+                  value={addFormData().freespinsCount}
+                  onInput={(e) => updateFormField("freespinsCount", parseInt(e.target.value))}
                 />
               </div>
-              
-              <div class="form-group">
-                <label>Bet Level (cents)</label>
-                <input 
-                  type="number" 
-                  min="1" 
-                  value={addFormData().betLevel} 
-                  onInput={(e) => updateFormField("betLevel", e.target.value)}
-                  required
+
+              <div class="filter-group">
+                <label class="filter-label">Bet Level (in cents)</label>
+                <input
+                  type="number"
+                  class="filter-select"
+                  min="1"
+                  step="1"
+                  value={addFormData().betLevel}
+                  onInput={(e) => updateFormField("betLevel", parseInt(e.target.value))}
                 />
               </div>
-              
-              <div class="form-group">
-                <label>Valid for (days)</label>
-                <input 
-                  type="number" 
-                  min="1" 
-                  max="30" 
-                  value={addFormData().validDays} 
-                  onInput={(e) => updateFormField("validDays", e.target.value)}
-                  required
+
+              <div class="filter-group">
+                <label class="filter-label">Valid for (days)</label>
+                <input
+                  type="number"
+                  class="filter-select"
+                  min="1"
+                  max="30"
+                  value={addFormData().validDays}
+                  onInput={(e) => updateFormField("validDays", parseInt(e.target.value))}
                 />
               </div>
-            </div>
-            
-            <div class="form-actions">
-              <button type="submit" class="submit-btn" disabled={formLoading()}>
-                {formLoading() ? "Adding..." : "Add Free Spins"}
-              </button>
+
+              <div class="filter-group" style="display: flex; align-items: flex-end;">
+                <button
+                  type="submit"
+                  class="bevel-button"
+                  style="margin-top: 10px; width: 100%;"
+                  disabled={formLoading() || !addFormData().userId || !addFormData().gameId}
+                >
+                  {formLoading() ? "Adding..." : "Add Free Spins"}
+                </button>
+              </div>
             </div>
           </form>
         </div>
       </Show>
-      
-      {/* Free Spins List */}
-      <div class="filter-container">
-        <div class="search-filter">
+
+      {/* Filters */}
+      <div class="filters-container">
+        <div class="search-container">
           <input 
             type="text" 
             placeholder="Search by User ID or Game ID..." 
@@ -454,122 +464,158 @@ const FreespinsTab = (props) => {
             onInput={handleSearch}
             class="search-input"
           />
+          <button 
+            class="search-button" 
+            onClick={() => handleSearch({ target: { value: searchTerm() } })}
+            disabled={loading()}
+          >
+            🔍
+          </button>
         </div>
         
-        <div class="status-filter">
-          <button 
-            class={`filter-btn ${activeFilter() === "all" ? "active" : ""}`}
-            onClick={() => handleActiveFilter("all")}
-          >
-            All
-          </button>
-          <button 
-            class={`filter-btn ${activeFilter() === "active" ? "active" : ""}`}
-            onClick={() => handleActiveFilter("active")}
-          >
-            Active
-          </button>
-          <button 
-            class={`filter-btn ${activeFilter() === "expired" ? "active" : ""}`}
-            onClick={() => handleActiveFilter("expired")}
-          >
-            Expired
-          </button>
+        <div class="filter-selects">
+          <div class="filter-group">
+            <label class="filter-label">Status</label>
+            <select 
+              class="filter-select" 
+              value={activeFilter()} 
+              onChange={(e) => handleActiveFilter(e.target.value)}
+            >
+              <option value="all">All</option>
+              <option value="active">Active</option>
+              <option value="expired">Expired</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label class="filter-label">Sort By</label>
+            <select 
+              class="filter-select" 
+              value={sortField()} 
+              onChange={(e) => handleSort(e.target.value)}
+            >
+              <option value="created_at">Date Added</option>
+              <option value="valid_until">Expiry Date</option>
+              <option value="freespins_count">Number of Spins</option>
+              <option value="freespins_performed">Spins Performed</option>
+              <option value="bet_level">Bet Level</option>
+            </select>
+          </div>
+          
+          <div class="filter-group small">
+            <label class="filter-label">Order</label>
+            <select 
+              class="filter-select" 
+              value={sortOrder()} 
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          </div>
         </div>
       </div>
       
-      <Show when={!loading()} fallback={<div class="loading">Loading free spins...</div>}>
-        <Show when={filteredFreespins().length > 0} fallback={<div class="no-data">No free spins found</div>}>
+      <Show when={!loading()} fallback={
+        <div class="games-loading">
+          <div class="spinner"></div>
+          <p>Loading free spins...</p>
+        </div>
+      }>
+        <Show when={filteredFreespins().length > 0} fallback={
+          <div class="empty-games-message">
+            <p>No free spins found. Try adjusting your filters or add new free spins.</p>
+          </div>
+        }>
           <div class="table-container">
-            <table class="data-table freespins-table">
+            <table class="games-table">
               <thead>
                 <tr>
-                  <th onClick={() => handleSort("id")} class={sortField() === "id" ? sortOrder() : ""}>
-                    ID
-                  </th>
-                  <th onClick={() => handleSort("user_id")} class={sortField() === "user_id" ? sortOrder() : ""}>
-                    User
-                  </th>
-                  <th onClick={() => handleSort("game_id")} class={sortField() === "game_id" ? sortOrder() : ""}>
-                    Game
-                  </th>
-                  <th onClick={() => handleSort("freespins_count")} class={sortField() === "freespins_count" ? sortOrder() : ""}>
-                    Total
-                  </th>
-                  <th onClick={() => handleSort("freespins_performed")} class={sortField() === "freespins_performed" ? sortOrder() : ""}>
-                    Used
-                  </th>
-                  <th onClick={() => handleSort("bet_level")} class={sortField() === "bet_level" ? sortOrder() : ""}>
-                    Bet Level
-                  </th>
-                  <th onClick={() => handleSort("freespins_wallet")} class={sortField() === "freespins_wallet" ? sortOrder() : ""}>
-                    Wallet
-                  </th>
-                  <th onClick={() => handleSort("valid_until")} class={sortField() === "valid_until" ? sortOrder() : ""}>
-                    Expires
-                  </th>
-                  <th>Status</th>
+                  <th onClick={() => handleSort("user_id")}>User ID</th>
+                  <th onClick={() => handleSort("game_id")}>Game ID</th>
+                  <th onClick={() => handleSort("freespins_count")}>Total Spins</th>
+                  <th onClick={() => handleSort("freespins_performed")}>Used</th>
+                  <th onClick={() => handleSort("bet_level")}>Bet Level</th>
+                  <th onClick={() => handleSort("created_at")}>Created</th>
+                  <th onClick={() => handleSort("valid_until")}>Expires</th>
+                  <th onClick={() => handleSort("active")}>Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 <For each={paginatedFreespins()}>
-                  {(freespin) => {
-                    const active = isActive(freespin);
-                    const remaining = getRemainingTime(freespin.valid_until);
-                    
-                    return (
-                      <tr class={!active ? "expired-row" : ""}>
-                        <td>{freespin.id}</td>
-                        <td title={freespin.user_id}>{freespin.user_id.substring(0, 8)}...</td>
-                        <td title={freespin.game_id}>{freespin.game_id.substring(0, 10)}...</td>
-                        <td>{freespin.freespins_count}</td>
-                        <td>{freespin.freespins_performed}</td>
-                        <td>{(freespin.bet_level / 100).toFixed(2)} {freespin.currency}</td>
-                        <td>{(freespin.freespins_wallet / 100).toFixed(2)} {freespin.currency}</td>
-                        <td title={formatDate(freespin.valid_until)}>{remaining}</td>
-                        <td>
-                          <span class={`status-badge ${active ? "active" : "expired"}`}>
-                            {active ? "Active" : "Expired"}
-                          </span>
-                        </td>
-                        <td>
-                          <Show when={active}>
-                            <button 
-                              class="action-btn deactivate-btn" 
-                              title="Deactivate free spins"
-                              onClick={() => deactivateFreespins(freespin.id)}
-                            >
-                              <i class="fas fa-ban"></i>
-                            </button>
-                          </Show>
-                        </td>
-                      </tr>
-                    );
-                  }}
+                  {(freespin) => (
+                    <tr>
+                      <td title={freespin.user_id}>{freespin.user_id.substring(0, 8)}...</td>
+                      <td title={freespin.game_id}>{freespin.game_id.substring(0, 10)}...</td>
+                      <td>{freespin.freespins_count}</td>
+                      <td>{freespin.freespins_performed}</td>
+                      <td>{(freespin.bet_level / 100).toFixed(2)}</td>
+                      <td>{formatDate(freespin.created_at)}</td>
+                      <td title={formatDate(freespin.valid_until)}>{getRemainingTime(freespin.valid_until)}</td>
+                      <td>
+                        <span style={{
+                          color: isActive(freespin) ? "#59E878" : "#FF5252",
+                          fontWeight: "500"
+                        }}>
+                          {isActive(freespin) ? "Active" : "Expired"}
+                        </span>
+                      </td>
+                      <td>
+                        <Show when={isActive(freespin)}>
+                          <button 
+                            class="bevel-button cancel" 
+                            style="padding: 5px 10px; font-size: 12px;"
+                            onClick={() => {
+                              if (confirm("Are you sure you want to deactivate these free spins?")) {
+                                deactivateFreespins(freespin.id);
+                              }
+                            }}
+                          >
+                            Deactivate
+                          </button>
+                        </Show>
+                      </td>
+                    </tr>
+                  )}
                 </For>
               </tbody>
             </table>
           </div>
           
-          {/* Pagination */}
-          <div class="pagination">
+          <div class="pagination-controls">
             <button 
-              class="pagination-btn" 
-              disabled={currentPage() === 1}
+              class="pagination-button" 
+              disabled={currentPage() === 1 || loading()}
+              onClick={() => setCurrentPage(1)}
+            >
+              &lt;&lt;
+            </button>
+            <button 
+              class="pagination-button" 
+              disabled={currentPage() === 1 || loading()}
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
             >
-              Previous
+              &lt;
             </button>
+            
             <span class="pagination-info">
               Page {currentPage()} of {totalPages()}
             </span>
+            
             <button 
-              class="pagination-btn" 
-              disabled={currentPage() === totalPages()}
+              class="pagination-button" 
+              disabled={currentPage() === totalPages() || loading()}
               onClick={() => setCurrentPage(prev => Math.min(totalPages(), prev + 1))}
             >
-              Next
+              &gt;
+            </button>
+            <button 
+              class="pagination-button" 
+              disabled={currentPage() === totalPages() || loading()}
+              onClick={() => setCurrentPage(totalPages())}
+            >
+              &gt;&gt;
             </button>
           </div>
         </Show>

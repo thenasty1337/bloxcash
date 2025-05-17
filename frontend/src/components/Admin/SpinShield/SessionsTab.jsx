@@ -106,75 +106,96 @@ const SessionsTab = (props) => {
   };
 
   return (
-    <div class="sessions-tab">
-      <div class="tab-header">
-        <h2 class="tab-title">Game Sessions</h2>
-        <div class="tab-actions">
-          <div class="search-filter">
-            <input 
-              type="text" 
-              placeholder="Search by ID or User ID..." 
-              value={searchTerm()} 
-              onInput={handleSearch}
-              class="search-input"
-            />
-            <div class="status-filter">
-              <button 
-                class={`filter-btn ${statusFilter() === "all" ? "active" : ""}`}
-                onClick={() => handleStatusFilter("all")}
-              >
-                All
-              </button>
-              <button 
-                class={`filter-btn ${statusFilter() === "active" ? "active" : ""}`}
-                onClick={() => handleStatusFilter("active")}
-              >
-                Active
-              </button>
-              <button 
-                class={`filter-btn ${statusFilter() === "completed" ? "active" : ""}`}
-                onClick={() => handleStatusFilter("completed")}
-              >
-                Completed
-              </button>
-              <button 
-                class={`filter-btn ${statusFilter() === "expired" ? "active" : ""}`}
-                onClick={() => handleStatusFilter("expired")}
-              >
-                Expired
-              </button>
-            </div>
+    <div class="games-container-in">
+      <div class="games-header">
+        <h2 class="games-title">Game Sessions</h2>
+      </div>
+      
+      <div class="filters-container">
+        <div class="search-container">
+          <input 
+            type="text" 
+            placeholder="Search by ID or User ID..." 
+            value={searchTerm()} 
+            onInput={handleSearch}
+            class="search-input"
+          />
+          <button 
+            class="search-button" 
+            onClick={() => handleSearch({ target: { value: searchTerm() } })}
+            disabled={loading()}
+          >
+            🔍
+          </button>
+        </div>
+        
+        <div class="filter-selects">
+          <div class="filter-group">
+            <label class="filter-label">Status</label>
+            <select 
+              class="filter-select" 
+              value={statusFilter()} 
+              onChange={(e) => handleStatusFilter(e.target.value)}
+            >
+              <option value="all">All</option>
+              <option value="active">Active</option>
+              <option value="completed">Completed</option>
+              <option value="expired">Expired</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label class="filter-label">Sort By</label>
+            <select 
+              class="filter-select" 
+              value={sortField()} 
+              onChange={(e) => handleSort(e.target.value)}
+            >
+              <option value="session_id">Session ID</option>
+              <option value="user_id">User ID</option>
+              <option value="game_id">Game ID</option>
+              <option value="status">Status</option>
+              <option value="started_at">Started At</option>
+              <option value="ended_at">Ended At</option>
+            </select>
+          </div>
+          
+          <div class="filter-group small">
+            <label class="filter-label">Order</label>
+            <select 
+              class="filter-select" 
+              value={sortOrder()} 
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
           </div>
         </div>
       </div>
       
-      <Show when={!loading()} fallback={<div class="loading">Loading sessions...</div>}>
-        <Show when={filteredSessions().length > 0} fallback={<div class="no-data">No sessions found</div>}>
+      <Show when={!loading()} fallback={
+        <div class="games-loading">
+          <div class="spinner"></div>
+          <p>Loading sessions...</p>
+        </div>
+      }>
+        <Show when={filteredSessions().length > 0} fallback={
+          <div class="empty-games-message">
+            <p>No sessions found. Try adjusting your filters.</p>
+          </div>
+        }>
           <div class="table-container">
-            <table class="data-table sessions-table">
+            <table class="games-table">
               <thead>
                 <tr>
-                  <th onClick={() => handleSort("session_id")} class={sortField() === "session_id" ? sortOrder() : ""}>
-                    Session ID
-                  </th>
-                  <th onClick={() => handleSort("user_id")} class={sortField() === "user_id" ? sortOrder() : ""}>
-                    User ID
-                  </th>
-                  <th onClick={() => handleSort("game_id")} class={sortField() === "game_id" ? sortOrder() : ""}>
-                    Game ID
-                  </th>
-                  <th onClick={() => handleSort("currency")} class={sortField() === "currency" ? sortOrder() : ""}>
-                    Currency
-                  </th>
-                  <th onClick={() => handleSort("status")} class={sortField() === "status" ? sortOrder() : ""}>
-                    Status
-                  </th>
-                  <th onClick={() => handleSort("started_at")} class={sortField() === "started_at" ? sortOrder() : ""}>
-                    Started
-                  </th>
-                  <th onClick={() => handleSort("ended_at")} class={sortField() === "ended_at" ? sortOrder() : ""}>
-                    Ended
-                  </th>
+                  <th onClick={() => handleSort("session_id")}>Session ID</th>
+                  <th onClick={() => handleSort("user_id")}>User ID</th>
+                  <th onClick={() => handleSort("game_id")}>Game ID</th>
+                  <th onClick={() => handleSort("currency")}>Currency</th>
+                  <th onClick={() => handleSort("status")}>Status</th>
+                  <th onClick={() => handleSort("started_at")}>Started</th>
+                  <th onClick={() => handleSort("ended_at")}>Ended</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -191,15 +212,17 @@ const SessionsTab = (props) => {
                       <td>{formatDate(session.ended_at)}</td>
                       <td>
                         <button 
-                          class="action-btn view-btn" 
+                          class="bevel-button" 
+                          style="padding: 5px 10px; font-size: 12px;"
                           title="View session details"
                           onClick={() => window.location.href = `/admin/spinshield/session/${session.id}`}
                         >
-                          <i class="fas fa-eye"></i>
+                          View
                         </button>
                         <Show when={session.status === "active"}>
                           <button 
-                            class="action-btn end-btn" 
+                            class="bevel-button cancel" 
+                            style="padding: 5px 10px; font-size: 12px; margin-left: 5px;"
                             title="End session"
                             onClick={() => {
                               if (confirm("Are you sure you want to end this session?")) {
@@ -208,7 +231,7 @@ const SessionsTab = (props) => {
                               }
                             }}
                           >
-                            <i class="fas fa-stop-circle"></i>
+                            End
                           </button>
                         </Show>
                       </td>
@@ -219,24 +242,39 @@ const SessionsTab = (props) => {
             </table>
           </div>
           
-          {/* Pagination */}
-          <div class="pagination">
+          <div class="pagination-controls">
             <button 
-              class="pagination-btn" 
-              disabled={currentPage() === 1}
+              class="pagination-button" 
+              disabled={currentPage() === 1 || loading()}
+              onClick={() => setCurrentPage(1)}
+            >
+              &lt;&lt;
+            </button>
+            <button 
+              class="pagination-button" 
+              disabled={currentPage() === 1 || loading()}
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
             >
-              Previous
+              &lt;
             </button>
+            
             <span class="pagination-info">
               Page {currentPage()} of {totalPages()}
             </span>
+            
             <button 
-              class="pagination-btn" 
-              disabled={currentPage() === totalPages()}
+              class="pagination-button" 
+              disabled={currentPage() === totalPages() || loading()}
               onClick={() => setCurrentPage(prev => Math.min(totalPages(), prev + 1))}
             >
-              Next
+              &gt;
+            </button>
+            <button 
+              class="pagination-button" 
+              disabled={currentPage() === totalPages() || loading()}
+              onClick={() => setCurrentPage(totalPages())}
+            >
+              &gt;&gt;
             </button>
           </div>
         </Show>
