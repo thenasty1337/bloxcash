@@ -1,84 +1,106 @@
 import {A} from "@solidjs/router";
-import GameInfo from "../Home/gameinfo";
 
 function FancySlotBanner(props) {
   return (
-    <>
-      <div className='slot'>
-        <div style={{ 'background-image': `url(${import.meta.env.VITE_SERVER_URL}${props?.img})`}} class='banner'/>
-
-        <div class='info'>
-          <div class='title'>
-            <p>{props?.name}</p>
-            <p className='provider'>{props?.providerName}</p>
-          </div>
-
-          <GameInfo type='RTP' rtp={props?.rtp || 100}/>
+    <div class='slot-container'>
+      <div class='slot-frame'>
+        <div class='banner' style={{ "background-image": `url(${props.img})` }}>
+          <A href={`/slots/${props.slug}`} class='gamemode-link'/>
         </div>
-
-        <A href={`/slots/${props.slug}`} class='gamemode-link'/>
       </div>
+      
+      {props.isNew && <div class="new-tag">NEW</div>}
+      {props.hasJackpot && <div class="jackpot-tag">JACKPOT</div>}
 
       <style jsx>{`
-        .slot {
-          min-width: 140px;
-          width: 140px;
-          min-height: 235px;
-          border-radius: 6px;
-          
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-
+        .slot-container {
           position: relative;
+          transition: all 0.2s ease;
+          cursor: pointer;
         }
         
+        .slot-container:hover {
+          transform: translateY(-4px);
+          z-index: 2;
+        }
+
+        .slot-frame {
+          background: rgba(54, 48, 98, 0.6);
+          border-radius: 8px;
+          padding: 3px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+          overflow: hidden;
+          transition: box-shadow 0.2s ease, border 0.2s ease;
+          border: 1px solid rgba(84, 76, 146, 0.3);
+        }
+        
+        .slot-container:hover .slot-frame {
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+          border: 2px solid rgba(255, 255, 255, 0.6);
+          padding: 2px;
+        }
+
         .banner {
           width: 100%;
-          height: 100%;
-          
+          aspect-ratio: 427/575;
+          border-radius: 6px;
           background-position: center;
-          background-size: 100%;
-          transition: background .3s;
-        }
-        
-        .slot:hover .banner {
-          background-size: 105%;
-        }
-        
-        .info {
-          width: 100%;
-          min-height: 65px;
-          
-          border-radius: 0px 0px 6px 6px;
-          border: 1px solid rgba(134, 111, 234, 0.15);
-          background: linear-gradient(0deg, rgba(71, 64, 126, 0.83) 0%, rgba(71, 64, 126, 0.83) 100%), radial-gradient(60% 60% at 50% 50%, rgba(147, 126, 236, 0.15) 0%, rgba(102, 83, 184, 0.15) 100%);
-          
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          
-          padding: 0 12px;
-        }
-        
-        .title {
-          color: #FFF;
-          font-size: 17px;
-          font-weight: 800;
-          text-transform: capitalize;
-          
-          white-space: nowrap;
-          text-overflow: ellipsis;
+          background-size: cover;
+          position: relative;
           overflow: hidden;
+          transition: transform 0.5s ease;
         }
         
-        .provider {
-          color: #9189D3;
-          font-size: 16px;
-          font-weight: 600;
+        .slot-container:hover .banner {
+          transform: scale(1.03);
+        }
+        
+        .gamemode-link {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 2;
+        }
+
+        .new-tag, .jackpot-tag {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          padding: 3px 8px;
+          border-radius: 4px;
+          font-size: 10px;
+          font-weight: 700;
+          z-index: 2;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          letter-spacing: 0.5px;
+        }
+        
+        .new-tag {
+          background-color: #59E878;
+          color: #0D2611;
+        }
+        
+        .jackpot-tag {
+          background: linear-gradient(180deg, #FFC700 0%, #FF7A00 100%);
+          color: #3A2800;
+          top: 36px;
+        }
+        
+        @media only screen and (max-width: 1000px) {
+          .banner {
+            max-width: unset;
+          }
+        }
+
+        @media only screen and (max-width: 450px) {
+          .banner {
+            max-width: unset;
+          }
         }
       `}</style>
-    </>
+    </div>
   );
 }
 

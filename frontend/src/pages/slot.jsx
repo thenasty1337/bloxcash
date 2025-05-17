@@ -17,11 +17,14 @@ function Slot(props) {
   const [user] = useUser()
   const [featured, setFeatured] = createSignal([])
   const [url, setURL] = createSignal()
+  const [sessionId, setSessionId] = createSignal()
+  const [loading, setLoading] = createSignal(false)
   const [slot, {mutate}] = createResource(() => params.slug, fetchSlot)
 
   async function fetchSlot(slug) {
     try {
       setURL(null)
+      setSessionId(null)
 
       let res = await api(`/slots/${slug}`, 'GET', null, false)
       if (!res.name) return null
@@ -29,11 +32,16 @@ function Slot(props) {
       setFeatured(res.featured)
 
       return {
+        id: res.id,
         name: res.name,
         slug: res.slug,
         img: res.img,
         provider: res.provider,
+        providerName: res.providerName || res.provider,
         rtp: res.rtp,
+        isNew: res.isNew,
+        hasJackpot: res.hasJackpot,
+        category: res.category
       }
     } catch (e) {
       console.error(e)
@@ -41,12 +49,34 @@ function Slot(props) {
     }
   }
 
-  createEffect(async () => {
-    if (!url() && slot() && user()) {
-      let sessURL = await authedAPI(`/slots/embed/${params.slug}`, 'POST', null, false)
-      if (!sessURL.url) return
+  async function launchGame(isDemo = false) {
+    if (loading() || !slot() || !user()) return;
+    
+    try {
+      setLoading(true);
+      
+      // Use the new play endpoint instead of embed
+      const demoParam = isDemo ? '?demo=true' : '';
+      let gameSession = await authedAPI(`/slots/play/${params.slug}${demoParam}`, 'POST', null, false);
+      
+      if (!gameSession.url) {
+        console.error('Failed to get game URL');
+        setLoading(false);
+        return;
+      }
+      
+      setURL(gameSession.url);
+      setSessionId(gameSession.sessionId);
+      setLoading(false);
+    } catch (e) {
+      console.error(e);
+      setLoading(false);
+    }
+  }
 
-      setURL(sessURL.url)
+  createEffect(async () => {
+    if (!url() && slot() && user() && !loading()) {
+      launchGame(false);
     }
   })
 
@@ -63,33 +93,47 @@ function Slot(props) {
 
       <div class='slot-base-container'>
         {user() ? (
-          <iframe src={url()} className='game' allow="fullscreen; autoplay" ref={slotRef}/>
+          url() ? (
+            <iframe src={url()} className='game' allow="fullscreen; autoplay" ref={slotRef}/>
+          ) : (
+            <div class='game'>
+              <Show when={!loading()} fallback={<Loader />}>
+                <button className='play-btn' onClick={() => launchGame(false)}>Play Now</button>
+                <button className='demo-btn' onClick={() => launchGame(true)}>Try Demo</button>
+              </Show>
+            </div>
+          )
         ) : (
           <div class='game'>
-            <p>Please login.</p>
+            <p>Please login to play.</p>
           </div>
         )}
 
         <div class='slot-info'>
-          <GameInfo type='RTP' rtp={slot()?.rtp || 100} margin='unset'/>
+          <GameInfo type='RTP' rtp={slot()?.rtp || 95} margin='unset'/>
 
           <div className='title-container'>
             <Show when={!slot.loading} fallback={<h1>Loading...</h1>}>
               <h1>{slot()?.name}</h1>
-              <p>{slot()?.provider}</p>
+              <p>{slot()?.providerName || slot()?.provider}</p>
+              {slot()?.category && <span className="category">{slot()?.category}</span>}
+              {slot()?.isNew && <span className="new-tag">NEW</span>}
+              {slot()?.hasJackpot && <span className="jackpot-tag">JACKPOT</span>}
             </Show>
           </div>
 
           <div class='controls'>
-            <button className='fullscreen' onClick={() => slotRef.requestFullscreen()}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
-                <path
-                  d="M20.5102 0V6.83674H18.2313V3.88554L14.4825 7.64575L12.8645 6.02772L16.6247 2.27891H13.6735V0H20.5102ZM0 0V6.83674H2.27891V3.88554L6.02772 7.64575L7.64575 6.02772L3.88554 2.27891H6.83674V0H0ZM20.5102 20.5102V13.6735H18.2313V16.6247L14.4825 12.8759L12.8759 14.4825L16.6247 18.2313H13.6735V20.5102H20.5102ZM6.83674 20.5102V18.2313H3.88554L7.63435 14.4825L6.02772 12.8645L2.27891 16.6247V13.6735H0V20.5102H6.83674Z"
-                  fill="#9189D3"/>
-              </svg>
+            {url() && (
+              <button className='fullscreen' onClick={() => slotRef.requestFullscreen()}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21" fill="none">
+                  <path
+                    d="M20.5102 0V6.83674H18.2313V3.88554L14.4825 7.64575L12.8645 6.02772L16.6247 2.27891H13.6735V0H20.5102ZM0 0V6.83674H2.27891V3.88554L6.02772 7.64575L7.64575 6.02772L3.88554 2.27891H6.83674V0H0ZM20.5102 20.5102V13.6735H18.2313V16.6247L14.4825 12.8759L12.8759 14.4825L16.6247 18.2313H13.6735V20.5102H20.5102ZM6.83674 20.5102V18.2313H3.88554L7.63435 14.4825L6.02772 12.8645L2.27891 16.6247V13.6735H0V20.5102H6.83674Z"
+                    fill="#9189D3"/>
+                </svg>
 
-              Fullscreen
-            </button>
+                Fullscreen
+              </button>
+            )}
           </div>
         </div>
 
@@ -151,9 +195,33 @@ function Slot(props) {
           display: flex;
           align-items: center;
           justify-content: center;
+          flex-direction: column;
+          gap: 12px;
           
           font-weight: 700;
           color: white;
+        }
+        
+        .play-btn, .demo-btn {
+          padding: 12px 24px;
+          border-radius: 8px;
+          font-family: Geogrotesque Wide, sans-serif;
+          font-weight: 700;
+          cursor: pointer;
+          min-width: 150px;
+          text-align: center;
+        }
+        
+        .play-btn {
+          background: linear-gradient(180deg, #59E878 0%, #26A240 100%);
+          color: #0D2611;
+          border: none;
+        }
+        
+        .demo-btn {
+          background: #342E5F;
+          border: 1px solid #494182;
+          color: #9189D3;
         }
 
         .slot-info {
@@ -178,16 +246,41 @@ function Slot(props) {
           font-size: 16px;
           font-weight: 600;
           text-transform: capitalize;
+          display: flex;
+          flex-direction: column;
         }
 
         .title-container h1 {
           color: white;
           font-size: 18px;
           font-weight: 800;
+          margin: 0;
         }
-
-        h1 {
-          margin: unset;
+        
+        .category {
+          font-size: 12px;
+          color: #9189D3;
+          margin-top: 2px;
+        }
+        
+        .new-tag, .jackpot-tag {
+          display: inline-block;
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-size: 10px;
+          font-weight: 700;
+          margin-right: 4px;
+          margin-top: 4px;
+        }
+        
+        .new-tag {
+          background-color: #59E878;
+          color: #0D2611;
+        }
+        
+        .jackpot-tag {
+          background: linear-gradient(180deg, #FFC700 0%, #FF7A00 100%);
+          color: #3A2800;
         }
         
         .controls {

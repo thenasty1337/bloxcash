@@ -17,33 +17,62 @@ function Slots(props) {
 
   const [user] = useUser()
   const [slots, setSlots] = createSignal()
+  const [categories, setCategories] = createSignal([])
   const [fetching, setFetching] = createSignal(true)
-  const [slotsData] = createResource(() => ({ sort: params.sort, provider: params.provider, search: params.search }), fetchSlots)
+  const [slotsData] = createResource(() => ({ sort: params.sort, provider: params.provider, search: params.search, category: params.category }), fetchSlots)
   const [providers] = createResource(fetchProviders)
   const [top] = createResource(fetchTopPicks)
 
   async function fetchSlots(params) {
     try {
-      let sort = params.sort?.toLowerCase() || 'popularity'
-      let prov = params.provider || ''
-      let order = sort !== 'a-z' ? 'DESC' : 'ASC'
-      let search = params.search || ''
-
-      if (sort.includes('-')) sort = 'name'
-
-      let res = await api(`/slots?sortOrder=${order}&sortBy=${sort}&provider=${prov}&search=${search}`, 'GET', null, false)
-      if (!Array.isArray(res.data)) {
-        setFetching(false)
-        return
+      // Convert frontend sort params to backend sort format
+      let sortBy = 'game_name';  // default sort field
+      let sortOrder = 'ASC';     // default sort order
+      
+      if (params.sort) {
+        const sort = params.sort.toLowerCase();
+        
+        if (sort === 'popularity') {
+          // SpinShield doesn't have popularity, sort by is_new as an alternative
+          sortBy = 'is_new';
+          sortOrder = 'DESC';
+        } else if (sort === 'rtp') {
+          sortBy = 'rtp';
+          sortOrder = 'DESC';
+        } else if (sort === 'a-z') {
+          sortBy = 'game_name';
+          sortOrder = 'ASC';
+        } else if (sort === 'z-a') {
+          sortBy = 'game_name';
+          sortOrder = 'DESC';
+        }
+      }
+      
+      const provider = params.provider || '';
+      const search = params.search || '';
+      const category = params.category || '';
+      
+      // Build query with all parameters
+      let url = `/slots?sortOrder=${sortOrder}&sortBy=${sortBy}&provider=${provider}&search=${search}`;
+      
+      if (category) {
+        url += `&category=${category}`;
       }
 
-      setSlots(res.data)
-      setFetching(false)
-      return res
+      let res = await api(url, 'GET', null, false);
+      
+      if (!res.data || !Array.isArray(res.data)) {
+        setFetching(false);
+        return;
+      }
+
+      setSlots(res.data);
+      setFetching(false);
+      return res;
     } catch (e) {
-      console.error(e)
-      setFetching(false)
-      return []
+      console.error(e);
+      setFetching(false);
+      return [];
     }
   }
 
@@ -61,12 +90,19 @@ function Slots(props) {
 
   async function fetchProviders() {
     try {
-      let res = await api('/slots/providers', 'GET', null, false)
-      if (!Array.isArray(res) || res.length < 1) return []
-      return res
+      // Fetch categories as well
+      const catResponse = await api('/slots/categories', 'GET', null, false);
+      if (Array.isArray(catResponse)) {
+        setCategories(catResponse);
+      }
+      
+      // Fetch providers
+      let res = await api('/slots/providers', 'GET', null, false);
+      if (!Array.isArray(res) || res.length < 1) return [];
+      return res;
     } catch (e) {
-      console.error(e)
-      return []
+      console.error(e);
+      return [];
     }
   }
 
@@ -76,25 +112,52 @@ function Slots(props) {
     try {
       setFetching(true)
 
-      let sort = params?.sort?.toLowerCase() || 'popularity'
-      let order = params.sort !== 'a-z' ? 'DESC' : 'ASC'
-      let provider = params?.provider || ''
-      let search = params.search || ''
-
-      if (sort.includes('-')) sort = 'name'
-
-      let res = await api(`/slots?offset=${slots()?.length}&sortOrder=${order}&sortBy=${sort}&provider=${provider}&search=${search}`, 'GET', null, false)
-      if (!Array.isArray(res.data)) {
-        setFetching(false)
-        return
+      // Convert frontend sort params to backend sort format
+      let sortBy = 'game_name';  // default sort field
+      let sortOrder = 'ASC';     // default sort order
+      
+      if (params.sort) {
+        const sort = params.sort.toLowerCase();
+        
+        if (sort === 'popularity') {
+          sortBy = 'is_new';
+          sortOrder = 'DESC';
+        } else if (sort === 'rtp') {
+          sortBy = 'rtp';
+          sortOrder = 'DESC';
+        } else if (sort === 'a-z') {
+          sortBy = 'game_name';
+          sortOrder = 'ASC';
+        } else if (sort === 'z-a') {
+          sortBy = 'game_name';
+          sortOrder = 'DESC';
+        }
+      }
+      
+      const provider = params.provider || '';
+      const search = params.search || '';
+      const category = params.category || '';
+      
+      // Build query with offset for pagination
+      let url = `/slots?offset=${slots()?.length}&sortOrder=${sortOrder}&sortBy=${sortBy}&provider=${provider}&search=${search}`;
+      
+      if (category) {
+        url += `&category=${category}`;
       }
 
-      setSlots([...slots(), ...res.data])
-      setFetching(false)
+      let res = await api(url, 'GET', null, false);
+      
+      if (!res.data || !Array.isArray(res.data)) {
+        setFetching(false);
+        return;
+      }
+
+      setSlots([...slots(), ...res.data]);
+      setFetching(false);
     } catch (e) {
-      console.error(e)
-      setFetching(false)
-      return []
+      console.error(e);
+      setFetching(false);
+      return [];
     }
   }
 
@@ -204,14 +267,55 @@ function Slots(props) {
               </div>
             </div>
           </div>
+          
+          {/* Add Category Filter */}
+          <Show when={categories().length > 0}>
+            <div class='sorting-wrapper' onClick={(e) => e.currentTarget.classList.toggle('active')}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="17" height="11" viewBox="0 0 17 11" fill="none">
+                <path
+                  d="M5.40909 9.14006e-06C4.93082 0.00135331 4.46466 0.150597 4.07454 0.42728C3.68442 0.703962 3.38942 1.09454 3.23 1.54546H0.772727C0.567787 1.54546 0.371241 1.62688 0.226327 1.77179C0.0814121 1.9167 0 2.11325 0 2.31819C0 2.52313 0.0814121 2.71968 0.226327 2.86459C0.371241 3.00951 0.567787 3.09092 0.772727 3.09092H3.23C3.37176 3.49187 3.62108 3.8461 3.95068 4.11484C4.28028 4.38358 4.67745 4.55648 5.09873 4.6146C5.52001 4.67273 5.94917 4.61386 6.33923 4.44442C6.72929 4.27497 7.06522 4.0015 7.31027 3.65392C7.55531 3.30634 7.70002 2.89805 7.72856 2.47374C7.75709 2.04943 7.66836 1.62544 7.47207 1.24818C7.27577 0.870915 6.97948 0.554921 6.61562 0.334775C6.25177 0.114628 5.83436 -0.00118488 5.40909 9.14006e-06ZM16.2273 1.54546H10.0455C9.84051 1.54546 9.64397 1.62688 9.49905 1.77179C9.35414 1.9167 9.27273 2.11325 9.27273 2.31819C9.27273 2.52313 9.35414 2.71968 9.49905 2.86459C9.64397 3.00951 9.84051 3.09092 10.0455 3.09092H16.2273C16.4322 3.09092 16.6288 3.00951 16.7737 2.86459C16.9186 2.71968 17 2.52313 17 2.31819C17 2.11325 16.9186 1.9167 16.7737 1.77179C16.6288 1.62688 16.4322 1.54546 16.2273 1.54546ZM6.95454 6.95455H0.772727C0.567787 6.95455 0.371241 7.03597 0.226327 7.18088C0.0814121 7.3258 0 7.52234 0 7.72728C0 7.93222 0.0814121 8.12877 0.226327 8.27368C0.371241 8.4186 0.567787 8.50001 0.772727 8.50001H6.95454C7.15948 8.50001 7.35603 8.4186 7.50095 8.27368C7.64586 8.12877 7.72727 7.93222 7.72727 7.72728C7.72727 7.52234 7.64586 7.3258 7.50095 7.18088C7.35603 7.03597 7.15948 6.95455 6.95454 6.95455ZM16.2273 6.95455H13.77C13.5877 6.43898 13.229 6.00444 12.7574 5.72775C12.2857 5.45105 11.7314 5.35001 11.1924 5.44248C10.6534 5.53496 10.1645 5.81499 9.81201 6.23309C9.45954 6.65119 9.26621 7.18043 9.26621 7.72728C9.26621 8.27413 9.45954 8.80338 9.81201 9.22147C10.1645 9.63957 10.6534 9.9196 11.1924 10.0121C11.7314 10.1046 12.2857 10.0035 12.7574 9.72681C13.229 9.45012 13.5877 9.01558 13.77 8.50001H16.2273C16.4322 8.50001 16.6288 8.4186 16.7737 8.27368C16.9186 8.12877 17 7.93222 17 7.72728C17 7.52234 16.9186 7.3258 16.7737 7.18088C16.6288 7.03597 16.4322 6.95455 16.2273 6.95455Z"
+                  fill="#FCA31E"/>
+              </svg>
+
+              <p>
+                Filter By: <span class='white'>Categories</span>
+              </p>
+
+              <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 9 6" fill="none">
+                <path
+                  d="M4.50001 -5.60273e-07C4.66131 -5.74374e-07 4.82259 0.0719308 4.94557 0.215494L8.81537 4.73537C9.06154 5.02289 9.06154 5.48906 8.81537 5.77646C8.5693 6.06387 8.35714 5.99202 7.92407 5.99202L4.50002 5.99202L1.28571 5.99202C0.642858 5.99202 0.430769 6.06373 0.184718 5.77632C-0.0615712 5.48892 -0.0615712 5.02275 0.184718 4.73523L4.05446 0.215353C4.1775 0.0717678 4.33878 -5.46177e-07 4.50001 -5.60273e-07Z"
+                  fill="#9489DB"/>
+              </svg>
+
+              <div className='dropdown left' onClick={(e) => e.stopPropagation()}>
+                <div className='filters'>
+                  <For each={categories()}>{(cat) =>
+                    <div className={'option ' + (params.category === cat ? 'active' : '')}
+                         onClick={() => setParams({ category: params?.category === cat ? null : cat })}>
+                      <p>{cat}</p>
+                      <div className='checkbox'>
+                        <img src='/assets/icons/check.svg'/>
+                      </div>
+                    </div>
+                  }</For>
+                </div>
+              </div>
+            </div>
+          </Show>
         </div>
 
         <div className='slots'>
           <Show when={!slotsData.loading} fallback={<Loader/>}>
             <For each={slots()}>{(slot, index) =>
-              <div className='slot'
-                   style={{'background-image': `url(${import.meta.env.VITE_SERVER_URL}${slot.img})`}}>
-                <A href={`/slots/${slot.slug}`} class='gamemode-link'/>
+              <div className='slot-container'>
+                <div className='slot-frame'>
+                  <div className='slot'
+                       style={{'background-image': `url(${slot.img})`}}>
+                    <A href={`/slots/${slot.slug}`} class='gamemode-link'/>
+                  </div>
+                </div>
+                {slot.isNew && <div class="new-tag">NEW</div>}
+                {slot.hasJackpot && <div class="jackpot-tag">JACKPOT</div>}
               </div>
             }</For>
           </Show>
@@ -251,7 +355,7 @@ function Slots(props) {
 
           <div class='providers' ref={providersRef}>
             <For each={repeatProviders()}>{(provider, index) =>
-              <div class='provider'>
+              <div class='provider' onClick={() => setParams({ provider: params?.provider === provider.slug ? null : provider.slug })}>
                 <img src={`${import.meta.env.VITE_SERVER_URL}${provider.img}`} height='50'/>
               </div>
             }</For>
@@ -301,12 +405,11 @@ function Slots(props) {
         }
         
         .top-five {
-          gap: 15px;
-          display: flex;
-          justify-content: center;
-          flex-wrap: wrap;
-          
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+          grid-gap: 10px;
           margin: 35px 0;
+          padding: 4px;
         }
 
         .sort {
@@ -424,34 +527,92 @@ function Slots(props) {
 
         .slots {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-          grid-gap: 8px;
-
+          grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+          grid-gap: 10px;
           margin-top: 20px;
-
           min-height: 195px;
           overflow-x: auto;
+          padding: 4px;
         }
 
         .slots::-webkit-scrollbar {
           display: none;
         }
 
-        .slot {
-          min-width: 130px;
-          aspect-ratio: 146/195;
-          border-radius: 6px;
-
-          background-size: 100%;
-          background-position: center;
-          background-repeat: no-repeat;
-
-          transition: background .3s;
+        .slot-container {
           position: relative;
+          transition: all 0.2s ease;
+          cursor: pointer;
+        }
+        
+        .slot-container:hover {
+          transform: translateY(-4px);
+          z-index: 2;
         }
 
-        .slot:hover {
-          background-size: 105%;
+        .slot-frame {
+          background: rgba(54, 48, 98, 0.6);
+          border-radius: 8px;
+          padding: 3px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+          overflow: hidden;
+          transition: box-shadow 0.2s ease, border 0.2s ease;
+          border: 1px solid rgba(84, 76, 146, 0.3);
+        }
+        
+        .slot-container:hover .slot-frame {
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+          border: 2px solid rgba(255, 255, 255, 0.6);
+          padding: 2px;
+        }
+
+        .slot {
+          width: 100%;
+          aspect-ratio: 427/575;
+          border-radius: 6px;
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          position: relative;
+          overflow: hidden;
+          transition: transform 0.5s ease;
+        }
+        
+        .slot-container:hover .slot {
+          transform: scale(1.03);
+        }
+        
+        .gamemode-link {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 2;
+        }
+
+        .new-tag, .jackpot-tag {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          padding: 3px 8px;
+          border-radius: 4px;
+          font-size: 10px;
+          font-weight: 700;
+          z-index: 2;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          letter-spacing: 0.5px;
+        }
+        
+        .new-tag {
+          background-color: #59E878;
+          color: #0D2611;
+        }
+        
+        .jackpot-tag {
+          background: linear-gradient(180deg, #FFC700 0%, #FF7A00 100%);
+          color: #3A2800;
+          top: ${(params.category || params.provider) ? '36px' : '8px'};
         }
 
         .pagination {
@@ -556,6 +717,19 @@ function Slots(props) {
         @media only screen and (max-width: 1000px) {
           .slots-base-container {
             padding-bottom: 90px;
+          }
+        }
+
+        @media only screen and (min-width: 768px) {
+          .slots {
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-gap: 12px;
+          }
+        }
+        
+        @media only screen and (min-width: 1200px) {
+          .slots {
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
           }
         }
       `}</style>
