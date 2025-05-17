@@ -719,4 +719,131 @@ router.get('/user-summary/:userId', async (req, res) => {
     }
 });
 
+// Update the sync-popularity endpoint to better match games and handle is_featured
+router.post('/sync-popularity', async (req, res) => {
+  try {
+    // Read the games_rating.json file
+    const fs = require('fs');
+    const path = require('path');
+    const gamesRatingPath = path.join(__dirname, '../../games_rating.json');
+    console.log('My Path: ', __dirname);
+    console.log('Games Path:', gamesRatingPath);
+    
+    if (!fs.existsSync(gamesRatingPath)) {
+      return res.status(404).json({ success: false, message: 'games_rating.json file not found' });
+    }
+    
+    const gamesRating = JSON.parse(fs.readFileSync(gamesRatingPath, 'utf8'));
+    
+    // Create a map for faster lookups
+    const popularityMap = new Map();
+    const cleanedTitleMap = new Map();
+    
+    // Process each game in the JSON and store multiple ways to look it up
+    gamesRating.forEach(game => {
+      if (game.title && game.popularity) {
+        // Store exact match
+        popularityMap.set(game.title.toLowerCase(), {
+          popularity: Math.floor(game.popularity),
+          trending: game.recentTrendingRank || 0
+        });
+        
+        // Also store a cleaned version for fuzzy matching
+        const cleanedTitle = game.title.toLowerCase()
+          .replace(/[^a-z0-9\s]/g, '') // Remove special characters
+          .replace(/\s+/g, ' ')        // Normalize whitespace
+          .trim();
+          
+        cleanedTitleMap.set(cleanedTitle, {
+          popularity: Math.floor(game.popularity),
+          trending: game.recentTrendingRank || 0
+        });
+      }
+    });
+    
+    // Get all games from database
+    const [games] = await sql.query('SELECT id, game_name FROM spinshield_games');
+    
+    // Prepare counts
+    let updatedCount = 0;
+    let featuredCount = 0;
+    
+    // Process each game (using a single transaction for performance)
+    const connection = await sql.getConnection();
+    await connection.beginTransaction();
+    
+    try {
+      for (const game of games) {
+        const gameName = game.game_name.toLowerCase();
+        const cleanedGameName = gameName.replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
+        let popularity = 0;
+        let isFeatured = false;
+        
+        // Try exact match first
+        if (popularityMap.has(gameName)) {
+          const data = popularityMap.get(gameName);
+          popularity = data.popularity;
+          isFeatured = data.trending > 0 && data.trending <= 20; // Top trending games become featured
+          updatedCount++;
+        } 
+        // Try cleaned match
+        else if (cleanedTitleMap.has(cleanedGameName)) {
+          const data = cleanedTitleMap.get(cleanedGameName);
+          popularity = data.popularity;
+          isFeatured = data.trending > 0 && data.trending <= 20;
+          updatedCount++;
+        }
+        // Try partial match
+        else {
+          // Check each title in our map for partial matches
+          for (const [title, data] of popularityMap.entries()) {
+            if (gameName.includes(title) || title.includes(gameName)) {
+              popularity = data.popularity;
+              isFeatured = data.trending > 0 && data.trending <= 20;
+              updatedCount++;
+              break;
+            }
+          }
+          
+          // If still no match, try against cleaned titles
+          if (popularity === 0) {
+            for (const [title, data] of cleanedTitleMap.entries()) {
+              if (cleanedGameName.includes(title) || title.includes(cleanedGameName)) {
+                popularity = data.popularity;
+                isFeatured = data.trending > 0 && data.trending <= 20;
+                updatedCount++;
+                break;
+              }
+            }
+          }
+        }
+        
+        // Update database if we found a match
+        if (popularity > 0) {
+          await connection.query('UPDATE spinshield_games SET popularity = ?, is_featured = ? WHERE id = ?', 
+            [popularity, isFeatured ? 1 : 0, game.id]);
+          
+          if (isFeatured) featuredCount++;
+        }
+      }
+      
+      await connection.commit();
+      
+      sendLog('admin', `[${req.user.id}] ${req.user.username} synced popularity data for ${updatedCount} games.`);
+      res.json({ 
+        success: true, 
+        message: `Updated popularity for ${updatedCount} games and marked ${featuredCount} as featured` 
+      });
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
+  } catch (error) {
+    console.error('Error syncing game popularity:', error);
+    res.status(500).json({ success: false, message: 'Failed to sync game popularity', error: error.message });
+  }
+});
+
 module.exports = router;

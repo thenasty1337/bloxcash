@@ -220,6 +220,27 @@ const SpinShield = () => {
     }
   };
 
+  // Sync popularity data
+  const syncPopularity = async () => {
+    try {
+      setLoading(true);
+      const response = await authedAPI('/admin/spinshield/sync-popularity', 'POST', {});
+      
+      if (response.success) {
+        displayMessage('success', response.message);
+        // After sync, refresh the games list
+        loadGames(true);
+      } else {
+        displayMessage('error', response.error || 'Failed to sync popularity data');
+      }
+    } catch (error) {
+      console.error('Error syncing popularity data:', error);
+      displayMessage('error', 'Failed to sync popularity data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Handle input changes
   const handleInputChange = (e) => {
     const { name, type, checked, value } = e.target;
@@ -532,6 +553,7 @@ const SpinShield = () => {
           totalGames={totalGames}
           loading={loading}
           syncGames={syncGames}
+          syncPopularity={syncPopularity}
           gamesPagination={gamesPagination}
           gamesFilters={gamesFilters}
           gamesSort={gamesSort}

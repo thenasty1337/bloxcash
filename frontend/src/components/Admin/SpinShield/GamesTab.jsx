@@ -7,6 +7,7 @@ const GamesTab = (props) => {
     totalGames,
     loading,
     syncGames,
+    syncPopularity,
     gamesPagination,
     gamesFilters,
     gamesSort,
@@ -22,13 +23,23 @@ const GamesTab = (props) => {
     <div class="games-container-in">
       <div class="games-header">
         <h2 class="games-title">Game Library - {totalGames()} games</h2>
-        <button
-          onClick={syncGames}
-          class="bevel-gold"
-          disabled={loading()}
-        >
-          {loading() ? "Syncing..." : "Sync Games"}
-        </button>
+        <div class="games-action-buttons">
+          <button
+            onClick={syncPopularity}
+            class="bevel-purple"
+            disabled={loading()}
+            style="margin-right: 10px;"
+          >
+            {loading() ? "Syncing..." : "Sync Popularity"}
+          </button>
+          <button
+            onClick={syncGames}
+            class="bevel-gold"
+            disabled={loading()}
+          >
+            {loading() ? "Syncing..." : "Sync Games"}
+          </button>
+        </div>
       </div>
       
       {/* Filters Section */}

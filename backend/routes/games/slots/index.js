@@ -11,14 +11,14 @@ cacheSlots();
 
 router.get('/', async (req, res) => {
     try {
-        let sortBy = req.query.sortBy || 'game_name';
-        if (!['game_name', 'rtp', 'provider'].includes(sortBy)) {
-            sortBy = 'game_name';
+        let sortBy = req.query.sortBy || 'popularity';
+        if (!['game_name', 'rtp', 'provider', 'popularity'].includes(sortBy)) {
+            sortBy = 'popularity';
         }
 
-        let sortOrder = req.query.sortOrder || 'ASC';
+        let sortOrder = req.query.sortOrder || 'DESC';
         if (!['ASC', 'DESC'].includes(sortOrder)) {
-            sortOrder = 'ASC';
+            sortOrder = 'DESC';
         }
 
         const limit = parseInt(req.query.limit) || 50;
@@ -134,7 +134,7 @@ router.get('/featured', async (req, res) => {
     try {
         const [featured] = await sql.query(`
             SELECT * FROM spinshield_games 
-            WHERE active = 1 AND is_new = 1 
+            WHERE active = 1 AND is_featured = 1 
             ORDER BY RAND() 
             LIMIT 7
         `);
@@ -145,7 +145,9 @@ router.get('/featured', async (req, res) => {
             name: game.game_name,
             provider: game.provider,
             providerName: game.provider_name,
-            img: game.image_url || game.image_square || '/public/slots/default.png',
+            img: ['readyplay', 'wizard', 'retrogaming', 'caleta'].includes(game.provider.toLowerCase()) 
+                ? (game.image_url || game.image_square || '/public/slots/default.png')
+                : (game.image_long || game.image_url || game.image_square || '/public/slots/default.png'),
             rtp: game.rtp
         })));
     } catch (error) {
@@ -182,7 +184,9 @@ router.get('/:slug', async (req, res) => {
             name: game.game_name,
             provider: game.provider,
             providerName: game.provider_name,
-            img: game.image_url || game.image_square || '/public/slots/default.png',
+            img: ['readyplay', 'wizard', 'retrogaming', 'caleta'].includes(game.provider.toLowerCase()) 
+                ? (game.image_url || game.image_square || '/public/slots/default.png')
+                : (game.image_long || game.image_url || game.image_square || '/public/slots/default.png'),
             imgLong: game.image_long,
             imgPortrait: game.image_portrait,
             rtp: game.rtp,

@@ -22,19 +22,20 @@ function Slots(props) {
   const [slotsData] = createResource(() => ({ sort: params.sort, provider: params.provider, search: params.search, category: params.category }), fetchSlots)
   const [providers] = createResource(fetchProviders)
   const [top] = createResource(fetchTopPicks)
+  const [providerSearch, setProviderSearch] = createSignal("");
+  const [categorySearch, setCategorySearch] = createSignal("");
 
   async function fetchSlots(params) {
     try {
       // Convert frontend sort params to backend sort format
-      let sortBy = 'game_name';  // default sort field
-      let sortOrder = 'ASC';     // default sort order
+      let sortBy = 'popularity';  // default sort field
+      let sortOrder = 'DESC';     // default sort order
       
       if (params.sort) {
         const sort = params.sort.toLowerCase();
         
         if (sort === 'popularity') {
-          // SpinShield doesn't have popularity, sort by is_new as an alternative
-          sortBy = 'is_new';
+          sortBy = 'popularity';  // Use the new popularity field
           sortOrder = 'DESC';
         } else if (sort === 'rtp') {
           sortBy = 'rtp';
@@ -53,7 +54,7 @@ function Slots(props) {
       const category = params.category || '';
       
       // Build query with all parameters
-      let url = `/slots?sortOrder=${sortOrder}&sortBy=${sortBy}&provider=${provider}&search=${search}`;
+      let url = `/slots?sortOrder=${sortOrder}&sortBy=${sortBy}&provider=${provider}&search=${search}&limit=48`;
       
       if (category) {
         url += `&category=${category}`;
@@ -120,7 +121,7 @@ function Slots(props) {
         const sort = params.sort.toLowerCase();
         
         if (sort === 'popularity') {
-          sortBy = 'is_new';
+          sortBy = 'popularity';  // Use the new popularity field
           sortOrder = 'DESC';
         } else if (sort === 'rtp') {
           sortBy = 'rtp';
@@ -138,8 +139,8 @@ function Slots(props) {
       const search = params.search || '';
       const category = params.category || '';
       
-      // Build query with offset for pagination
-      let url = `/slots?offset=${slots()?.length}&sortOrder=${sortOrder}&sortBy=${sortBy}&provider=${provider}&search=${search}`;
+      // Build query with offset for pagination and limit to load in multiples of 6
+      let url = `/slots?offset=${slots()?.length}&limit=24&sortOrder=${sortOrder}&sortBy=${sortBy}&provider=${provider}&search=${search}`;
       
       if (category) {
         url += `&category=${category}`;
@@ -173,6 +174,20 @@ function Slots(props) {
     })
   }
 
+  function filteredProviders() {
+    if (!providers() || !Array.isArray(providers())) return [];
+    const search = providerSearch().toLowerCase();
+    if (!search) return providers();
+    return providers().filter(p => p.name.toLowerCase().includes(search));
+  }
+  
+  function filteredCategories() {
+    if (!categories() || !Array.isArray(categories())) return [];
+    const search = categorySearch().toLowerCase();
+    if (!search) return categories();
+    return categories().filter(c => c.toLowerCase().includes(search));
+  }
+
   return (
     <>
       <Title>BloxClash | Slots</Title>
@@ -180,14 +195,14 @@ function Slots(props) {
       <Meta name='description' content='Play And Spin The Best Slots On BloxClash To Win Robux On Roblox Gaming!'></Meta>
 
       <div class='slots-base-container'>
-        <SlotsHeader/>
+       
 
         <div class='our-picks'>
           <div style={{ flex: 1, background: 'linear-gradient(270deg, #FF9901 0%, rgba(252, 163, 30, 0.00) 98.59%)', 'min-height': '1px' }}/>
 
           <p>
             <img src='/assets/icons/fire.svg' height='20' width='15'/>
-            OUR TOP PICKS
+            OUR HOT PICKS
           </p>
 
           <div style={{ flex: 1, background: 'linear-gradient(90deg, #FF9901 0%, rgba(252, 163, 30, 0.00) 98.59%)', 'min-height': '1px' }}/>
@@ -222,8 +237,16 @@ function Slots(props) {
             </svg>
 
             <div className='dropdown left' onClick={(e) => e.stopPropagation()}>
+              <div className='search-container'>
+                <input 
+                  type="text" 
+                  placeholder="Search providers..." 
+                  value={providerSearch()} 
+                  onInput={(e) => setProviderSearch(e.target.value)}
+                />
+              </div>
               <div className='filters'>
-                <For each={providers()}>{(prov) =>
+                <For each={filteredProviders()}>{(prov) =>
                   <div className={'option ' + (params.provider === prov.slug ? 'active' : '')}
                        onClick={() => setParams({ provider: params?.provider === prov.slug ? null : prov.slug })}>
                     <p>{prov.name}</p>
@@ -288,8 +311,16 @@ function Slots(props) {
               </svg>
 
               <div className='dropdown left' onClick={(e) => e.stopPropagation()}>
+                <div className='search-container'>
+                  <input 
+                    type="text" 
+                    placeholder="Search categories..." 
+                    value={categorySearch()} 
+                    onInput={(e) => setCategorySearch(e.target.value)}
+                  />
+                </div>
                 <div className='filters'>
-                  <For each={categories()}>{(cat) =>
+                  <For each={filteredCategories()}>{(cat) =>
                     <div className={'option ' + (params.category === cat ? 'active' : '')}
                          onClick={() => setParams({ category: params?.category === cat ? null : cat })}>
                       <p>{cat}</p>
@@ -453,11 +484,16 @@ function Slots(props) {
           position: absolute;
           right: 0;
           
-          z-index: 2;
+          z-index: 10;
           top: 40px;
 
           width: 245px;
           display: none;
+          background: #26214A;
+          border: 1px solid #3A336D;
+          border-radius: 6px;
+          overflow: hidden;
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
         }
         
         .dropdown.left {
@@ -469,16 +505,57 @@ function Slots(props) {
           display: block;
         }
         
+        .search-container {
+          padding: 8px 8px 0 8px;
+        }
+        
+        .search-container input {
+          width: 100%;
+          height: 36px;
+          background: #342E5F;
+          border: 1px solid #494182;
+          border-radius: 4px;
+          padding: 0 12px;
+          color: #FFF;
+          font-family: Geogrotesque Wide, sans-serif;
+          font-size: 13px;
+        }
+        
+        .search-container input::placeholder {
+          color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .search-container input:focus {
+          outline: none;
+          border-color: #9489DB;
+        }
+        
         .filters {
           display: flex;
           flex-direction: column;
           gap: 8px;
           
-          background: #26214A;
-          border: 1px solid #3A336D;
           padding: 8px;
-          
-          width: 245px;
+          max-height: 300px;
+          overflow-y: auto;
+        }
+        
+        .filters::-webkit-scrollbar {
+          width: 8px;
+        }
+        
+        .filters::-webkit-scrollbar-track {
+          background: #342E5F;
+          border-radius: 4px;
+        }
+        
+        .filters::-webkit-scrollbar-thumb {
+          background: #494182;
+          border-radius: 4px;
+        }
+        
+        .filters::-webkit-scrollbar-thumb:hover {
+          background: #5A5499;
         }
         
         .option {
@@ -730,6 +807,37 @@ function Slots(props) {
         @media only screen and (min-width: 1200px) {
           .slots {
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+          }
+        }
+
+        @media only screen and (max-width: 768px) {
+          .sort {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+          }
+          
+          .sorting-wrapper {
+            width: 100%;
+            justify-content: space-between;
+          }
+          
+          .dropdown {
+            width: 100%;
+            max-width: 100%;
+          }
+          
+          .dropdown.left {
+            left: 0;
+            right: 0;
+          }
+          
+          .option {
+            max-width: 100%;
+          }
+          
+          .sorting-wrapper p {
+            flex: 1;
           }
         }
       `}</style>
