@@ -14,5 +14,8 @@
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^8.2.0"
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0"
   }
 }
