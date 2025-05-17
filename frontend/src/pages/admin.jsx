@@ -1,5 +1,6 @@
 import {A, Outlet, useLocation, useSearchParams} from "@solidjs/router";
 import {useUser} from "../contexts/usercontextprovider";
+import "./adminNav.css";
 
 const URL_TO_PAGE = {
     '/admin': 'DASHBOARD',
@@ -42,38 +43,24 @@ function Admin(props) {
                         &nbsp;<span class='gold id'>ACCOUNT ID</span>
                         &nbsp;<span class='id gray'>{user()?.id}</span>
                     </p>
-
-                    <div class='pages-container'>
-                        {URL_TO_PAGE[location?.pathname] === 'CASHIER' && (
-                            <div className='pages bevel-light' onClick={(e) => e.currentTarget.classList.toggle('active')}>
-                                <p>{params?.type || 'ROBUX'}</p>
-
-                                <div className='pages-dropdown' onClick={(e) => e.stopPropagation()}>
-                                    <p onClick={() => setParams({ type: null })}>ROBUX</p>
-                                    <p onClick={() => setParams({ type: 'crypto' })}>CRYPTO</p>
-                                </div>
-                            </div>
-                        )}
-
-                        <div class='pages bevel-light' onClick={(e) => e.currentTarget.classList.toggle('active')}>
-                            <p>{URL_TO_PAGE[location?.pathname]}</p>
-
-                            <div class='pages-dropdown' onClick={(e) => e.stopPropagation()}>
-                                <A href='/admin' class='admin-link'>DASHBOARD</A>
-                                <A href='/admin/users' class='admin-link'>USERS</A>
-                                <A href='/admin/statistics' class='admin-link'>STATISTICS</A>
-                                <A href='/admin/filter' class='admin-link'>FILTER</A>
-                                <A href='/admin/cashier' class='admin-link'>CASHIER</A>
-                                <A href='/admin/rain' class='admin-link'>RAIN</A>
-                                <A href='/admin/statsbook' class='admin-link'>STATSBOOK</A>
-                                <A href='/admin/cases' class='admin-link'>CASES</A>
-                                <A href='/admin/spinshield' class='admin-link'>SLOTS</A>
-                                <A href='/admin/settings' class='admin-link'>SETTINGS</A>
-                            </div>
-                        </div>
-                    </div>
+              
                 </div>
 
+                <div class="admin-nav-wrapper">
+                    <nav class='admin-nav-container'>
+                        <A href='/admin' class={`nav-link ${location?.pathname === '/admin' ? 'active' : ''}`}>DASHBOARD</A>
+                        <A href='/admin/users' class={`nav-link ${location?.pathname === '/admin/users' || location?.pathname === '/admin/user' ? 'active' : ''}`}>USERS</A>
+                        <A href='/admin/statistics' class={`nav-link ${location?.pathname === '/admin/statistics' ? 'active' : ''}`}>STATISTICS</A>
+                        <A href='/admin/filter' class={`nav-link ${location?.pathname === '/admin/filter' ? 'active' : ''}`}>FILTER</A>
+                        <A href='/admin/cashier' class={`nav-link ${location?.pathname === '/admin/cashier' ? 'active' : ''}`}>CASHIER</A>
+                        <A href='/admin/rain' class={`nav-link ${location?.pathname === '/admin/rain' ? 'active' : ''}`}>RAIN</A>
+                        <A href='/admin/statsbook' class={`nav-link ${location?.pathname === '/admin/statsbook' ? 'active' : ''}`}>STATSBOOK</A>
+                        <A href='/admin/cases' class={`nav-link ${location?.pathname === '/admin/cases' ? 'active' : ''}`}>CASES</A>
+                        <A href='/admin/spinshield' class={`nav-link ${location?.pathname === '/admin/spinshield' ? 'active' : ''}`}>SLOTS</A>
+                        <A href='/admin/settings' class={`nav-link ${location?.pathname === '/admin/settings' ? 'active' : ''}`}>SETTINGS</A>
+                    </nav>
+                </div>
+                
                 <div className='bar' style={{margin: '25px 0 30px 0'}}/>
 
                 <Outlet/>
@@ -107,57 +94,36 @@ function Admin(props) {
                 font-weight: 700;
               }
               
-              .pages-container {
-                margin-left: auto;
-                display: flex;
-                gap: 10px;
-              }
-              
-              .pages {
-                display: flex;
-                gap: 10px;
-                align-items: center;
-                justify-content: center;
-                font-size: 14px;
+              .admin-nav-wrapper {
+                margin: 25px 0;
+                background: rgba(74, 69, 129, 0.15);
+                border-radius: 10px;
+                padding: 10px 20px;
                 position: relative;
-                
-                user-select: none;
-
-                width: 130px;
-                height: 40px;
+                border: 1px solid rgba(74, 69, 129, 0.5);
               }
               
-              .pages-dropdown {
-                display: none;
+              .admin-nav-wrapper::before {
+                content: '';
                 position: absolute;
-                z-index: 1;
-
-                border-radius: 3px;
-                background: #4A4581;
-                
-                flex-direction: column;
-                
-                width: 100%;
-                top: 50px;
-                
-                padding: 10px 15px;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: linear-gradient(90deg, transparent, #ff9903, transparent);
+                border-radius: 2px;
               }
               
-              .pages {
-                text-transform: uppercase;
-              }
+              /* The rest of the navigation styles are now in adminNav.css */
               
-              .pages-dropdown a {
-                opacity: 0.5;
-                transition: opacity .3s;
-              }
-              
-              .pages-dropdown a:hover {
-                opacity: 1;
-              }
-              
-              .active .pages-dropdown {
+              .cashier-type-selector {
                 display: flex;
+                margin-left: auto;
+                gap: 5px;
+                background: #312a5e;
+                padding: 5px;
+                border-radius: 8px;
+                border: 1px solid #4A4581;
               }
               
               .id {

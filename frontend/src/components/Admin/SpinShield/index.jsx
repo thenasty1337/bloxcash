@@ -8,7 +8,6 @@ import GamesTab from "./GamesTab";
 import SessionsTab from "./SessionsTab";
 import TransactionsTab from "./TransactionsTab";
 import FreespinsTab from "./FreespinsTab";
-import "./tabStyles.css";
 
 const SpinShield = () => {
   const [activeTab, setActiveTab] = createSignal("games");

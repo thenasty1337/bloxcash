@@ -24,11 +24,7 @@ function AdminCashier(props) {
     return (
         <>
             <div className='content'>
-                {params.type === 'crypto' ? (
-                    <AdminCryptoCashier/>
-                ) : (
-                    <AdminRobuxCashier/>
-                )}
+            <AdminCryptoCashier/>
 
                 <div class='filters'>
                     <div class='search-wrapper'>
