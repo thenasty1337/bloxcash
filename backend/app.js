@@ -114,7 +114,7 @@ app.use('/blackjack', blackjackRoute);
 app.use('/admin', adminRoute);
 app.use('/surveys', surveysRoute);
 app.use('/fairness', fairnessRoute);
-app.use('/spinshield', spinshieldRoute);
+app.use('/api/spinshield', spinshieldRoute);
 app.use('/games', spinshieldGamesRoute);
 
 app.get('/', (req, res) => {

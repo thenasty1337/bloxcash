@@ -148,7 +148,14 @@ router.get('/play/:gameId', isAuthed, async (req, res) => {
         }
         
         // Generate secure user password for SpinShield
-        const userPassword = `user_${user.id}_${Date.now()}`;
+        const userPassword = `user_${user.id}_pass`;
+        
+        // Use a more reliable format for SpinShield username
+        // Format: SS_{userId}_{original username}
+        // This way we can always extract userId reliably from the prefix
+        const userName = `SS_${user.id}_${user.username}`;
+        
+        console.log(`Creating SpinShield player: ${userName} (original username: ${user.username}, ID: ${user.id})`);
         
         const apiClient = new ApiClient({
             api_login: settings.api_login,
@@ -156,72 +163,99 @@ router.get('/play/:gameId', isAuthed, async (req, res) => {
             endpoint: settings.endpoint
         });
         
-        // First create/ensure player exists in SpinShield
-        const createPlayerResponse = await apiClient.createPlayer(
-            user.username,
-            userPassword,
-            user.username,
-            'USD'
-        );
-        
-        if (createPlayerResponse.error !== 0 && createPlayerResponse.error !== 1) { // Error 1 means player already exists
-            return res.status(400).json({ 
-                error: 'Failed to create player',
-                details: createPlayerResponse
-            });
-        }
-        
-        // Site URLs for the game
-        const homeUrl = `${process.env.FRONTEND_URL || 'https://bloxcash.com'}`;
-        const cashierUrl = `${process.env.FRONTEND_URL || 'https://bloxcash.com'}/deposit`;
-        
-        // Get real money game URL
-        const response = await apiClient.getGame(
-            user.username,
-            userPassword,
-            gameId,
-            'USD', // Default currency
-            homeUrl,
-            cashierUrl,
-            0, // Not play for fun (real money)
-            'en' // Default language
-        );
-        
-        if (response.error !== 0) {
-            return res.status(400).json({ 
-                error: 'Failed to launch game',
-                details: response
-            });
-        }
-        
-        // Save session
-        await sql.query(
-            `INSERT INTO spinshield_sessions (
-                user_id, game_id, session_id, is_demo, game_url, status, currency
-            ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [
-                user.id,
-                gameId,
-                response.session_id,
-                0, // Not demo (real money)
-                response.response, // Game URL
-                'active',
+        try {
+            // First create/ensure player exists in SpinShield
+            const createPlayerResponse = await apiClient.createPlayer(
+                userName,
+                userPassword,
+                user.username,
                 'USD'
-            ]
-        );
-        
-        res.json({
-            success: true,
-            game: {
-                id: game.id,
-                name: game.game_name,
-                provider: game.provider,
-                gameUrl: response.response
+            );
+            
+            if (createPlayerResponse.error !== 0 && createPlayerResponse.error !== 1) { // Error 1 means player already exists
+                return res.status(400).json({ 
+                    error: 'Failed to create player',
+                    details: createPlayerResponse
+                });
             }
-        });
+            
+            // Site URLs for the game
+            const homeUrl = `${process.env.FRONTEND_URL || 'https://bloxcash.com'}`;
+            const cashierUrl = `${process.env.FRONTEND_URL || 'https://bloxcash.com'}/deposit`;
+            
+            // Get real money game URL
+            const response = await apiClient.getGame(
+                userName,
+                userPassword,
+                gameId,
+                'USD', // Default currency
+                homeUrl,
+                cashierUrl,
+                0, // Not play for fun (real money)
+                'en' // Default language
+            );
+            
+            if (!response || typeof response !== 'object') {
+                return res.status(500).json({ 
+                    error: 'Invalid response from SpinShield API'
+                });
+            }
+            
+            if (response.error !== 0 || !response.response || !response.session_id) {
+                return res.status(400).json({ 
+                    error: 'Failed to launch game',
+                    details: response
+                });
+            }
+            
+            // Save session
+            await sql.query(
+                `INSERT INTO spinshield_sessions (
+                    user_id, game_id, session_id, is_demo, game_url, status, currency
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+                [
+                    user.id,
+                    gameId,
+                    response.session_id,
+                    0, // Not demo (real money)
+                    response.response, // Game URL
+                    'active',
+                    'USD'
+                ]
+            );
+            
+            res.json({
+                success: true,
+                game: {
+                    id: game.id,
+                    name: game.game_name,
+                    provider: game.provider,
+                    gameUrl: response.response
+                }
+            });
+        } catch (apiError) {
+            // Handle API-specific errors
+            console.error('SpinShield API Error:', apiError);
+            
+            // Check if the error has response data from the API
+            if (apiError.response && apiError.response.data) {
+                return res.status(500).json({ 
+                    error: 'SpinShield API error', 
+                    details: apiError.response.data
+                });
+            }
+            
+            return res.status(500).json({ 
+                error: 'Failed to communicate with SpinShield API',
+                message: apiError.message || 'Unknown error'
+            });
+        }
     } catch (error) {
         console.error('Error launching game:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ 
+            error: 'Internal server error',
+            message: error.message || 'Unknown error'
+        });
     }
 });
 

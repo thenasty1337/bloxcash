@@ -99,7 +99,7 @@ class ApiClient {
             lang: 'en',
             user_username: username,
             user_password: userpassword,
-            gameid: game_id,
+            gameid: String(game_id), // Ensure game_id is converted to string
             freespins: freespins,
             bet_level: betlevel,
             valid_days: valid_days,
@@ -120,7 +120,7 @@ class ApiClient {
      */
     async getGameDemo(game_id, currency, homeurl, cashierurl, lang) {
         const response = await this.sendRequest('post', 'getGameDemo', {
-            gameid: game_id,
+            gameid: String(game_id),
             homeurl: homeurl,
             cashierurl: cashierurl,
             lang: lang,
@@ -157,7 +157,7 @@ class ApiClient {
      */
     async deleteFreeRounds(game_id, username, userpassword, currency) {
         const response = await this.sendRequest('post', 'deleteFreeRounds', {
-            gameid: game_id,
+            gameid: String(game_id),
             user_username: username,
             user_password: userpassword,
             currency: currency.toUpperCase()
@@ -187,7 +187,7 @@ class ApiClient {
         const response = await this.sendRequest('post', 'getGame', {
             user_username: username,
             user_password: userpassword,
-            gameid: game_id,
+            gameid: String(game_id),
             homeurl: homeurl,
             cashierurl: cashierurl,
             play_for_fun: Number(play_for_fun),
@@ -213,23 +213,61 @@ class ApiClient {
             method: api_method
         };
 
+        console.log(`Sending request to ${this.endpoint} for method ${api_method}`);
+
         try {
             const response = await axios({
                 method: method,
                 url: this.endpoint,
-                data: querystring.stringify(requestData),
+                data: requestData,
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/json'
                 }
             });
             
+            console.log(`Got response from ${api_method}:`, {
+                status: response.status,
+                statusText: response.statusText
+            });
+            
+            // Validate response format
+            if (!response.data) {
+                throw new Error(`${api_method} returned empty response`);
+            }
+            
+            // Check if the response is a string (unexpected format)
+            if (typeof response.data === 'string') {
+                console.error(`${api_method} returned unexpected string response:`, response.data);
+                throw new Error(`${api_method} returned unexpected format`);
+            }
+            
             return response.data;
         } catch (error) {
+            console.error(`Error in ${api_method} request:`, {
+                message: error.message,
+                code: error.code,
+                response: error.response ? {
+                    status: error.response.status,
+                    statusText: error.response.statusText,
+                    data: error.response.data
+                } : 'No response'
+            });
+            
             if (error.response) {
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
-                return error.response.data;
+                const errorData = error.response.data || { message: `${api_method} failed with status ${error.response.status}` };
+                
+                // Add additional context to the error data
+                errorData.statusCode = error.response.status;
+                errorData.statusText = error.response.statusText;
+                
+                return errorData;
+            } else if (error.request) {
+                // The request was made but no response was received
+                throw new Error(`${api_method} request failed: No response from server`);
             } else {
+                // Something happened in setting up the request that triggered an Error
                 throw error;
             }
         }

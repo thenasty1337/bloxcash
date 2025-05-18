@@ -156,8 +156,9 @@ router.get('/featured', async (req, res) => {
     }
 });
 
-router.get('/:slug', async (req, res) => {
+router.get('/:slug(*)', async (req, res) => {
     try {
+        // Capture the entire path after /slots/ as the slug
         const slug = req.params.slug;
         const [gameData] = await sql.query(
             'SELECT * FROM spinshield_games WHERE game_id_hash = ? AND active = 1',
@@ -167,16 +168,18 @@ router.get('/:slug', async (req, res) => {
         if (!gameData.length) {
             return res.status(404).json({ error: 'INVALID_SLOT' });
         }
+        console.log('gameData: ', gameData[0].provider);
         
         const game = gameData[0];
+        const gameProvider = game.provider;
         
         // Get featured games
         const [featured] = await sql.query(`
             SELECT * FROM spinshield_games 
-            WHERE active = 1 AND game_id_hash != ? 
+            WHERE active = 1 AND provider = ? 
             ORDER BY RAND() 
-            LIMIT 10
-        `, [slug]);
+            LIMIT 20
+        `, [gameProvider]);
         
         res.json({
             id: game.game_id,
@@ -202,7 +205,9 @@ router.get('/:slug', async (req, res) => {
                 name: f.game_name,
                 provider: f.provider,
                 providerName: f.provider_name,
-                img: f.image_url || f.image_square || '/public/slots/default.png',
+                img: ['readyplay', 'wizard', 'retrogaming', 'caleta'].includes(f.provider.toLowerCase()) 
+                ? (f.image_url || f.image_square || '/public/slots/default.png')
+                : (f.image_long || f.image_url || f.image_square || '/public/slots/default.png'),
                 rtp: f.rtp
             }))
         });
@@ -212,13 +217,15 @@ router.get('/:slug', async (req, res) => {
     }
 });
 
-router.post('/play/:slug', isAuthed, async (req, res) => {
+router.post('/play/:slug(*)', isAuthed, async (req, res) => {
     try {
         if (!enabledFeatures.slots) {
             return res.status(400).json({ error: 'DISABLED' });
         }
         
+        // Capture the entire path after /slots/play/ as the slug
         const slug = req.params.slug;
+        console.log('Slug: ', slug);
         
         // Get game details
         const [gameData] = await sql.query(
@@ -233,18 +240,42 @@ router.post('/play/:slug', isAuthed, async (req, res) => {
         const game = gameData[0];
         const isDemo = req.query.demo === 'true';
         
-        // Create game session
-        const session = await createGameSession(
-            req.user.id,
-            game.game_id,
-            'USD',
-            isDemo
-        );
-        
-        res.json({
-            url: session.game_url,
-            sessionId: session.session_id
-        });
+        try {
+            // Create game session
+            const session = await createGameSession(
+                req.user.id,
+                game.game_id_hash,
+                'USD',
+                isDemo
+            );
+            
+            // Prepare response with base data
+            const response = {
+                url: session.game_url,
+                sessionId: session.session_id
+            };
+            
+            // Handle the case where we got a demo instead of real money game
+            if (session.is_demo && !isDemo) {
+                // User requested real money game but got demo instead (fallback)
+                response.isDemo = true;
+                response.fallbackReason = session.fallback_message || 'Using demo mode due to provider API issues';
+                response.warning = 'This is a demo game. Real money transactions are not available.';
+            } else if (session.is_demo) {
+                // User requested demo mode and got it
+                response.isDemo = true;
+            }
+            
+            res.json(response);
+        } catch (sessionError) {
+            console.error('Session creation error details:', sessionError);
+            // Return a more specific error message to the client
+            res.status(500).json({ 
+                error: 'Failed to launch game', 
+                details: sessionError.message,
+                code: 'SESSION_CREATION_FAILED'
+            });
+        }
     } catch (error) {
         console.error('Error launching game:', error);
         res.status(500).json({ error: 'Failed to launch game', details: error.message });

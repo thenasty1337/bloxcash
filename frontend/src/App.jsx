@@ -335,7 +335,7 @@ function App() {
                       </Suspense>
                     }/>
 
-                    <Route path='/slots/:slug' element={
+                    <Route path='/slots/:slug/*' element={
                       <Suspense fallback={<Loader/>}>
                         <Slot/>
                       </Suspense>
