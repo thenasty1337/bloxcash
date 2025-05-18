@@ -165,7 +165,25 @@ function Slots(props) {
 
   function repeatProviders() {
     if (!providers() || !Array.isArray(providers())) return []
-    return Array(Math.ceil(6 / providers().length)).fill(providers()).flat() || []
+    
+    // List of available provider images (those we have in the directory)
+    const availableImages = [
+      "3-oaks-gaming", "avatarux", "b-gaming", "backseatgaming", "belatra", 
+      "bigtimegaming", "blueprint", "bullsharkgames", "elk-studios", "endorphina", 
+      "evolution-gaming", "fantasma-games", "fat-panda", "game-art", "games-global", 
+      "gamomat", "hacksaw", "jade-rabbit", "just-slots", "live88", "massive-studios", 
+      "netent", "nolimit", "novomatic", "octoplay", "onetouch", "petersons", "pgsoft", 
+      "playn-go", "pragmatic-play", "print-studios", "push-gaming", "quickspin", 
+      "red-rake-gaming", "red-tiger", "relax-gaming", "shady-lady", "slotmill", 
+      "spinomenal", "titan-gaming", "truelab", "twist-gaming", "voltent"
+    ];
+    
+    // Filter to only show providers with available images
+    const availableProviders = providers().filter(provider => 
+      availableImages.includes(provider.slug.toLowerCase())
+    );
+    
+    return Array(Math.ceil(6 / availableProviders.length)).fill(availableProviders).flat() || []
   }
 
   function scrollProviders(direction) {
@@ -395,6 +413,9 @@ function Slots(props) {
                 <img src={`${import.meta.env.VITE_BASE_URL}${provider.img}`} height='50'/>
               </div>
             }</For>
+            <div class='provider more-providers'>
+              <span>and more...</span>
+            </div>
           </div>
         </div>
 
@@ -792,8 +813,23 @@ function Slots(props) {
           border-radius: 8px;
           border: 1px solid rgba(134, 111, 234, 0.15);
           background: linear-gradient(0deg, rgba(64, 57, 118, 0.65) 0%, rgba(64, 57, 118, 0.65) 100%), radial-gradient(60% 60% at 50% 50%, rgba(147, 126, 236, 0.15) 0%, rgba(102, 83, 184, 0.15) 100%);
-
+          
           cursor: pointer;
+        }
+        
+        .more-providers {
+          min-width: 140px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .more-providers span {
+          color: #9489DB;
+          font-family: Geogrotesque Wide, sans-serif;
+          font-size: 16px;
+          font-weight: 500;
+          text-align: center;
         }
 
         @media only screen and (max-width: 1000px) {
