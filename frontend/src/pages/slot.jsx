@@ -44,7 +44,21 @@ function Slot(props) {
 
       console.log("API response:", res);
       console.log("Featured games count:", res.featured ? res.featured.length : 0);
-      setFeatured(res.featured || [])
+      
+      // Ensure each featured game has the necessary properties
+      const mappedFeatured = (res.featured || []).map(game => ({
+        id: game.id,
+        name: game.name,
+        slug: game.slug,
+        img: game.img,
+        provider: game.provider,
+        providerName: game.providerName || game.provider,
+        rtp: game.rtp,
+        isNew: false, // Set default values for properties that might be missing
+        hasJackpot: false
+      }));
+      
+      setFeatured(mappedFeatured)
 
       return {
         id: res.id,
@@ -212,14 +226,15 @@ function Slot(props) {
             </div>
           </div>
 
-          <div className='slots-container'>
+         
             <div className='slots' ref={slotsRef}>
               <Show when={!slot.loading} fallback={<Loader small={true}/>}>
+                {console.log("Featured games data:", featured())}
                 <For each={featured()}>{(slot, index) =>
                   <FancySlotBanner {...slot}/>
                 }</For>
               </Show>
-            </div>
+        
           </div>
         </div>
 
@@ -401,7 +416,9 @@ function Slot(props) {
           color: white;
           font-family: Geogrotesque Wide, sans-serif;
           font-weight: 700;
-          font-size: 16px;
+          font-size: 18px;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+          letter-spacing: 0.5px;
         }
 
         .line {
@@ -423,20 +440,22 @@ function Slot(props) {
           position: relative;
           overflow: hidden;
           border-radius: 12px;
-          background: rgba(29, 24, 62, 0.15);
-          padding: 12px;
+          background: rgba(29, 24, 62, 0.35);
+          padding: 16px;
           margin-bottom: 30px;
+          border: 1px solid rgba(134, 111, 234, 0.2);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
 
         .slots {
           display: flex;
-          gap: 12px;
+          gap: 18px;
           overflow-x: auto;
-          padding: 4px;
+          padding: 8px 4px;
           scroll-behavior: smooth;
           -ms-overflow-style: none;
           scrollbar-width: none;
-          min-height: 195px;
+          min-height: 220px;
         }
 
         .slots::-webkit-scrollbar {
@@ -444,33 +463,38 @@ function Slot(props) {
         }
 
         .slot {
-          min-width: 133px;
-          width: 133px;
-          height: 195px;
-          border-radius: 6px;
-
+          min-width: 150px;
+          width: 150px;
+          height: 220px;
+          border-radius: 8px;
           background-size: cover;
           background-repeat: no-repeat;
-
           position: relative;
         }
 
         .arrow {
-          width: 36px;
-          height: 36px;
-          border-radius: 6px;
+          width: 42px;
+          height: 42px;
+          border-radius: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          background: rgba(84, 76, 146, 0.4);
-          border: 1px solid rgba(134, 111, 234, 0.3);
-          transition: background-color 0.2s ease, transform 0.2s ease;
+          background: rgba(84, 76, 146, 0.5);
+          border: 1px solid rgba(134, 111, 234, 0.4);
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+          transition: all 0.2s ease;
         }
         
         .arrow:hover {
-          background: rgba(84, 76, 146, 0.6);
+          background: rgba(114, 106, 176, 0.7);
           transform: translateY(-2px);
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .arrow:active {
+          transform: translateY(0);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         @media only screen and (max-width: 1000px) {

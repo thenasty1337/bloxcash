@@ -1,6 +1,12 @@
 import {A} from "@solidjs/router";
+import { createEffect } from "solid-js";
 
 function FancySlotBanner(props) {
+  // Debug the props
+  createEffect(() => {
+    console.log("FancySlotBanner props:", props);
+  });
+  
   return (
     <div class='slot-container'>
       <div class='slot-frame'>
@@ -17,6 +23,8 @@ function FancySlotBanner(props) {
           position: relative;
           transition: all 0.2s ease;
           cursor: pointer;
+          width: 160px;
+          min-width: 160px;
         }
         
         .slot-container:hover {
