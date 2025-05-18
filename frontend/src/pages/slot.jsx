@@ -26,6 +26,8 @@ function Slot(props) {
   const [errorToast, setErrorToast] = createSignal(null)
   const [isFullWidth, setIsFullWidth] = createSignal(false)
   const [isLiked, setIsLiked] = createSignal(false)
+  const [showGameSelection, setShowGameSelection] = createSignal(true)
+  const [isGamePreloaded, setIsGamePreloaded] = createSignal(false)
   
   // Hide toast after 5 seconds
   createEffect(() => {
@@ -92,6 +94,9 @@ function Slot(props) {
         showError("Could not load game information");
         return null;
       }
+      
+      // Debug log to check if we're getting the image URL
+      console.log("Game image URL:", res.img);
 
 
       // Ensure each featured game has the necessary properties
@@ -114,6 +119,7 @@ function Slot(props) {
         name: res.name,
         slug: res.slug,
         img: res.img,
+        imgPortrait: res.imgPortrait,
         provider: res.provider,
         providerName: res.providerName || res.provider,
         rtp: res.rtp,
@@ -128,105 +134,110 @@ function Slot(props) {
     }
   }
 
+  // We've removed the auto-launch effect to allow user to choose play mode
+  // The game will only launch when user clicks on one of the play options
+  
+  // New effect to preload real game in background
   createEffect(async () => {
-    if (!url() && slot() && user() && !loading()) {
-      // Add a flag to prevent multiple attempts on auth failure
-      let attemptCount = 0;
-      const maxAttempts = 1; // Only try once if user is logged in
-      
-      const tryLaunchGame = async () => {
-        if (attemptCount >= maxAttempts) return;
+    if (slot() && user() && !isGamePreloaded() && !loading()) {
+      try {
+        setIsGamePreloaded(true);
+        setLoading(true);
         
-        try {
-          attemptCount++;
-          await launchGame(false);
-        } catch (err) {
-          console.error("Failed to launch game:", err);
-          // Handle specific error types
-          if (err?.message?.includes("UNAUTHENTICATED") || err?.error === "UNAUTHENTICATED") {
-            showError("Please log in again to play this game");
-            setFallbackMessage("Session expired. Please log in again.");
-          } else if (err?.message?.includes("INSUFFICIENT_FUNDS") || err?.error === "INSUFFICIENT_FUNDS") {
-            showError("Insufficient funds to play this game");
-          } else if (err?.message?.includes("GAME_UNAVAILABLE") || err?.error === "GAME_UNAVAILABLE") {
-            showError("This game is currently unavailable");
+        // Silently preload the real game in background
+        const fullSlug = location.pathname.replace(/^\/slots\//, '');
+        const gameSession = await authedAPI(`/slots/play/${fullSlug}`, 'POST', null, false);
+        
+        if (gameSession && gameSession.url) {
+          setURL(gameSession.url);
+          setSessionId(gameSession.sessionId);
+          
+          // Check if we got a demo version as fallback
+          if (gameSession.isDemo) {
+            setIsDemoMode(true);
+            if (gameSession.fallbackReason) {
+              setFallbackMessage(gameSession.fallbackReason);
+            }
           } else {
-            showError(`Failed to launch game: ${err.message || "Unknown error"}`);
+            setIsDemoMode(false);
           }
         }
-      };
-      
-      tryLaunchGame();
+        
+        setLoading(false);
+      } catch (err) {
+        console.error("Failed to preload game:", err);
+        setLoading(false);
+        // We don't show error toasts for preloading failures
+        // Just set the game as not preloaded so we can try again on user action
+        setIsGamePreloaded(false);
+      }
     }
-  })
+  });
   
   async function launchGame(isDemo = false) {
-    if (loading() || !slot() || !user()) return;
+    if (loading()) return;
     
-    try {
-      setLoading(true);
-      
-      // Extract the slug from the full pathname
-      const fullPath = location.pathname;
-      const fullSlug = fullPath.replace(/^\/slots\//, '');
-      
-      // Use the new play endpoint instead of embed
-      const demoParam = isDemo ? '?demo=true' : '';
-      
-      // Add error handling for failed requests
-      let gameSession;
+    // If demo was requested OR if real game failed to preload
+    if (isDemo || !isGamePreloaded()) {
       try {
-        gameSession = await authedAPI(`/slots/play/${fullSlug}${demoParam}`, 'POST', null, false);
-      } catch (err) {
-        console.error('API request failed:', err);
-        setLoading(false);
+        setLoading(true);
         
-        // Show appropriate error based on response
-        if (err.status === 401) {
-          showError("Authentication required. Please log in again.");
-        } else if (err.status === 403) {
-          showError("You don't have permission to play this game");
-        } else if (err.status === 429) {
-          showError("Too many requests. Please try again later.");
-        } else {
-          showError(`Error: ${err.message || "Failed to connect to game server"}`);
+        // Extract the slug from the full pathname
+        const fullPath = location.pathname;
+        const fullSlug = fullPath.replace(/^\/slots\//, '');
+        
+        // Add demo parameter if demo mode was requested
+        const demoParam = isDemo ? '?demo=true' : '';
+        
+        // Make API request for game session
+        const gameSession = await authedAPI(`/slots/play/${fullSlug}${demoParam}`, 'POST', null, false);
+        
+        if (!gameSession || !gameSession.url) {
+          console.error('Failed to get game URL');
+          setLoading(false);
+          showError("Failed to get game URL");
+          return;
         }
         
-        // Rethrow the error for the createEffect handler to catch
-        throw err;
-      }
-      
-      if (!gameSession || !gameSession.url) {
-        console.error('Failed to get game URL');
-        setLoading(false);
-        showError("Failed to get game URL");
-        return;
-      }
-      
-      setURL(gameSession.url);
-      setSessionId(gameSession.sessionId);
-      
-      // Check if we got a demo version (either requested or as fallback)
-      if (gameSession.isDemo) {
-        setIsDemoMode(true);
+        setURL(gameSession.url);
+        setSessionId(gameSession.sessionId);
         
-        // Check if this was a fallback
-        if (gameSession.fallbackReason && !isDemo) {
-          setFallbackMessage(gameSession.fallbackReason);
+        // Check if we got a demo version
+        if (gameSession.isDemo) {
+          setIsDemoMode(true);
+          
+          // Check if this was a fallback
+          if (gameSession.fallbackReason && !isDemo) {
+            setFallbackMessage(gameSession.fallbackReason);
+          } else {
+            setFallbackMessage(isDemo ? "You are playing in demo mode. No real money will be used." : "");
+          }
         } else {
-          setFallbackMessage(isDemo ? "You are playing in demo mode. No real money will be used." : "");
+          setIsDemoMode(false);
+          setFallbackMessage("");
         }
-      } else {
-        setIsDemoMode(false);
-        setFallbackMessage("");
+        
+        // Hide the selection UI after loading is complete
+        setShowGameSelection(false);
+        setLoading(false);
+      } catch (e) {
+        console.error(e);
+        setLoading(false);
+        
+        // Handle specific error types
+        if (e?.message?.includes("UNAUTHENTICATED") || e?.error === "UNAUTHENTICATED") {
+          showError("Please log in again to play this game");
+        } else if (e?.message?.includes("INSUFFICIENT_FUNDS") || e?.error === "INSUFFICIENT_FUNDS") {
+          showError("Insufficient funds to play this game");
+        } else if (e?.message?.includes("GAME_UNAVAILABLE") || e?.error === "GAME_UNAVAILABLE") {
+          showError("This game is currently unavailable");
+        } else {
+          showError(`Failed to launch game: ${e.message || "Unknown error"}`);
+        }
       }
-      
-      setLoading(false);
-    } catch (e) {
-      console.error(e);
-      setLoading(false);
-      // Rethrow for higher-level handling
-      throw e;
+    } else {
+      // For real play when game is already preloaded, just close the selection UI
+      setShowGameSelection(false);
     }
   }
 
@@ -260,13 +271,99 @@ function Slot(props) {
                   {fallbackMessage()}
                 </div>
               )}
-              <iframe src={url()} className='game' allow="fullscreen; autoplay" ref={slotRef}/>
+              <div class="game-container">
+                <iframe src={url()} className='game' allow="fullscreen; autoplay" ref={slotRef}/>
+                
+                {/* Game selection overlay - only shown while showGameSelection is true */}
+                <Show when={showGameSelection()}>
+                  <div class="game-selection-overlay">
+                    <div class="game-background-container">
+                      <Show when={slot() && slot().imgPortrait} fallback={
+                        <div class="fallback-background"></div>
+                      }>
+                        <img 
+                          src={slot().imgPortrait} 
+                          alt={slot().name}
+                          class="game-background-image" 
+                          onError={(e) => {
+                            console.error("Image failed to load:", e);
+                            e.target.style.display = "none";
+                            e.target.parentNode.classList.add("fallback-background");
+                          }}
+                        />
+                      </Show>
+                      <div class="game-overlay"></div>
+                    </div>
+                    
+                    <Show when={!loading()} fallback={<Loader />}>
+                      <div class="game-selection-compact">
+                        <h2>Ready to Play?</h2>
+                        <div class="play-options">
+                          <button class="play-btn-fancy" onClick={() => launchGame(false)}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <circle cx="12" cy="12" r="10" />
+                              <line x1="12" y1="6" x2="12" y2="18" />
+                              <path d="M16 8H10a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H8" />
+                            </svg>
+                            REAL PLAY
+                          </button>
+                          <span class="or-divider">OR</span>
+                          <button class="demo-btn-fancy" onClick={() => launchGame(true)}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <circle cx="12" cy="12" r="10"></circle>
+                              <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                            </svg>
+                            TRY DEMO
+                          </button>
+                        </div>
+                      </div>
+                    </Show>
+                  </div>
+                </Show>
+              </div>
             </>
           ) : (
-            <div class='game'>
+            <div class='game game-with-background'>
+              {/* Direct image approach */}
+              <div class="game-background-container">
+                <Show when={slot() && slot().imgPortrait} fallback={
+                  <div class="fallback-background"></div>
+                }>
+                  <img 
+                    src={slot().imgPortrait} 
+                    alt={slot().name}
+                    class="game-background-image" 
+                    onError={(e) => {
+                      console.error("Image failed to load:", e);
+                      e.target.style.display = "none";
+                      e.target.parentNode.classList.add("fallback-background");
+                    }}
+                  />
+                </Show>
+                <div class="game-overlay"></div>
+              </div>
               <Show when={!loading()} fallback={<Loader />}>
-                <button className='play-btn' onClick={() => launchGame(false)}>Play Now</button>
-                <button className='demo-btn' onClick={() => launchGame(true)}>Try Demo</button>
+                <div class="game-selection-compact">
+                  <h2>Ready to Play?</h2>
+                  <div class="play-options">
+                    <button class="play-btn-fancy" onClick={() => launchGame(false)}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="6" x2="12" y2="18" />
+                        <path d="M16 8H10a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H8" />
+                      </svg>
+                      REAL PLAY
+                    </button>
+                    <span class="or-divider">OR</span>
+                    <button class="demo-btn-fancy" onClick={() => launchGame(true)}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                      </svg>
+                      TRY DEMO
+                    </button>
+                  </div>
+                </div>
               </Show>
             </div>
           )
@@ -414,7 +511,7 @@ function Slot(props) {
           border: unset;
           border-radius: 15px;
           border: 1px solid #3F3B77;
-          background: #29254E;
+          background-color: #29254E; /* Changed from background to background-color */
           display: flex;
           align-items: center;
           justify-content: center;
@@ -423,6 +520,8 @@ function Slot(props) {
           font-weight: 700;
           color: white;
           transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
         }
         
         .full-width .game {
@@ -438,12 +537,24 @@ function Slot(props) {
           cursor: pointer;
           min-width: 150px;
           text-align: center;
+          transition: all 0.2s ease;
         }
         
         .play-btn {
           background: linear-gradient(180deg, #59E878 0%, #26A240 100%);
           color: #0D2611;
           border: none;
+          box-shadow: 0 4px 10px rgba(38, 162, 64, 0.3);
+        }
+        
+        .play-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 14px rgba(38, 162, 64, 0.4);
+        }
+        
+        .play-btn:active {
+          transform: translateY(0);
+          box-shadow: 0 2px 6px rgba(38, 162, 64, 0.2);
         }
         
         .demo-btn {
@@ -451,25 +562,226 @@ function Slot(props) {
           border: 1px solid #494182;
           color: #9189D3;
         }
-
-        .demo-warning {
-          width: 100%;
-          padding: 10px 15px;
-          margin-bottom: 10px;
-          background: rgba(254, 215, 102, 0.1);
-          border: 1px solid #FED766;
-          border-radius: 8px;
-          color: #FED766;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          font-size: 14px;
+        
+        .demo-btn:hover {
+          background: #3D3770;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 10px rgba(73, 65, 130, 0.3);
         }
         
-        .demo-warning svg {
-          min-width: 24px;
-          height: 24px;
-          stroke: #FED766;
+        .demo-btn:active {
+          transform: translateY(0);
+          box-shadow: none;
+        }
+        
+        .wide {
+          width: 100%;
+          padding: 14px 24px;
+          font-size: 16px;
+        }
+
+        .game-selection-compact {
+          background: rgba(41, 37, 78, 0.6);
+          backdrop-filter: blur(12px);
+          padding: 28px;
+          border-radius: 16px;
+          max-width: 500px;
+          width: 90%;
+          box-shadow: 
+            0 10px 25px rgba(0, 0, 0, 0.4),
+            0 0 0 1px rgba(134, 111, 234, 0.2) inset,
+            0 0 30px rgba(93, 86, 177, 0.2) inset;
+          position: relative;
+          z-index: 3;
+          text-align: center;
+          border: none;
+        }
+        
+        .game-selection-compact h2 {
+          font-family: Geogrotesque Wide, sans-serif;
+          font-weight: 800;
+          font-size: 26px;
+          margin: 0 0 20px 0;
+          color: white;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+          letter-spacing: 0.5px;
+        }
+        
+        .play-options {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 15px;
+        }
+        
+        .play-btn-fancy, .demo-btn-fancy {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          padding: 14px 24px;
+          border-radius: 8px;
+          font-family: Geogrotesque Wide, sans-serif;
+          font-weight: 700;
+          font-size: 16px;
+          cursor: pointer;
+          transition: all 0.25s ease;
+          min-width: 160px;
+        }
+        
+        .play-btn-fancy {
+          background: linear-gradient(180deg, #59E878 0%, #26A240 100%);
+          color: #0D2611;
+          border: none;
+          box-shadow: 
+            0 8px 20px rgba(38, 162, 64, 0.4),
+            0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+            0 -3px 0 rgba(0, 0, 0, 0.2) inset;
+          text-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
+          letter-spacing: 0.5px;
+        }
+        
+        .play-btn-fancy:hover {
+          transform: translateY(-3px);
+          box-shadow: 
+            0 12px 25px rgba(38, 162, 64, 0.5),
+            0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+            0 -3px 0 rgba(0, 0, 0, 0.2) inset;
+          background: linear-gradient(180deg, #6BEF88 0%, #2FB84A 100%);
+        }
+        
+        .play-btn-fancy:active {
+          transform: translateY(0);
+          box-shadow: 
+            0 4px 10px rgba(38, 162, 64, 0.3),
+            0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+            0 2px 0 rgba(0, 0, 0, 0.1) inset;
+        }
+        
+        .demo-btn-fancy {
+          background: rgba(53, 47, 99, 0.8);
+          border: none;
+          color: #B6B0F1;
+          box-shadow: 
+            0 8px 15px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(134, 111, 234, 0.4) inset,
+            0 -3px 0 rgba(0, 0, 0, 0.2) inset;
+          letter-spacing: 0.5px;
+        }
+        
+        .demo-btn-fancy:hover {
+          background: rgba(63, 56, 115, 0.9);
+          transform: translateY(-3px);
+          box-shadow: 
+            0 12px 20px rgba(0, 0, 0, 0.3),
+            0 0 0 1px rgba(134, 111, 234, 0.6) inset,
+            0 -3px 0 rgba(0, 0, 0, 0.2) inset;
+          color: #CAC5FF;
+        }
+        
+        .demo-btn-fancy:active {
+          transform: translateY(0);
+          box-shadow: 
+            0 4px 10px rgba(0, 0, 0, 0.2),
+            0 0 0 1px rgba(134, 111, 234, 0.4) inset,
+            0 2px 0 rgba(0, 0, 0, 0.1) inset;
+        }
+        
+        .or-divider {
+          font-size: 14px;
+          font-weight: 700;
+          color: #6E67B8;
+          display: inline-block;
+          padding: 0 5px;
+        }
+        
+        .game-with-background {
+          position: relative;
+        }
+        
+        .game-background-container {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          border-radius: 15px;
+          z-index: 1;
+        }
+        
+        .game-background-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          display: block;
+          filter: blur(8px);
+          transform: scale(1.05); /* Prevent blur from showing edges */
+        }
+        
+        .fallback-background {
+          width: 100%;
+          height: 100%;
+          background-color: #252144;
+          background-image: linear-gradient(135deg, #2B2858 25%, #322F6B 25%, #322F6B 50%, #2B2858 50%, #2B2858 75%, #322F6B 75%, #322F6B 100%);
+          background-size: 20px 20px;
+        }
+        
+        .game-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+            135deg,
+            rgba(20, 17, 45, 0.85) 0%,
+            rgba(29, 25, 64, 0.8) 50%,
+            rgba(32, 28, 71, 0.9) 100%
+          );
+          z-index: 2;
+          box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.3);
+        }
+        
+        .option-icon {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 16px;
+        }
+        
+        .real-play-icon {
+          background: linear-gradient(135deg, #59E878 0%, #26A240 100%);
+          color: #0D2611;
+        }
+        
+        .demo-play-icon {
+          background: #342E5F;
+          border: 1px solid #494182;
+          color: #9189D3;
+        }
+        
+        .option-details {
+          text-align: center;
+          margin-bottom: 20px;
+        }
+        
+        .option-details h3 {
+          font-family: Geogrotesque Wide, sans-serif;
+          font-weight: 700;
+          font-size: 18px;
+          margin: 0 0 4px 0;
+          color: white;
+        }
+        
+        .option-details p {
+          color: #9189D3;
+          font-size: 14px;
+          margin: 0;
         }
         
         .toast {
@@ -807,6 +1119,50 @@ function Slot(props) {
             right: 20px;
             max-width: calc(100% - 40px);
           }
+        }
+
+        @media only screen and (max-width: 600px) {
+          .play-options {
+            flex-direction: column;
+            gap: 12px;
+          }
+          
+          .play-btn-fancy, .demo-btn-fancy {
+            width: 100%;
+          }
+          
+          .or-divider {
+            margin: 0;
+            font-size: 12px;
+          }
+          
+          .game-selection-compact {
+            padding: 20px;
+            max-width: 90%;
+          }
+          
+          .game-selection-compact h2 {
+            font-size: 22px;
+            margin-bottom: 16px;
+          }
+        }
+
+        .game-container {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 1150/637;
+        }
+        
+        .game-selection-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10;
         }
       `}</style>
     </>

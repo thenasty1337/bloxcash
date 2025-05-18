@@ -92,16 +92,17 @@ function SideBar(props) {
 
         <div class='options'>
           <Chats online={online()} ws={ws()} room={room()}/>
-
-          <div class='split'>
-            <ChatRules/>
-            <GreenCount active={true} number={online()?.total} css={{'flex': '1'}}/>
-          </div>
-
           <TipRain/>
         </div>
 
         <Chat messages={messages()} ws={ws()} emojis={emojis()}/>
+        
+        <div class='bottom-info'>
+          <div class='compact-controls'>
+            <ChatRules/>
+            <GreenCount active={true} number={online()?.total} css={{'flex': '1'}}/>
+          </div>
+        </div>
       </div>
 
       <style jsx>{`
@@ -127,13 +128,22 @@ function SideBar(props) {
           gap: 10px;
         }
 
-        .split {
+        .compact-controls {
           display: flex;
-          gap: 10px;
+          justify-content: space-between;
+          gap: 5px;
+          padding: 2px 8px;
+          height: 24px;
         }
 
-        .split > * {
+        .compact-controls > * {
           flex: 1;
+        }
+
+        .bottom-info {
+          background: rgba(23, 20, 48, 0.7);
+          padding: 0;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .top-container {

@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     solidPlugin(),
     solidStyled({
-      prefix: 'my-prefix', // optional
+      prefix: 'casino', // optional
       filter: {
         include: 'src/**/*.{js,tsx,jsx}',
         exclude: 'node_modules/**/*.{js,tsx,jsx}',
