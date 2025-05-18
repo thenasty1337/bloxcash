@@ -1,12 +1,24 @@
 import {A} from "@solidjs/router";
 import { createEffect } from "solid-js";
+import BlurImage from "../UI/BlurImage";
 
 function FancySlotBanner(props) {
   return (
     <div class='slot-container'>
       <div class='slot-frame'>
-        <div class='banner' style={{ "background-image": `url(${props.img})` }}>
-          <A href={`/slots/${props.slug}`} class='gamemode-link'/>
+        <div class='banner'>
+          <A href={`/slots/${props.slug}`} class='gamemode-link'>
+            <BlurImage
+              src={props.img}
+              blurhash={props.blurhash}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                'border-radius': '6px'
+              }}
+            />
+          </A>
         </div>
       </div>
       
@@ -47,8 +59,6 @@ function FancySlotBanner(props) {
           width: 100%;
           aspect-ratio: 427/575;
           border-radius: 6px;
-          background-position: center;
-          background-size: cover;
           position: relative;
           overflow: hidden;
           transition: transform 0.5s ease;

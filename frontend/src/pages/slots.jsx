@@ -360,12 +360,13 @@ function Slots(props) {
               <div className='slot-container'>
                 <div className='slot-frame'>
                   <div className='slot'>
-                    <BlurImage 
-                      src={slot.img} 
-                      blurhash={slot.blurhash}
-                      style={{'border-radius': '6px'}}
-                    />
-                    <A href={`/slots/${slot.slug}`} class='gamemode-link'/>
+                    <A href={`/slots/${slot.slug}`} class='gamemode-link'>
+                      <BlurImage 
+                        src={slot.img} 
+                        blurhash={slot.blurhash}
+                        style={{'border-radius': '6px'}}
+                      />
+                    </A>
                   </div>
                 </div>
                 {slot.isNew && <div class="new-tag">NEW</div>}
