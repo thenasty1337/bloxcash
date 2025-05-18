@@ -154,7 +154,7 @@ function CasePage(props) {
               <>
                 <div class='case-image'>
                   <div class='image-wrapper'>
-                    <img src={`${import.meta.env.VITE_SERVER_URL}${caseObj()?.img}`}/>
+                    <img src={caseObj()?.img}/>
                   </div>
 
                   <A href='/docs/provably' class='provably'>PROVABLY FAIR</A>

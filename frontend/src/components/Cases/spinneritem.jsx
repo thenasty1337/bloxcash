@@ -104,7 +104,7 @@ function SpinnerItem(props) {
     return (
         <>
             <div class='case-item-container' ref={item}>
-                <img ref={image} class='item-image' src={`${import.meta.env.VITE_SERVER_URL}${props.img}`} height='90' alt='' draggable={false}/>
+                <img ref={image} class='item-image' src={props.img} height='90' alt='' draggable={false}/>
                 <img className='back-img' src={backImage(props?.price)} height='70' alt='' ref={swords}/>
             </div>
 

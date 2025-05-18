@@ -177,7 +177,7 @@ function NavBar(props) {
               .navbar-container {
                 width: 100%;
                 height: fit-content;
-                z-index: 99999;
+                z-index: 99;
                 position: sticky;
                 top: 0;
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);

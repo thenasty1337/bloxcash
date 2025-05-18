@@ -26,7 +26,7 @@ function LiveDrop(props) {
 
                 <div class='details'>
                     <div class='case'>
-                        <img src={`${import.meta.env.VITE_SERVER_URL}${props?.case?.img}`} height='40' alt=''/>
+                        <img src={props?.case?.img} height='40' alt=''/>
                     </div>
 
                     <LiveItem {...props?.item}/>

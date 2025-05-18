@@ -61,6 +61,7 @@ async function cacheCases() {
 async function cacheDrops(top = false) {
 
     const now = Date.now();
+    console.log(`[DEBUG] Starting cacheDrops function (top=${top})`); 
 
     const [results] = await sql.query(`
         SELECT cases.slug, cases.name as caseName, cases.img as caseImg,
@@ -71,6 +72,8 @@ async function cacheDrops(top = false) {
         INNER JOIN users ON caseOpenings.userId = users.id INNER JOIN caseItems ON caseOpenings.caseItemId = caseItems.id
         ${top ? `WHERE caseItems.price > ${topDropPrice}` : ''} ORDER BY caseOpenings.id DESC LIMIT ${limit}
     `);
+
+    console.log(`[DEBUG] cacheDrops query returned ${results?.length || 0} results`);
 
     const after = Date.now();
     console.log(`Drops${top ? ' top': ''} took ${after - now}ms`);

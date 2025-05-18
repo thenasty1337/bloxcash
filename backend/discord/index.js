@@ -15,7 +15,7 @@ const discordIds = {
 	giveawayRole: '1132678038694404147'
 }
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildEmojisAndStickers] });
 client.login(process.env.DISCORD_BOT_TOKEN);
 
 client.once(Events.ClientReady, c => {

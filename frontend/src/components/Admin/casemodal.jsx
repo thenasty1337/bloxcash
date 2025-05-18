@@ -24,7 +24,6 @@ function CaseModal(props) {
     const [itemName, setItemName] = createSignal('');
     const [itemImage, setItemImage] = createSignal('');
     const [itemPrice, setItemPrice] = createSignal(0);
-    const [itemRobloxId, setItemRobloxId] = createSignal('');
     const [itemProbability, setItemProbability] = createSignal(1);
     const [remainingProbability, setRemainingProbability] = createSignal(100);
     const [items, setItems] = createSignal(props.items || []);
@@ -42,27 +41,25 @@ function CaseModal(props) {
     // Calculate the expected value and house edge
     const calculatedStats = () => {
         const currentItems = items();
-        if (!currentItems || !currentItems.length) return { expectedValue: 0, houseEdge: 0, suggestedPrice: 0 };
+        if (!currentItems || !currentItems.length) return { expectedValue: 0, houseEdge: 0, suggestedPrice: 0, totalProbability: 0, needsMoreItems: true };
         
-        // Calculate total probability from all items
-        const totalProbability = currentItems.reduce((sum, item) => {
-            return sum + (Number(item.probability) || 0);
-        }, 0);
+        const TOTAL_RANGE = 100000; // Max range
         
-        // Safely calculate expected value with checks for missing or invalid data
+        // Calculate total range coverage and expected value using range-based probability
+        let totalRangeCovered = 0;
         const totalExpectedValue = currentItems.reduce((sum, item) => {
+            if (!item.rangeFrom || !item.rangeTo) return sum;
+            
+            const rangeSize = item.rangeTo - item.rangeFrom + 1;
+            totalRangeCovered += rangeSize;
+            
             const price = Number(item.price) || 0;
-            const probability = Number(item.probability) || 0;
+            const probability = (rangeSize / TOTAL_RANGE) * 100;
             return sum + (price * (probability / 100));
         }, 0);
         
-        // If we don't have close to 100% probability filled, scale the expected value
-        // This gives a more accurate suggestion when items are incomplete
-        let scaledExpectedValue = totalExpectedValue;
-        if (totalProbability < 95) { // If less than 95% is filled
-            scaledExpectedValue = totalProbability > 0 ? 
-                (totalExpectedValue / totalProbability) * 100 : totalExpectedValue;
-        }
+        // Calculate total probability as a percentage of the total range covered
+        const totalProbability = (totalRangeCovered / TOTAL_RANGE) * 100;
         
         // Ensure we have valid numbers
         const currentPrice = Math.max(0, Number(casePrice()) || 0);
@@ -76,24 +73,18 @@ function CaseModal(props) {
         }
         
         // Calculate suggested price based on expected value and target house edge
-        // Use scaled expected value if probability is incomplete
-        // Ensure we have a positive value
-        const suggestedPrice = totalProbability >= 95 ?
-            // If we have close to 100% probability, use normal calculation
-            Math.max(0.01, totalExpectedValue * (1 + targetHouseEdge() / 100)) :
-            // Otherwise, use current case price or a minimum reasonable value
-            Math.max(currentPrice || scaledExpectedValue, scaledExpectedValue * (1 + targetHouseEdge() / 100));
+        const suggestedPrice = Math.max(0.01, totalExpectedValue * (1 + targetHouseEdge() / 100));
         
-        // Add warning flag if probabilities aren't close to 100%
-        const needsMoreItems = totalProbability < 95;
+        // Flag if ranges don't cover the full total range
+        const needsMoreItems = totalRangeCovered < TOTAL_RANGE;
         
         return {
             expectedValue: totalExpectedValue,
-            scaledExpectedValue: scaledExpectedValue,
             houseEdge: houseEdge,
             suggestedPrice: suggestedPrice,
             totalProbability: totalProbability,
-            needsMoreItems: needsMoreItems
+            needsMoreItems: needsMoreItems,
+            totalRange: TOTAL_RANGE
         };
     };
 
@@ -410,9 +401,9 @@ function CaseModal(props) {
                 },
                 credentials: 'include',
                 body: JSON.stringify({
-                    robloxID: itemRobloxId(),
+
                     name: itemName(),
-                    image: itemImage(),
+                    img: itemImage(),
                     price: parseFloat(itemPrice()),
                     probability: parseFloat(itemProbability())
                 })
@@ -429,7 +420,6 @@ function CaseModal(props) {
             setItemName('');
             setItemImage('');
             setItemPrice(0);
-            setItemRobloxId('');
             setItemProbability(1);
             
             // Update items array
@@ -938,15 +928,7 @@ function CaseModal(props) {
                                             <span class="input-hint">Available: {remainingProbability()}%</span>
                                         </div>
                                         
-                                        <div class="form-group">
-                                            <label>Item ROBLOX ID</label>
-                                            <input 
-                                                type="text" 
-                                                value={itemRobloxId()} 
-                                                onInput={(e) => setItemRobloxId(e.target.value)}
-                                                placeholder="Enter ROBLOX item ID (optional)"
-                                            />
-                                        </div>
+                                      
                                         
                                         <div class="form-actions">
                                             <button class="add-item-btn" onClick={addItem}>
@@ -987,12 +969,15 @@ function CaseModal(props) {
                                                             <img src={item.img} alt={item.name} />
                                                         </span>
                                                         <span class="item-name">{item.name}</span>
-                                                        <span class="item-price">${parseFloat(item.price).toFixed(2)}</span>
+                                                        <span class="item-price">
+  {parseFloat(item.price).toLocaleString('en-US', { style: 'currency', currency: 'USD' })}
+</span>
+
                                                         <span class="item-probability" style={{
-                                                            color: parseFloat(item.probability) < 5 ? '#ff7070' :
-                                                                  parseFloat(item.probability) > 30 ? '#70ff70' : 'inherit'
+                                                            color: ((item.rangeTo - item.rangeFrom + 1) / 100000 * 100) < 5 ? '#ff7070' :
+                                                                  ((item.rangeTo - item.rangeFrom + 1) / 100000 * 100) > 30 ? '#70ff70' : 'inherit'
                                                         }}>
-                                                            {parseFloat(item.probability).toFixed(3)}%
+                                                            {((item.rangeTo - item.rangeFrom + 1) / 100000 * 100).toFixed(3)}%
                                                         </span>
                                                         <span class="item-actions">
                                                             <button 
@@ -1089,6 +1074,14 @@ function CaseModal(props) {
 
                 .form-group {
                     margin-bottom: 15px;
+                }
+
+                .item-name {
+                    color: #ADA3EF;
+                }
+
+                .item-price {
+                    color: #ADA3EF;
                 }
 
                 .form-row {

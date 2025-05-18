@@ -31,7 +31,7 @@ function PlainItem(props) {
             <div class={'case-item-container ' + (getRarity(props?.price || 0))}>
 
                 <div class='item-content'>
-                    <img class='item-image' src={`${import.meta.env.VITE_SERVER_URL}${props.img}`} height='75' alt='' draggable={false}/>
+                    <img class='item-image' src={props.img} height='75' alt='' draggable={false}/>
                     <p class='name'>{props?.name || 'Unknown Item'}</p>
                 </div>
 

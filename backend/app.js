@@ -145,7 +145,7 @@ async function start() {
         cacheRains,
         cacheBattles,
         cacheCases,
-        // cacheDrops,
+        cacheDrops,
         cacheCrash,
         cacheCryptos,
         cacheWithdrawalCoins,

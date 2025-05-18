@@ -34,7 +34,7 @@ function CaseItem(props) {
                     <p class='name'>{props?.name || 'Unknown Item'}</p>
                     <p class='percent'>{props?.probability || '0.000'}%</p>
 
-                    <img class='item-image' src={`${import.meta.env.VITE_SERVER_URL}${props.img}`} height='60' alt='' draggable={false}/>
+                    <img class='item-image' src={props.img} height='60' alt='' draggable={false}/>
                 </div>
 
                 <div class='price'>

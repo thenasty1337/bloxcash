@@ -138,8 +138,8 @@ router.post('/:id/open', [isAuthed, apiLimiter], async (req, res) => {
                 );
                 
                 const [openingResult] = await connection.query(`
-                    INSERT INTO caseOpenings (userId, caseVersionId, rollId, caseItemId) VALUES (?, ?, ?, ?)`,
-                    [user.id, caseInfo.revId, fairResult.insertId, item.id]
+                    INSERT INTO caseOpenings (userId, caseVersionId, rollId, caseItemId, cost, winnings) VALUES (?, ?, ?, ?, ?, ?)`,
+                    [user.id, caseInfo.revId, fairResult.insertId, item.id, caseInfo.price, item.price]
                 );
         
                 await connection.query(`

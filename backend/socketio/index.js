@@ -161,7 +161,9 @@ module.exports = (ioInstance) => {
         });
 
         socket.on('cases:subscribe', async () => {
+            console.log(`[DEBUG] Client ${socket.id} subscribed to cases channel`);
             socket.join('cases');
+            console.log(`[DEBUG] Sending drops data to client. All drops: ${caseDrops.all?.length || 0}, Top drops: ${caseDrops.top?.length || 0}`);
             socket.emit('cases:drops:all', caseDrops.all);
             socket.emit('cases:drops:top', caseDrops.top);
         });
