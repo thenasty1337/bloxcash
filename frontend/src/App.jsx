@@ -93,13 +93,11 @@ function App() {
     
     // Check initial connection state
     if (socket.connected) {
-      console.log('WebSocket connected immediately');
       setupBalanceListeners(socket);
     }
     
     // Also listen for future connections/reconnections
     socket.on('connect', () => {
-      console.log('WebSocket connected via event');
       setupBalanceListeners(socket);
     });
   });

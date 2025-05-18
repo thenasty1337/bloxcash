@@ -7,18 +7,15 @@ import authStore from '../stores/authStore';
  */
 const AuthInitializer = (props) => {
   onMount(async () => {
-    console.log('Initializing authentication state...');
     // Try to maintain auth state across page refreshes and app updates
     try {
       // First try refresh token in case the access token is expired
       await authStore.refreshToken();
-      console.log('Auth initialized with token refresh');
     } catch (e) {
       console.log('Token refresh failed, falling back to checkAuth');
       // If refresh fails, try regular auth check as fallback
       try {
         await authStore.checkAuth();
-        console.log('Auth initialized with checkAuth');
       } catch (err) {
         console.log('Authentication initialization failed', err);
       }

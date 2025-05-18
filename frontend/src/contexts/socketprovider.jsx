@@ -15,7 +15,6 @@ const SocketManager = (() => {
     
     // Create a single usable socket instance
     const createSocket = (serverUrl) => {
-        console.log('📱 Creating new singleton socket connection');
         
         // If we already have an instance and it's connected, return it
         if (instance && instance.connected) {
@@ -44,7 +43,6 @@ const SocketManager = (() => {
             // Removed custom headers that were causing CORS issues
         });
         
-        console.log('📱 New socket instance created');
         return instance;
     };
     
@@ -128,7 +126,6 @@ export function WebsocketProvider(props) {
         
         // Set up connect event
         socket.on('connect', () => {
-            console.log('📱 Socket connected');
             
             // Reset connection attempts on successful connect
             SocketManager.resetAttempts();
@@ -160,9 +157,7 @@ export function WebsocketProvider(props) {
         
         // Handle auth response
         socket.on('auth', (response) => {
-            console.log('📱 Socket auth response:', response);
             if (response.success) {
-                console.log('📱 Socket authenticated with ID:', response.userId);
                 SocketManager.setAuthenticated(true);
             } else {
                 console.warn('📱 Socket authentication failed:', response.error);

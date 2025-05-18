@@ -2,11 +2,6 @@ import {A} from "@solidjs/router";
 import { createEffect } from "solid-js";
 
 function FancySlotBanner(props) {
-  // Debug the props
-  createEffect(() => {
-    console.log("FancySlotBanner props:", props);
-  });
-  
   return (
     <div class='slot-container'>
       <div class='slot-frame'>
