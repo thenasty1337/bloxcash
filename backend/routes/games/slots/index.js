@@ -74,6 +74,7 @@ router.get('/', async (req, res) => {
             img: ['readyplay', 'wizard', 'retrogaming', 'caleta'].includes(game.provider.toLowerCase()) 
                 ? (game.image_url || game.image_square || '/public/slots/default.png')
                 : (game.image_long || game.image_url || game.image_square || '/public/slots/default.png'),
+            blurhash: game.image_blurhash || null,
             rtp: game.rtp,
             type: game.type,
             category: game.category,
@@ -106,7 +107,7 @@ router.get('/providers', async (req, res) => {
         res.json(providers.map(p => ({
             slug: p.provider,
             name: p.provider_name || p.provider,
-            img: `/public/assets/gameProvider/${p.provider.toLowerCase()}.webp`
+            img: `/assets/gameProvider/${p.provider.toLowerCase()}.webp`
         })));
     } catch (error) {
         console.error('Error fetching providers:', error);
@@ -148,6 +149,7 @@ router.get('/featured', async (req, res) => {
             img: ['readyplay', 'wizard', 'retrogaming', 'caleta'].includes(game.provider.toLowerCase()) 
                 ? (game.image_url || game.image_square || '/public/slots/default.png')
                 : (game.image_long || game.image_url || game.image_square || '/public/slots/default.png'),
+            blurhash: game.image_blurhash || null,
             rtp: game.rtp
         })));
     } catch (error) {
@@ -208,6 +210,7 @@ router.get('/:slug(*)', async (req, res) => {
                 img: ['readyplay', 'wizard', 'retrogaming', 'caleta'].includes(f.provider.toLowerCase()) 
                 ? (f.image_url || f.image_square || '/public/slots/default.png')
                 : (f.image_long || f.image_url || f.image_square || '/public/slots/default.png'),
+                blurhash: f.image_blurhash || null,
                 rtp: f.rtp
             }))
         });

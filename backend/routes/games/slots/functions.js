@@ -4,6 +4,7 @@
  */
 const { sql } = require('../../../database');
 const { ApiClient } = require('../../../utils/spin-shield');
+const { generateBlurHash } = require('../../../utils/blurhash');
 const slots = {};
 
 // Session tracking - just record sessions and their timestamps, no active pinging
@@ -35,9 +36,54 @@ process.on('SIGINT', () => {
 });
 
 async function cacheSlots() {
-    // Get games from spinshield_games table instead
-    const [all] = await sql.query(`SELECT * FROM spinshield_games WHERE active = 1 ORDER BY id ASC`);
-    all.forEach(e => slots[e.game_id_hash] = e);
+    try {
+        // Get games from spinshield_games table 
+        const [all] = await sql.query(`SELECT * FROM spinshield_games WHERE active = 1 ORDER BY id ASC`);
+        
+        // First store all the data we already have
+        all.forEach(e => slots[e.game_id_hash] = e);
+        
+        // Check if we have blurhash column in the table
+        let hasBlurHashColumn = false;
+        try {
+            const [columnsInfo] = await sql.query(`SHOW COLUMNS FROM spinshield_games LIKE 'image_blurhash'`);
+            hasBlurHashColumn = columnsInfo.length > 0;
+        } catch (e) {
+            console.log('BlurHash column check failed, will use in-memory storage instead:', e.message);
+        }
+        
+        // Generate missing BlurHash values for images
+        for (const game of all) {
+            if (!game.image_blurhash) {
+                try {
+                    // Determine which image to use for BlurHash - using the same priority as the frontend
+                    const imageUrl = ['readyplay', 'wizard', 'retrogaming', 'caleta'].includes(game.provider?.toLowerCase())
+                        ? (game.image_url || game.image_square || '/public/slots/default.png')
+                        : (game.image_long || game.image_url || game.image_square || '/public/slots/default.png');
+                    const fullImageUrl = imageUrl.startsWith('http') ? imageUrl : `${process.env.SERVER_URL || 'http://localhost:3000'}${imageUrl}`;
+                    
+                    // Generate BlurHash
+                    const blurhash = await generateBlurHash(fullImageUrl);
+                    
+                    // Store in memory
+                    slots[game.game_id_hash].image_blurhash = blurhash;
+                    
+                    // If database has the column, update it
+                    if (hasBlurHashColumn) {
+                        await sql.query(`UPDATE spinshield_games SET image_blurhash = ? WHERE game_id_hash = ?`, 
+                            [blurhash, game.game_id_hash]);
+                        console.log(`Updated BlurHash for game ${game.game_id_hash}`);
+                    }
+                } catch (err) {
+                    console.error(`Failed to generate BlurHash for slot ${game.game_id_hash}:`, err);
+                }
+            }
+        }
+        
+        console.log(`Cached ${all.length} slot games, processed BlurHash values`);
+    } catch (error) {
+        console.error('Error caching slots:', error);
+    }
 }
 
 async function createGameSession(userId, gameIdHash, currency = 'USD', isDemo = false) {

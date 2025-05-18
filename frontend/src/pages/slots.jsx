@@ -2,6 +2,7 @@ import SlotsHeader from "../components/Slots/slotsheader";
 import {createResource, createSignal, For, Show} from "solid-js";
 import {api} from "../util/api";
 import Loader from "../components/Loader/loader";
+import BlurImage from "../components/UI/BlurImage";
 import {A, useSearchParams} from "@solidjs/router";
 import Bets from "../components/Home/bets";
 import {useUser} from "../contexts/usercontextprovider";
@@ -340,8 +341,12 @@ function Slots(props) {
             <For each={slots()}>{(slot, index) =>
               <div className='slot-container'>
                 <div className='slot-frame'>
-                  <div className='slot'
-                       style={{'background-image': `url(${slot.img})`}}>
+                  <div className='slot'>
+                    <BlurImage 
+                      src={slot.img} 
+                      blurhash={slot.blurhash}
+                      style={{'border-radius': '6px'}}
+                    />
                     <A href={`/slots/${slot.slug}`} class='gamemode-link'/>
                   </div>
                 </div>
@@ -387,7 +392,7 @@ function Slots(props) {
           <div class='providers' ref={providersRef}>
             <For each={repeatProviders()}>{(provider, index) =>
               <div class='provider' onClick={() => setParams({ provider: params?.provider === provider.slug ? null : provider.slug })}>
-                <img src={`${import.meta.env.VITE_SERVER_URL}${provider.img}`} height='50'/>
+                <img src={`${import.meta.env.VITE_BASE_URL}${provider.img}`} height='50'/>
               </div>
             }</For>
           </div>

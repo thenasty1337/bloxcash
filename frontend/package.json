@@ -18,9 +18,11 @@
   "dependencies": {
     "@solidjs/meta": "^0.28.6",
     "@solidjs/router": "^0.8.2",
+    "@unpic/solid": "^1.0.0",
     "axios": "^1.4.0",
     "babel-preset-solid": "^1.7.4",
     "bezier-easing": "^2.1.0",
+    "blurhash": "^2.0.5",
     "date-fns": "^4.1.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",

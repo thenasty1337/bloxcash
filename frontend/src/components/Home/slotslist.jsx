@@ -2,6 +2,7 @@ import {createResource, createSignal, For, Show} from "solid-js";
 import {A} from "@solidjs/router";
 import {api} from "../../util/api";
 import Loader from "../Loader/loader";
+import BlurImage from "../UI/BlurImage";
 
 function SlotsList() {
 
@@ -66,7 +67,12 @@ function SlotsList() {
         <div class='slots' ref={slotsRef}>
           <Show when={!slots.loading} fallback={<Loader small={true}/>}>
             <For each={slots()}>{(slot, index) =>
-              <div className='slot' style={{ 'background-image': `url(${import.meta.env.VITE_SERVER_URL}${slot.img})` }}>
+              <div className='slot'>
+                <BlurImage 
+                  src={`${import.meta.env.VITE_SERVER_URL}${slot.img}`}
+                  blurhash={slot.blurhash}
+                  style={{ 'border-radius': '6px' }}
+                />
                 <A href={`/slots/${slot.slug}`} class='gamemode-link'/>
               </div>
             }</For>

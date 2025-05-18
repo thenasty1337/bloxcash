@@ -95,7 +95,7 @@ function AdminUsers(props) {
                         </div>
 
                         <div className='table-column'>
-                            <p>RBX ID</p>
+                            <p>USER ID</p>
                         </div>
 
                         <div className='table-column'>
@@ -117,7 +117,18 @@ function AdminUsers(props) {
                                     </div>
 
                                     <div className='table-column'>
-                                        <p class='gold'>{user?.id}</p>
+                                        <div class='id-container'>
+                                            <p 
+                                                class='gold truncated-id' 
+                                                onClick={() => {
+                                                    navigator.clipboard.writeText(user?.id);
+                                                    createNotification('success', 'User ID copied to clipboard!');
+                                                }}
+                                            >
+                                                {user?.id ? `${user?.id.substring(0, 6)}...` : ''}
+                                            </p>
+                                            <div class='id-tooltip'>{user?.id}</div>
+                                        </div>
                                     </div>
 
                                     <div className='table-column'>
@@ -288,6 +299,41 @@ function AdminUsers(props) {
               
               .users-wrapper {
                 width: 100%;
+              }
+              
+              .truncated-id {
+                cursor: pointer;
+                transition: color 0.2s ease;
+              }
+              
+              .truncated-id:hover {
+                color: #FFD700;
+              }
+              
+              .id-container {
+                position: relative;
+                display: inline-block;
+              }
+              
+              .id-tooltip {
+                visibility: hidden;
+                position: absolute;
+                z-index: 1;
+                bottom: 125%;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: rgba(20, 20, 30, 0.9);
+                color: #FFD700;
+                padding: 5px 10px;
+                border-radius: 4px;
+                white-space: nowrap;
+                font-size: 12px;
+                border: 1px solid rgba(173, 163, 239, 0.5);
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+              }
+              
+              .id-container:hover .id-tooltip {
+                visibility: visible;
               }
             `}</style>
         </>
