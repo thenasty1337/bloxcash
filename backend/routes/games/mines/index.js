@@ -33,11 +33,33 @@ router.get('/', async (req, res) => {
     try {
         // Only parse if a non-empty string
         if (typeof activeGame.revealedTiles === 'string' && activeGame.revealedTiles.trim() !== '') {
-             parsedRevealedTiles = JSON.parse(activeGame.revealedTiles);
+            // First try standard JSON parsing
+            try {
+                parsedRevealedTiles = JSON.parse(activeGame.revealedTiles);
+            } catch (jsonError) {
+                // If that fails, try comma-separated format
+                if (activeGame.revealedTiles.includes(',')) {
+                    parsedRevealedTiles = activeGame.revealedTiles.split(',').map(num => parseInt(num.trim(), 10));
+                } else {
+                    // Maybe it's just a single number
+                    parsedRevealedTiles = [parseInt(activeGame.revealedTiles.trim(), 10)];
+                }
+            }
+        } else if (Array.isArray(activeGame.revealedTiles)) {
+            // If it's already an array, use it directly
+            parsedRevealedTiles = activeGame.revealedTiles;
+        }
+        
+        // Make sure parsedRevealedTiles is an array and remove any NaN values
+        if (!Array.isArray(parsedRevealedTiles)) {
+            parsedRevealedTiles = [];
+        } else {
+            parsedRevealedTiles = parsedRevealedTiles.filter(tile => !isNaN(tile));
         }
     } catch (e) {
         console.error(`Failed to parse revealedTiles for mines game (User: ${req.user.id}, Value: ${activeGame.revealedTiles}):`, e);
         // Keep parsedRevealedTiles as [] if parsing failed
+        parsedRevealedTiles = [];
     }
     activeGame.revealedTiles = parsedRevealedTiles;
 
@@ -147,11 +169,33 @@ router.post('/reveal', apiLimiter, async (req, res) => {
             try {
                 // Only parse if a non-empty string
                 if (typeof activeGame.revealedTiles === 'string' && activeGame.revealedTiles.trim() !== '') {
-                    revealedTiles = JSON.parse(activeGame.revealedTiles);
+                    // First try standard JSON parsing
+                    try {
+                        revealedTiles = JSON.parse(activeGame.revealedTiles);
+                    } catch (jsonError) {
+                        // If that fails, try comma-separated format
+                        if (activeGame.revealedTiles.includes(',')) {
+                            revealedTiles = activeGame.revealedTiles.split(',').map(num => parseInt(num.trim(), 10));
+                        } else {
+                            // Maybe it's just a single number
+                            revealedTiles = [parseInt(activeGame.revealedTiles.trim(), 10)];
+                        }
+                    }
+                } else if (Array.isArray(activeGame.revealedTiles)) {
+                    // If it's already an array, use it directly
+                    revealedTiles = activeGame.revealedTiles;
+                }
+                
+                // Make sure revealedTiles is an array and remove any NaN values
+                if (!Array.isArray(revealedTiles)) {
+                    revealedTiles = [];
+                } else {
+                    revealedTiles = revealedTiles.filter(tile => !isNaN(tile));
                 }
             } catch (e) {
                 console.error(`Failed to parse revealedTiles for mines game (User: ${req.user.id}, Value: ${activeGame.revealedTiles}):`, e);
                 // Keep revealedTiles as [] if parsing failed
+                revealedTiles = [];
             }
 
             if (revealedTiles.includes(field)) return res.status(400).json({ error: 'ALREADY_REVEALED' });
@@ -162,12 +206,36 @@ router.post('/reveal', apiLimiter, async (req, res) => {
                 if (!activeGame.mines) {
                     throw new Error('Mines data is missing from active game.');
                 }
-                // Check if mines is a comma-separated string and convert it to a proper array
-                if (typeof activeGame.mines === 'string' && activeGame.mines.includes(',') && !activeGame.mines.includes('[')) {
-                    minePositions = activeGame.mines.split(',').map(num => parseInt(num.trim(), 10));
+                // Check if mines is a comma-separated string or JSON array
+                if (typeof activeGame.mines === 'string') {
+                    // If it looks like a comma-separated list without brackets
+                    if (activeGame.mines.includes(',') && !activeGame.mines.includes('[')) {
+                        minePositions = activeGame.mines.split(',').map(num => parseInt(num.trim(), 10));
+                    } 
+                    // If it looks like a JSON array (starts with [ and ends with ])
+                    else if (activeGame.mines.trim().startsWith('[') && activeGame.mines.trim().endsWith(']')) {
+                        minePositions = JSON.parse(activeGame.mines);
+                    }
+                    // Single number or other format
+                    else {
+                        // Try to parse as JSON first
+                        try {
+                            minePositions = JSON.parse(activeGame.mines);
+                        } catch {
+                            // If that fails, try as a single number or comma-separated without brackets
+                            if (activeGame.mines.includes(',')) {
+                                minePositions = activeGame.mines.split(',').map(num => parseInt(num.trim(), 10));
+                            } else {
+                                // Maybe it's just a single number
+                                minePositions = [parseInt(activeGame.mines.trim(), 10)];
+                            }
+                        }
+                    }
+                } else if (Array.isArray(activeGame.mines)) {
+                    // If it's already an array, use it directly
+                    minePositions = activeGame.mines;
                 } else {
-                    // Try standard JSON parsing if it appears to be JSON format
-                    minePositions = JSON.parse(activeGame.mines);
+                    throw new Error(`Invalid mines data type: ${typeof activeGame.mines}`);
                 }
             } catch (e) {
                 console.error(`Failed to parse mines for active game (ID: ${activeGame.id}, User: ${req.user.id}, Value: ${activeGame.mines}):`, e);
@@ -231,12 +299,35 @@ router.post('/cashout', apiLimiter, async (req, res) => {
             // Safely parse revealedTiles, default to [] on error or null/empty string
             let revealedTiles = [];
             try {
+                // Only parse if a non-empty string
                 if (typeof activeGame.revealedTiles === 'string' && activeGame.revealedTiles.trim() !== '') {
-                    revealedTiles = JSON.parse(activeGame.revealedTiles);
+                    // First try standard JSON parsing
+                    try {
+                        revealedTiles = JSON.parse(activeGame.revealedTiles);
+                    } catch (jsonError) {
+                        // If that fails, try comma-separated format
+                        if (activeGame.revealedTiles.includes(',')) {
+                            revealedTiles = activeGame.revealedTiles.split(',').map(num => parseInt(num.trim(), 10));
+                        } else {
+                            // Maybe it's just a single number
+                            revealedTiles = [parseInt(activeGame.revealedTiles.trim(), 10)];
+                        }
+                    }
+                } else if (Array.isArray(activeGame.revealedTiles)) {
+                    // If it's already an array, use it directly
+                    revealedTiles = activeGame.revealedTiles;
+                }
+                
+                // Make sure revealedTiles is an array and remove any NaN values
+                if (!Array.isArray(revealedTiles)) {
+                    revealedTiles = [];
+                } else {
+                    revealedTiles = revealedTiles.filter(tile => !isNaN(tile));
                 }
             } catch (e) {
                 console.error(`Failed to parse revealedTiles during cashout (User: ${req.user.id}, Value: ${activeGame.revealedTiles}):`, e);
                 // Default to empty array if parsing fails
+                revealedTiles = [];
             }
             if (revealedTiles.length == 0) return res.status(400).json({ error: 'NO_REVEALED_TILES' });
 
@@ -279,15 +370,45 @@ async function doPayout(connection, commit, activeGame, multiplier, payout, req,
         game: 'mines'
     }]);
 
-    // Parse mine positions with the same approach as we use elsewhere
-    let minePositions;
+    // Parse mine positions with robust approach
+    let minePositions = [];
     try {
-        // Check if mines is a comma-separated string and convert it to a proper array
-        if (typeof activeGame.mines === 'string' && activeGame.mines.includes(',') && !activeGame.mines.includes('[')) {
-            minePositions = activeGame.mines.split(',').map(num => parseInt(num.trim(), 10));
+        if (!activeGame.mines) {
+            minePositions = [];
+        } else if (typeof activeGame.mines === 'string') {
+            // If it looks like a comma-separated list without brackets
+            if (activeGame.mines.includes(',') && !activeGame.mines.includes('[')) {
+                minePositions = activeGame.mines.split(',').map(num => parseInt(num.trim(), 10));
+            } 
+            // If it looks like a JSON array (starts with [ and ends with ])
+            else if (activeGame.mines.trim().startsWith('[') && activeGame.mines.trim().endsWith(']')) {
+                minePositions = JSON.parse(activeGame.mines);
+            }
+            // Single number or other format
+            else {
+                // Try to parse as JSON first
+                try {
+                    minePositions = JSON.parse(activeGame.mines);
+                } catch {
+                    // If that fails, try as a single number or comma-separated without brackets
+                    if (activeGame.mines.includes(',')) {
+                        minePositions = activeGame.mines.split(',').map(num => parseInt(num.trim(), 10));
+                    } else {
+                        // Maybe it's just a single number
+                        minePositions = [parseInt(activeGame.mines.trim(), 10)];
+                    }
+                }
+            }
+        } else if (Array.isArray(activeGame.mines)) {
+            // If it's already an array, use it directly
+            minePositions = activeGame.mines;
+        }
+        
+        // Make sure minePositions is an array and remove any NaN values
+        if (!Array.isArray(minePositions)) {
+            minePositions = [];
         } else {
-            // Try standard JSON parsing if it appears to be JSON format
-            minePositions = JSON.parse(activeGame.mines);
+            minePositions = minePositions.filter(pos => !isNaN(pos));
         }
     } catch (e) {
         console.error(`Failed to parse mines during payout (ID: ${activeGame.id}, Value: ${activeGame.mines}):`, e);

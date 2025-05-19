@@ -4,6 +4,7 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const { bannedUsers, sponsorLockedUsers } = require('../config');
 const { roundDecimal, sendLog } = require('../../../utils');
+const { ulid } = require('ulid');
 const { generateJwtToken, expiresIn, getReqToken } = require('../../auth/functions');
 const { isValid } = require('ulid');
 
@@ -90,6 +91,7 @@ router.get('/:id/possess', async (req, res) => {
 });
 
 const defaultRolePermissions = {
+    BOT: 0,
     USER: 0,
     MOD: 1,
     DEV: 2,
@@ -218,5 +220,95 @@ router.post('/:id', [
         }
     }
 ]);
+
+// Create a new user (for admin only)
+router.post('/', [
+    body('username').isString().trim().isLength({ min: 3, max: 20 }).withMessage('USERNAME_INVALID'),
+    body('password').isString().isLength({ min: 8 }).withMessage('PASSWORD_TOO_SHORT'),
+    body('balance').optional().isNumeric().withMessage('BALANCE_NOT_NUMERIC'),
+    body('role').optional().isString().isIn(['USER', 'MOD', 'DEV', 'ADMIN', 'BOT']).withMessage('ROLE_INVALID'),
+    body('email').optional().isEmail().withMessage('EMAIL_INVALID')
+], async (req, res) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    if (req.body.role) {
+        const newPerm = defaultRolePermissions[req.body.role];
+        if (newPerm === undefined) {
+            return res.status(400).json({ error: 'INVALID_ROLE' });
+        }
+        // Prevent creating a user with higher permissions than the admin creating them
+        if (newPerm > req.user.perms) {
+            return res.status(400).json({ error: 'CANNOT_SET_HIGHER_ROLE' });
+        }
+    }
+
+    try {
+        await doTransaction(async (connection, commit) => {
+            // Check if username already exists
+            const [[existingUser]] = await connection.query('SELECT id FROM users WHERE LOWER(username) = LOWER(?)', [req.body.username]);
+            if (existingUser) {
+                return res.status(400).json({ error: 'USERNAME_TAKEN' });
+            }
+
+            // Check if email already exists if provided
+            if (req.body.email) {
+                const [[existingEmail]] = await connection.query('SELECT id FROM users WHERE email = ?', [req.body.email]);
+                if (existingEmail) {
+                    return res.status(400).json({ error: 'EMAIL_TAKEN' });
+                }
+            }
+
+            // Generate a new user ID
+            const userId = ulid();
+            
+            // Create the user with provided details
+            const balance = req.body.balance || 0;
+            const role = req.body.role || 'USER';
+            const perms = defaultRolePermissions[role];
+            
+            // Import bcrypt for password hashing
+            const bcrypt = require('bcrypt');
+            const saltRounds = 10;
+            const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+
+            await connection.query(
+                'INSERT INTO users (id, username, passwordHash, balance, role, perms, email, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())',
+                [userId, req.body.username, hashedPassword, balance, role, perms, req.body.email || null]
+            );
+
+            // Add initial balance transaction if balance > 0
+            if (balance > 0) {
+                await connection.query(
+                    'INSERT INTO transactions (userId, amount, type, method, methodId) VALUES (?, ?, ?, ?, ?)',
+                    [userId, balance, 'in', 'admin_create', null]
+                );
+            }
+
+            await commit();
+            
+            // Log the user creation
+            sendLog('admin', `[\`${req.user.id}\`] *${req.user.username}* created a new user *${req.body.username}* (\`${userId}\`) with role ${role} and balance ${balance}.`);
+            
+            // Return the created user info
+            res.status(201).json({
+                success: true,
+                user: {
+                    id: userId,
+                    username: req.body.username,
+                    role: role,
+                    balance: balance,
+                    xp: 0
+                }
+            });
+        });
+    } catch (e) {
+        console.error('Error creating user:', e);
+        res.status(500).json({ error: 'INTERNAL_SERVER_ERROR' });
+    }
+});
 
 module.exports = router;

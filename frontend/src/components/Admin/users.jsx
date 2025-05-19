@@ -5,6 +5,7 @@ import AdminMFA from "../MFA/adminmfa";
 import Avatar from "../Level/avatar";
 import {useSearchParams} from "@solidjs/router";
 import UserModal from "./usermodal";
+import NewUserModal from "./newusermodal";
 import Pagination from "../Pagination/pagination";
 import {addPage} from "../../util/pagination";
 
@@ -16,6 +17,7 @@ function AdminUsers(props) {
     const [isLoading, setIsLoading] = createSignal(true)
 
     const [username, setUsername] = createSignal('')
+    const [showNewUserModal, setShowNewUserModal] = createSignal(false)
 
     const [params, setParams] = useSearchParams()
     const [users, setUsers] = createSignal([], { equals: false })
@@ -73,11 +75,27 @@ function AdminUsers(props) {
         setParams({id: null})
         mutateUser(null)
     }
+    
+    function handleNewUserSuccess(newUser) {
+        // Add the new user to the current page if it's the first page
+        if (page() === 1 && users()[1]) {
+            const updatedUsers = {...users()};
+            updatedUsers[1] = [newUser, ...updatedUsers[1]].slice(0, 10);
+            setUsers(updatedUsers);
+        } else {
+            // Otherwise just refresh the data
+            refetchUsers();
+        }
+    }
 
     return (
         <>
             {params.id && (
                 <UserModal user={user()} loading={user.loading} close={closeUserModal}/>
+            )}
+            
+            {showNewUserModal() && (
+                <NewUserModal close={() => setShowNewUserModal(false)} onSuccess={handleNewUserSuccess}/>
             )}
 
             {usersResource()?.mfa && (
@@ -89,6 +107,12 @@ function AdminUsers(props) {
 
             <div className='content'>
                 <div class='users-wrapper'>
+                    <div className='table-actions'>
+                        <button className='add-user-btn' onClick={() => setShowNewUserModal(true)}>
+                            <img src='/assets/icons/user-plus.svg' alt='Add User' />
+                            Add User
+                        </button>
+                    </div>
                     <div className='table-header'>
                         <div className='table-column'>
                             <p>USERNAME</p>
@@ -299,6 +323,41 @@ function AdminUsers(props) {
               
               .users-wrapper {
                 width: 100%;
+              }
+              
+              .table-actions {
+                display: flex;
+                justify-content: flex-end;
+                margin-bottom: 15px;
+              }
+              
+              .add-user-btn {
+                background: #59E878;
+                box-shadow: 0px 1px 0px 0px #339548, 0px -1px 0px 0px #88FFA2;
+                color: white;
+                border: none;
+                outline: none;
+                border-radius: 5px;
+                height: 40px;
+                padding: 0 15px;
+                font-family: Geogrotesque Wide, sans-serif;
+                font-weight: 700;
+                font-size: 14px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.2s ease;
+              }
+              
+              .add-user-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0px 3px 0px 0px #339548, 0px -1px 0px 0px #88FFA2;
+              }
+              
+              .add-user-btn img {
+                width: 16px;
+                height: 16px;
               }
               
               .truncated-id {

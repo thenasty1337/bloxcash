@@ -115,11 +115,20 @@ function App() {
       console.log(`💰 Legacy balance event: ${type} ${amount}`);
       
       if(type === 'add') {
-        setBalance(prev => Number(prev) + Number(amount));
+        console.log('Adding ' + amount + ' to balance');
+        const currentBalance = user().balance;
+        console.log('Balance before add: ' + currentBalance);
+        const newBalance = Number(currentBalance) + Number(amount);
+        console.log('Will add: ' + Number(currentBalance) + ' + ' + Number(amount) + ' = ' + newBalance);
+        // Direct value update instead of callback
+        setBalance(newBalance);
+        // Note: user().balance won't reflect the change immediately, it will be updated in the next render
       } else if (type === 'set') {
         setBalance(Number(amount));
       } else if (type === 'subtract') {
-        setBalance(prev => Math.max(0, Number(prev) - Number(amount)));
+        const currentBalance = user().balance;
+        const newBalance = Math.max(0, Number(currentBalance) - Number(amount));
+        setBalance(newBalance);
       }
 
       // Only show notifications for add/subtract, not for set operations

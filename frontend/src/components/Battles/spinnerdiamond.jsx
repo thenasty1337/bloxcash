@@ -79,7 +79,6 @@ function SpinnerDiamond(props) {
           height: 100%;
           opacity: 0.15;
           border-radius: 10px;
-          background-image: url("/assets/icons/battlestripes.png");
         }
 
         .green {

@@ -247,7 +247,7 @@ function BattleSpinner(props) {
           height: 100%;
           opacity: 0.15;
           border-radius: 10px;
-          background-image: url("/assets/icons/battlestripes.png");
+   
         }
 
         .spinner.green {
@@ -407,7 +407,6 @@ function BattleSpinner(props) {
         .spinner-column:before {
           width: 100%;
           height: 100%;
-          background-image: url("/assets/icons/battlestripes.png");
           position: absolute;
           z-index: -1;
           content: '';

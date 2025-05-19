@@ -101,7 +101,7 @@ function BattlePreview(props) {
 
           <div class='cases'>
             <For each={props?.battle?.rounds}>{(c, index) => (
-              <img src={`${import.meta.env.VITE_SERVER_URL}${getCase(c?.caseId)?.img}`} height='80'
+              <img src={getCase(c?.caseId)?.img} height='80'
                    alt=''/>
             )}</For>
           </div>

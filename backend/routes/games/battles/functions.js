@@ -359,11 +359,46 @@ async function startBattle(battle, players) {
                         fairRollsIds.push(result.insertId);
                     }
                 
-                    const caseOpeningsData = rounds.map(r => r.items.map((e, i) => [e.userId, revIds[r.caseId], fairRollsIds.shift(), e.itemId])).flat();
+                    // We need to get case information for the cost and winnings fields
+                    // First, we'll query the database to get the case prices
+                    const [casePrices] = await connection.query(`
+                        SELECT caseVersions.id AS versionId, caseVersions.price 
+                        FROM caseVersions 
+                        WHERE caseVersions.id IN (?)
+                    `, [Object.values(revIds)]);
+                    
+                    // Then, we'll query to get item prices
+                    const [itemPrices] = await connection.query(`
+                        SELECT id, price 
+                        FROM caseItems 
+                        WHERE id IN (?)
+                    `, [rounds.map(r => r.items.map(e => e.itemId)).flat()]);
+                    
+                    // Create maps for quick lookups
+                    const caseVersionPriceMap = {};
+                    casePrices.forEach(c => {
+                        caseVersionPriceMap[c.versionId] = c.price;
+                    });
+                    
+                    const itemPriceMap = {};
+                    itemPrices.forEach(i => {
+                        itemPriceMap[i.id] = i.price;
+                    });
+                    
+                    // Now prepare the data for insertion
+                    const caseOpeningsData = rounds.map(r => {
+                        const caseVersionId = revIds[r.caseId];
+                        const caseCost = caseVersionPriceMap[caseVersionId] || 0;
+                        
+                        return r.items.map((e, i) => {
+                            const itemPrice = itemPriceMap[e.itemId] || 0;
+                            return [e.userId, caseVersionId, fairRollsIds.shift(), e.itemId, caseCost, itemPrice];
+                        });
+                    }).flat();
                     const caseOpeningsIds = [];
                 
                     for (const row of caseOpeningsData) {
-                        const [result] = await connection.query(`INSERT INTO caseOpenings (userId, caseVersionId, rollId, caseItemId) VALUES (?)`, [row]);
+                        const [result] = await connection.query(`INSERT INTO caseOpenings (userId, caseVersionId, rollId, caseItemId, cost, winnings) VALUES (?)`, [row]);
                         caseOpeningsIds.push(result.insertId);
                     }
 
