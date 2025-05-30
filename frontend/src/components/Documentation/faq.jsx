@@ -1,386 +1,832 @@
 function FAQ(props) {
 
     function toggleDropdown(e) {
-        e.target.parentElement.classList.toggle('active')
+        e.target.closest('.dropdown-wrapper').classList.toggle('active')
+    }
+
+    function handleCategoryFilter(e, category) {
+        // Remove active class from all category tags
+        document.querySelectorAll('.category-tag').forEach(tag => {
+            tag.classList.remove('active')
+        })
+        
+        // Add active class to clicked tag
+        e.target.classList.add('active')
+        
+        // Get all FAQ items
+        const faqItems = document.querySelectorAll('.dropdown-wrapper')
+        
+        // Show/hide items based on category
+        faqItems.forEach(item => {
+            const itemCategory = item.getAttribute('data-category')
+            if (category === 'all' || itemCategory === category) {
+                item.style.display = 'block'
+            } else {
+                item.style.display = 'none'
+            }
+        })
+    }
+
+    function handleSearch(e) {
+        const searchTerm = e.target.value.toLowerCase()
+        const faqItems = document.querySelectorAll('.dropdown-wrapper')
+        
+        faqItems.forEach(item => {
+            const questionText = item.querySelector('.question-text h3').textContent.toLowerCase()
+            const descriptionText = item.querySelector('.question-text p').textContent.toLowerCase()
+            const contentText = item.querySelector('.dropdown-content').textContent.toLowerCase()
+            
+            const matchesSearch = questionText.includes(searchTerm) || 
+                                descriptionText.includes(searchTerm) || 
+                                contentText.includes(searchTerm)
+            
+            if (matchesSearch || searchTerm === '') {
+                item.style.display = 'block'
+            } else {
+                item.style.display = 'none'
+            }
+        })
+        
+        // If search is active, reset category filter to show all matching results
+        if (searchTerm !== '') {
+            document.querySelectorAll('.category-tag').forEach(tag => {
+                tag.classList.remove('active')
+            })
+            document.querySelector('.category-tag[data-category="all"]').classList.add('active')
+        }
     }
 
     return (
         <>
-            <div class='tos-container'>
-                <div class='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        Is there a reason why you need my Roblox credentials / Roblosecurity?
+            <div className='faq-container'>
+                <div className='header-section'>
+                    <h1 className='main-title'>Frequently Asked Questions</h1>
+                    <p className='subtitle'>
+                        Find answers to common questions about BloxClash. If you can't find what you're 
+                        looking for, don't hesitate to contact our support team.
+                    </p>
+                </div>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
+                <div className='search-section'>
+                    <div className='search-box'>
+                        <svg className='search-icon' xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/>
+                            <path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2"/>
                         </svg>
-                    </button>
-
-                    <div class='dropdown'>
-                        <p>
-                            We use your roblox authentication in order to automate our Peer-to-Peer (P2P) system for
-                            Roblox deposits & withdraws. We never hold your Robux when you initate a deposit listing,
-                            instead we store it in our queue system until a withdrawer initates the process. Automating
-                            the P2P process makes it safer for both users and a more convenient experience. As a
-                            reminder, we do not have access to your credentials.
-                        </p>
+                        <input 
+                            type="text" 
+                            placeholder="Search FAQ..." 
+                            className='search-input'
+                            onChange={handleSearch}
+                        />
                     </div>
                 </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        How do I deposit my Robux to play on the site?
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
-
-                    <div className='dropdown'>
-                        <p>
-                            You can create a Robux or Limited item deposit listing by clicking the Deposit tab, at the
-                            top of the screen. Select the deposit method you'd like to use and then enter in the
-                            required information into the boxes shown.
-                        </p>
+                <div className='categories-section'>
+                    <h2 className='categories-title'>Popular Topics</h2>
+                    <div className='category-tags'>
+                        <span 
+                            className='category-tag active' 
+                            data-category="all"
+                            onClick={(e) => handleCategoryFilter(e, 'all')}
+                        >
+                            All
+                        </span>
+                        <span 
+                            className='category-tag'
+                            data-category="account"
+                            onClick={(e) => handleCategoryFilter(e, 'account')}
+                        >
+                            Account
+                        </span>
+                        <span 
+                            className='category-tag'
+                            data-category="deposits"
+                            onClick={(e) => handleCategoryFilter(e, 'deposits')}
+                        >
+                            Deposits
+                        </span>
+                        <span 
+                            className='category-tag'
+                            data-category="withdrawals"
+                            onClick={(e) => handleCategoryFilter(e, 'withdrawals')}
+                        >
+                            Withdrawals
+                        </span>
+                        <span 
+                            className='category-tag'
+                            data-category="gaming"
+                            onClick={(e) => handleCategoryFilter(e, 'gaming')}
+                        >
+                            Gaming
+                        </span>
+                        <span 
+                            className='category-tag'
+                            data-category="security"
+                            onClick={(e) => handleCategoryFilter(e, 'security')}
+                        >
+                            Security
+                        </span>
+                        <span 
+                            className='category-tag'
+                            data-category="support"
+                            onClick={(e) => handleCategoryFilter(e, 'support')}
+                        >
+                            Support
+                        </span>
                     </div>
                 </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        Why have I been restricted from tipping users and raining Robux?
+                <div className='faq-sections'>
+                    <div className='dropdown-wrapper' data-category="account">
+                        <button className='faq-button' onClick={toggleDropdown}>
+                            <div className='question-content'>
+                                <span className='question-icon'>👤</span>
+                                <div className='question-text'>
+                                    <h3>How do I create an account on BloxClash?</h3>
+                                    <p>Learn about our simple registration process</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
-
-                    <div className='dropdown'>
-                        <p>
-                            BloxClash uses a system to ensure users are not exploiting the site's balance system in any
-                            way.This could be by mass- joining the site rains that we provide on multiple accounts, or
-                            stealing user's accounts to tip the balance to your own. Ultimately, we have the final
-                            decision when it comes to restricting you from creating & joining rains as well as receiving
-                            & sending tips.
-                        </p>
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <p>
+                                    Creating an account on BloxClash is quick and easy! Simply click the "Sign Up" button 
+                                    and choose from our supported authentication methods including Google, Discord, or email 
+                                    registration. You can also use our OAuth integration for seamless account creation. 
+                                    Once registered, you'll need to verify your email address to start playing.
+                                </p>
+                                <div className='helpful-info'>
+                                    <strong>Note:</strong> Make sure to use a valid email address as you'll need it for 
+                                    account verification and important notifications.
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        Do I make any money when my affiliate wagers?
+                    <div className='dropdown-wrapper' data-category="deposits">
+                        <button className='faq-button' onClick={toggleDropdown}>
+                            <div className='question-content'>
+                                <span className='question-icon'>💰</span>
+                                <div className='question-text'>
+                                    <h3>How do I deposit funds to play on the site?</h3>
+                                    <p>Learn about our supported deposit methods</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
-
-                    <div className='dropdown'>
-                        <p>
-                            BloxClash offers a 0.5% incentive to affiliate code holders. You may also receive additional
-                            perks & incentives if you have a large number of users under your affiliate code.
-                        </p>
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <p>
+                                    BloxClash supports multiple deposit methods for your convenience:
+                                </p>
+                                <ul className='info-list'>
+                                    <li><strong>Cryptocurrency:</strong> Bitcoin, Ethereum, Litecoin, and other popular coins</li>
+                                    <li><strong>Credit/Debit Cards:</strong> Visa, Mastercard (processed securely)</li>
+                                    <li><strong>Digital Wallets:</strong> PayPal, Skrill, and other e-wallets</li>
+                                    <li><strong>Bank Transfer:</strong> Direct bank transfers for larger amounts</li>
+                                </ul>
+                                <p>
+                                    To make a deposit, click the "Deposit" button, select your preferred method, 
+                                    and follow the instructions. Most deposits are processed instantly.
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        How do you become a partnered creator?
+                    <div className='dropdown-wrapper' data-category="withdrawals">
+                        <button className='faq-button' onClick={toggleDropdown}>
+                            <div className='question-content'>
+                                <span className='question-icon'>🏦</span>
+                                <div className='question-text'>
+                                    <h3>How long do withdrawals take to process?</h3>
+                                    <p>Information about withdrawal processing times</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
-
-                    <div className='dropdown'>
-                        <p>
-                            We have a partnership channel in our discord that explains how to become partnered and what
-                            we look for in creators. You may also email marketing@bloxclash.com with your channel link &
-                            information and we will review your request.
-                        </p>
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <p>Withdrawal processing times vary by method:</p>
+                                <ul className='info-list'>
+                                    <li><strong>Cryptocurrency:</strong> 15-30 minutes (after blockchain confirmation)</li>
+                                    <li><strong>E-wallets:</strong> 1-24 hours</li>
+                                    <li><strong>Bank Transfer:</strong> 1-5 business days</li>
+                                    <li><strong>Credit/Debit Cards:</strong> 3-7 business days</li>
+                                </ul>
+                                <p>
+                                    Verified accounts with completed KYC enjoy faster processing times. All withdrawals 
+                                    are manually reviewed for security purposes, which may add additional time during peak periods.
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        How can I tip users on the site?
+                    <div className='dropdown-wrapper' data-category="gaming">
+                        <button className='faq-button' onClick={toggleDropdown}>
+                            <div className='question-content'>
+                                <span className='question-icon'>🎯</span>
+                                <div className='question-text'>
+                                    <h3>Are the games fair and transparent?</h3>
+                                    <p>Learn about our provably fair gaming system</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
-
-                    <div className='dropdown'>
-                        <p>
-                            You can click a user's profile in the chat by pressing on their profile image and then
-                            clicking the Tip button. This will bring up a pop-up that will allow you to enter in your
-                            desired tip amount. Otherwise, you can tip users by typing in the chat.
-                        </p>
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <p>
+                                    Absolutely! BloxClash uses a state-of-the-art provably fair system to ensure 
+                                    all game outcomes are completely transparent and cannot be manipulated by us or anyone else.
+                                </p>
+                                <ul className='info-list'>
+                                    <li>Every game result can be independently verified</li>
+                                    <li>Cryptographic algorithms ensure true randomness</li>
+                                    <li>You can verify any game result using our verification tools</li>
+                                    <li>Seeds are generated using secure, transparent methods</li>
+                                </ul>
+                                <p>
+                                    You can access our Provably Fair documentation at any time to verify game results 
+                                    or learn more about how our system works.
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        How do I start a rain on the site?
+                    <div className='dropdown-wrapper' data-category="account">
+                        <button className='faq-button' onClick={toggleDropdown}>
+                            <div className='question-content'>
+                                <span className='question-icon'>🔒</span>
+                                <div className='question-text'>
+                                    <h3>How do I enable two-factor authentication (2FA)?</h3>
+                                    <p>Secure your account with additional protection</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
-
-                    <div className='dropdown'>
-                        <p>
-                            You can create a rain for other site users to join by using the command "/rain (amount)",
-                            without the quotations. This will deduct from your balance so make sure to not input the
-                            incorrect amount!
-                        </p>
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <p>
+                                    To enable 2FA and secure your account:
+                                </p>
+                                <ol className='info-list'>
+                                    <li>Go to your Account Settings</li>
+                                    <li>Click on "Security Settings"</li>
+                                    <li>Select "Enable Two-Factor Authentication"</li>
+                                    <li>Download an authenticator app (Google Authenticator, Authy, etc.)</li>
+                                    <li>Scan the QR code with your authenticator app</li>
+                                    <li>Enter the 6-digit code to confirm setup</li>
+                                </ol>
+                                <div className='helpful-info'>
+                                    <strong>Important:</strong> Save your backup codes in a secure location. 
+                                    You'll need them if you lose access to your authenticator app.
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        I have an issue with the site and I cannot find where to contact support at.
+                    <div className='dropdown-wrapper' data-category="gaming">
+                        <button className='faq-button' onClick={toggleDropdown}>
+                            <div className='question-content'>
+                                <span className='question-icon'>🎁</span>
+                                <div className='question-text'>
+                                    <h3>How can I tip other users or participate in rain events?</h3>
+                                    <p>Learn about our community features</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
-
-                    <div className='dropdown'>
-                        <p>
-                            You can email us directly at support@bloxclash.com or you can alternatively join our discord
-                            server with the vanity URL being discord.gg/bloxclash.
-                        </p>
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <p>BloxClash has several ways to share your winnings with the community:</p>
+                                <ul className='info-list'>
+                                    <li><strong>Tipping:</strong> Click on a user's profile in chat and select "Tip" to send them funds</li>
+                                    <li><strong>Rain Events:</strong> Use the command "/rain [amount]" in chat to create a rain for others to join</li>
+                                    <li><strong>Chat Commands:</strong> Type "/tip [username] [amount]" to tip users directly</li>
+                                </ul>
+                                <p>
+                                    Please note that tipping and rain participation may be restricted for new accounts 
+                                    or accounts that haven't completed verification to prevent abuse.
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        Do you rig the games provided on the site?
+                    <div className='dropdown-wrapper' data-category="account">
+                        <button className='faq-button' onClick={toggleDropdown}>
+                            <div className='question-content'>
+                                <span className='question-icon'>🏆</span>
+                                <div className='question-text'>
+                                    <h3>How does the affiliate program work?</h3>
+                                    <p>Earn rewards by referring friends</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
-
-                    <div className='dropdown'>
-                        <p>
-                            BloxClash has a state-of-the-art provably fair system to ensure all wagers that any users
-                            place are fair and free from third-party manipulation. You can verify this by clicking the
-                            Provably fair button at the top right of the site, or at the bottom of the site.
-                        </p>
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <p>
+                                    Our affiliate program offers generous rewards for bringing new users to BloxClash:
+                                </p>
+                                <ul className='info-list'>
+                                    <li><strong>Commission Rate:</strong> Earn 0.5% of your referrals' wagering volume</li>
+                                    <li><strong>Instant Payouts:</strong> Commissions are credited to your account immediately</li>
+                                    <li><strong>No Limits:</strong> Refer as many users as you want</li>
+                                    <li><strong>Bonus Tiers:</strong> High-volume affiliates receive additional perks and bonuses</li>
+                                </ul>
+                                <p>
+                                    To get started, visit your profile settings and generate your unique affiliate code. 
+                                    Share it with friends and start earning today!
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        I've opened a case and I did not receive the limited.
+                    <div className='dropdown-wrapper' data-category="gaming">
+                        <button className='faq-button' onClick={toggleDropdown}>
+                            <div className='question-content'>
+                                <span className='question-icon'>🌐</span>
+                                <div className='question-text'>
+                                    <h3>What happens if I disconnect during a game?</h3>
+                                    <p>Information about connection issues and game outcomes</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
-
-                    <div className='dropdown'>
-                        <p>
-                            BloxClash.com uses a balance system to facilitate users withdrawals & deposits instead of an
-                            on-site inventory. This is used to mitigate Roblox terminations which allows us to reward
-                            our players with more incentives.
-                        </p>
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <p>
+                                    Don't worry! Your game outcomes are determined the moment you place your bet using 
+                                    our provably fair system, so disconnections won't affect your results:
+                                </p>
+                                <ul className='info-list'>
+                                    <li><strong>Instant Games:</strong> Results are determined immediately when you bet</li>
+                                    <li><strong>Crash:</strong> We recommend stable internet; auto-cashout features can help</li>
+                                    <li><strong>Live Games:</strong> Your position is maintained during temporary disconnections</li>
+                                    <li><strong>History Check:</strong> All results are available in your game history</li>
+                                </ul>
+                                <p>
+                                    If you experience frequent disconnections, check your internet connection and consider 
+                                    using auto-bet features for consistent gameplay.
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        I deposited and I still haven't recieved my balance.
+                    <div className='dropdown-wrapper' data-category="deposits">
+                        <button className='faq-button' onClick={toggleDropdown}>
+                            <div className='question-content'>
+                                <span className='question-icon'>⏰</span>
+                                <div className='question-text'>
+                                    <h3>My deposit hasn't arrived yet. What should I do?</h3>
+                                    <p>Troubleshooting delayed deposits</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
-
-                    <div className='dropdown'>
-                        <p>
-                            Our Robux & Limited deposit system is Peer-to-Peer (P2P), which means a user must withdraw
-                            in order to facilitate your deposit. In this instance, you must be patient. In the
-                            circumstance where you haven't received your deposit but your Robux was taken from your
-                            account, please contact support.
-                        </p>
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <p>If your deposit is delayed, here's what to check:</p>
+                                <ul className='info-list'>
+                                    <li><strong>Cryptocurrency:</strong> Check blockchain confirmations (usually 1-3 required)</li>
+                                    <li><strong>Bank Transfer:</strong> Processing can take 1-5 business days</li>
+                                    <li><strong>Card Payments:</strong> May require additional verification</li>
+                                    <li><strong>Payment Processor:</strong> Third-party delays can occur</li>
+                                </ul>
+                                <p>
+                                    If your deposit is significantly delayed or if funds were deducted but not credited, 
+                                    please contact our support team immediately with your transaction details and receipt.
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        I deposited via cryptocurrency and I haven't received my balance.
+                    <div className='dropdown-wrapper' data-category="security">
+                        <button className='faq-button' onClick={toggleDropdown}>
+                            <div className='question-content'>
+                                <span className='question-icon'>🛡️</span>
+                                <div className='question-text'>
+                                    <h3>I found a security vulnerability. How do I report it?</h3>
+                                    <p>Responsible disclosure and bug bounty information</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
-
-                    <div className='dropdown'>
-                        <p>
-                            We use CoinPayments to process our cryptocurrency deposits which requires multiple
-                            blockchain confirmations before we're able to credit your balance. You can check your
-                            transaction ID provided by the exchange platform you used to view the amount of
-                            confirmations.
-                        </p>
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <p>
+                                    We take security seriously and appreciate responsible disclosure. If you've found a vulnerability:
+                                </p>
+                                <ol className='info-list'>
+                                    <li>Email our security team at security@bloxclash.com immediately</li>
+                                    <li>Include detailed information about the vulnerability</li>
+                                    <li>Do not publicly disclose the issue until we've addressed it</li>
+                                    <li>Allow us reasonable time to investigate and fix the issue</li>
+                                </ol>
+                                <div className='helpful-info'>
+                                    <strong>Bug Bounty:</strong> We offer rewards for valid security reports, 
+                                    ranging from platform credits to cash bounties depending on severity.
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        I disconnected mid-round while playing.
+                    <div className='dropdown-wrapper' data-category="support">
+                        <button className='faq-button' onClick={toggleDropdown}>
+                            <div className='question-content'>
+                                <span className='question-icon'>💬</span>
+                                <div className='question-text'>
+                                    <h3>How can I contact customer support?</h3>
+                                    <p>Get help when you need it most</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
-
-                    <div className='dropdown'>
-                        <p>
-                            For specific games, latency is not a factor of the outcome of the game. We highly suggest
-                            you do not play the Crash game mode if you experience a laggy internet connection. On any
-                            other game mode, our provably fair system determines the outcome as soon as you place the
-                            wager. Therefore, you can check your History tab in the Profile section to see the result.
-                        </p>
-                    </div>
-                </div>
-
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        I've found an on-site vulnerability.
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
-
-                    <div className='dropdown'>
-                        <p>
-                            Create a ticket within our discord or contact a member of our administration team
-                            immediately. We will reward free on-site balance to those who report vulnerabilities.
-                        </p>
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <p>We offer multiple ways to get support when you need help:</p>
+                                <ul className='info-list'>
+                                    <li><strong>Live Chat:</strong> Available 24/7 on our website for immediate assistance</li>
+                                    <li><strong>Email:</strong> support@bloxclash.com for detailed inquiries</li>
+                                    <li><strong>Discord:</strong> Join our community at discord.gg/bloxclash</li>
+                                    <li><strong>Help Center:</strong> Browse our comprehensive knowledge base</li>
+                                </ul>
+                                <p>
+                                    For faster resolution, please include relevant details like your username, 
+                                    transaction IDs, and screenshots when contacting support.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <style jsx>{`
-              .tos-container {
+              .faq-container {
                 width: 100%;
-                max-width: 1175px;
+                max-width: 1200px;
                 height: fit-content;
-
                 box-sizing: border-box;
-                padding: 30px 0;
+                padding: 40px 20px;
                 margin: 0 auto;
-
                 color: #ADA3EF;
                 font-family: "Geogrotesque Wide", sans-serif;
-                font-size: 13px;
+                font-size: 14px;
                 font-weight: 400;
-
-                display: flex;
-                flex-direction: column;
-                gap: 15px;
-
+                line-height: 1.6;
               }
 
-              button {
-                width: 100%;
-                max-width: 525px;
-                height: 40px;
+              .header-section {
+                text-align: center;
+                margin-bottom: 40px;
+              }
 
-                border: unset;
-                outline: unset;
-                cursor: pointer;
-
-                color: #ADA3EF;
-                font-family: Geogrotesque Wide, sans-serif;
-                font-size: 12px;
+              .main-title {
+                color: #FFF;
+                font-family: "Geogrotesque Wide", sans-serif;
+                font-size: 32px;
                 font-weight: 700;
-                text-align: left;
+                margin: 0 0 15px 0;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+              }
 
-                padding: 0 15px;
+              .subtitle {
+                color: #ADA3EF;
+                font-size: 16px;
+                font-weight: 400;
+                max-width: 600px;
+                margin: 0 auto;
+                opacity: 0.9;
+              }
 
-                border-radius: 2px;
-                background: rgba(90, 84, 153, 0.35);
+              .search-section {
+                margin-bottom: 40px;
+                display: flex;
+                justify-content: center;
+              }
 
+              .search-box {
+                position: relative;
+                max-width: 500px;
+                width: 100%;
+              }
+
+              .search-icon {
+                position: absolute;
+                left: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #ADA3EF;
+                opacity: 0.6;
+              }
+
+              .search-input {
+                width: 100%;
+                padding: 15px 15px 15px 50px;
+                background: rgba(42, 37, 88, 0.2);
+                border: 1px solid rgba(42, 37, 88, 0.5);
+                border-radius: 12px;
+                color: #FFF;
+                font-family: inherit;
+                font-size: 14px;
+                outline: none;
+                transition: all 0.3s ease;
+              }
+
+              .search-input:focus {
+                border-color: #6366f1;
+                background: rgba(42, 37, 88, 0.3);
+              }
+
+              .search-input::placeholder {
+                color: #ADA3EF;
+                opacity: 0.6;
+              }
+
+              .categories-section {
+                margin-bottom: 40px;
+                text-align: center;
+              }
+
+              .categories-title {
+                color: #FFF;
+                font-size: 20px;
+                font-weight: 700;
+                margin: 0 0 20px 0;
+              }
+
+              .category-tags {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                flex-wrap: wrap;
+              }
+
+              .category-tag {
+                padding: 8px 16px;
+                background: rgba(42, 37, 88, 0.3);
+                border: 1px solid rgba(42, 37, 88, 0.5);
+                border-radius: 20px;
+                color: #ADA3EF;
+                font-size: 13px;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                user-select: none;
+              }
+
+              .category-tag:hover,
+              .category-tag.active {
+                background: linear-gradient(135deg, #6366f1, #8b5cf6);
+                border-color: #6366f1;
+                color: #FFF;
+              }
+
+              .faq-sections {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+              }
+
+              .dropdown-wrapper {
+                background: rgba(42, 37, 88, 0.1);
+                border: 1px solid rgba(70, 65, 120, 0.6);
+                border-radius: 12px;
+                overflow: hidden;
+                transition: all 0.3s ease;
+              }
+
+              .dropdown-wrapper:hover {
+                background: rgba(42, 37, 88, 0.15);
+                border-color: rgba(70, 65, 120, 0.8);
+              }
+
+              .dropdown-wrapper.active {
+                background: rgba(42, 37, 88, 0.2);
+                border-color: #6366f1;
+              }
+
+              .faq-button {
+                width: 100%;
+                padding: 20px 25px;
+                background: transparent;
+                border: none;
+                cursor: pointer;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                
-                border: 1px solid transparent;
-                transition: all .3s;
+                color: inherit;
+                font-family: inherit;
+                transition: all 0.3s ease;
               }
-              
-              .active button {
-                border-radius: 2px;
-                border: 1px solid #5A5499;
-                background: rgba(90, 84, 153, 0.05);
+
+              .faq-button:hover {
+                background: rgba(99, 102, 241, 0.05);
               }
-              
-              .active button svg {
-                rotate: 180deg;
+
+              .question-content {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                text-align: left;
+              }
+
+              .question-icon {
+                font-size: 24px;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #6366f1, #8b5cf6);
+                border-radius: 8px;
+                flex-shrink: 0;
+              }
+
+              .question-text h3 {
+                color: #FFF;
+                font-size: 16px;
+                font-weight: 600;
+                margin: 0 0 5px 0;
+              }
+
+              .question-text p {
+                color: #ADA3EF;
+                font-size: 13px;
+                margin: 0;
+                opacity: 0.8;
+              }
+
+              .chevron {
+                transition: transform 0.3s ease;
+                flex-shrink: 0;
+              }
+
+              .dropdown-wrapper.active .chevron {
+                transform: rotate(180deg);
               }
 
               .dropdown {
-                display: flex;
-                flex-direction: column;
-
                 max-height: 0;
                 overflow: hidden;
-
-                transition: max-height .3s;
+                transition: max-height 0.3s ease;
               }
 
-              .code {
-                width: 100%;
-                height: auto;
+              .dropdown-wrapper.active .dropdown {
+                max-height: 1000px;
+              }
 
-                background: #272549;
-                color: #47C754;
+              .dropdown-content {
+                padding: 0 25px 25px 25px;
+                border-top: 1px solid rgba(70, 65, 120, 0.4);
+              }
 
+              .dropdown-content p {
+                margin: 15px 0;
+                color: #C7C2F0;
+                line-height: 1.6;
+              }
+
+              .info-list {
+                margin: 15px 0;
+                padding-left: 0;
+                list-style: none;
+              }
+
+              .info-list li {
+                position: relative;
+                padding-left: 25px;
+                margin-bottom: 8px;
+                color: #C7C2F0;
+              }
+
+              .info-list li::before {
+                content: "•";
+                position: absolute;
+                left: 0;
+                color: #6366f1;
+                font-weight: bold;
+                font-size: 16px;
+              }
+
+              .info-list li strong {
+                color: #E8E5FF;
+                font-weight: 600;
+              }
+
+              .helpful-info {
+                background: rgba(99, 102, 241, 0.1);
+                border: 1px solid rgba(99, 102, 241, 0.3);
+                border-radius: 8px;
                 padding: 15px;
+                margin: 15px 0;
+                color: #E8E5FF;
+                font-size: 13px;
               }
 
-              pre {
-                margin: unset;
+              .helpful-info strong {
+                color: #FFF;
               }
 
-              p {
-                margin: revert;
+              @media (max-width: 768px) {
+                .faq-container {
+                  padding: 20px 15px;
+                }
+
+                .main-title {
+                  font-size: 24px;
+                }
+
+                .category-tags {
+                  gap: 8px;
+                }
+
+                .category-tag {
+                  padding: 6px 12px;
+                  font-size: 12px;
+                }
+
+                .faq-button {
+                  padding: 15px 20px;
+                }
+
+                .question-content {
+                  gap: 12px;
+                }
+
+                .question-icon {
+                  width: 35px;
+                  height: 35px;
+                  font-size: 20px;
+                }
+
+                .question-text h3 {
+                  font-size: 15px;
+                }
+
+                .question-text p {
+                  font-size: 12px;
+                }
+
+                .dropdown-content {
+                  padding: 0 20px 20px 20px;
+                }
               }
 
-              .active .dropdown {
-                max-height: 500px;
+              @media (max-width: 480px) {
+                .search-input {
+                  padding: 12px 12px 12px 45px;
+                  font-size: 13px;
+                }
+
+                .question-content {
+                  gap: 10px;
+                }
+
+                .question-icon {
+                  width: 30px;
+                  height: 30px;
+                  font-size: 18px;
+                }
+
+                .dropdown-content {
+                  padding: 0 15px 15px 15px;
+                }
               }
             `}</style>
         </>

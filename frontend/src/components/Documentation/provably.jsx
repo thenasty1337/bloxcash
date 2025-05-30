@@ -137,360 +137,795 @@ console.log(minePositions);`,
 function Provably(props) {
 
     function toggleDropdown(e) {
-        e.target.parentElement.classList.toggle('active')
+        e.target.closest('.dropdown-wrapper').classList.toggle('active')
     }
 
     return (
         <>
-            <div class='tos-container'>
-                <div class='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        Cases
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z" fill="#9489DB"/>
-                        </svg>
-                    </button>
-
-                    <div class='dropdown'>
-                        <p>Each opening is calculated by the following variables:</p>
-                        <ul>
-                            <li><strong>Server Seed</strong> - provided by us</li>
-                            <li><strong>Client Seed</strong> - provided by your browser and adjusted by you.</li>
-                            <li><strong>Nonce</strong> - A number that increases with each case you open.</li>
-                        </ul>
-                        <p>
-                            You will get an encrypted hash of the serverseed before you open a case. Since you get it in advance, the site cannot change it later. However it is encrypted, so you cannot calculate your own roll results in advance (only afterwards if you get the unhashed serverseed.).
-                            <br/><br/>
-                            To get the unhashed server seed, you’ll have to change your current one, that’ll reveal your previous server seed, and provide you with a new hashed one.
-                            <br/><br/>
-                            Your browser will generate a random clientseed. However, you could adjust this clientseed yourself and that won’t change the current server seed and nonce.
-                            <br/><br/>
-                            Each case item get’s an individual range of tickets according to their probability, the sum of all tickets it’s 100000. To pick a random item from the case, we generate a number between 1-100000 and then we find the item that’s on the range of the generated number.
-                        </p>
-                        <p><strong>Calculating Roll result</strong></p>
-                        <p>This is a code snippet that can be run in NodeJS, it takes a serverseed, clientseed and a nonce and it returns a result number. The item that has it’s range of tickets inside the drawn result, it’s the one that get’s drawn in the case opening.</p>
-
-                        <div class='code'>
-                            <pre>
-                                {PROVABLY_CODE.CASES}
-                            </pre>
+            <div className='provably-container'>
+                <div className='header-section'>
+                    <h1 className='main-title'>Provably Fair Gaming</h1>
+                    <p className='subtitle'>
+                        Transparency and fairness are at the core of BloxClash. Our provably fair system 
+                        ensures that every game outcome is verifiable and cannot be manipulated.
+                    </p>
+                    <div className='trust-indicators'>
+                        <div className='indicator'>
+                            <span className='indicator-icon'>🔒</span>
+                            <span>Cryptographically Secure</span>
+                        </div>
+                        <div className='indicator'>
+                            <span className='indicator-icon'>✓</span>
+                            <span>100% Verifiable</span>
+                        </div>
+                        <div className='indicator'>
+                            <span className='indicator-icon'>🎯</span>
+                            <span>Transparent Results</span>
                         </div>
                     </div>
                 </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        Case Battles
-
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
-
-                    <div className='dropdown'>
-                        <p>Each case opened is calculated by the following variables:</p>
-                        <ul>
-                            <li><strong>Server Seed</strong> - a randomly generated hash.</li>
-                            <li><strong>Client Seed</strong> - the ID of an EOS block we commit to before it’s mined.</li>
-                            <li><strong>Nonce</strong> - A number that increases with each case you open.</li>
-                        </ul>
-                        <p>
-                            At creation, a server seed it’s generated for each battle, and it’s SHA256 hash is shown. After all players have joined and before the openings start, we commit to a future EOS block, and we will use it’s ID as the client seed once mined.
-                            <br/><br/>
-                            After the round is over the unhashed server seed will be revealed so users can confirm it’s SHA256 matches with the one shown previously.<br/>
-                            This way, neither the players nor our system know what data will be used to generate the openings results until after all players have committed their bets.
-                            <br/><br/>
-                            Roll verification code is the same as individual case openings, but the nonce starts at 0 and increases by 1 on each opening.
-                        </p>
-
-                        <div className='code'>
-                            <pre>
-                                {PROVABLY_CODE.BATTLES}
-                            </pre>
-                        </div>
-                    </div>
+                <div className='intro-section'>
+                    <h2 className='intro-title'>How Provably Fair Works</h2>
+                    <p className='intro-text'>
+                        Our provably fair system uses cryptographic algorithms to ensure that game outcomes 
+                        are determined fairly and cannot be manipulated by either party. Each game uses a 
+                        combination of server seeds, client seeds, and nonces to generate results that can 
+                        be independently verified.
+                    </p>
                 </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        Roulette
+                <div className='games-section'>
+                    <h2 className='section-title'>Game Verification Methods</h2>
+                    
+                    <div className='dropdown-wrapper'>
+                        <button className='game-button' onClick={toggleDropdown}>
+                            <div className='button-content'>
+                                <span className='game-icon'>📦</span>
+                                <div className='button-text'>
+                                    <h3>Cases</h3>
+                                    <p>Verify case opening results</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <h4>Case Opening Verification</h4>
+                                <p>Each case opening is calculated using the following variables:</p>
+                                <div className='seed-grid'>
+                                    <div className='seed-item'>
+                                        <strong>Server Seed</strong>
+                                        <span>Provided by BloxClash</span>
+                                    </div>
+                                    <div className='seed-item'>
+                                        <strong>Client Seed</strong>
+                                        <span>Generated by your browser (customizable)</span>
+                                    </div>
+                                    <div className='seed-item'>
+                                        <strong>Nonce</strong>
+                                        <span>Increments with each case opened</span>
+                                    </div>
+                                </div>
+                                
+                                <div className='explanation'>
+                                    <p>
+                                        You receive an encrypted hash of the server seed before opening a case. This prevents 
+                                        us from changing the outcome after you've committed to opening the case. The unhashed 
+                                        server seed is revealed when you change your current seed.
+                                    </p>
+                                    <p>
+                                        Each case item receives a range of tickets based on its probability (total: 100,000 tickets). 
+                                        A random number between 1-100,000 determines which item is drawn.
+                                    </p>
+                                </div>
 
-                    <div className='dropdown'>
-                        <p>In Roulette, our system generates the result for each round by using the SHA-256 hash of 2 inputs:</p>
-                        <ul>
-                            <li><strong>Server Seed</strong> - a series of hashes generated from a genesis seed.</li>
-                            <li><strong>Client Seed</strong> - the hash of Bitcoin block 788,500.</li>
-                        </ul>
-                        <p>
-                            To calculate the <strong>Server Seed</strong>, we begin with a genesis seed and hash it using the SHA-256 algorithm. We then hash the resuling seed, and repeat this process to generate 10 million Server Seeds. The first Roulette game uses the 10 millionth Server Seed, and each following game uses the next seed down the list. For example, the second game uses the 9,999,999th seed, the third game uses the 9,999,998th seed and so forth.
-                            <br/><br/>
-
-                            We revealed the last server seed on the chain and the Bitcoin Block number for the client seed before it got mined.
-                            <br/><br/>
-
-                            <strong>10th millionth server seed:</strong><br/>
-                            acb0aa39d25f1a618ccf90cf695106c412759d07461a285dab94ac55c991aab4
-                            <br/><br/>
-
-                            <strong>Client seed: (Bitcoin Block 788,500 hash)</strong><br/>
-                            00000000000000000003e5a54c2898a18d262eb5860e696441f8a4ebbff03697
-                            <br/><br/>
-
-                            For more information, check our announcement on Twitter.
-                            Players can replicate any past roll by using the Node.js code below:
-                        </p>
-
-                        <div className='code'>
-                            <pre>
-                                {PROVABLY_CODE.ROULETTE}
-                            </pre>
+                                <div className='code-section'>
+                                    <h5>Verification Code (Node.js)</h5>
+                                    <div className='code-block'>
+                                        <pre><code>{PROVABLY_CODE.CASES}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        Crash
+                    <div className='dropdown-wrapper'>
+                        <button className='game-button' onClick={toggleDropdown}>
+                            <div className='button-content'>
+                                <span className='game-icon'>⚔️</span>
+                                <div className='button-text'>
+                                    <h3>Case Battles</h3>
+                                    <p>Verify battle round outcomes</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <h4>Case Battle Verification</h4>
+                                <p>Each case opened in battles is calculated using:</p>
+                                <div className='seed-grid'>
+                                    <div className='seed-item'>
+                                        <strong>Server Seed</strong>
+                                        <span>Randomly generated hash for each battle</span>
+                                    </div>
+                                    <div className='seed-item'>
+                                        <strong>Client Seed</strong>
+                                        <span>EOS blockchain transaction ID</span>
+                                    </div>
+                                    <div className='seed-item'>
+                                        <strong>Nonce</strong>
+                                        <span>Starts at 0, increments per opening</span>
+                                    </div>
+                                </div>
+                                
+                                <div className='explanation'>
+                                    <p>
+                                        At battle creation, a server seed is generated and its SHA256 hash is displayed. 
+                                        Before openings begin, we commit to a future EOS block whose ID becomes the client seed.
+                                    </p>
+                                    <p>
+                                        After the battle, the unhashed server seed is revealed for verification. This ensures 
+                                        neither players nor our system know the outcome data until all bets are committed.
+                                    </p>
+                                </div>
 
-                    <div className='dropdown'>
-                        <p>In Crash, our system generates the result for each round by using the SHA-256 hash of 2 inputs:</p>
-                        <ul>
-                            <li><strong>Server Seed</strong> - a series of hashes generated from a genesis seed.</li>
-                            <li><strong>Client Seed</strong> - the hash of Bitcoin block 788,500.</li>
-                        </ul>
-                        <p>
-                            To calculate the <strong>Server Seed</strong>, we begin with a genesis seed and hash it using the SHA-256 algorithm. We then hash the resuling seed, and repeat this process to generate 10 million Server Seeds. The first Crash game uses the 10 millionth Server Seed, and each following game uses the next seed down the list. For example, the second game uses the 9,999,999th seed, the third game uses the 9,999,998th seed and so forth.                            <br/><br/>
-
-                            We revealed the last server seed on the chain and the Bitcoin Block number for the client seed before it got mined.
-                            <br/><br/>
-
-                            <strong>10th millionth server seed:</strong><br/>
-                            acb0aa39d25f1a618ccf90cf695106c412759d07461a285dab94ac55c991aab4
-                            <br/><br/>
-
-                            <strong>Client seed: (Bitcoin Block 788,500 hash)</strong><br/>
-                            00000000000000000003e5a54c2898a18d262eb5860e696441f8a4ebbff03697
-                            <br/><br/>
-
-                            For more information, check our announcement on Twitter.
-                            Players can replicate any past roll by using the Node.js code below:
-                        </p>
-
-                        <div className='code'>
-                            <pre>
-                                {PROVABLY_CODE.CRASH}
-                            </pre>
+                                <div className='code-section'>
+                                    <h5>Verification Code (Node.js)</h5>
+                                    <div className='code-block'>
+                                        <pre><code>{PROVABLY_CODE.BATTLES}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        Jackpot
+                    <div className='dropdown-wrapper'>
+                        <button className='game-button' onClick={toggleDropdown}>
+                            <div className='button-content'>
+                                <span className='game-icon'>🎯</span>
+                                <div className='button-text'>
+                                    <h3>Roulette</h3>
+                                    <p>Verify roulette spin results</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <h4>Roulette Verification</h4>
+                                <p>Roulette results are generated using SHA-256 hash of:</p>
+                                <div className='seed-grid'>
+                                    <div className='seed-item'>
+                                        <strong>Server Seed</strong>
+                                        <span>Generated from a genesis seed chain</span>
+                                    </div>
+                                    <div className='seed-item'>
+                                        <strong>Client Seed</strong>
+                                        <span>Bitcoin block 788,500 hash</span>
+                                    </div>
+                                </div>
+                                
+                                <div className='explanation'>
+                                    <p>
+                                        Server seeds are generated by repeatedly hashing a genesis seed 10 million times. 
+                                        The first game uses the 10 millionth seed, with subsequent games using the next seed down.
+                                    </p>
+                                    <div className='seed-display'>
+                                        <p><strong>10th millionth server seed:</strong></p>
+                                        <code className='seed-hash'>acb0aa39d25f1a618ccf90cf695106c412759d07461a285dab94ac55c991aab4</code>
+                                        <p><strong>Client seed (Bitcoin Block 788,500):</strong></p>
+                                        <code className='seed-hash'>00000000000000000003e5a54c2898a18d262eb5860e696441f8a4ebbff03697</code>
+                                    </div>
+                                </div>
 
-                    <div className='dropdown'>
-                        <p>In Jackpot, our system generates the result for each round by using the SHA-256 hash of 2 inputs:</p>
-                        <ul>
-                            <li><strong>Server Seed</strong> - a randomly generated hash.</li>
-                            <li><strong>Client Seed</strong> - the ID of an EOS block we commit to before it’s mined.</li>
-                        </ul>
-                        <p>
-                            When a new jackpot round is created, we’ll make a random server seed and show it’s SHA256 hash. After all players have placed their bets, we’ll commit to a future block number on the EOS blockchain, once the block gets mined, we’ll use it’s ID as the Client seed.
-                            <br/><br/>
-
-                            After the round is over users the unhashed server seed will be revealed so users can confirm it’s SHA256 matches with the one shown previously.
-                            <br/>
-                            To determine the total number of tickets, multiply the total pot amount of the jackpot round times 100.
-                        </p>
-
-                        <div className='code'>
-                            <pre>
-                                {PROVABLY_CODE.JACKPOT}
-                            </pre>
+                                <div className='code-section'>
+                                    <h5>Verification Code (Node.js)</h5>
+                                    <div className='code-block'>
+                                        <pre><code>{PROVABLY_CODE.ROULETTE}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        Coinflip
+                    <div className='dropdown-wrapper'>
+                        <button className='game-button' onClick={toggleDropdown}>
+                            <div className='button-content'>
+                                <span className='game-icon'>📈</span>
+                                <div className='button-text'>
+                                    <h3>Crash</h3>
+                                    <p>Verify crash multiplier results</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <h4>Crash Verification</h4>
+                                <p>Crash multipliers are generated using the same system as Roulette:</p>
+                                <div className='seed-grid'>
+                                    <div className='seed-item'>
+                                        <strong>Server Seed</strong>
+                                        <span>Genesis seed chain (10 million hashes)</span>
+                                    </div>
+                                    <div className='seed-item'>
+                                        <strong>Client Seed</strong>
+                                        <span>Bitcoin block 788,500 hash</span>
+                                    </div>
+                                    <div className='seed-item'>
+                                        <strong>House Edge</strong>
+                                        <span>10% house edge applied</span>
+                                    </div>
+                                </div>
+                                
+                                <div className='explanation'>
+                                    <p>
+                                        The crash point calculation uses the same secure seed generation method as roulette, 
+                                        with a mathematical formula that incorporates a 10% house edge to determine the 
+                                        final multiplier for each round.
+                                    </p>
+                                </div>
 
-                    <div className='dropdown'>
-                        <p>In Coinflip, our system generates the result for each round by using the SHA-256 hash of 2 inputs:</p>
-                        <ul>
-                            <li><strong>Server Seed</strong> - a randomly generated hash.</li>
-                            <li><strong>Client Seed</strong> - the ID of an EOS block we commit to before it’s mined.</li>
-                        </ul>
-                        <p>
-                            When a new coinflip game is created, we’ll make a random server seed and show it’s SHA256 hash. After all players have placed their bets, we’ll commit to a future block number on the EOS blockchain, once the block gets mined, we’ll use it’s ID as the Client seed.
-                            <br/><br/>
-                            After the round is over users the unhashed server seed will be revealed so users can confirm it’s SHA256 matches with the one shown previously.
-                            <br/><br/>
-                            Players can replicate the winning side of a coinflip game by using the Node.js code below:
-                        </p>
-
-                        <div className='code'>
-                            <pre>
-                                {PROVABLY_CODE.COINFLIP}
-                            </pre>
+                                <div className='code-section'>
+                                    <h5>Verification Code (Node.js)</h5>
+                                    <div className='code-block'>
+                                        <pre><code>{PROVABLY_CODE.CRASH}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div className='dropdown-wrapper'>
-                    <button onClick={toggleDropdown}>
-                        Mines
+                    <div className='dropdown-wrapper'>
+                        <button className='game-button' onClick={toggleDropdown}>
+                            <div className='button-content'>
+                                <span className='game-icon'>💰</span>
+                                <div className='button-text'>
+                                    <h3>Jackpot</h3>
+                                    <p>Verify jackpot winner selection</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
 
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="5" viewBox="0 0 7 5" fill="none">
-                            <path
-                                d="M3.50001 1.12732e-05C3.62547 1.12623e-05 3.7509 0.0480295 3.84655 0.143865L6.8564 3.16113C7.04787 3.35307 7.04787 3.66426 6.8564 3.85612C6.66501 4.04797 6.5 4.00001 6.16316 4.00001L3.50001 4.00001L1 4.00001C0.5 4.00001 0.335042 4.04788 0.14367 3.85602C-0.0478893 3.66417 -0.0478893 3.35298 0.14367 3.16104L3.15347 0.143772C3.24916 0.0479206 3.3746 1.12842e-05 3.50001 1.12732e-05Z"
-                                fill="#9489DB"/>
-                        </svg>
-                    </button>
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <h4>Jackpot Winner Verification</h4>
+                                <p>Jackpot winners are determined using:</p>
+                                <div className='seed-grid'>
+                                    <div className='seed-item'>
+                                        <strong>Server Seed</strong>
+                                        <span>Randomly generated for each round</span>
+                                    </div>
+                                    <div className='seed-item'>
+                                        <strong>Client Seed</strong>
+                                        <span>EOS blockchain transaction ID</span>
+                                    </div>
+                                    <div className='seed-item'>
+                                        <strong>Total Tickets</strong>
+                                        <span>Pot amount × 100</span>
+                                    </div>
+                                </div>
+                                
+                                <div className='explanation'>
+                                    <p>
+                                        When a jackpot round starts, we generate a random server seed and display its SHA256 hash. 
+                                        After all bets are placed, we commit to a future EOS block for the client seed.
+                                    </p>
+                                    <p>
+                                        The total ticket count equals the pot amount multiplied by 100, and the winning ticket 
+                                        is determined by the cryptographic hash of the combined seeds.
+                                    </p>
+                                </div>
 
-                    <div className='dropdown'>
-                        <p>In Mines, our system generates a 32-byte hexadecimal hash based on your server seed, client seed and nonce. This hash is converted into 4-byte parts which are used to generate floats between 0 and 1. These floats are looped through and multiplied by the remaining possible outcomes.</p>
-                        <ul>
-                            <li><strong>Server Seed</strong> - a SHA-256 hash of 16 cryptographically secure random bytes. This seed can be cycled by the user at any time.</li>
-                            <li><strong>Client Seed</strong> - a seed that each user can customize at any time.</li>
-                            <li><strong>Nonce</strong> - the round number that increments with each bet</li>
-                        </ul>
-                        <p>
-                            For shuffling we use the Fisher–Yates shuffle algorithm to ensure there are no duplicate outcomes. In this case, it is utilised to ensure 2 mines don't occupy the same tile.
-                            <br/><br/>
-                            A hashed version of your current and next server seed is available at any time on the Mines page, and can be cycled at any time.
-                            You can only unhash a game's server seed when you cycle your seeds, and the game's used server seed is no longer in use.
-                        </p>
+                                <div className='code-section'>
+                                    <h5>Verification Code (Node.js)</h5>
+                                    <div className='code-block'>
+                                        <pre><code>{PROVABLY_CODE.JACKPOT}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                        <div className='code'>
-                            <pre>
-                                {PROVABLY_CODE.MINES}
-                            </pre>
+                    <div className='dropdown-wrapper'>
+                        <button className='game-button' onClick={toggleDropdown}>
+                            <div className='button-content'>
+                                <span className='game-icon'>🪙</span>
+                                <div className='button-text'>
+                                    <h3>Coinflip</h3>
+                                    <p>Verify coinflip game outcomes</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
+
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <h4>Coinflip Verification</h4>
+                                <p>Coinflip results use the same secure system:</p>
+                                <div className='seed-grid'>
+                                    <div className='seed-item'>
+                                        <strong>Server Seed</strong>
+                                        <span>Random hash for each game</span>
+                                    </div>
+                                    <div className='seed-item'>
+                                        <strong>Client Seed</strong>
+                                        <span>EOS blockchain transaction ID</span>
+                                    </div>
+                                    <div className='seed-item'>
+                                        <strong>Result</strong>
+                                        <span>Even = Ice, Odd = Fire</span>
+                                    </div>
+                                </div>
+                                
+                                <div className='explanation'>
+                                    <p>
+                                        Similar to other games, coinflip uses a random server seed (with SHA256 hash shown) 
+                                        and an EOS block ID as the client seed. The result is determined by checking if 
+                                        a specific character in the hash is even (Ice) or odd (Fire).
+                                    </p>
+                                </div>
+
+                                <div className='code-section'>
+                                    <h5>Verification Code (Node.js)</h5>
+                                    <div className='code-block'>
+                                        <pre><code>{PROVABLY_CODE.COINFLIP}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className='dropdown-wrapper'>
+                        <button className='game-button' onClick={toggleDropdown}>
+                            <div className='button-content'>
+                                <span className='game-icon'>💣</span>
+                                <div className='button-text'>
+                                    <h3>Mines</h3>
+                                    <p>Verify mine placement and results</p>
+                                </div>
+                            </div>
+                            <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                        </button>
+
+                        <div className='dropdown'>
+                            <div className='dropdown-content'>
+                                <h4>Mines Verification</h4>
+                                <p>Mine placement uses advanced cryptographic shuffling:</p>
+                                <div className='seed-grid'>
+                                    <div className='seed-item'>
+                                        <strong>Server Seed</strong>
+                                        <span>SHA-256 hash of 16 secure random bytes</span>
+                                    </div>
+                                    <div className='seed-item'>
+                                        <strong>Client Seed</strong>
+                                        <span>User-customizable seed</span>
+                                    </div>
+                                    <div className='seed-item'>
+                                        <strong>Nonce</strong>
+                                        <span>Round number (increments per bet)</span>
+                                    </div>
+                                </div>
+                                
+                                <div className='explanation'>
+                                    <p>
+                                        Mines generates a 32-byte hexadecimal hash from your seeds and nonce, converts it 
+                                        into 4-byte parts to create floats between 0 and 1. These floats are used with the 
+                                        Fisher-Yates shuffle algorithm to ensure no duplicate mine positions.
+                                    </p>
+                                    <p>
+                                        You can cycle your server seed anytime to get a new hashed seed. The previous 
+                                        server seed is revealed only when you cycle to a new one.
+                                    </p>
+                                </div>
+
+                                <div className='code-section'>
+                                    <h5>Verification Code (TypeScript)</h5>
+                                    <div className='code-block'>
+                                        <pre><code>{PROVABLY_CODE.MINES}</code></pre>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <style jsx>{`
-              .tos-container {
+              .provably-container {
                 width: 100%;
-                max-width: 1175px;
+                max-width: 1200px;
                 height: fit-content;
-                
                 box-sizing: border-box;
-                padding: 30px 0;
+                padding: 40px 20px;
                 margin: 0 auto;
-
                 color: #ADA3EF;
                 font-family: "Geogrotesque Wide", sans-serif;
-                font-size: 13px;
+                font-size: 14px;
                 font-weight: 400;
-                
+                line-height: 1.6;
+              }
+
+              .header-section {
+                text-align: center;
+                margin-bottom: 50px;
+                padding: 30px 0;
+                border-bottom: 2px solid #2A2558;
+              }
+
+              .main-title {
+                color: #FFF;
+                font-family: "Geogrotesque Wide", sans-serif;
+                font-size: 32px;
+                font-weight: 700;
+                margin: 0 0 15px 0;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+              }
+
+              .subtitle {
+                color: #ADA3EF;
+                font-size: 16px;
+                font-weight: 400;
+                max-width: 800px;
+                margin: 0 auto 30px auto;
+                opacity: 0.9;
+              }
+
+              .trust-indicators {
+                display: flex;
+                justify-content: center;
+                gap: 30px;
+                margin-top: 30px;
+              }
+
+              .indicator {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 12px 20px;
+                background: rgba(99, 102, 241, 0.1);
+                border: 1px solid rgba(99, 102, 241, 0.3);
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 600;
+                color: #E8E5FF;
+              }
+
+              .indicator-icon {
+                font-size: 16px;
+              }
+
+              .intro-section {
+                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                padding: 30px;
+                border-radius: 12px;
+                margin-bottom: 40px;
+                border: 1px solid #2A2558;
+                text-align: center;
+              }
+
+              .intro-title {
+                color: #FFF;
+                font-size: 24px;
+                font-weight: 700;
+                margin: 0 0 15px 0;
+              }
+
+              .intro-text {
+                color: #E8E5FF;
+                font-size: 15px;
+                line-height: 1.7;
+                margin: 0;
+                max-width: 800px;
+                margin: 0 auto;
+              }
+
+              .games-section {
                 display: flex;
                 flex-direction: column;
-                gap: 15px;
-                
+                gap: 20px;
               }
-              
-              button {
-                width: 100%;
-                max-width: 525px;
-                height: 40px;
-                
-                border: unset;
-                outline: unset;
-                cursor: pointer;
 
-                color: #ADA3EF;
-                font-family: Geogrotesque Wide, sans-serif;
-                font-size: 12px;
+              .section-title {
+                color: #FFF;
+                font-size: 24px;
                 font-weight: 700;
-                text-align: left;
-                
-                padding: 0 15px;
-                
-                border-radius: 2px;
-                background: rgba(90, 84, 153, 0.35);
-                
+                margin: 0 0 30px 0;
+                text-align: center;
+              }
+
+              .dropdown-wrapper {
+                background: rgba(42, 37, 88, 0.1);
+                border: 1px solid rgba(42, 37, 88, 0.3);
+                border-radius: 12px;
+                overflow: hidden;
+                transition: all 0.3s ease;
+              }
+
+              .dropdown-wrapper:hover {
+                background: rgba(42, 37, 88, 0.15);
+                border-color: rgba(42, 37, 88, 0.5);
+              }
+
+              .dropdown-wrapper.active {
+                background: rgba(42, 37, 88, 0.2);
+                border-color: #6366f1;
+              }
+
+              .game-button {
+                width: 100%;
+                padding: 20px 25px;
+                background: transparent;
+                border: none;
+                cursor: pointer;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                border: 1px solid transparent;
-                
-                transition: all .3s;
+                color: inherit;
+                font-family: inherit;
+                transition: all 0.3s ease;
               }
 
-              .active button {
-                border-radius: 2px;
-                border: 1px solid #5A5499;
-                background: rgba(90, 84, 153, 0.05);
+              .game-button:hover {
+                background: rgba(99, 102, 241, 0.05);
               }
 
-              .active button svg {
-                rotate: 180deg;
-              }
-              
-              .dropdown {
+              .button-content {
                 display: flex;
-                flex-direction: column;
-                
+                align-items: center;
+                gap: 15px;
+              }
+
+              .game-icon {
+                font-size: 24px;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(135deg, #6366f1, #8b5cf6);
+                border-radius: 8px;
+              }
+
+              .button-text {
+                text-align: left;
+              }
+
+              .button-text h3 {
+                color: #FFF;
+                font-size: 18px;
+                font-weight: 700;
+                margin: 0 0 5px 0;
+              }
+
+              .button-text p {
+                color: #ADA3EF;
+                font-size: 14px;
+                margin: 0;
+                opacity: 0.8;
+              }
+
+              .chevron {
+                transition: transform 0.3s ease;
+              }
+
+              .dropdown-wrapper.active .chevron {
+                transform: rotate(180deg);
+              }
+
+              .dropdown {
                 max-height: 0;
                 overflow: hidden;
-                
-                transition: max-height .3s;
+                transition: max-height 0.3s ease;
               }
-              
-              .code {
-                width: 100%;
-                height: auto;
 
-                background: #272549;
-                color: #47C754;
-                
+              .dropdown-wrapper.active .dropdown {
+                max-height: 2000px;
+              }
+
+              .dropdown-content {
+                padding: 0 25px 25px 25px;
+                border-top: 1px solid rgba(42, 37, 88, 0.5);
+              }
+
+              .dropdown-content h4 {
+                color: #FFF;
+                font-size: 20px;
+                font-weight: 700;
+                margin: 20px 0 15px 0;
+              }
+
+              .dropdown-content h5 {
+                color: #E8E5FF;
+                font-size: 16px;
+                font-weight: 600;
+                margin: 25px 0 10px 0;
+              }
+
+              .seed-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+                margin: 20px 0;
+              }
+
+              .seed-item {
+                background: rgba(26, 26, 46, 0.5);
                 padding: 15px;
+                border-radius: 8px;
+                border: 1px solid rgba(42, 37, 88, 0.3);
               }
-              
-              pre {
-                margin: unset;
+
+              .seed-item strong {
+                display: block;
+                color: #FFF;
+                font-weight: 600;
+                margin-bottom: 5px;
               }
-              
-              p {
-                margin: revert;
+
+              .seed-item span {
+                color: #C7C2F0;
+                font-size: 13px;
               }
-              
-              .active .dropdown {
-                max-height: 1250px;
+
+              .explanation {
+                margin: 20px 0;
+              }
+
+              .explanation p {
+                margin: 15px 0;
+                color: #C7C2F0;
+                line-height: 1.6;
+              }
+
+              .seed-display {
+                background: rgba(26, 26, 46, 0.5);
+                padding: 20px;
+                border-radius: 8px;
+                margin: 15px 0;
+                border: 1px solid rgba(42, 37, 88, 0.3);
+              }
+
+              .seed-display p {
+                margin: 10px 0 5px 0;
+                color: #E8E5FF;
+                font-weight: 600;
+              }
+
+              .seed-hash {
+                display: block;
+                background: rgba(0, 0, 0, 0.3);
+                padding: 10px;
+                border-radius: 4px;
+                font-family: 'Courier New', monospace;
+                font-size: 12px;
+                color: #47C754;
+                word-break: break-all;
+                margin-bottom: 15px;
+              }
+
+              .code-section {
+                margin-top: 25px;
+              }
+
+              .code-block {
+                background: linear-gradient(135deg, #1a1a2e 0%, #272549 100%);
+                border: 1px solid #2A2558;
+                border-radius: 8px;
+                padding: 20px;
+                overflow-x: auto;
+              }
+
+              .code-block pre {
+                margin: 0;
+                font-family: 'Courier New', monospace;
+                font-size: 13px;
+                line-height: 1.5;
+              }
+
+              .code-block code {
+                color: #47C754;
+                white-space: pre;
+              }
+
+              @media (max-width: 768px) {
+                .provably-container {
+                  padding: 20px 15px;
+                }
+
+                .main-title {
+                  font-size: 24px;
+                }
+
+                .trust-indicators {
+                  flex-direction: column;
+                  gap: 15px;
+                  align-items: center;
+                }
+
+                .indicator {
+                  padding: 10px 15px;
+                  font-size: 12px;
+                }
+
+                .seed-grid {
+                  grid-template-columns: 1fr;
+                }
+
+                .game-button {
+                  padding: 15px 20px;
+                }
+
+                .button-content {
+                  gap: 12px;
+                }
+
+                .game-icon {
+                  width: 35px;
+                  height: 35px;
+                  font-size: 20px;
+                }
+
+                .button-text h3 {
+                  font-size: 16px;
+                }
+
+                .button-text p {
+                  font-size: 13px;
+                }
+
+                .dropdown-content {
+                  padding: 0 20px 20px 20px;
+                }
+
+                .code-block {
+                  padding: 15px;
+                }
+
+                .code-block pre {
+                  font-size: 12px;
+                }
+              }
+
+              @media (max-width: 480px) {
+                .trust-indicators {
+                  gap: 10px;
+                }
+
+                .indicator {
+                  padding: 8px 12px;
+                  font-size: 11px;
+                }
+
+                .game-button {
+                  padding: 12px 15px;
+                }
+
+                .dropdown-content {
+                  padding: 0 15px 15px 15px;
+                }
               }
             `}</style>
         </>
