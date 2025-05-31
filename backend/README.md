@@ -1,6 +1,6 @@
-# BloxCash Backend
+# NOVACASINO Backend
 
-This directory contains the Express.js backend application for BloxCash.
+This directory contains the Express.js backend application for NOVACASINO.
 
 ## Structure
 - `app.js` - Main application entry point

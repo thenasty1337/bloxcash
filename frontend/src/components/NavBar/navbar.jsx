@@ -74,7 +74,7 @@ function NavBar(props) {
                                 <div class='logo-icon'>
                                     <AiOutlineStar size={24} />
                                 </div>
-                                <span class='logo-text'>BloxCash</span>
+                                <span class='logo-text'>NOVA CASINO</span>
                             </div>
                             <button 
                                 class='collapse-button' 

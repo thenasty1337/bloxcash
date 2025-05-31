@@ -69,8 +69,8 @@ router.get('/demo/:gameId', isAuthed, async (req, res) => {
         });
         
         // Site URLs for the game
-        const homeUrl = `${process.env.FRONTEND_URL || 'https://bloxcash.com'}`;
-        const cashierUrl = `${process.env.FRONTEND_URL || 'https://bloxcash.com'}/deposit`;
+        const homeUrl = `${process.env.FRONTEND_URL || 'https://NOVACASINO.com'}`;
+        const cashierUrl = `${process.env.FRONTEND_URL || 'https://NOVACASINO.com'}/deposit`;
         
         // Get demo game URL
         const response = await apiClient.getGameDemo(
@@ -180,8 +180,8 @@ router.get('/play/:gameId', isAuthed, async (req, res) => {
             }
             
             // Site URLs for the game
-            const homeUrl = `${process.env.FRONTEND_URL || 'https://bloxcash.com'}`;
-            const cashierUrl = `${process.env.FRONTEND_URL || 'https://bloxcash.com'}/deposit`;
+            const homeUrl = `${process.env.FRONTEND_URL || 'https://NOVACASINO.com'}`;
+            const cashierUrl = `${process.env.FRONTEND_URL || 'https://NOVACASINO.com'}/deposit`;
             
             // Get real money game URL
             const response = await apiClient.getGame(

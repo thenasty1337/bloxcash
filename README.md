@@ -1,8 +1,8 @@
-# BloxCash
+# NOVACASINO
 
-![BloxCash Logo](https://raw.githubusercontent.com/likhonisaac/bloxcash/refs/heads/main/public/meta.png)
+![NOVACASINO Logo](https://raw.githubusercontent.com/likhonisaac/NOVACASINO/refs/heads/main/public/meta.png)
 
-**BloxCash** is an innovative online gaming platform that combines casino games, sports betting, and lottery all in one place. Designed with versatility in mind, BloxCash offers unique, in-house game modes and supports a wide range of deposit methods, making it easy and convenient for users to get started.
+**NOVACASINO** is an innovative online gaming platform that combines casino games, sports betting, and lottery all in one place. Designed with versatility in mind, NOVACASINO offers unique, in-house game modes and supports a wide range of deposit methods, making it easy and convenient for users to get started.
 
 **Live at**: [https://blox-cash.vercel.app](https://blox-cash.vercel.app)
 
@@ -47,8 +47,8 @@ The project is organized into two main directories:
 
 1. **Clone the Repository**:
     ```bash
-    git clone https://github.com/likhonisaac/bloxcash.git
-    cd bloxcash
+    git clone https://github.com/likhonisaac/NOVACASINO.git
+    cd NOVACASINO
     ```
 
 2. **Install Backend Dependencies**:
@@ -87,7 +87,7 @@ The project is organized into two main directories:
 
 ## Donations
 
-If you find BloxCash valuable and want to support its growth, consider donating:
+If you find NOVACASINO valuable and want to support its growth, consider donating:
 
 **Ethereum Donation Address**: `0x00fC876d03172279E04CC30E5edCE103c3d23C1A`
 
@@ -103,7 +103,7 @@ This project is licensed under the Apache-2.0 License. See the `LICENSE` file fo
 
 ## Disclaimer
 
-Roblox and its individual marks and logos are trademarks of Roblox Corporation. **BloxCash** is **NOT** endorsed, sponsored, or affiliated with Roblox Corporation in any way.
+Roblox and its individual marks and logos are trademarks of Roblox Corporation. **NOVACASINO** is **NOT** endorsed, sponsored, or affiliated with Roblox Corporation in any way.
 
 ---
 
@@ -126,4 +126,4 @@ This project is **not for sale**. Your stars and contributions are highly apprec
 
 ---
 
-**BloxCash** – All rights reserved.
+**NOVACASINO** – All rights reserved.

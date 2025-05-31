@@ -1,6 +1,6 @@
-# BloxCash Frontend
+# NOVACASINO Frontend
 
-This directory contains the SolidJS frontend application for BloxCash.
+This directory contains the SolidJS frontend application for NOVACASINO.
 
 ## Structure
 - `src/` - Source code

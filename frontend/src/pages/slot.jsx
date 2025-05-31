@@ -393,7 +393,7 @@ function Slot(props) {
           </div>
 
           <div class='slot-logo'>
-            <span>BLOXCASH</span>
+            <span>NOVA CASINO</span>
           </div>
 
           <div class='controls'>

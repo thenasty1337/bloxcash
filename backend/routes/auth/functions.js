@@ -32,11 +32,11 @@ const tokenSettings = {
     access: {
         expiresIn: '15m', // Short-lived
         // Using consistent secrets (or from env) to ensure tokens stay valid across restarts
-        secret: process.env.JWT_ACCESS_SECRET || 'bloxcash-access-static-secret-do-not-use-in-prod'
+        secret: process.env.JWT_ACCESS_SECRET || 'NOVACASINO-access-static-secret-do-not-use-in-prod'
     },
     refresh: {
         expiresIn: '7d', // 7 days
-        secret: process.env.JWT_REFRESH_SECRET || 'bloxcash-refresh-static-secret-do-not-use-in-prod'
+        secret: process.env.JWT_REFRESH_SECRET || 'NOVACASINO-refresh-static-secret-do-not-use-in-prod'
     }
 };
 
