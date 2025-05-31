@@ -1,10 +1,8 @@
 import Chat from "../Chat/chat";
 import Chats from "../SideBar/chats";
 import TipRain from "../SideBar/tiprain";
-import ChatRules from "../SideBar/chatrules";
 import {createEffect, createSignal, onCleanup} from "solid-js";
 import {useWebsocket} from "../../contexts/socketprovider";
-import GreenCount from "../Count/greencount";
 import {useRain} from "../../contexts/raincontext";
 import {createNotification} from "../../util/api";
 import SidebarRain from "../SideBar/rain";
@@ -87,14 +85,12 @@ function ChatSidebar(props) {
           <TipRain/>
         </div>
 
-        <Chat messages={messages()} ws={ws()} emojis={emojis()}/>
-        
-        <div class='chat-bottom-info'>
-          <div class='chat-compact-controls'>
-            <ChatRules/>
-            <GreenCount active={true} number={online()?.total} css={{'flex': '1'}}/>
-          </div>
-        </div>
+        <Chat 
+          messages={messages()} 
+          ws={ws()} 
+          emojis={emojis()} 
+          onlineCount={online()?.total || 0}
+        />
       </div>
 
       <style jsx>{`
@@ -111,10 +107,12 @@ function ChatSidebar(props) {
           display: flex;
           flex-direction: column;
 
-          background: var(--gradient-bg);
+          background: linear-gradient(180deg, rgba(26, 35, 50, 0.95) 0%, rgba(20, 28, 40, 0.95) 100%);
+          backdrop-filter: blur(12px);
           overflow: hidden;
           transition: right .3s ease;
-          border-left: 1px solid rgba(255, 255, 255, 0.1);
+          border-left: 1px solid rgba(78, 205, 196, 0.2);
+          box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
         }
 
         .chat-sidebar-container.active {
@@ -123,40 +121,26 @@ function ChatSidebar(props) {
 
         .chat-options {
           padding: 15px 15px;
+          background: rgba(26, 35, 50, 0.6);
+          border-bottom: 1px solid rgba(78, 205, 196, 0.1);
 
           display: flex;
           flex-direction: column;
           gap: 10px;
         }
 
-        .chat-compact-controls {
-          display: flex;
-          justify-content: space-between;
-          gap: 5px;
-          padding: 2px 8px;
-          height: 24px;
-        }
-
-        .chat-compact-controls > * {
-          flex: 1;
-        }
-
-        .chat-bottom-info {
-          background: rgba(23, 20, 48, 0.7);
-          padding: 0;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
         .chat-top-container {
           width: 100%;
           min-height: 180px;
-          background: rgb(23, 20, 48);
+          background: rgba(26, 35, 50, 0.9);
           position: relative;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          border-bottom: 1px solid rgba(78, 205, 196, 0.2);
           display: flex;
           align-items: center;
           justify-content: center;
           animation: slideDown 0.3s ease-out;
+          backdrop-filter: blur(8px);
+          box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
         }
 
         @keyframes slideDown {
@@ -187,13 +171,15 @@ function ChatSidebar(props) {
           margin: 0;
           font-size: 18px;
           font-weight: 600;
+          color: #ffffff;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .close-chat {
-          background: rgba(255, 255, 255, 0.1);
-          border: none;
-          border-radius: 50%;
-          color: #ffffff;
+          background: rgba(45, 75, 105, 0.4);
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          border-radius: 6px;
+          color: #8aa3b8;
           width: 32px;
           height: 32px;
           cursor: pointer;
@@ -201,11 +187,16 @@ function ChatSidebar(props) {
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: background-color 0.2s;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          backdrop-filter: blur(8px);
         }
 
         .close-chat:hover {
-          background: rgba(255, 255, 255, 0.2);
+          background: rgba(78, 205, 196, 0.15);
+          border-color: #4ecdc4;
+          color: #4ecdc4;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(78, 205, 196, 0.2);
         }
 
         @media only screen and (max-width: 1250px) {

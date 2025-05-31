@@ -464,7 +464,7 @@ function Slots(props) {
         
         .top-five {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
           grid-gap: 10px;
           margin: 35px 0;
           padding: 4px;
@@ -631,7 +631,7 @@ function Slots(props) {
 
         .slots {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
           grid-gap: 10px;
           margin-top: 20px;
           min-height: 195px;
@@ -840,15 +840,24 @@ function Slots(props) {
         }
 
         @media only screen and (min-width: 768px) {
+          .top-five {
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            grid-gap: 12px;
+          }
+          
           .slots {
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             grid-gap: 12px;
           }
         }
         
         @media only screen and (min-width: 1200px) {
+          .top-five {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+          }
+          
           .slots {
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
           }
         }
 

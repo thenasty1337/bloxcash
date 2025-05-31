@@ -52,7 +52,7 @@ function Chats(props) {
                          xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M3.50001 0.994671C3.62547 0.994671 3.7509 1.04269 3.84655 1.13852L6.8564 4.15579C7.04787 4.34773 7.04787 4.65892 6.8564 4.85078C6.66501 5.04263 6.5 4.99467 6.16316 4.99467L3.50001 4.99467L1 4.99467C0.5 4.99467 0.335042 5.04254 0.14367 4.85068C-0.0478893 4.65883 -0.0478893 4.34764 0.14367 4.1557L3.15347 1.13843C3.24916 1.04258 3.3746 0.994671 3.50001 0.994671Z"
-                            fill="#9489DB"/>
+                            fill="#4ecdc4"/>
                     </svg>
                 </div>
 
@@ -81,10 +81,10 @@ function Chats(props) {
                 width: 100%;
                 height: 35px;
 
-                font-family: 'Geogrotesque Wide', sans-serif;
-                font-weight: 700;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                font-weight: 600;
                 font-size: 14px;
-                color: #ADA3EF;
+                color: #8aa3b8;
                 
                 position: relative;
                 z-index: 3;
@@ -101,6 +101,17 @@ function Chats(props) {
                 padding: 0 15px;
                 cursor: pointer;
                 position: relative;
+                background: rgba(26, 35, 50, 0.4);
+                border: 1px solid rgba(78, 205, 196, 0.2);
+                border-radius: 8px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                backdrop-filter: blur(8px);
+              }
+
+              .chats:hover {
+                background: rgba(78, 205, 196, 0.1);
+                border-color: rgba(78, 205, 196, 0.3);
+                color: #ffffff;
               }
 
               .chat-name {
@@ -110,6 +121,8 @@ function Chats(props) {
                 text-align: center;
 
                 user-select: none;
+                color: inherit;
+                font-weight: 600;
               }
 
               .dropdown {
@@ -121,7 +134,7 @@ function Chats(props) {
                 left: 0;
                 z-index: 1;
 
-                border-radius: 3px 0 3px 3px;
+                border-radius: 8px;
                 transition: max-height .3s;
                 overflow: hidden;
                 
@@ -136,18 +149,22 @@ function Chats(props) {
                 transform: rotate(180deg);
               }
 
+              svg path {
+                fill: #4ecdc4;
+              }
+
               .decoration-arrow {
                 width: 13px;
                 height: 9px;
 
                 top: 1px;
-                background: #201B3D;
+                background: rgba(26, 35, 50, 0.9);
                 position: absolute;
                 right: 0;
                 
-                border-left: 1px solid #2D2654;
-                border-right: 1px solid #2D2654;
-                border-top: 1px solid #2D2654;
+                border-left: 1px solid rgba(78, 205, 196, 0.2);
+                border-right: 1px solid rgba(78, 205, 196, 0.2);
+                border-top: 1px solid rgba(78, 205, 196, 0.2);
 
                 clip-path: polygon(0% 100%, 100% 0%, 100% 100%);
               }
@@ -158,8 +175,11 @@ function Chats(props) {
                 gap: 8px;
                 padding: 10px;
 
-                border: 1px solid #2D2654;
-                background: #201B3D;
+                border: 1px solid rgba(78, 205, 196, 0.2);
+                background: rgba(26, 35, 50, 0.9);
+                border-radius: 8px;
+                backdrop-filter: blur(12px);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
                 
                 margin-top: 9px;
               }
@@ -171,30 +191,35 @@ function Chats(props) {
                 
                 height: 30px;
 
-                background: #312A5E;
-                box-shadow: 0px -1px 0px #3C3472, 0px 1px 0px #1B1734;
-                border-radius: 3px;
+                background: rgba(45, 75, 105, 0.3);
+                border: 1px solid rgba(78, 205, 196, 0.1);
+                border-radius: 6px;
                 
                 gap: 10px;
                 padding: 0 7px;
-                transition: background-color .3s;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 
                 cursor: pointer;
+                color: #8aa3b8;
               }
               
               .room:hover {
-                background: #332f61;
+                background: rgba(78, 205, 196, 0.15);
+                border-color: rgba(78, 205, 196, 0.3);
+                color: #ffffff;
+                transform: translateX(3px);
               }
               
               .online {
                 padding: 3px 5px;
-                background: conic-gradient(from 180deg at 50% 50%, #59E878 -0.3deg, #459D7B 72.1deg, #407B64 139.9deg, #407C64 180.52deg, #37545C 215.31deg, #3B5964 288.37deg, #59E878 359.62deg, #59E878 359.7deg, #459D7B 432.1deg);
-                border-radius: 3px;
+                background: rgba(78, 205, 196, 0.2);
+                border: 1px solid rgba(78, 205, 196, 0.3);
+                border-radius: 4px;
 
-                font-family: 'Geogrotesque Wide';
-                font-weight: 700;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                font-weight: 600;
                 font-size: 11px;
-                color: #59E878;
+                color: #4ecdc4;
                 
                 margin-left: auto;
                 position: relative;
@@ -203,6 +228,7 @@ function Chats(props) {
                 display: flex;
                 align-items: center;
                 gap: 5px;
+                backdrop-filter: blur(4px);
               }
               
               .online:before {
@@ -217,14 +243,14 @@ function Chats(props) {
                 border-radius: 3px;
 
                 z-index: -1;
-                background: linear-gradient(0deg, rgba(89, 232, 120, 0.25), rgba(89, 232, 120, 0.25)), linear-gradient(252.77deg, #1A0E33 -27.53%, #423C7A 175.86%);
+                background: rgba(26, 35, 50, 0.8);
               }
               
               .dot {
                 width: 10px;
                 height: 10px;
 
-                background: rgba(89, 232, 120, 0.25);
+                background: rgba(78, 205, 196, 0.2);
                 border-radius: 2px;
                 
                 display: flex;
@@ -240,8 +266,8 @@ function Chats(props) {
                 
                 content: '';
                 
-                background: #59E878;
-                box-shadow: 0px 0px 4px #59E878;
+                background: #4ecdc4;
+                box-shadow: 0px 0px 4px rgba(78, 205, 196, 0.5);
                 border-radius: 2px;
               }
             `}</style>

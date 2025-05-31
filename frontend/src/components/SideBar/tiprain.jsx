@@ -117,7 +117,7 @@ function TipRain(props) {
                 position: absolute;
                 width: 100%;
 
-                border-radius: 3px 0px 3px 3px;
+                border-radius: 8px;
 
                 top: 40px;
                 left: 0;
@@ -137,13 +137,13 @@ function TipRain(props) {
                 height: 9px;
 
                 top: 1px;
-                background: #20153D;
+                background: rgba(26, 35, 50, 0.9);
                 position: absolute;
                 right: 0;
 
-                border-left: 1px solid #3B2D67;
-                border-right: 1px solid #3B2D67;
-                border-top: 1px solid #3B2D67;
+                border-left: 1px solid rgba(78, 205, 196, 0.2);
+                border-right: 1px solid rgba(78, 205, 196, 0.2);
+                border-top: 1px solid rgba(78, 205, 196, 0.2);
 
                 clip-path: polygon(0% 100%, 100% 0%, 100% 100%);
               }
@@ -153,8 +153,11 @@ function TipRain(props) {
                 padding: 12px 20px;
                 margin-top: 9px;
                 
-                background: linear-gradient(252.77deg, #1A0E33 -27.53%, #423C7A 175.86%);
-                border: 1px solid #3B2D67;
+                background: rgba(26, 35, 50, 0.9);
+                border: 1px solid rgba(78, 205, 196, 0.2);
+                border-radius: 8px;
+                backdrop-filter: blur(12px);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
                 
                 display: flex;
                 flex-direction: column;
@@ -179,7 +182,8 @@ function TipRain(props) {
                 width: 100%;
                 height: 30px;
 
-                background: linear-gradient(0deg, #1C1438, #1C1438), linear-gradient(252.77deg, #1A0E33 -27.53%, #423C7A 175.86%);
+                background: rgba(45, 75, 105, 0.4);
+                border: 1px solid rgba(78, 205, 196, 0.2);
                 
                 padding: 0px 10px;
                 
@@ -187,7 +191,8 @@ function TipRain(props) {
                 align-items: center;
                 gap: 10px;
 
-                border-radius: 3px;
+                border-radius: 6px;
+                backdrop-filter: blur(8px);
               }
               
               .input-wrapper input {
