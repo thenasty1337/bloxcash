@@ -28,15 +28,15 @@ function Docs(props) {
             <div class='docs-container'>
                 <div class='docs-layout'>
                     <nav class='docs-sidebar'>
-                        <div class='sidebar-header'>
+                        <div class='docu-sidebar-header'>
                             <h2 class='docs-title'>Documentation</h2>
                             <div class='title-underline'></div>
                         </div>
                         
-                        <div class='nav-links'>
+                        <div class='docu-docu-nav-links'>
                             <A 
                                 href='/docs/faq' 
-                                class={`nav-link ${isActive('faq') ? 'docs-active' : ''}`}
+                                class={`docu-nav-link ${isActive('faq') ? 'docs-active' : ''}`}
                             >
                                 <div class='link-content'>
                                     <span 
@@ -56,7 +56,7 @@ function Docs(props) {
 
                             <A 
                                 href='/docs/provably' 
-                                class={`nav-link ${isActive('provably') ? 'docs-active' : ''}`}
+                                class={`docu-nav-link ${isActive('provably') ? 'docs-active' : ''}`}
                             >
                                 <div class='link-content'>
                                     <span 
@@ -76,7 +76,7 @@ function Docs(props) {
 
                             <A 
                                 href='/docs/tos' 
-                                class={`nav-link ${isActive('tos') ? 'docs-active' : ''}`}
+                                class={`docu-nav-link ${isActive('tos') ? 'docs-active' : ''}`}
                             >
                                 <div class='link-content'>
                                     <span 
@@ -96,7 +96,7 @@ function Docs(props) {
 
                             <A 
                                 href='/docs/aml' 
-                                class={`nav-link ${isActive('aml') ? 'docs-active' : ''}`}
+                                class={`docu-nav-link ${isActive('aml') ? 'docs-active' : ''}`}
                             >
                                 <div class='link-content'>
                                     <span 
@@ -116,7 +116,7 @@ function Docs(props) {
 
                             <A 
                                 href='/docs/privacy' 
-                                class={`nav-link ${isActive('privacy') ? 'docs-active' : ''}`}
+                                class={`docu-nav-link ${isActive('privacy') ? 'docs-active' : ''}`}
                             >
                                 <div class='link-content'>
                                     <span 
@@ -177,7 +177,7 @@ function Docs(props) {
                 gap: 40px;
               }
               
-              .sidebar-header {
+              .docu-sidebar-header {
                 padding: 0 30px;
               }
               
@@ -200,14 +200,14 @@ function Docs(props) {
                 border-radius: 2px;
               }
               
-              .nav-links {
+              .docu-docu-nav-links {
                 display: flex;
                 flex-direction: column;
                 gap: 16px;
                 padding: 0 30px;
               }
               
-              .nav-link {
+              .docu-nav-link {
                 display: flex;
                 align-items: center;
                 text-decoration: none;
@@ -220,7 +220,7 @@ function Docs(props) {
                 border: 1px solid rgba(255, 255, 255, 0.08);
               }
               
-              .nav-link::before {
+              .docu-nav-link::before {
                 content: '';
                 position: absolute;
                 top: 0;
@@ -231,11 +231,11 @@ function Docs(props) {
                 transition: left 0.5s ease;
               }
               
-              .nav-link:hover::before {
+              .docu-nav-link:hover::before {
                 left: 100%;
               }
               
-              .nav-link:hover {
+              .docu-nav-link:hover {
                 background: rgba(255, 255, 255, 0.07);
                 border-color: rgba(255, 255, 255, 0.15);
                 transform: translateX(2px);
@@ -258,7 +258,7 @@ function Docs(props) {
                 line-height: 1.3;
               }
               
-              .nav-link:hover .link-text {
+              .docu-nav-link:hover .link-text {
                 color: rgba(255, 255, 255, 0.95);
               }
               
@@ -271,7 +271,7 @@ function Docs(props) {
                 line-height: 1.4;
               }
               
-              .nav-link:hover .link-subtitle {
+              .docu-nav-link:hover .link-subtitle {
                 color: rgba(255, 255, 255, 0.65);
               }
               
@@ -317,7 +317,7 @@ function Docs(props) {
                   background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.05) 100%);
                 }
                 
-                .sidebar-header {
+                .docu-sidebar-header {
                   padding: 0 25px;
                   margin-bottom: 25px;
                   text-align: center;
@@ -333,14 +333,14 @@ function Docs(props) {
                   height: 3px;
                 }
                 
-                .nav-links {
+                .docu-docu-nav-links {
                   display: flex;
                   flex-direction: column;
                   gap: 12px;
                   padding: 0 25px;
                 }
                 
-                .nav-link {
+                .docu-nav-link {
                   padding: 18px 24px;
                   border-radius: 12px;
                   justify-content: center;
@@ -351,7 +351,7 @@ function Docs(props) {
                   backdrop-filter: blur(10px);
                 }
                 
-                .nav-link:hover {
+                .docu-nav-link:hover {
                   transform: translateY(-2px);
                   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
                   background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
@@ -392,7 +392,7 @@ function Docs(props) {
                   background: linear-gradient(180deg, rgba(0, 0, 0, 0.08) 0%, rgba(0, 0, 0, 0.03) 100%);
                 }
                 
-                .sidebar-header {
+                .docu-sidebar-header {
                   padding: 0 20px;
                   margin-bottom: 20px;
                 }
@@ -406,12 +406,12 @@ function Docs(props) {
                   height: 3px;
                 }
                 
-                .nav-links {
+                .docu-docu-nav-links {
                   gap: 10px;
                   padding: 0 20px;
                 }
                 
-                .nav-link {
+                .docu-nav-link {
                   padding: 16px 20px;
                   border-radius: 10px;
                   background: linear-gradient(135deg, rgba(123, 111, 207, 0.15) 0%, rgba(165, 148, 249, 0.08) 100%);
@@ -420,7 +420,7 @@ function Docs(props) {
                   backdrop-filter: blur(8px);
                 }
                 
-                .nav-link:hover {
+                .docu-nav-link:hover {
                   transform: translateY(-1px);
                   box-shadow: 0 5px 15px rgba(123, 111, 207, 0.2);
                   background: linear-gradient(135deg, rgba(123, 111, 207, 0.2) 0%, rgba(165, 148, 249, 0.12) 100%);
@@ -452,7 +452,7 @@ function Docs(props) {
                   padding: 20px 0;
                 }
                 
-                .sidebar-header {
+                .docu-sidebar-header {
                   padding: 0 15px;
                   margin-bottom: 18px;
                 }
@@ -461,12 +461,12 @@ function Docs(props) {
                   font-size: 18px;
                 }
                 
-                .nav-links {
+                .docu-docu-nav-links {
                   gap: 8px;
                   padding: 0 15px;
                 }
                 
-                .nav-link {
+                .docu-nav-link {
                   padding: 14px 18px;
                   border-radius: 8px;
                   background: linear-gradient(135deg, rgba(123, 111, 207, 0.2) 0%, rgba(165, 148, 249, 0.1) 100%);
@@ -474,7 +474,7 @@ function Docs(props) {
                   box-shadow: 0 2px 8px rgba(123, 111, 207, 0.15);
                 }
                 
-                .nav-link:hover {
+                .docu-nav-link:hover {
                   transform: translateY(-1px);
                   box-shadow: 0 4px 12px rgba(123, 111, 207, 0.25);
                 }

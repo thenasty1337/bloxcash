@@ -1,7 +1,8 @@
 import {Routes, Route, useSearchParams, useLocation} from '@solidjs/router'
 import {createEffect, createSignal, ErrorBoundary, lazy, Suspense} from "solid-js";
 import {useUser} from "./contexts/usercontextprovider";
-import Sidebar from "./components/SideBar/sidebar";
+import GamesSidebar from "./components/GamesSidebar/gamesSidebar";
+import ChatSidebar from "./components/ChatSidebar/chatSidebar";
 import {authedAPI, closeDropdowns, createNotification} from "./util/api";
 import Navbar from "./components/NavBar/navbar";
 import {Toaster} from "solid-toast";
@@ -80,6 +81,8 @@ function App() {
   const [user, {hasFetched, setBalance, setXP, getUser}] = useUser()
   const [ws] = useWebsocket()
   const [chat, setChat] = createSignal(false)
+  const [gamesSidebar, setGamesSidebar] = createSignal(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = createSignal(false)
 
   createEffect(() => {
     if (location.pathname && pageContent) {
@@ -253,10 +256,24 @@ function App() {
               )
             }}>
             <div class='app' onClick={() => closeDropdowns()}>
-              <Sidebar chat={chat()} setChat={setChat}/>
-              <div class='center' ref={pageContent}>
-                <Navbar user={user()} chat={chat()} setChat={setChat}/>
-
+              <GamesSidebar 
+                gamesSidebar={gamesSidebar()} 
+                setGamesSidebar={setGamesSidebar} 
+                user={user()} 
+                collapsed={sidebarCollapsed()}
+              />
+              
+              <Navbar 
+                user={user()} 
+                chat={chat()} 
+                setChat={setChat} 
+                gamesSidebar={gamesSidebar()} 
+                setGamesSidebar={setGamesSidebar}
+                sidebarCollapsed={sidebarCollapsed()}
+                setSidebarCollapsed={setSidebarCollapsed}
+              />
+              
+              <div class={`center ${sidebarCollapsed() ? 'collapsed' : ''} ${chat() ? 'chat-open' : ''}`} ref={pageContent}>
                 <div class='content'>
                   <Routes>
                     <Route path='/' element={
@@ -499,11 +516,13 @@ function App() {
                     )}
                   </Routes>
 
-                  <div class='background'/>
+                  {/* <div class='background'/> */}
                 </div>
 
                 <Footer/>
               </div>
+
+              <ChatSidebar chat={chat()} setChat={setChat}/>
             </div>
           </ErrorBoundary>
         </>
@@ -515,18 +534,29 @@ function App() {
           height: 100vh;
 
           display: flex;
-
           position: relative;
           overflow: hidden;
           scrollbar-color: transparent transparent;
         }
 
         .center {
-          height: 100vh;
+          height: calc(100vh - 70px); /* Subtract navbar height */
           width: 100%;
           position: relative;
           overflow: auto;
           scrollbar-color: transparent transparent;
+          margin-left: 240px; /* Account for games sidebar */
+          margin-right: 0; /* Default - no chat open */
+          margin-top: 70px; /* Account for navbar height */
+          transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .center.collapsed {
+          margin-left: 60px; /* Account for collapsed sidebar */
+        }
+
+        .center.chat-open {
+          margin-right: 300px; /* Account for chat sidebar */
         }
 
         .center::-webkit-scrollbar {
@@ -569,9 +599,17 @@ function App() {
           display: none;
         }
 
-        @media only screen and (max-width: 1000px) {
+        @media only screen and (max-width: 1250px) {
           .center {
+            margin-left: 0;
+            margin-right: 0; /* Reset right margin on mobile */
             padding-bottom: 50px;
+            margin-top: 45px; /* Adjust for smaller navbar on mobile */
+            height: calc(100vh - 45px);
+          }
+
+          .center.chat-open {
+            margin-right: 0; /* Chat overlays on mobile, doesn't push content */
           }
         }
       `}</style>
