@@ -86,7 +86,7 @@ function Leaderboard(props) {
                                 <p className='tag'>1st PLACE</p>
 
                                 <Avatar id={placements()[0] ? placements()[0]?.id || 'Anonymous' : '?'} height='68'
-                                        xp='gold'/>
+                                        xp='gold' avatar={placements()[0]?.avatar}/>
                                 <p>{placements()[0] ? placements()[0]?.username || 'Anonymous' : 'No User'}</p>
                                 <div className='cost'>
                                     <img src='/assets/icons/coin.svg' height='14' width='15' alt=''/>
@@ -112,7 +112,7 @@ function Leaderboard(props) {
                                 <p className='tag'>2nd PLACE</p>
 
                                 <Avatar id={placements()[1] ? placements()[1]?.id || 'Anonymous' : '?'} height='68'
-                                        xp='silver'/>
+                                        xp='silver' avatar={placements()[1]?.avatar}/>
                                 <p>{placements()[1] ? placements()[1]?.username || 'Anonymous' : 'No User'}</p>
                                 <div className='cost'>
                                     <img src='/assets/icons/coin.svg' height='14' width='15' alt=''/>
@@ -136,7 +136,7 @@ function Leaderboard(props) {
                                 <p className='tag'>3rd PLACE</p>
 
                                 <Avatar id={placements()[2] ? placements()[2]?.id || 'Anonymous' : '?'} height='68'
-                                        xp='bronze'/>
+                                        xp='bronze' avatar={placements()[2]?.avatar}/>
                                 <p>{placements()[2] ? placements()[2]?.username || 'Anonymous' : 'No User'}</p>
                                 <div className='cost'>
                                     <img src='/assets/icons/coin.svg' height='14' width='15' alt=''/>
@@ -186,7 +186,7 @@ function Leaderboard(props) {
                                 </div>
 
                                 <div className='table-column'>
-                                    <Avatar id={placement?.id} height='30'/>
+                                    <Avatar id={placement?.id} height='30' avatar={placement?.avatar}/>
                                     <p>{placement?.username || 'Anonymous'}</p>
                                 </div>
 

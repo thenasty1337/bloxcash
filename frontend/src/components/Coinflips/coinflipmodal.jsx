@@ -53,6 +53,7 @@ function CoinflipModal(props) {
                     id={creator?.id}
                     xp={creator?.xp}
                     height={90}
+                    avatar={creator?.avatar}
                   />
                 </div>
 
@@ -86,6 +87,7 @@ function CoinflipModal(props) {
                       id={opponent().id}
                       xp={opponent().xp}
                       height={90}
+                      avatar={opponent()?.avatar}
                     />
                   </div>
                 ) : (

@@ -35,7 +35,7 @@ function Notification(props) {
     </div>,
 
     'tip-received': () => <div class='tip'>
-      <Avatar id={props?.content?.fromUser?.id} height='24'/> <p class='white bold'>{props?.content?.fromUser?.username}</p> <Level xp={props?.content?.fromUser?.xp}/>
+      <Avatar id={props?.content?.fromUser?.id} height='24' avatar={props?.content?.fromUser?.avatar}/> <p class='white bold'>{props?.content?.fromUser?.username}</p> <Level xp={props?.content?.fromUser?.xp}/>
       tipped you &nbsp;
       <span class='fancyamt'>
         <img src='/assets/icons/coin.svg' height='18' width='19' alt=''/>

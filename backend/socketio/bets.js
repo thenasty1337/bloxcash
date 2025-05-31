@@ -18,21 +18,21 @@ const maxLength = 10;
 async function cacheBets() {
 
     const [all] = await sql.query(`
-        SELECT bets.amount, bets.winnings, bets.game, bets.createdAt, users.id, users.username, users.xp, users.role, users.anon FROM bets
+        SELECT bets.amount, bets.winnings, bets.game, bets.createdAt, users.id, users.username, users.xp, users.role, users.anon, users.avatar FROM bets
         INNER JOIN users ON bets.userId = users.id WHERE bets.completed = 1 ORDER BY bets.id DESC LIMIT ${maxLength}
     `);
 
     cachedBets.all = all.map(e => mapBet(e));
 
     const [high] = await sql.query(`
-        SELECT bets.amount, bets.winnings, bets.game, bets.createdAt, users.id, users.username, users.xp, users.role, users.anon FROM bets
+        SELECT bets.amount, bets.winnings, bets.game, bets.createdAt, users.id, users.username, users.xp, users.role, users.anon, users.avatar FROM bets
         INNER JOIN users ON bets.userId = users.id WHERE bets.completed = 1 AND bets.amount > ${highBetAmount} ORDER BY bets.id DESC LIMIT ${maxLength}
     `);
 
     cachedBets.high = high.map(e => mapBet(e));
 
     const [lucky] = await sql.query(`
-        SELECT bets.amount, bets.winnings, bets.game, bets.createdAt, users.id, users.username, users.xp, users.role, users.anon FROM bets
+        SELECT bets.amount, bets.winnings, bets.game, bets.createdAt, users.id, users.username, users.xp, users.role, users.anon, users.avatar FROM bets
         INNER JOIN users ON bets.userId = users.id WHERE bets.completed = 1 AND bets.winnings / bets.amount > ${luckyBetMultiplier}
         ORDER BY bets.id DESC LIMIT ${maxLength}
     `);
@@ -188,7 +188,7 @@ async function getBets(type, userId) {
 
         if (!userId) return false;
 
-        const [[user]] = await sql.query('SELECT id, username, xp FROM users WHERE id = ?', [userId]);
+        const [[user]] = await sql.query('SELECT id, username, xp, role, avatar FROM users WHERE id = ?', [userId]);
         if (!user) return false;
 
         const [bets] = await sql.query('SELECT amount, winnings, game, createdAt FROM bets WHERE userId = ? AND completed = 1 ORDER BY id DESC LIMIT 10', [userId]);

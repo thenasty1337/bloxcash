@@ -137,7 +137,7 @@ console.log(minePositions);`,
 function Provably(props) {
 
     function toggleDropdown(e) {
-        e.target.closest('.dropdown-wrapper').classList.toggle('active')
+        e.target.closest('.dropdown-faq-wrapper-faq').classList.toggle('active')
     }
 
     return (
@@ -178,7 +178,7 @@ function Provably(props) {
                 <div className='games-section'>
                     <h2 className='section-title'>Game Verification Methods</h2>
                     
-                    <div className='dropdown-wrapper'>
+                    <div className='dropdown-faq-wrapper-faq'>
                         <button className='game-button' onClick={toggleDropdown}>
                             <div className='button-content'>
                                 <span className='game-icon'>📦</span>
@@ -192,8 +192,8 @@ function Provably(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <h4>Case Opening Verification</h4>
                                 <p>Each case opening is calculated using the following variables:</p>
                                 <div className='seed-grid'>
@@ -233,7 +233,7 @@ function Provably(props) {
                         </div>
                     </div>
 
-                    <div className='dropdown-wrapper'>
+                    <div className='dropdown-faq-wrapper-faq'>
                         <button className='game-button' onClick={toggleDropdown}>
                             <div className='button-content'>
                                 <span className='game-icon'>⚔️</span>
@@ -247,8 +247,8 @@ function Provably(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <h4>Case Battle Verification</h4>
                                 <p>Each case opened in battles is calculated using:</p>
                                 <div className='seed-grid'>
@@ -287,7 +287,7 @@ function Provably(props) {
                         </div>
                     </div>
 
-                    <div className='dropdown-wrapper'>
+                    <div className='dropdown-faq-wrapper-faq'>
                         <button className='game-button' onClick={toggleDropdown}>
                             <div className='button-content'>
                                 <span className='game-icon'>🎯</span>
@@ -301,8 +301,8 @@ function Provably(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <h4>Roulette Verification</h4>
                                 <p>Roulette results are generated using SHA-256 hash of:</p>
                                 <div className='seed-grid'>
@@ -339,7 +339,7 @@ function Provably(props) {
                         </div>
                     </div>
 
-                    <div className='dropdown-wrapper'>
+                    <div className='dropdown-faq-wrapper-faq'>
                         <button className='game-button' onClick={toggleDropdown}>
                             <div className='button-content'>
                                 <span className='game-icon'>📈</span>
@@ -353,8 +353,8 @@ function Provably(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <h4>Crash Verification</h4>
                                 <p>Crash multipliers are generated using the same system as Roulette:</p>
                                 <div className='seed-grid'>
@@ -390,7 +390,7 @@ function Provably(props) {
                         </div>
                     </div>
 
-                    <div className='dropdown-wrapper'>
+                    <div className='dropdown-faq-wrapper-faq'>
                         <button className='game-button' onClick={toggleDropdown}>
                             <div className='button-content'>
                                 <span className='game-icon'>💰</span>
@@ -404,8 +404,8 @@ function Provably(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <h4>Jackpot Winner Verification</h4>
                                 <p>Jackpot winners are determined using:</p>
                                 <div className='seed-grid'>
@@ -444,7 +444,7 @@ function Provably(props) {
                         </div>
                     </div>
 
-                    <div className='dropdown-wrapper'>
+                    <div className='dropdown-faq-wrapper-faq'>
                         <button className='game-button' onClick={toggleDropdown}>
                             <div className='button-content'>
                                 <span className='game-icon'>🪙</span>
@@ -458,8 +458,8 @@ function Provably(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <h4>Coinflip Verification</h4>
                                 <p>Coinflip results use the same secure system:</p>
                                 <div className='seed-grid'>
@@ -495,7 +495,7 @@ function Provably(props) {
                         </div>
                     </div>
 
-                    <div className='dropdown-wrapper'>
+                    <div className='dropdown-faq-wrapper-faq'>
                         <button className='game-button' onClick={toggleDropdown}>
                             <div className='button-content'>
                                 <span className='game-icon'>💣</span>
@@ -509,8 +509,8 @@ function Provably(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <h4>Mines Verification</h4>
                                 <p>Mine placement uses advanced cryptographic shuffling:</p>
                                 <div className='seed-grid'>
@@ -656,7 +656,7 @@ function Provably(props) {
                 text-align: center;
               }
 
-              .dropdown-wrapper {
+              .dropdown-faq-wrapper-faq {
                 background: rgba(42, 37, 88, 0.1);
                 border: 1px solid rgba(42, 37, 88, 0.3);
                 border-radius: 12px;
@@ -664,12 +664,12 @@ function Provably(props) {
                 transition: all 0.3s ease;
               }
 
-              .dropdown-wrapper:hover {
+              .dropdown-faq-wrapper-faq:hover {
                 background: rgba(42, 37, 88, 0.15);
                 border-color: rgba(42, 37, 88, 0.5);
               }
 
-              .dropdown-wrapper.active {
+              .dropdown-faq-wrapper-faq.active {
                 background: rgba(42, 37, 88, 0.2);
                 border-color: #6366f1;
               }
@@ -731,33 +731,33 @@ function Provably(props) {
                 transition: transform 0.3s ease;
               }
 
-              .dropdown-wrapper.active .chevron {
+              .dropdown-faq-wrapper-faq.active .chevron {
                 transform: rotate(180deg);
               }
 
-              .dropdown {
+              .dropdown-faq {
                 max-height: 0;
                 overflow: hidden;
                 transition: max-height 0.3s ease;
               }
 
-              .dropdown-wrapper.active .dropdown {
+              .dropdown-faq-wrapper-faq.active .dropdown-faq {
                 max-height: 2000px;
               }
 
-              .dropdown-content {
+              .dropdown-faq-content {
                 padding: 0 25px 25px 25px;
                 border-top: 1px solid rgba(42, 37, 88, 0.5);
               }
 
-              .dropdown-content h4 {
+              .dropdown-faq-content h4 {
                 color: #FFF;
                 font-size: 20px;
                 font-weight: 700;
                 margin: 20px 0 15px 0;
               }
 
-              .dropdown-content h5 {
+              .dropdown-faq-content h5 {
                 color: #E8E5FF;
                 font-size: 16px;
                 font-weight: 600;
@@ -896,7 +896,7 @@ function Provably(props) {
                   font-size: 13px;
                 }
 
-                .dropdown-content {
+                .dropdown-faq-content {
                   padding: 0 20px 20px 20px;
                 }
 
@@ -923,7 +923,7 @@ function Provably(props) {
                   padding: 12px 15px;
                 }
 
-                .dropdown-content {
+                .dropdown-faq-content {
                   padding: 0 15px 15px 15px;
                 }
               }

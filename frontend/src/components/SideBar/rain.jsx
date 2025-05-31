@@ -70,7 +70,7 @@ function SidebarRain(props) {
 
             <div className='rain-container fadein'>
                 {userRain() ? (
-                    <Avatar id={userRain()?.host?.id} xp={userRain()?.host?.xp} height='30'/>
+                    <Avatar id={userRain()?.host?.id} xp={userRain()?.host?.xp} height='30' avatar={userRain()?.host?.avatar}/>
                 ) : (
                     <img src='/assets/icons/logoswords.png' height='41' alt=''/>
                 )}

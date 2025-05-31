@@ -1,6 +1,7 @@
 import {A, useSearchParams} from "@solidjs/router";
 import {ADMIN_ROLES} from "../../resources/users";
 import {createNotification, logout} from "../../util/api";
+import Avatar from "../Level/avatar";
 import { 
   FiUser, 
   FiCreditCard, 
@@ -22,11 +23,11 @@ function UserDropdown(props) {
                 <div class='dropdown-content'>
                     <div class='dropdown-header'>
                         <div class='user-info'>
-                            <img
-                                src={props.user?.avatar ? props.user.avatar : '/assets/icons/anon.svg'}
-                                alt='User avatar'
-                                class='header-avatar'
-                                onError={e => { e.currentTarget.src = '/assets/icons/anon.svg'; }}
+                            <Avatar 
+                                avatar={props.user?.avatar}
+                                xp={props.user?.xp}
+                                height={40}
+                                id={props.user?.id}
                             />
                             <div class='user-details'>
                                 <h4 class='user-name'>{props.user?.username || 'Anonymous'}</h4>
@@ -177,14 +178,7 @@ function UserDropdown(props) {
                 gap: 12px;
               }
 
-              .header-avatar {
-                width: 40px;
-                height: 40px;
-                border-radius: 8px;
-                object-fit: cover;
-                border: 2px solid rgba(78, 205, 196, 0.3);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-              }
+             
 
               .user-details {
                 flex: 1;

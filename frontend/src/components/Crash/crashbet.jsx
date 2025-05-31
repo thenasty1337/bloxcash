@@ -13,7 +13,7 @@ function CrashBet(props) {
         <>
             <div class={'crash-bet ' + (getBetState())}>
                 <div class='section'>
-                    <Avatar id={props?.bet?.user?.id} xp={props?.bet?.user?.xp || 0} height='22'/>
+                    <Avatar avatar={props?.bet?.user?.avatar} xp={props?.bet?.user?.xp || 0} height='22'/>
                     <p>{props?.bet?.user?.username || 'Anonymous'}</p>
                 </div>
 

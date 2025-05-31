@@ -122,7 +122,7 @@ const refreshTokens = async (refreshToken) => {
         
         // Get the user
         const [[user]] = await sql.query(
-            'SELECT id, email, username, perms, banned, balance, xp, role FROM users WHERE id = ?',
+            'SELECT id, email, username, avatar, perms, banned, balance, xp, role FROM users WHERE id = ?',
             [decoded.userId]
         );
         
@@ -191,7 +191,7 @@ const authenticate = async (req, res, next) => {
             
             // Get the user from DB to ensure they still exist and aren't banned
             const [[user]] = await sql.query(
-                'SELECT id, email, username, perms, banned, balance, xp, role FROM users WHERE id = ?',
+                'SELECT id, email, username, avatar, perms, banned, balance, xp, role FROM users WHERE id = ?',
                 [decoded.userId]
             );
             
@@ -229,7 +229,7 @@ const authenticate = async (req, res, next) => {
                 
                 // Get the user
                 const [[user]] = await sql.query(
-                    'SELECT id, email, username, perms, banned, balance, xp, role FROM users WHERE id = ?',
+                    'SELECT id, email, username, avatar, perms, banned, balance, xp, role FROM users WHERE id = ?',
                     [decoded.userId]
                 );
                 

@@ -12,7 +12,7 @@ function LiveEarn(props) {
                     </div>
 
                     <div class='avatar'>
-                        <Avatar height='25' id={props?.user?.id} xp={props?.user?.xp}/>
+                        <Avatar height='25' id={props?.user?.id} xp={props?.user?.xp} avatar={props?.user?.avatar}/>
                     </div>
                 </div>
 

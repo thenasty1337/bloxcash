@@ -52,7 +52,7 @@ function JackpotUser(props) {
         <>
             <div class={'jackpot-user ' + (props?.won ? 'won big ' : '')} ref={jpUser}>
                 <p class='percent'>{((props?.percent || 0) * 100)?.toFixed(2)}%</p>
-                <Avatar id={props?.id || '?'} xp={props?.xp} height={48} />
+                <Avatar id={props?.id || '?'} xp={props?.xp} height={48} avatar={props?.avatar}/>
                 <div class='bar' style={{background: props?.color}}/>
             </div>
 

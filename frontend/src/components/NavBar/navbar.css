@@ -124,56 +124,28 @@
   justify-content: center;
   height: 36px;
   padding: 0 16px;
-  background: rgba(26, 35, 50, 0.6);
-  border: 1px solid rgba(78, 205, 196, 0.25);
-  border-radius: 8px;
-  color: #4ecdc4;
+  background: linear-gradient(135deg, #50c9e5, #1a8ea9);
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(12px);
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  position: relative;
-  overflow: hidden;
-  letter-spacing: 0.3px;
-}
-
-.deposit-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(78, 205, 196, 0.1), transparent);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  border-radius: 8px;
-}
-
-.deposit-button:hover::before {
-  opacity: 1;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px #50c9e54d;
+  letter-spacing: 0.5px;
 }
 
 .deposit-button:hover {
-  background: rgba(78, 205, 196, 0.15);
-  border-color: rgba(78, 205, 196, 0.4);
-  color: #ffffff;
+  background: linear-gradient(135deg, #1a8ea9, #1a8ea9);
   transform: translateY(-1px);
-  box-shadow: 
-    0 4px 16px rgba(78, 205, 196, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 8px #50c9e54d;
 }
 
 .deposit-button:active {
   transform: translateY(0);
-  box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 1px 2px #50c9e54d;
 }
 
 /* Center Wallet Balance Button - Clean design like the photo */
@@ -518,16 +490,13 @@
   box-shadow: 0 4px 12px rgba(78, 205, 196, 0.15);
 }
 
-.user-avatar {
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  object-fit: cover;
+.user-profile .avatar {
   box-shadow: 0 0 0 1px rgba(78, 205, 196, 0.2);
   transition: all 0.3s ease;
+  border-radius: 4px;
 }
 
-.user-profile:hover .user-avatar {
+.user-profile:hover .avatar {
   box-shadow: 0 0 0 2px rgba(78, 205, 196, 0.4);
   transform: scale(1.03);
 }
@@ -641,9 +610,8 @@
     gap: 6px;
   }
 
-  .user-avatar {
-    width: 22px;
-    height: 22px;
+  .user-profile .avatar {
+    /* Size controlled by Avatar component height prop */
   }
 
   .username {
@@ -685,9 +653,8 @@
     padding: 0 6px;
   }
 
-  .user-avatar {
-    width: 20px;
-    height: 20px;
+  .user-profile .avatar {
+    /* Size controlled by Avatar component height prop */
   }
 
   .auth-button {
@@ -719,17 +686,17 @@
     font-size: 9px;
   }
 
-  .user-avatar {
-    width: 18px;
-    height: 18px;
+  .user-profile .avatar {
+    /* Size controlled by Avatar component height prop */
   }
 }
 
 .navbar-container.sidebar-collapsed .sidebar-header-in-navbar {
-  min-width: 60px; /* Match collapsed sidebar width */
-  width: 60px;
+  min-width: 240px; /* Keep the same width to show logo */
+  width: 240px;
 }
 
+/* Keep logo text visible when sidebar is collapsed */
 .navbar-container.sidebar-collapsed .sidebar-header-in-navbar .logo-text {
-  display: none; /* Hide logo text when sidebar is collapsed */
+  display: block;
 } 

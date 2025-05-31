@@ -38,7 +38,7 @@ const verifyJwtToken = async (socket, next) => {
         
         // Get user from database to ensure they exist and aren't banned
         const [[user]] = await sql.query(
-            'SELECT id, email, username, perms, banned, balance, xp, role FROM users WHERE id = ?',
+            'SELECT id, email, username, avatar, perms, banned, balance, xp, role FROM users WHERE id = ?',
             [decoded.userId]
         );
         

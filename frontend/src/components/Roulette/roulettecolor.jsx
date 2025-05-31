@@ -88,7 +88,7 @@ function RouletteColor(props) {
                     <For each={bets()}>{(bet, index) => (
                         <div class={'bet ' + (props?.color + '-') + (index() === 0 ? 'top' : '')}>
                             <div class='user'>
-                                <Avatar id={bet?.user?.id} xp={bet?.user?.xp} height={30}/>
+                                <Avatar id={bet?.user?.id} xp={bet?.user?.xp} height={30} avatar={bet?.user?.avatar}/>
                                 <p>{bet?.user?.username}</p>
 
                                 {index() === 0 && (

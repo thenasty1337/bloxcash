@@ -38,7 +38,7 @@ function JackpotBet(props) {
                 </p>
 
                 <div class='user'>
-                    <Avatar id={props?.user?.id} xp={props?.user?.xp} height='45'/>
+                    <Avatar avatar={props?.user?.avatar} xp={props?.user?.xp} height='45' id={props?.user?.id}/>
                     <p>{props?.user?.username || 'Anonymous'}</p>
                 </div>
             </div>

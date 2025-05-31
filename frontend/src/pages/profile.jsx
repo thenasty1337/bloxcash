@@ -55,7 +55,7 @@ function Profile(props) {
                     </p>
 
                     <div class='user-display'>
-                        <Avatar id={user()?.id} xp={user()?.xp} height='45'/>
+                        <Avatar id={user()?.id} xp={user()?.xp} height='45' avatar={user()?.avatar}/>
                         <p>{user()?.username}</p>
                         <Level xp={user()?.xp}/>
                     </div>

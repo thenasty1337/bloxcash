@@ -19,7 +19,7 @@ router.use('/notifications', notificationsRoute);
 
 router.get('/', isAuthed, async (req, res) => {
 
-    const [[user]] = await sql.query('SELECT id, role, username, balance, xp, anon FROM users WHERE id = ?', [req.user.id]);
+    const [[user]] = await sql.query('SELECT id, role, username, avatar, balance, xp, anon FROM users WHERE id = ?', [req.user.id]);
 
     if (!user) {
         console.error(`User not found for authenticated request, userId: ${req.user.id}`);
@@ -142,7 +142,7 @@ router.get('/:id/profile', async (req, res) => {
     const userId = parseInt(req.params.id);
     if (!userId || isNaN(userId)) return res.status(400).json({ error: 'INVALID_USER_ID' });
 
-    const [[user]] = await sql.query('SELECT id, username, xp FROM users WHERE id = ?', [userId]);
+    const [[user]] = await sql.query('SELECT id, username, xp, avatar FROM users WHERE id = ?', [userId]);
     if (!user) return res.status(404).json({ error: 'USER_NOT_FOUND' });
 
     const [[wagered]] = await sql.query('SELECT SUM(amount) AS wagered FROM bets WHERE userId = ? AND completed = 1', [userId]);

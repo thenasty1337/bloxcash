@@ -124,7 +124,7 @@ function AdminCryptoCashier(props) {
                         <For each={transactions()[page()]}>{(tx, index) =>
                             <div className='table-data'>
                                 <div className='table-column'>
-                                    <Avatar id={tx?.userId} xp={tx.xp} height='30'/>
+                                    <Avatar id={tx?.userId} xp={tx.xp} height='30' avatar={tx?.avatar}/>
                                     <p className='white'>{tx?.username || 'Anonymous'}</p>
                                 </div>
 

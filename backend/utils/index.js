@@ -215,7 +215,8 @@ function mapUser(user) {
         id: user.id,
         username: user.username,
         role: user.role,
-        xp: user.xp
+        xp: user.xp,
+        avatar: user.avatar
     }
 }
 

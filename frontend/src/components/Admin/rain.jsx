@@ -55,7 +55,7 @@ function AdminRain(props) {
                             <For each={users()}>{(tipper, index) =>
                                 <div className='table-data'>
                                     <div className='table-column'>
-                                        <Avatar id={tipper?.id} xp={tipper.xp} height='30'/>
+                                        <Avatar id={tipper?.id} xp={tipper.xp} height='30' avatar={tipper?.avatar}/>
                                         <p class='white'>{tipper?.username || 'Anonymous'}</p>
                                     </div>
 

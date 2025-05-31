@@ -205,7 +205,7 @@ function Affiliates(props) {
                         <For each={users()[page()]}>{(aff, index) => (
                             <div class='table-data'>
                                 <div class='table-column'>
-                                    <Avatar id={aff?.id} xp={aff.xp} height='30'/>
+                                    <Avatar id={aff?.id} xp={aff.xp} height='30' avatar={aff?.avatar}/>
                                     <p>{aff?.username || 'Anonymous'}</p>
                                 </div>
 

@@ -13,6 +13,7 @@ function UserModal(props) {
   const [tip, setTip] = createSignal(0)
   const [ws] = useWebsocket()
 
+
   async function getUser(userid) {
     try {
       let res = await api(`/user/${userid}/profile`, 'GET', null, true)
@@ -24,6 +25,9 @@ function UserModal(props) {
       return
     }
   }
+
+  console.log('user', user())
+
 
   function tipUser() {
     if (!ws() || !ws().connected || tip() < 1) return
@@ -44,7 +48,7 @@ function UserModal(props) {
                 <h1><img src='/assets/icons/user.svg' style={{margin: '0 8px 0 0'}}/>USER PROFILE</h1>
 
                 <div className='user-info'>
-                  <Avatar id={user()?.id || 0} xp={user()?.xp || 0} height='35'/>
+                  <Avatar id={user()?.id || 0} xp={user()?.xp || 0} height='35' avatar={user()?.avatar}/>
                   <p>{user()?.username || 'Unknown'}</p>
                   <Level xp={user()?.xp || 0}/>
                 </div>

@@ -30,27 +30,38 @@ function Avatar(props) {
                     </svg>
                 ) : (
                     <img
-    src={props?.avatar ? props.avatar : '/assets/icons/anon.svg'}
-    alt=''
-    style={{ height: props?.height ? ((props.height - 2) + 'px') : '16px' }}
-    onError={e => { e.currentTarget.src = '/assets/icons/anon.svg'; }}
-/>
+                        src={props?.avatar ? props.avatar : '/assets/icons/anon.svg'}
+                        alt=''
+                        style={{ height: props?.height ? ((props.height - 4) + 'px') : '16px' }}
+                        onError={e => { e.currentTarget.src = '/assets/icons/anon.svg'; }}
+                    />
                 )}
             </div>
 
             <style jsx>{`
-              .avatar img {
-                border-radius: 3px;
-                position: relative;
-                z-index: 1;
-              }
-
               .avatar {
                 position: relative;
-                padding: 1px;
+                padding: 2px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                border-radius: 50%;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+                transition: all 0.2s ease;
+              }
+
+              .avatar:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+              }
+
+              .avatar img {
+                border-radius: 50%;
+                position: relative;
+                z-index: 1;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
               }
               
               .empty {
@@ -63,100 +74,129 @@ function Avatar(props) {
               }
               
               .avatar.purple:before {
-                background: linear-gradient(rgba(89, 74, 203, 1), rgba(103, 89, 209, 1));
+                background: linear-gradient(135deg, #594ACB 0%, #6759D1 100%);
+                box-shadow: 0 0 15px rgba(89, 74, 203, 0.4);
               }
 
               .avatar.yellowteam:before {
-                background: #DFFF18;
+                background: linear-gradient(135deg, #DFFF18 0%, #F0FF6B 100%);
+                box-shadow: 0 0 15px rgba(223, 255, 24, 0.4);
               }
               
               .avatar.yellowteam:after {
-                background: linear-gradient(0deg, rgba(223, 255, 24, 0.25) 0%, rgba(223, 255, 24, 0.25) 100%), linear-gradient(230deg, #1A0E33 0%, #423C7A 100%);
+                background: linear-gradient(135deg, rgba(223, 255, 24, 0.25) 0%, rgba(223, 255, 24, 0.1) 100%), linear-gradient(230deg, #1A0E33 0%, #423C7A 100%);
               }
 
               .avatar.blueteam:before {
-                background: #3EC5FF;
+                background: linear-gradient(135deg, #3EC5FF 0%, #6BD3FF 100%);
+                box-shadow: 0 0 15px rgba(62, 197, 255, 0.4);
               }
 
               .avatar.blueteam:after {
-                background: linear-gradient(0deg, rgba(62, 197, 255, 0.25) 0%, rgba(62, 197, 255, 0.25) 100%), linear-gradient(230deg, #1A0E33 0%, #423C7A 100%);
+                background: linear-gradient(135deg, rgba(62, 197, 255, 0.25) 0%, rgba(62, 197, 255, 0.1) 100%), linear-gradient(230deg, #1A0E33 0%, #423C7A 100%);
               }
 
               .avatar:before {
                 width: 100%;
                 height: 100%;
-
-                border-radius: 3px;
-
+                border-radius: 50%;
                 content: '';
                 position: absolute;
-
                 left: 0;
                 top: 0;
-
-                background: #8F8DA1;
+                background: linear-gradient(135deg, #8F8DA1 0%, #A5A3B8 100%);
                 z-index: 0;
               }
               
               .avatar.dark:after {
-                background: linear-gradient(0deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%), #2F2B59;
+                background: linear-gradient(135deg, rgba(0, 0, 0, 0.20) 0%, rgba(0, 0, 0, 0.10) 100%), #2F2B59;
               }
 
               .avatar:after {
-                width: calc(100% - 2px);
-                height: calc(100% - 2px);
-
-                border-radius: 3px;
-
+                width: calc(100% - 4px);
+                height: calc(100% - 4px);
+                border-radius: 50%;
                 content: '';
                 position: absolute;
-
-                left: 1px;
-                top: 1px;
-
+                left: 2px;
+                top: 2px;
                 background: var(--background);
                 z-index: 0;
               }
 
               .avatar.green:before {
-                background: #56B66B;
+                background: linear-gradient(135deg, #56B66B 0%, #6BC876 100%);
+                box-shadow: 0 0 15px rgba(86, 182, 107, 0.3);
               }
 
               .avatar.blue:before {
-                background: #559EE4;
-                color: #D9D9D9;
+                background: linear-gradient(135deg, #559EE4 0%, #6BAEE8 100%);
+                box-shadow: 0 0 15px rgba(85, 158, 228, 0.3);
               }
               
               .avatar.pink:before {
-                background: #BF50D1;
-              }
-              
-              .avatar.fire:before {
-                background: #BF50D1;
-                color: #D9D9D9;
+                background: linear-gradient(135deg, #BF50D1 0%, #D165DC 100%);
+                box-shadow: 0 0 15px rgba(191, 80, 209, 0.3);
               }
 
               .avatar.gem:before {
-                background: linear-gradient(133.08deg, #04B79D 25.84%, #2F8C62 97.55%);
+                background: linear-gradient(135deg, #04B79D 0%, #2F8C62 50%, #39A581 100%);
+                box-shadow: 0 0 15px rgba(4, 183, 157, 0.4);
               }
               
               .avatar.fire:before {
-                background: linear-gradient(133.08deg, #FF9900 58.33%, #F9AC39 68.04%);
+                background: linear-gradient(135deg, #FF9900 0%, #F9AC39 50%, #FFB84D 100%);
+                box-shadow: 0 0 15px rgba(255, 153, 0, 0.4);
+                animation: fireGlow 2s ease-in-out infinite alternate;
+              }
+
+              @keyframes fireGlow {
+                0% {
+                  box-shadow: 0 0 15px rgba(255, 153, 0, 0.4);
+                }
+                100% {
+                  box-shadow: 0 0 20px rgba(255, 153, 0, 0.6);
+                }
+              }
+
+              .avatar.bronze:before {
+                background: linear-gradient(135deg, #CD7F32 0%, #B8721C 100%);
+                box-shadow: 0 0 15px rgba(205, 127, 50, 0.3);
               }
 
               .avatar.bronze:after {
-                border: 1px solid rgb(154, 108, 108);
-                background: rgb(65, 55, 83);
+                border: 1px solid rgba(154, 108, 108, 0.5);
+                background: linear-gradient(135deg, rgba(65, 55, 83, 0.9) 0%, rgba(75, 65, 93, 0.9) 100%);
               }
               
+              .avatar.silver:before {
+                background: linear-gradient(135deg, #C0C0C0 0%, #E8E8E8 100%);
+                box-shadow: 0 0 15px rgba(192, 192, 192, 0.4);
+              }
+
               .avatar.silver:after {
-                border: 1px solid rgb(193, 193, 193);
-                background: rgb(96, 93, 126);
+                border: 1px solid rgba(193, 193, 193, 0.5);
+                background: linear-gradient(135deg, rgba(96, 93, 126, 0.9) 0%, rgba(106, 103, 136, 0.9) 100%);
+              }
+
+              .avatar.gold:before {
+                background: linear-gradient(135deg, #FFD700 0%, #F9AC39 50%, #FFC107 100%);
+                box-shadow: 0 0 20px rgba(249, 172, 57, 0.5);
+                animation: goldShine 3s ease-in-out infinite;
               }
 
               .avatar.gold:after {
-                border: 1px solid rgb(249, 172, 57);
-                background: #674A44;
+                border: 1px solid rgba(249, 172, 57, 0.6);
+                background: linear-gradient(135deg, rgba(103, 74, 68, 0.9) 0%, rgba(113, 84, 78, 0.9) 100%);
+              }
+
+              @keyframes goldShine {
+                0%, 100% {
+                  box-shadow: 0 0 20px rgba(249, 172, 57, 0.5);
+                }
+                50% {
+                  box-shadow: 0 0 25px rgba(249, 172, 57, 0.7);
+                }
               }
             `}</style>
         </>

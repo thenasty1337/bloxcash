@@ -1,7 +1,7 @@
 function FAQ(props) {
 
     function toggleDropdown(e) {
-        e.target.closest('.dropdown-wrapper').classList.toggle('active')
+        e.target.closest('.dropdown-faq-wrapper-faq').classList.toggle('active')
     }
 
     function handleCategoryFilter(e, category) {
@@ -14,7 +14,7 @@ function FAQ(props) {
         e.target.classList.add('active')
         
         // Get all FAQ items
-        const faqItems = document.querySelectorAll('.dropdown-wrapper')
+        const faqItems = document.querySelectorAll('.dropdown-faq-wrapper-faq')
         
         // Show/hide items based on category
         faqItems.forEach(item => {
@@ -29,12 +29,12 @@ function FAQ(props) {
 
     function handleSearch(e) {
         const searchTerm = e.target.value.toLowerCase()
-        const faqItems = document.querySelectorAll('.dropdown-wrapper')
+        const faqItems = document.querySelectorAll('.dropdown-faq-wrapper-faq')
         
         faqItems.forEach(item => {
             const questionText = item.querySelector('.question-text h3').textContent.toLowerCase()
             const descriptionText = item.querySelector('.question-text p').textContent.toLowerCase()
-            const contentText = item.querySelector('.dropdown-content').textContent.toLowerCase()
+            const contentText = item.querySelector('.dropdown-faq-content').textContent.toLowerCase()
             
             const matchesSearch = questionText.includes(searchTerm) || 
                                 descriptionText.includes(searchTerm) || 
@@ -138,7 +138,7 @@ function FAQ(props) {
                 </div>
 
                 <div className='faq-sections'>
-                    <div className='dropdown-wrapper' data-category="account">
+                    <div className='dropdown-faq-wrapper-faq' data-category="account">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
                                 <span className='question-icon'>👤</span>
@@ -152,8 +152,8 @@ function FAQ(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <p>
                                     Creating an account on BloxClash is quick and easy! Simply click the "Sign Up" button 
                                     and choose from our supported authentication methods including Google, Discord, or email 
@@ -168,7 +168,7 @@ function FAQ(props) {
                         </div>
                     </div>
 
-                    <div className='dropdown-wrapper' data-category="deposits">
+                    <div className='dropdown-faq-wrapper-faq' data-category="deposits">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
                                 <span className='question-icon'>💰</span>
@@ -182,8 +182,8 @@ function FAQ(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <p>
                                     BloxClash supports multiple deposit methods for your convenience:
                                 </p>
@@ -201,7 +201,7 @@ function FAQ(props) {
                         </div>
                     </div>
 
-                    <div className='dropdown-wrapper' data-category="withdrawals">
+                    <div className='dropdown-faq-wrapper-faq' data-category="withdrawals">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
                                 <span className='question-icon'>🏦</span>
@@ -215,8 +215,8 @@ function FAQ(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <p>Withdrawal processing times vary by method:</p>
                                 <ul className='info-list'>
                                     <li><strong>Cryptocurrency:</strong> 15-30 minutes (after blockchain confirmation)</li>
@@ -232,7 +232,7 @@ function FAQ(props) {
                         </div>
                     </div>
 
-                    <div className='dropdown-wrapper' data-category="gaming">
+                    <div className='dropdown-faq-wrapper-faq' data-category="gaming">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
                                 <span className='question-icon'>🎯</span>
@@ -246,8 +246,8 @@ function FAQ(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <p>
                                     Absolutely! BloxClash uses a state-of-the-art provably fair system to ensure 
                                     all game outcomes are completely transparent and cannot be manipulated by us or anyone else.
@@ -266,7 +266,7 @@ function FAQ(props) {
                         </div>
                     </div>
 
-                    <div className='dropdown-wrapper' data-category="account">
+                    <div className='dropdown-faq-wrapper-faq' data-category="account">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
                                 <span className='question-icon'>🔒</span>
@@ -280,8 +280,8 @@ function FAQ(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <p>
                                     To enable 2FA and secure your account:
                                 </p>
@@ -301,7 +301,7 @@ function FAQ(props) {
                         </div>
                     </div>
 
-                    <div className='dropdown-wrapper' data-category="gaming">
+                    <div className='dropdown-faq-wrapper-faq' data-category="gaming">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
                                 <span className='question-icon'>🎁</span>
@@ -315,8 +315,8 @@ function FAQ(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <p>BloxClash has several ways to share your winnings with the community:</p>
                                 <ul className='info-list'>
                                     <li><strong>Tipping:</strong> Click on a user's profile in chat and select "Tip" to send them funds</li>
@@ -331,7 +331,7 @@ function FAQ(props) {
                         </div>
                     </div>
 
-                    <div className='dropdown-wrapper' data-category="account">
+                    <div className='dropdown-faq-wrapper-faq' data-category="account">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
                                 <span className='question-icon'>🏆</span>
@@ -345,8 +345,8 @@ function FAQ(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <p>
                                     Our affiliate program offers generous rewards for bringing new users to BloxClash:
                                 </p>
@@ -364,7 +364,7 @@ function FAQ(props) {
                         </div>
                     </div>
 
-                    <div className='dropdown-wrapper' data-category="gaming">
+                    <div className='dropdown-faq-wrapper-faq' data-category="gaming">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
                                 <span className='question-icon'>🌐</span>
@@ -378,8 +378,8 @@ function FAQ(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <p>
                                     Don't worry! Your game outcomes are determined the moment you place your bet using 
                                     our provably fair system, so disconnections won't affect your results:
@@ -398,7 +398,7 @@ function FAQ(props) {
                         </div>
                     </div>
 
-                    <div className='dropdown-wrapper' data-category="deposits">
+                    <div className='dropdown-faq-wrapper-faq' data-category="deposits">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
                                 <span className='question-icon'>⏰</span>
@@ -412,8 +412,8 @@ function FAQ(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <p>If your deposit is delayed, here's what to check:</p>
                                 <ul className='info-list'>
                                     <li><strong>Cryptocurrency:</strong> Check blockchain confirmations (usually 1-3 required)</li>
@@ -429,7 +429,7 @@ function FAQ(props) {
                         </div>
                     </div>
 
-                    <div className='dropdown-wrapper' data-category="security">
+                    <div className='dropdown-faq-wrapper-faq' data-category="security">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
                                 <span className='question-icon'>🛡️</span>
@@ -443,8 +443,8 @@ function FAQ(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <p>
                                     We take security seriously and appreciate responsible disclosure. If you've found a vulnerability:
                                 </p>
@@ -462,7 +462,7 @@ function FAQ(props) {
                         </div>
                     </div>
 
-                    <div className='dropdown-wrapper' data-category="support">
+                    <div className='dropdown-faq-wrapper-faq' data-category="support">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
                                 <span className='question-icon'>💬</span>
@@ -476,8 +476,8 @@ function FAQ(props) {
                             </svg>
                         </button>
 
-                        <div className='dropdown'>
-                            <div className='dropdown-content'>
+                        <div className='dropdown-faq'>
+                            <div className='dropdown-faq-content'>
                                 <p>We offer multiple ways to get support when you need help:</p>
                                 <ul className='info-list'>
                                     <li><strong>Live Chat:</strong> Available 24/7 on our website for immediate assistance</li>
@@ -623,7 +623,7 @@ function FAQ(props) {
                 gap: 20px;
               }
 
-              .dropdown-wrapper {
+              .dropdown-faq-wrapper-faq {
                 background: rgba(42, 37, 88, 0.1);
                 border: 1px solid rgba(70, 65, 120, 0.6);
                 border-radius: 12px;
@@ -631,12 +631,12 @@ function FAQ(props) {
                 transition: all 0.3s ease;
               }
 
-              .dropdown-wrapper:hover {
+              .dropdown-faq-wrapper-faq:hover {
                 background: rgba(42, 37, 88, 0.15);
                 border-color: rgba(70, 65, 120, 0.8);
               }
 
-              .dropdown-wrapper.active {
+              .dropdown-faq-wrapper-faq.active {
                 background: rgba(42, 37, 88, 0.2);
                 border-color: #6366f1;
               }
@@ -697,26 +697,26 @@ function FAQ(props) {
                 flex-shrink: 0;
               }
 
-              .dropdown-wrapper.active .chevron {
+              .dropdown-faq-wrapper-faq.active .chevron {
                 transform: rotate(180deg);
               }
 
-              .dropdown {
+              .dropdown-faq {
                 max-height: 0;
                 overflow: hidden;
                 transition: max-height 0.3s ease;
               }
 
-              .dropdown-wrapper.active .dropdown {
+              .dropdown-faq-wrapper-faq.active .dropdown-faq {
                 max-height: 1000px;
               }
 
-              .dropdown-content {
+              .dropdown-faq-content {
                 padding: 0 25px 25px 25px;
                 border-top: 1px solid rgba(70, 65, 120, 0.4);
               }
 
-              .dropdown-content p {
+              .dropdown-faq-content p {
                 margin: 15px 0;
                 color: #C7C2F0;
                 line-height: 1.6;
@@ -803,7 +803,7 @@ function FAQ(props) {
                   font-size: 12px;
                 }
 
-                .dropdown-content {
+                .dropdown-faq-content {
                   padding: 0 20px 20px 20px;
                 }
               }
@@ -824,7 +824,7 @@ function FAQ(props) {
                   font-size: 18px;
                 }
 
-                .dropdown-content {
+                .dropdown-faq-content {
                   padding: 0 15px 15px 15px;
                 }
               }

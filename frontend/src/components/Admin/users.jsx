@@ -136,7 +136,7 @@ function AdminUsers(props) {
                             <For each={users()[page()]}>{(user, index) =>
                                 <div className='table-data'>
                                     <div className='table-column'>
-                                        <Avatar id={user?.id} xp={user.xp} height='30'/>
+                                        <Avatar id={user?.id} xp={user.xp} height='30' avatar={user?.avatar}/>
                                         <p class='white'>{user?.username || 'Anonymous'}</p>
                                     </div>
 

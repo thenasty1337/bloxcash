@@ -30,7 +30,7 @@ router.post('/login', loginLimiter, async (req, res) => {
 
         // Find the user
         const [[user]] = await sql.query(
-            'SELECT id, email, username, passwordHash, perms, banned, balance, xp, role FROM users WHERE email = ?', 
+            'SELECT id, email, username, avatar, passwordHash, perms, banned, balance, xp, role FROM users WHERE email = ?', 
             [req.body.email]
         );
 
@@ -161,6 +161,7 @@ router.post('/logout', async (req, res) => {
 // Get current user info
 router.get('/me', authenticate, (req, res) => {
     // User is already authenticated by the middleware
+    console.log(req.user);
     res.json({ user: req.user });
 });
 

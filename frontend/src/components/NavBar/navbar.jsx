@@ -2,6 +2,7 @@ import {A, useSearchParams} from "@solidjs/router";
 import {createEffect, createSignal} from "solid-js";
 import Level from "../Level/level";
 import Circularprogress from "../Level/circularprogress";
+import Avatar from "../Level/avatar";
 import {progressToNextLevel} from "../../resources/levels";
 import BottomNavBar from "./mobilenav";
 import UserDropdown from "./userdropdown";
@@ -70,12 +71,12 @@ function NavBar(props) {
                     <div class='navbar-content'>
                         {/* Sidebar Header - Logo and Collapse Button */}
                         <div class='sidebar-header-in-navbar'>
-                            <div class='logo-section'>
+                            <A href='/' class='logo-section'>
                                 <div class='logo-icon'>
                                     <AiOutlineStar size={24} />
                                 </div>
                                 <span class='logo-text'>NOVA CASINO</span>
-                            </div>
+                            </A>
                             <button 
                                 class='collapse-button' 
                                 onClick={toggleSidebarCollapsed}
@@ -167,13 +168,16 @@ function NavBar(props) {
                                              setUserDropdown(!userDropdown())
                                              e.stopPropagation()
                                          }}>
-                                        <img
-                                            src={props.user?.avatar ? props.user.avatar : '/assets/icons/anon.svg'}
-                                            alt='User avatar'
-                                            class='user-avatar'
-                                            onError={e => { e.currentTarget.src = '/assets/icons/anon.svg'; }}
+                                        <Avatar 
+                                            avatar={props.user?.avatar}
+                                            xp={props.user?.xp}
+                                            height={24}
                                         />
-                                        <span class='username'>{props.user?.username || 'Anonymous'}</span>
+                                        <span class='username' title={props.user?.username || 'Anonymous'}>
+                                            {props.user?.username?.length > 12 
+                                                ? props.user?.username?.slice(0, 12) + '...' 
+                                                : props.user?.username || 'Anonymous'}
+                                        </span>
                                         <FiChevronDown 
                                             size={12}
                                             class='dropdown-arrow'

@@ -60,7 +60,7 @@ function AdminUserModal(props) {
                   <p className='id'><span className='gold bold'>ACCOUNT ID</span> {props?.user?.id}
                   </p>
 
-                  <Avatar id={props?.user?.id || 0} xp={props?.user?.xp || 0} height='35'/>
+                  <Avatar id={props?.user?.id || 0} xp={props?.user?.xp || 0} height='35' avatar={props?.user?.avatar}/>
                   <p>{props?.user?.username || 'Unknown'}</p>
                   <Level xp={props?.user?.xp || 0}/>
                 </div>

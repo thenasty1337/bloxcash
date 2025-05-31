@@ -14,7 +14,7 @@ function CoinflipPreview(props) {
                 <div class='user'>
                     <img src={`/assets/icons/${props?.flip?.ownerSide}coin.svg`} height='35' width='35' alt={props?.flip?.ownerSide}/>
 
-                    <Avatar id={creator?.id} xp={creator?.xp} height='45'/>
+                    <Avatar id={creator?.id} xp={creator?.xp} height='45' avatar={creator?.avatar}/>
                     <p class='username'>{creator?.username}</p>
                 </div>
 

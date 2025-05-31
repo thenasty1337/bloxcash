@@ -23,7 +23,7 @@ function BattleUser(props) {
         <>
             <div class='battle-user-container'>
                 <div class={'user-info ' + (props?.player ? 'active' : '')}>
-                    <Avatar height='40' id={props?.player?.id || '?'} xp={props?.player?.xp || 'purple'} dark={!props.player}/>
+                    <Avatar height='40' id={props?.player?.id || '?'} xp={props?.player?.xp || 'purple'} dark={!props.player} avatar={props?.player?.avatar}/>
 
                     <div class='name-container'>
                         <p class='username'>{props?.player?.username || 'WAITING FOR PLAYER'}</p>

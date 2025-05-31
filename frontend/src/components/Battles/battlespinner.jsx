@@ -152,7 +152,7 @@ function BattleSpinner(props) {
             )}
 
             <div class='avatar'>
-              <Avatar id={props?.player?.id} xp={props?.player?.xp} height='50'/>
+              <Avatar id={props?.player?.id} xp={props?.player?.xp} height='50' avatar={props?.player?.avatar}/>
 
               {color() === 'green' && (
                 <img class='crown' src='/assets/icons/crown.svg' height='31' width='50'/>

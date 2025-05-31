@@ -8,7 +8,7 @@ function RainTip(props) {
                 <div class='swords'/>
                 <p class='title'><img src='/assets/icons/coin.svg'/>RAIN HAS BEEN TIPPED</p>
                 <div class='info'>
-                    <Avatar xp={props?.user?.xp || 0} id={props?.user?.id} height={20}/>
+                    <Avatar xp={props?.user?.xp || 0} id={props?.user?.id} height={20} avatar={props?.user?.avatar}/>
                     <div class='text'>
                         <p className='name'>{props?.user?.username}</p>
                         <p className='gray'>tipped the rain</p>

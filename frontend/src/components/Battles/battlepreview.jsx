@@ -81,7 +81,7 @@ function BattlePreview(props) {
                       return (
                         <>
                           <Avatar height={44} xp={getColor(teamIndex())}
-                                  id={player?.id || '?'}/>
+                                  id={player?.id || '?'} avatar={player?.avatar}/>
                           {(props?.battle?.gamemode === 'group' && playerIndex() < props?.battle?.playersPerTeam - 1) && (
                             <img src='/assets/icons/goldhands.svg' height='18' width='18'
                                  alt='vs'/>

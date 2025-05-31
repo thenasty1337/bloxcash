@@ -597,24 +597,24 @@ function Chat(props) {
               }
               
               .send-button {
-                background: linear-gradient(135deg, #f39c12, #e67e22);
+                background: linear-gradient(135deg, #50c9e5, #1a8ea9);
                 border: none;
                 border-radius: 6px;
                 padding: 6px 16px;
                 cursor: pointer;
                 transition: all 0.2s ease;
-                box-shadow: 0 2px 4px rgba(243, 156, 18, 0.3);
+                box-shadow: 0 2px 4px #50c9e54d;
               }
               
               .send-button:hover {
-                background: linear-gradient(135deg, #e67e22, #d35400);
+                background: linear-gradient(135deg, #1a8ea9, #1a8ea9);
                 transform: translateY(-1px);
-                box-shadow: 0 4px 8px rgba(243, 156, 18, 0.4);
+                box-shadow: 0 4px 8px #50c9e54d;
               }
               
               .send-button:active {
                 transform: translateY(0);
-                box-shadow: 0 1px 2px rgba(243, 156, 18, 0.3);
+                box-shadow: 0 1px 2px #50c9e54d;
               }
               
               .send-button span {
