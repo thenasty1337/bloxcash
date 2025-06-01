@@ -12,10 +12,12 @@ const { getUserRakebacks } = require('./rakeback/functions');
 const affiliateRoute = require('./affiliate');
 const rakebackRoute = require('./rakeback');
 const notificationsRoute = require('./notifications');
+const settingsRoute = require('./settings');
 
 router.use('/affiliate', affiliateRoute);
 router.use('/rakeback', rakebackRoute);
 router.use('/notifications', notificationsRoute);
+router.use('/settings', settingsRoute);
 
 router.get('/', isAuthed, async (req, res) => {
 

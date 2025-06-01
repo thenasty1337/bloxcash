@@ -8,6 +8,8 @@ import {getUserNextLevel, progressToNextLevel, xpForLevel} from "../resources/le
 import Avatar from "../components/Level/avatar";
 import {Title} from "@solidjs/meta";
 import { TbChartBar, TbHistory, TbSettings, TbCoin, TbArrowUp, TbArrowDown, TbTrendingUp } from 'solid-icons/tb';
+import PasswordModal from "../components/Modal/PasswordModal";
+import { ModalProvider, useModal } from "../contexts/ModalContext";
 
 function Profile(props) {
 
@@ -41,6 +43,31 @@ function Profile(props) {
         <>
             <Title>BloxClash | Profile</Title>
 
+            <ModalProvider>
+                <ProfileContent 
+                    location={location}
+                    user={user}
+                    stats={stats}
+                    fetchStats={fetchStats}
+                    getCurrentXP={getCurrentXP}
+                    getTotalXPForNext={getTotalXPForNext}
+                    isActive={isActive}
+                />
+            </ModalProvider>
+        </>
+    );
+}
+
+function ProfileContent(props) {
+    const modal = useModal();
+
+    return (
+        <>
+            {/* Global Password Modal */}
+            <Show when={modal.showPasswordModal()}>
+                <PasswordModal onClose={modal.closePasswordModal} />
+            </Show>
+
             <div class="profile-page">
                 <div class="profile-container">
                     
@@ -48,13 +75,13 @@ function Profile(props) {
                     <div class="profile-main">
                         <div class="profile-header">
                             <div class="avatar-section">
-                                <Avatar id={user()?.id} xp={user()?.xp} height='64' avatar={user()?.avatar}/>
+                                <Avatar id={props.user()?.id} xp={props.user()?.xp} height='64' avatar={props.user()?.avatar}/>
                             </div>
                             <div class="user-info">
-                                <h1 class="username-profile">{user()?.username}</h1>
+                                <h1 class="username-profile">{props.user()?.username}</h1>
                                 <div class="user-meta">
-                                    <span class="user-id">#{user()?.id}</span>
-                                    <Level xp={user()?.xp}/>
+                                    <span class="user-id">#{props.user()?.id}</span>
+                                    <Level xp={props.user()?.xp}/>
                                 </div>
                             </div>
                         </div>
@@ -62,21 +89,21 @@ function Profile(props) {
                         <div class="xp-section">
                             <div class="xp-header">
                                 <div class="level-info">
-                                    <Level xp={xpForLevel(user()?.xp || 0)}/>
+                                    <Level xp={xpForLevel(props.user()?.xp || 0)}/>
                                 </div>
                                 <div class="xp-numbers">
-                                    <span class="xp-current">{getCurrentXP()?.toLocaleString()}</span>
+                                    <span class="xp-current">{props.getCurrentXP()?.toLocaleString()}</span>
                                     <span>/</span>
-                                    <span class="xp-total">{getTotalXPForNext()?.toLocaleString()}</span>
+                                    <span class="xp-total">{props.getTotalXPForNext()?.toLocaleString()}</span>
                                 </div>
                                 <div class="level-info">
-                                    <Level xp={getUserNextLevel(user()?.xp || 0)}/>
+                                    <Level xp={getUserNextLevel(props.user()?.xp || 0)}/>
                                 </div>
                             </div>
                             <div class="progress-bar">
                                 <div 
                                     class="progress-fill" 
-                                    style={{width: `${100 - progressToNextLevel(user()?.xp || 0)}%`}}
+                                    style={{width: `${100 - progressToNextLevel(props.user()?.xp || 0)}%`}}
                                 ></div>
                             </div>
                         </div>
@@ -91,7 +118,7 @@ function Profile(props) {
                                 <h3 class="stats-title">Account Statistics</h3>
                                 <div class="stats-subtitle">Your gambling performance overview</div>
                             </div>
-                            <Show when={!stats.loading} fallback={
+                            <Show when={!props.stats.loading} fallback={
                                 <div class="stats-loading">
                                     <Loader/>
                                     <span>Loading statistics...</span>
@@ -109,7 +136,7 @@ function Profile(props) {
                                             <div class="stat-label">Total Wagered</div>
                                             <div class="stat-value">
                                             <span class="currency">$</span>
-                                                {(stats()?.wagered || 0)?.toLocaleString(undefined, {
+                                                {(props.stats()?.wagered || 0)?.toLocaleString(undefined, {
                                                     minimumFractionDigits: 0,
                                                     maximumFractionDigits: 2
                                                 })}
@@ -129,7 +156,7 @@ function Profile(props) {
                                             <div class="stat-label">Total Withdrawn</div>
                                             <div class="stat-value">
                                             <span class="currency">$</span>
-                                                {(stats()?.withdraws || 0)?.toLocaleString(undefined, {
+                                                {(props.stats()?.withdraws || 0)?.toLocaleString(undefined, {
                                                     minimumFractionDigits: 0,
                                                     maximumFractionDigits: 2
                                                 })}
@@ -148,7 +175,7 @@ function Profile(props) {
                                             <div class="stat-label">Total Deposited</div>
                                             <div class="stat-value">
                                             <span class="currency">$</span>
-                                                {(stats()?.deposits || 0)?.toLocaleString(undefined, {
+                                                {(props.stats()?.deposits || 0)?.toLocaleString(undefined, {
                                                     minimumFractionDigits: 0,
                                                     maximumFractionDigits: 2
                                                 })}
@@ -165,9 +192,9 @@ function Profile(props) {
                                         </div>
                                         <div class="stat-content">
                                             <div class="stat-label">Net Profit/Loss</div>
-                                            <div class={`stat-value ${(stats()?.withdraws - stats()?.deposits) >= 0 ? 'profit-positive' : 'profit-negative'}`}>
+                                            <div class={`stat-value ${(props.stats()?.withdraws - props.stats()?.deposits) >= 0 ? 'profit-positive' : 'profit-negative'}`}>
                                             <span class="currency">$</span>
-                                                {((stats()?.withdraws - stats()?.deposits) || 0)?.toLocaleString(undefined, {
+                                                {((props.stats()?.withdraws - props.stats()?.deposits) || 0)?.toLocaleString(undefined, {
                                                     minimumFractionDigits: 0,
                                                     maximumFractionDigits: 2
                                                 })}
@@ -182,15 +209,15 @@ function Profile(props) {
                         <div class="nav-container">
                             <h3 class="nav-title">Account</h3>
                             <div class="nav-list">
-                                <A href='/profile/transactions' class={`nav-item ${isActive('transactions') ? 'active' : ''}`}>
+                                <A href='/profile/transactions' class={`nav-item ${props.isActive('transactions') ? 'active' : ''}`}>
                                     <TbChartBar size={16}/>
                                     <span>Transactions</span>
                                 </A>
-                                <A href='/profile/history' class={`nav-item ${isActive('history') ? 'active' : ''}`}>
+                                <A href='/profile/history' class={`nav-item ${props.isActive('history') ? 'active' : ''}`}>
                                     <TbHistory size={16}/>
                                     <span>History</span>
                                 </A>
-                                <A href='/profile/settings' class={`nav-item ${isActive('settings') ? 'active' : ''}`}>
+                                <A href='/profile/settings' class={`nav-item ${props.isActive('settings') ? 'active' : ''}`}>
                                     <TbSettings size={16}/>
                                     <span>Settings</span>
                                 </A>
@@ -200,7 +227,7 @@ function Profile(props) {
 
                     {/* Content Area */}
                     <div class="content-section">
-                        <Outlet/>
+                        <Outlet />
                     </div>
                 </div>
             </div>

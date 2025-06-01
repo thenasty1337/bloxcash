@@ -3,24 +3,59 @@ import {authedAPI, createNotification} from "../../util/api";
 import {useUser} from "../../contexts/usercontextprovider";
 import Loader from "../Loader/loader";
 import { TbVolume, TbEyeOff, TbBell, TbBrandDiscord, TbSettings, TbShieldCheck, TbPalette, TbMail, TbLock, TbKey, TbPhone, TbCurrencyDollar, TbClock, TbUserCheck, TbNotification, TbShield, TbDeviceMobile } from 'solid-icons/tb';
+import { useModal } from "../../contexts/ModalContext";
 
 function Settings(props) {
+    /* 
+     * DATA PRIORITIZATION:
+     * - email: users.email (primary) → user_settings.email (fallback)
+     * - verified: users.verified (primary) → user_settings.email_verified (fallback)
+     * - 2FA: users.2fa (primary) → user_settings.two_factor_enabled (fallback)
+     * - anon: users.anon (primary, already implemented)
+     * - mentions: users.mentionsEnabled (primary) → localStorage (fallback)
+     * - Other settings: user_settings table (phone, notifications, limits, etc.)
+     */
 
     let slider
-    const [mentions, setMentions] = createSignal(localStorage.getItem('mentions') === 'true')
+    const [mentions, setMentions] = createSignal(false) // Fallback for mentions, prioritize users table
     const [discord, { mutate }] = createResource(fetchDiscord)
     const [linked, setLinked] = createSignal(false)
     const [sound, setSound] = createSignal(localStorage.getItem('sound') || 100)
     const [user, { mutateUser }] = useUser()
+    const modal = useModal()
 
-    // New state for additional settings
-    const [emailNotifications, setEmailNotifications] = createSignal(localStorage.getItem('emailNotifications') !== 'false')
-    const [smsNotifications, setSmsNotifications] = createSignal(localStorage.getItem('smsNotifications') === 'true')
-    const [marketingEmails, setMarketingEmails] = createSignal(localStorage.getItem('marketingEmails') !== 'false')
-    const [twoFactorEnabled, setTwoFactorEnabled] = createSignal(false)
-    const [sessionTimeout, setSessionTimeout] = createSignal(localStorage.getItem('sessionTimeout') || '30')
+    // Backend-connected settings
+    const [userSettings, { mutate: mutateSettings }] = createResource(fetchUserSettings)
+    const [loading, setLoading] = createSignal(false)
+
+    // Local state for form inputs
+    const [emailInput, setEmailInput] = createSignal('')
+    const [phoneInput, setPhoneInput] = createSignal('')
     const [depositLimit, setDepositLimit] = createSignal('')
     const [withdrawalLimit, setWithdrawalLimit] = createSignal('')
+    const [monthlyLossLimit, setMonthlyLossLimit] = createSignal('')
+    const [realityCheckInterval, setRealityCheckInterval] = createSignal('')
+    const [sessionTimeout, setSessionTimeout] = createSignal('')
+    const [twoFactorSetup, setTwoFactorSetup] = createSignal(null)
+
+    // Initialize form values from API response
+    createEffect(() => {
+        if (userSettings()) {
+            setSessionTimeout(userSettings().session_timeout?.toString() || '43200') // Default 30 days
+            setDepositLimit(userSettings().daily_deposit_limit || '')
+            setWithdrawalLimit(userSettings().weekly_withdrawal_limit || '')
+            setMonthlyLossLimit(userSettings().monthly_loss_limit || '')
+            setRealityCheckInterval(userSettings().reality_check_interval ? userSettings().reality_check_interval.toString() : '')
+            
+            // Sync anonymous mode with userSettings if available, fallback to user context
+            if (userSettings().anonymous_mode !== undefined) {
+                // If userSettings has the anonymous_mode, update the user context to match
+                if (user()?.anon !== userSettings().anonymous_mode) {
+                    mutateUser({...user(), anon: userSettings().anonymous_mode})
+                }
+            }
+        }
+    })
 
     createEffect(() => {
         if (!localStorage.getItem('sound')) {
@@ -28,8 +63,11 @@ function Settings(props) {
             setSound(100)
         }
 
-        if (localStorage.getItem('mentions') === undefined) {
-            localStorage.setItem('mentions', true)
+        // Initialize mentions from users table or localStorage as fallback
+        if (user()?.mentionsEnabled !== undefined) {
+            setMentions(user().mentionsEnabled)
+        } else if (localStorage.getItem('mentions') !== null) {
+            setMentions(localStorage.getItem('mentions') === 'true')
         }
 
         if (sound()) {
@@ -45,6 +83,98 @@ function Settings(props) {
         } catch (e) {
             console.log(e)
             return mutate(null)
+        }
+    }
+
+    async function fetchUserSettings() {
+        try {
+            let res = await authedAPI('/user/settings', 'GET', null)
+            return mutateSettings(res)
+        } catch (e) {
+            console.log(e)
+            return mutateSettings(null)
+        }
+    }
+
+    async function updateEmail() {
+        if (!emailInput().trim()) {
+            createNotification('error', 'Please enter an email address')
+            return
+        }
+        
+        setLoading(true)
+        try {
+            let res = await authedAPI('/user/settings/email', 'POST', JSON.stringify({
+                email: emailInput().trim()
+            }))
+            
+            if (res.success) {
+                createNotification('success', res.message)
+                setEmailInput('')
+                fetchUserSettings()
+            }
+        } catch (e) {
+            console.error(e)
+            createNotification('error', 'Failed to update email')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    async function updatePhone() {
+        if (!phoneInput().trim()) {
+            createNotification('error', 'Please enter a phone number')
+            return
+        }
+        
+        setLoading(true)
+        try {
+            let res = await authedAPI('/user/settings/phone', 'POST', JSON.stringify({
+                phone: phoneInput().trim()
+            }))
+            
+            if (res.success) {
+                createNotification('success', res.message)
+                setPhoneInput('')
+                fetchUserSettings()
+            }
+        } catch (e) {
+            console.error(e)
+            createNotification('error', 'Failed to update phone number')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    async function setup2FA() {
+        setLoading(true)
+        try {
+            let res = await authedAPI('/user/settings/2fa/setup', 'POST', null)
+            
+            if (res.secret) {
+                setTwoFactorSetup(res)
+                createNotification('info', res.message)
+            }
+        } catch (e) {
+            console.error(e)
+            createNotification('error', 'Failed to setup 2FA')
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    async function updateNotificationSettings(field, value) {
+        try {
+            let res = await authedAPI('/user/settings/notifications', 'POST', JSON.stringify({
+                [field]: value
+            }))
+            
+            if (res.success) {
+                fetchUserSettings()
+            }
+        } catch (e) {
+            console.error(e)
+            createNotification('error', 'Failed to update notification settings')
         }
     }
 
@@ -120,16 +250,22 @@ function Settings(props) {
                                     <div class="setting-text">
                                         <h4>Email Address</h4>
                                         <p>Update your email address for account notifications</p>
+                                        {(user()?.email || userSettings()?.email) && (
+                                            <div class={`verification-status ${user()?.verified || userSettings()?.email_verified ? 'verified' : 'unverified'}`}>
+                                                {user()?.verified || userSettings()?.email_verified ? '✓ Verified' : '⚠ Unverified'}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <div class="setting-control">
                                     <SettingInput 
                                         type="email"
-                                        placeholder={user()?.email || "Enter email address"}
-                                        value=""
+                                        placeholder={user()?.email || userSettings()?.email || "Enter email address"}
+                                        value={emailInput() || user()?.email || userSettings()?.email || ''}
+                                        onInput={(e) => setEmailInput(e.target.value)}
                                         button={true}
-                                        buttonText="Update"
-                                        onButtonClick={() => createNotification('info', 'Email update feature coming soon')}
+                                        buttonText={loading() ? "Updating..." : "Update"}
+                                        onButtonClick={updateEmail}
                                     />
                                 </div>
                             </div>
@@ -143,16 +279,22 @@ function Settings(props) {
                                     <div class="setting-text">
                                         <h4>Phone Number</h4>
                                         <p>Add phone number for SMS notifications and security</p>
+                                        {userSettings()?.phone && (
+                                            <div class={`verification-status ${userSettings()?.phone_verified ? 'verified' : 'unverified'}`}>
+                                                {userSettings()?.phone_verified ? '✓ Verified' : '⚠ Unverified'}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <div class="setting-control">
                                     <SettingInput 
                                         type="tel"
-                                        placeholder="Enter phone number"
-                                        value=""
+                                        placeholder={userSettings()?.phone || "Enter phone number"}
+                                        value={phoneInput() || userSettings()?.phone || ''}
+                                        onInput={(e) => setPhoneInput(e.target.value)}
                                         button={true}
-                                        buttonText="Add"
-                                        onButtonClick={() => createNotification('info', 'Phone verification feature coming soon')}
+                                        buttonText={loading() ? "Updating..." : (userSettings()?.phone ? "Update" : "Add")}
+                                        onButtonClick={updatePhone}
                                     />
                                 </div>
                             </div>
@@ -165,13 +307,13 @@ function Settings(props) {
                                     </div>
                                     <div class="setting-text">
                                         <h4>Password</h4>
-                                        <p>Change your account password for better security</p>
+                                        <p>Change your account password</p>
                                     </div>
                                 </div>
                                 <div class="setting-control">
                                     <button 
                                         class="action-button secondary"
-                                        onClick={() => createNotification('info', 'Password change feature coming soon')}
+                                        onClick={modal.openPasswordModal}
                                     >
                                         <TbLock size={14}/>
                                         Change Password
@@ -204,10 +346,13 @@ function Settings(props) {
                                 </div>
                                 <div class="setting-control">
                                     <CustomSwitch 
-                                        active={twoFactorEnabled()} 
+                                        active={user()?.['2fa'] || userSettings()?.two_factor_enabled || false} 
                                         toggle={() => {
-                                            setTwoFactorEnabled(!twoFactorEnabled())
-                                            createNotification('info', '2FA feature coming soon')
+                                            if (user()?.['2fa'] || userSettings()?.two_factor_enabled) {
+                                                createNotification('info', '2FA disable feature requires additional verification')
+                                            } else {
+                                                setup2FA()
+                                            }
                                         }}
                                     />
                                 </div>
@@ -226,14 +371,25 @@ function Settings(props) {
                                 </div>
                                 <div class="setting-control">
                                     <CustomSwitch 
-                                        active={user()?.anon} 
+                                        active={userSettings()?.anonymous_mode || user()?.anon || false} 
                                         toggle={async () => {
-                                            let res = await authedAPI('/user/anon', 'POST', JSON.stringify({
-                                                enable: !user()?.anon
-                                            }))
+                                            const currentState = userSettings()?.anonymous_mode !== undefined 
+                                                ? userSettings().anonymous_mode 
+                                                : user()?.anon || false
+                                            
+                                            try {
+                                                let res = await authedAPI('/user/anon', 'POST', JSON.stringify({
+                                                    enable: !currentState
+                                                }))
 
-                                            if (res.success) {
-                                                mutateUser({...user(), anon: !user()?.anon})
+                                                if (res.success) {
+                                                    // Update both user context and refetch settings
+                                                    mutateUser({...user(), anon: !currentState})
+                                                    fetchUserSettings()
+                                                }
+                                            } catch (e) {
+                                                console.error('Failed to update anonymous mode:', e)
+                                                createNotification('error', 'Failed to update anonymous mode')
                                             }
                                         }}
                                     />
@@ -248,23 +404,35 @@ function Settings(props) {
                                     </div>
                                     <div class="setting-text">
                                         <h4>Session Timeout</h4>
-                                        <p>Automatically log out after inactivity (minutes)</p>
+                                        <p>Automatically log out after period of inactivity</p>
                                     </div>
                                 </div>
                                 <div class="setting-control">
                                     <select 
                                         class="setting-select"
-                                        value={sessionTimeout()}
-                                        onChange={(e) => {
+                                        value={sessionTimeout() || userSettings()?.session_timeout?.toString() || '43200'}
+                                        onChange={async (e) => {
                                             setSessionTimeout(e.target.value)
                                             localStorage.setItem('sessionTimeout', e.target.value)
+                                            try {
+                                                let res = await authedAPI('/user/settings/limits', 'POST', JSON.stringify({
+                                                    session_timeout: parseInt(e.target.value)
+                                                }))
+                                                if (res.success) {
+                                                    fetchUserSettings()
+                                                    createNotification('success', 'Session timeout updated successfully')
+                                                }
+                                            } catch (e) {
+                                                console.error('Failed to update session timeout:', e)
+                                                createNotification('error', 'Failed to update session timeout')
+                                            }
                                         }}
                                     >
-                                        <option value="15">15 minutes</option>
                                         <option value="30">30 minutes</option>
-                                        <option value="60">1 hour</option>
                                         <option value="120">2 hours</option>
-                                        <option value="never">Never</option>
+                                        <option value="1440">1 day</option>
+                                        <option value="10080">7 days</option>
+                                        <option value="43200">30 days</option>
                                     </select>
                                 </div>
                             </div>
@@ -294,10 +462,9 @@ function Settings(props) {
                                 </div>
                                 <div class="setting-control">
                                     <CustomSwitch 
-                                        active={emailNotifications()} 
+                                        active={userSettings()?.email_notifications || false} 
                                         toggle={() => {
-                                            setEmailNotifications(!emailNotifications())
-                                            localStorage.setItem('emailNotifications', emailNotifications())
+                                            updateNotificationSettings('email_notifications', !userSettings()?.email_notifications)
                                         }}
                                     />
                                 </div>
@@ -316,10 +483,9 @@ function Settings(props) {
                                 </div>
                                 <div class="setting-control">
                                     <CustomSwitch 
-                                        active={smsNotifications()} 
+                                        active={userSettings()?.sms_notifications || false} 
                                         toggle={() => {
-                                            setSmsNotifications(!smsNotifications())
-                                            localStorage.setItem('smsNotifications', smsNotifications())
+                                            updateNotificationSettings('sms_notifications', !userSettings()?.sms_notifications)
                                         }}
                                     />
                                 </div>
@@ -338,10 +504,23 @@ function Settings(props) {
                                 </div>
                                 <div class="setting-control">
                                     <CustomSwitch 
-                                        active={mentions()} 
-                                        toggle={() => {
-                                            setMentions(!mentions())
-                                            localStorage.setItem('mentions', mentions())
+                                        active={user()?.mentionsEnabled || mentions()} 
+                                        toggle={async () => {
+                                            const newValue = !(user()?.mentionsEnabled || mentions())
+                                            setMentions(newValue)
+                                            localStorage.setItem('mentions', newValue)
+                                            
+                                            // Update in backend if we have user data
+                                            try {
+                                                let res = await authedAPI('/user/mentions', 'POST', JSON.stringify({
+                                                    enable: newValue
+                                                }))
+                                                if (res.success) {
+                                                    mutateUser({...user(), mentionsEnabled: newValue})
+                                                }
+                                            } catch (e) {
+                                                console.error('Failed to update mentions setting:', e)
+                                            }
                                         }}
                                     />
                                 </div>
@@ -360,10 +539,135 @@ function Settings(props) {
                                 </div>
                                 <div class="setting-control">
                                     <CustomSwitch 
-                                        active={marketingEmails()} 
+                                        active={userSettings()?.marketing_emails || false} 
                                         toggle={() => {
-                                            setMarketingEmails(!marketingEmails())
-                                            localStorage.setItem('marketingEmails', marketingEmails())
+                                            updateNotificationSettings('marketing_emails', !userSettings()?.marketing_emails)
+                                        }}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Push Notifications */}
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-icon">
+                                        <TbNotification size={16}/>
+                                    </div>
+                                    <div class="setting-text">
+                                        <h4>Push Notifications</h4>
+                                        <p>Receive browser notifications for important updates</p>
+                                    </div>
+                                </div>
+                                <div class="setting-control">
+                                    <CustomSwitch 
+                                        active={userSettings()?.push_notifications || false} 
+                                        toggle={() => {
+                                            updateNotificationSettings('push_notifications', !userSettings()?.push_notifications)
+                                        }}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Login Notifications */}
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-icon">
+                                        <TbShield size={16}/>
+                                    </div>
+                                    <div class="setting-text">
+                                        <h4>Login Notifications</h4>
+                                        <p>Get notified when someone logs into your account</p>
+                                    </div>
+                                </div>
+                                <div class="setting-control">
+                                    <CustomSwitch 
+                                        active={userSettings()?.login_notifications || false} 
+                                        toggle={() => {
+                                            updateNotificationSettings('login_notifications', !userSettings()?.login_notifications)
+                                        }}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Security Alerts */}
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-icon">
+                                        <TbShieldCheck size={16}/>
+                                    </div>
+                                    <div class="setting-text">
+                                        <h4>Security Alerts</h4>
+                                        <p>Receive alerts for suspicious account activity</p>
+                                    </div>
+                                </div>
+                                <div class="setting-control">
+                                    <CustomSwitch 
+                                        active={userSettings()?.security_alerts || false} 
+                                        toggle={() => {
+                                            updateNotificationSettings('security_alerts', !userSettings()?.security_alerts)
+                                        }}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Deposit Notifications */}
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-icon">
+                                        <TbCurrencyDollar size={16}/>
+                                    </div>
+                                    <div class="setting-text">
+                                        <h4>Deposit Notifications</h4>
+                                        <p>Get notified when deposits are processed</p>
+                                    </div>
+                                </div>
+                                <div class="setting-control">
+                                    <CustomSwitch 
+                                        active={userSettings()?.deposit_notifications || false} 
+                                        toggle={() => {
+                                            updateNotificationSettings('deposit_notifications', !userSettings()?.deposit_notifications)
+                                        }}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Withdrawal Notifications */}
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-icon">
+                                        <TbCurrencyDollar size={16}/>
+                                    </div>
+                                    <div class="setting-text">
+                                        <h4>Withdrawal Notifications</h4>
+                                        <p>Get notified when withdrawals are processed</p>
+                                    </div>
+                                </div>
+                                <div class="setting-control">
+                                    <CustomSwitch 
+                                        active={userSettings()?.withdrawal_notifications || false} 
+                                        toggle={() => {
+                                            updateNotificationSettings('withdrawal_notifications', !userSettings()?.withdrawal_notifications)
+                                        }}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Bonus Notifications */}
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-icon">
+                                        <TbCurrencyDollar size={16}/>
+                                    </div>
+                                    <div class="setting-text">
+                                        <h4>Bonus Notifications</h4>
+                                        <p>Get notified about bonus rewards and promotions</p>
+                                    </div>
+                                </div>
+                                <div class="setting-control">
+                                    <CustomSwitch 
+                                        active={userSettings()?.bonus_notifications || false} 
+                                        toggle={() => {
+                                            updateNotificationSettings('bonus_notifications', !userSettings()?.bonus_notifications)
                                         }}
                                     />
                                 </div>
@@ -395,13 +699,24 @@ function Settings(props) {
                                 <div class="setting-control">
                                     <SettingInput 
                                         type="number"
-                                        placeholder="Enter amount (USD)"
-                                        value={depositLimit()}
+                                        placeholder={userSettings()?.daily_deposit_limit || "Enter amount (USD)"}
+                                        value={depositLimit() || userSettings()?.daily_deposit_limit || ''}
                                         onInput={(e) => setDepositLimit(e.target.value)}
                                         button={true}
                                         buttonText="Set Limit"
-                                        onButtonClick={() => {
-                                            createNotification('success', `Daily deposit limit set to $${depositLimit()}`)
+                                        onButtonClick={async () => {
+                                            try {
+                                                const limitValue = depositLimit() ? parseFloat(depositLimit()) : null
+                                                let res = await authedAPI('/user/settings/limits', 'POST', JSON.stringify({
+                                                    daily_deposit_limit: limitValue
+                                                }))
+                                                if (res.success) {
+                                                    createNotification('success', `Daily deposit limit set to $${depositLimit()}`)
+                                                    fetchUserSettings()
+                                                }
+                                            } catch (e) {
+                                                createNotification('error', 'Failed to update deposit limit')
+                                            }
                                         }}
                                     />
                                 </div>
@@ -421,15 +736,128 @@ function Settings(props) {
                                 <div class="setting-control">
                                     <SettingInput 
                                         type="number"
-                                        placeholder="Enter amount (USD)"
-                                        value={withdrawalLimit()}
+                                        placeholder={userSettings()?.weekly_withdrawal_limit || "Enter amount (USD)"}
+                                        value={withdrawalLimit() || userSettings()?.weekly_withdrawal_limit || ''}
                                         onInput={(e) => setWithdrawalLimit(e.target.value)}
                                         button={true}
                                         buttonText="Set Limit"
-                                        onButtonClick={() => {
-                                            createNotification('success', `Weekly withdrawal limit set to $${withdrawalLimit()}`)
+                                        onButtonClick={async () => {
+                                            try {
+                                                const limitValue = withdrawalLimit() ? parseFloat(withdrawalLimit()) : null
+                                                let res = await authedAPI('/user/settings/limits', 'POST', JSON.stringify({
+                                                    weekly_withdrawal_limit: limitValue
+                                                }))
+                                                if (res.success) {
+                                                    createNotification('success', `Weekly withdrawal limit set to $${withdrawalLimit()}`)
+                                                    fetchUserSettings()
+                                                }
+                                            } catch (e) {
+                                                createNotification('error', 'Failed to update withdrawal limit')
+                                            }
                                         }}
                                     />
+                                </div>
+                            </div>
+
+                            {/* Monthly Loss Limit */}
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-icon">
+                                        <TbCurrencyDollar size={16}/>
+                                    </div>
+                                    <div class="setting-text">
+                                        <h4>Monthly Loss Limit</h4>
+                                        <p>Set a monthly limit for losses (responsible gambling)</p>
+                                    </div>
+                                </div>
+                                <div class="setting-control">
+                                    <SettingInput 
+                                        type="number"
+                                        placeholder={userSettings()?.monthly_loss_limit || "Enter amount (USD)"}
+                                        value={monthlyLossLimit() || userSettings()?.monthly_loss_limit || ''}
+                                        onInput={(e) => setMonthlyLossLimit(e.target.value)}
+                                        button={true}
+                                        buttonText="Set Limit"
+                                        onButtonClick={async () => {
+                                            try {
+                                                const limitValue = monthlyLossLimit() ? parseFloat(monthlyLossLimit()) : null
+                                                let res = await authedAPI('/user/settings/limits', 'POST', JSON.stringify({
+                                                    monthly_loss_limit: limitValue
+                                                }))
+                                                if (res.success) {
+                                                    createNotification('success', `Monthly loss limit set to $${monthlyLossLimit()}`)
+                                                    fetchUserSettings()
+                                                }
+                                            } catch (e) {
+                                                createNotification('error', 'Failed to update loss limit')
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Reality Check */}
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-icon">
+                                        <TbClock size={16}/>
+                                    </div>
+                                    <div class="setting-text">
+                                        <h4>Reality Check Interval</h4>
+                                        <p>Get reminders about your gambling time (minutes)</p>
+                                    </div>
+                                </div>
+                                <div class="setting-control">
+                                    <select 
+                                        class="setting-select"
+                                        value={(() => {
+                                            const localValue = realityCheckInterval()
+                                            const backendValue = userSettings()?.reality_check_interval
+                                            console.log('Reality check - Local state:', localValue, 'Backend value:', backendValue)
+                                            
+                                            // If we have a local value (user just changed it), use that
+                                            if (localValue !== undefined && localValue !== null) {
+                                                return localValue
+                                            }
+                                            
+                                            // Otherwise use backend value
+                                            return backendValue ? backendValue.toString() : ''
+                                        })()}
+                                        onChange={async (e) => {
+                                            const newValue = e.target.value
+                                            setRealityCheckInterval(newValue)
+                                            
+                                            try {
+                                                const intervalValue = newValue === '' ? null : parseInt(newValue)
+                                                console.log('Sending reality check interval:', intervalValue, 'from value:', newValue) // Debug log
+                                                
+                                                let res = await authedAPI('/user/settings/limits', 'POST', JSON.stringify({
+                                                    reality_check_interval: intervalValue
+                                                }))
+                                                
+                                                if (res.success) {
+                                                    // Ensure local state matches what we sent to backend
+                                                    setRealityCheckInterval(newValue) 
+                                                    createNotification('success', intervalValue === null ? 'Reality check disabled' : 'Reality check interval updated')
+                                                    fetchUserSettings()
+                                                } else {
+                                                    // Revert local state if backend call failed
+                                                    setRealityCheckInterval(userSettings()?.reality_check_interval ? userSettings().reality_check_interval.toString() : '')
+                                                }
+                                            } catch (e) {
+                                                console.error('Reality check update error:', e)
+                                                // Revert local state on error
+                                                setRealityCheckInterval(userSettings()?.reality_check_interval ? userSettings().reality_check_interval.toString() : '')
+                                                createNotification('error', 'Failed to update reality check')
+                                            }
+                                        }}
+                                    >
+                                        <option value="">Disabled</option>
+                                        <option value="15">15 minutes</option>
+                                        <option value="30">30 minutes</option>
+                                        <option value="60">1 hour</option>
+                                        <option value="120">2 hours</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -750,6 +1178,27 @@ function Settings(props) {
                     line-height: 1.4;
                 }
 
+                .verification-status {
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    margin-top: 0.25rem;
+                    padding: 0.125rem 0.375rem;
+                    border-radius: 4px;
+                    display: inline-block;
+                }
+
+                .verification-status.verified {
+                    background: rgba(78, 205, 196, 0.15);
+                    color: #4ecdc4;
+                    border: 1px solid rgba(78, 205, 196, 0.25);
+                }
+
+                .verification-status.unverified {
+                    background: rgba(255, 193, 7, 0.15);
+                    color: #ffc107;
+                    border: 1px solid rgba(255, 193, 7, 0.25);
+                }
+
                 .setting-control {
                     flex-shrink: 0;
                     margin-left: 1rem;
@@ -1020,6 +1469,8 @@ function Settings(props) {
                     justify-content: center;
                     padding: 0.625rem 0.875rem;
                 }
+
+
 
                 /* Responsive Design */
                 @media (max-width: 1200px) {
