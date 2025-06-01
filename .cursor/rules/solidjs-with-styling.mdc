@@ -1,0 +1,71 @@
+---
+description: Comprehensive guide for AI to follow Solid.js best practices including advanced styling techniques.
+globs: 
+alwaysApply: false
+---
+
+This project uses **Solid.js** and **does not** use any React-related libraries or patterns.
+
+# 🚫 Avoid:
+- React-specific style solutions like styled-components (React version), Emotion, or inline styles from React.
+- Global CSS misuse without scoping.
+- CSS-in-JS patterns that rely on virtual DOM diffing.
+
+# ✅ Styling in Solid.js
+
+## 1. **CSS Modules**
+- Use `.module.css` or `.module.scss` files.
+- Import styles and apply as class bindings:
+  ```tsx
+  import styles from './Button.module.css';
+
+  <button class={styles.primary}>Click Me</button>
+  ```
+
+## 2. **UnoCSS or TailwindCSS**
+- Utility-first CSS frameworks work well with Solid.js.
+- Example with Tailwind:
+  ```tsx
+  <div class="bg-blue-500 text-white p-4 rounded-xl">Hello Solid</div>
+  ```
+- Configure your build tools (`vite.config.ts`, `postcss.config.js`) to enable PurgeCSS or JIT mode for optimal performance.
+
+## 3. **solid-styled-components**
+- A Solid-compatible styled-components library.
+- Example usage:
+  ```tsx
+  import { styled } from 'solid-styled-components';
+
+  const Box = styled('div')`
+    padding: 1rem;
+    background-color: #f0f0f0;
+  `;
+
+  <Box>Hello</Box>
+  ```
+
+## 4. **Scoped Global CSS**
+- For global styles (e.g., resets or typography), place them in a `global.css` and import it once in the root entry file:
+  ```tsx
+  import './global.css';
+  ```
+
+## 5. **Component-Scoped Styles**
+- Co-locate component styles in the same folder to maintain modularity.
+- Example:
+  ```
+  /components
+    /Card
+      Card.tsx
+      Card.module.css
+  ```
+
+## 6. **Dynamic Styling**
+- Use class bindings based on signals:
+  ```tsx
+  <button classList={{ active: isActive() }}>Toggle</button>
+  ```
+
+---
+
+Ensure that all styling suggestions align with idiomatic Solid.js practices. Promote scoped, efficient, and reactive-friendly styling techniques.

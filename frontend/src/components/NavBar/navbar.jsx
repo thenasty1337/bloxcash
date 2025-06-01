@@ -142,7 +142,7 @@ function NavBar(props) {
                                     </div>
 
                                     <button class='deposit-button' onClick={() => setShowWalletModal(true)}>
-                                        Deposit
+                                        DEPOSIT
                                     </button>
                                 </div>
                             )}

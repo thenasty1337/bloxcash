@@ -277,8 +277,8 @@ function Bets(props) {
 
                 .pill-option.active {
                     color: #ffffff;
-                    background: linear-gradient(135deg, #50c9e5, #1a8ea9);
-                    box-shadow: 0 4px 12px rgb(71 190 218 / 20%);
+                    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+                    box-shadow: 0 2px 8px rgba(78, 205, 196, 0.25)
                 }
 
                 .feed-content {

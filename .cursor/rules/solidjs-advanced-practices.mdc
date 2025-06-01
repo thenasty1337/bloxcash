@@ -1,0 +1,72 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+
+This project is built using **Solid.js** — a reactive UI library that differs fundamentally from React. Please follow these guidelines and best practices strictly:
+
+# 🚫 Do NOT Use:
+- `useState`, `useEffect`, `useRef`, `useContext`, or any React hooks.
+- Virtual DOM manipulation or diffing assumptions — Solid.js uses fine-grained reactivity.
+- Class components — everything is functional and reactive.
+- React Router or other React-specific libraries.
+
+# ✅ General Principles of Solid.js:
+- Solid is **reactive at the primitive level** (signals), not at the component level.
+- JSX compiles into fine-grained updates; changes affect only what’s reactive.
+- **No re-renders**: Components are only called once. Updates are handled via reactive primitives.
+
+# 🔧 Reactive Primitives:
+- Use `createSignal()` for reactive state.
+- Use `createEffect()` for reactive side effects. Automatically tracks dependencies.
+- Use `createMemo()` for derived computations.
+- Use `onCleanup()` to clean up inside effects.
+
+# 🧩 Component Patterns:
+- Keep components pure and minimal. Move logic into composables (custom hooks).
+- Use `Show`, `Switch`, `Match`, `For`, and `Index` for conditional/rendered lists.
+- Avoid ternary expressions and inline `.map()` for JSX – prefer Solid control components.
+- Use props destructuring carefully; treat them as signals or values, not refs.
+
+# 📦 State Management:
+- Use `createStore()` or `createSignal()` for state depending on complexity.
+- Avoid using libraries like Redux or Zustand.
+- Co-locate state with usage when possible.
+
+# 🛣️ Routing:
+- Use `solid-start` or `solid-app-router`.
+- Use `<Route>` components with `path` and `component`.
+- Loaders and actions should leverage Solid’s reactivity model.
+
+# 🎨 Styling:
+- Prefer scoped styles with `solid-styled-components` or CSS modules.
+- TailwindCSS or UnoCSS are also commonly used.
+
+# 💡 Advanced Patterns:
+- Use `createRoot()` to scope isolated state.
+- For async loading, use `Suspense` and `Resource`.
+- Prefer file-based routing if using `solid-start`.
+
+# 🧪 Testing:
+- Use `@solidjs/testing-library` or Playwright for UI testing.
+- Ensure reactive updates are flushed before assertions.
+
+# 🔍 TypeScript:
+- Use Solid’s JSX namespace for typing components: `JSX.Element`.
+- Avoid React typing patterns — they are often incompatible.
+- Signals can be typed like: `const [count, setCount] = createSignal<number>(0);`
+
+# 📁 File Structure (example):
+frontend/src/
+  components/
+  contexts/
+  pages/
+  resources/
+  stores/
+  util/
+  utils/
+  App.tsx
+  index.tsx
+
+Always assume that the developer is writing for Solid.js. Provide assistance based on Solid.js architecture, reactivity model, and component philosophy. Recommend idiomatic code. Avoid suggesting React-style solutions or libraries.

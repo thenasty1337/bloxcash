@@ -597,13 +597,13 @@ function Chat(props) {
               }
               
               .send-button {
-                background: linear-gradient(135deg, #50c9e5, #1a8ea9);
+                background: linear-gradient(135deg, #4ecdc4, #44a08d);
                 border: none;
                 border-radius: 6px;
                 padding: 6px 16px;
                 cursor: pointer;
                 transition: all 0.2s ease;
-                box-shadow: 0 2px 4px #50c9e54d;
+                box-shadow: 0 2px 8px rgba(78, 205, 196, 0.25);
               }
               
               .send-button:hover {

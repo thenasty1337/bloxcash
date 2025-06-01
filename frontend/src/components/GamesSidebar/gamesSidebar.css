@@ -29,9 +29,15 @@
 .games-sidebar.collapsed .view-all,
 .games-sidebar.collapsed .badge,
 .games-sidebar.collapsed .expand-arrow {
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
+  display: none !important;
+}
+
+/* Ensure game icons are visible in collapsed state */
+.games-sidebar.collapsed .item-icon,
+.games-sidebar.collapsed .game-icon {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 /* Hide social icons when collapsed */
@@ -46,16 +52,80 @@
   visibility: visible;
 }
 
+/* Reset games-card styling when collapsed */
 .games-sidebar.collapsed .games-card {
   margin-bottom: 8px;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0;
 }
 
-.games-sidebar.collapsed .all-games-item,
-.games-sidebar.collapsed .featured-header,
-.games-sidebar.collapsed .game-item {
+/* Style individual game items to look like live-support button */
+.games-sidebar.collapsed .games-card .game-item {
+  display: flex !important;
+  align-items: center;
   justify-content: center;
+  width: 100%;
   padding: 12px;
+  background: rgba(45, 75, 105, 0.25);
+  border: 1px solid rgba(78, 205, 196, 0.2);
+  border-radius: 8px;
+  color: #8aa3b8;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(8px);
+  box-sizing: border-box;
   position: relative;
+  margin: 0;
+  text-decoration: none;
+}
+
+.games-sidebar.collapsed .games-card .game-item:hover {
+  background: rgba(78, 205, 196, 0.15);
+  border-color: #4ecdc4;
+  color: #4ecdc4;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(78, 205, 196, 0.2);
+}
+
+.games-sidebar.collapsed .games-card .game-item .item-left {
+  justify-content: center;
+  gap: 0;
+  margin: 0;
+}
+
+.games-sidebar.collapsed .games-card .game-item .game-icon {
+  display: flex !important;
+  opacity: 1;
+  color: inherit;
+}
+
+/* Style all-games-item when collapsed to match */
+.games-sidebar.collapsed .all-games-item {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 12px;
+  background: rgba(45, 75, 105, 0.25);
+  border: 1px solid rgba(78, 205, 196, 0.2);
+  border-radius: 8px;
+  color: #8aa3b8;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(8px);
+  box-sizing: border-box;
+  position: relative;
+  margin: 0;
+}
+
+.games-sidebar.collapsed .all-games-item:hover {
+  background: rgba(78, 205, 196, 0.15);
+  border-color: #4ecdc4;
+  color: #4ecdc4;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(78, 205, 196, 0.2);
 }
 
 /* Show live support as icon only when collapsed */
@@ -79,6 +149,7 @@
 .games-sidebar.collapsed .all-games-item:hover::after,
 .games-sidebar.collapsed .featured-header:hover::after,
 .games-sidebar.collapsed .game-item:hover::after,
+.games-sidebar.collapsed .games-card .game-item:hover::after,
 .games-sidebar.collapsed .live-support:hover::after {
   content: attr(title);
   position: absolute;
@@ -102,6 +173,7 @@
 .games-sidebar.collapsed .all-games-item:hover::before,
 .games-sidebar.collapsed .featured-header:hover::before,
 .games-sidebar.collapsed .game-item:hover::before,
+.games-sidebar.collapsed .games-card .game-item:hover::before,
 .games-sidebar.collapsed .live-support:hover::before {
   content: '';
   position: absolute;
@@ -159,8 +231,9 @@
 }
 
 .games-sidebar.collapsed .sidebar-content {
-  padding: 14px 8px;
+  padding: 8px 6px;
   padding-bottom: 80px; /* Reduced space for smaller footer */
+  gap: 2px;
 }
 
 /* Enhanced scrollbar for content */
@@ -471,9 +544,12 @@
   min-height: 60px;
 }
 
-/* Hide live support when collapsed */
+/* Show live support when collapsed */
 .games-sidebar.collapsed .live-support {
-  display: none;
+  display: flex !important;
+  justify-content: center;
+  padding: 12px;
+  margin-bottom: 8px;
 }
 
 .live-support {

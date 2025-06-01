@@ -566,9 +566,10 @@ function App() {
         .content {
           width: 100%;
           min-height: calc(100% - 130px);
-
+          {/* background: linear-gradient(135deg, rgba(26, 35, 50, 0.95) 0%, rgba(32, 45, 65, 0.9) 100%);
+          border-radius: 25px 0 0 0; */}
           position: relative;
-          padding: 0 25px;
+          {/* padding: 0 25px; */}
           scrollbar-color: transparent transparent;
         }
 
