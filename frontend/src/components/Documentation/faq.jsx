@@ -1,3 +1,5 @@
+import { TbUser, TbCoin, TbBuildingBank, TbTarget, TbLock, TbGift, TbTrophy, TbWifi, TbClock, TbShield, TbHeadset } from 'solid-icons/tb';
+
 function FAQ(props) {
 
     function toggleDropdown(e) {
@@ -141,14 +143,16 @@ function FAQ(props) {
                     <div className='dropdown-faq-wrapper-faq' data-category="account">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
-                                <span className='question-icon'>👤</span>
+                                <span className='question-icon'>
+                                    <TbUser size={20}/>
+                                </span>
                                 <div className='question-text'>
                                     <h3>How do I create an account on BloxClash?</h3>
                                     <p>Learn about our simple registration process</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -171,14 +175,16 @@ function FAQ(props) {
                     <div className='dropdown-faq-wrapper-faq' data-category="deposits">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
-                                <span className='question-icon'>💰</span>
+                                <span className='question-icon'>
+                                    <TbCoin size={20}/>
+                                </span>
                                 <div className='question-text'>
                                     <h3>How do I deposit funds to play on the site?</h3>
                                     <p>Learn about our supported deposit methods</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -204,14 +210,16 @@ function FAQ(props) {
                     <div className='dropdown-faq-wrapper-faq' data-category="withdrawals">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
-                                <span className='question-icon'>🏦</span>
+                                <span className='question-icon'>
+                                    <TbBuildingBank size={20}/>
+                                </span>
                                 <div className='question-text'>
                                     <h3>How long do withdrawals take to process?</h3>
                                     <p>Information about withdrawal processing times</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -235,14 +243,16 @@ function FAQ(props) {
                     <div className='dropdown-faq-wrapper-faq' data-category="gaming">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
-                                <span className='question-icon'>🎯</span>
+                                <span className='question-icon'>
+                                    <TbTarget size={20}/>
+                                </span>
                                 <div className='question-text'>
                                     <h3>Are the games fair and transparent?</h3>
                                     <p>Learn about our provably fair gaming system</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -269,14 +279,16 @@ function FAQ(props) {
                     <div className='dropdown-faq-wrapper-faq' data-category="account">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
-                                <span className='question-icon'>🔒</span>
+                                <span className='question-icon'>
+                                    <TbLock size={20}/>
+                                </span>
                                 <div className='question-text'>
                                     <h3>How do I enable two-factor authentication (2FA)?</h3>
                                     <p>Secure your account with additional protection</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -304,14 +316,16 @@ function FAQ(props) {
                     <div className='dropdown-faq-wrapper-faq' data-category="gaming">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
-                                <span className='question-icon'>🎁</span>
+                                <span className='question-icon'>
+                                    <TbGift size={20}/>
+                                </span>
                                 <div className='question-text'>
                                     <h3>How can I tip other users or participate in rain events?</h3>
                                     <p>Learn about our community features</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -334,14 +348,16 @@ function FAQ(props) {
                     <div className='dropdown-faq-wrapper-faq' data-category="account">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
-                                <span className='question-icon'>🏆</span>
+                                <span className='question-icon'>
+                                    <TbTrophy size={20}/>
+                                </span>
                                 <div className='question-text'>
                                     <h3>How does the affiliate program work?</h3>
                                     <p>Earn rewards by referring friends</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -367,14 +383,16 @@ function FAQ(props) {
                     <div className='dropdown-faq-wrapper-faq' data-category="gaming">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
-                                <span className='question-icon'>🌐</span>
+                                <span className='question-icon'>
+                                    <TbWifi size={20}/>
+                                </span>
                                 <div className='question-text'>
                                     <h3>What happens if I disconnect during a game?</h3>
                                     <p>Information about connection issues and game outcomes</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -401,14 +419,16 @@ function FAQ(props) {
                     <div className='dropdown-faq-wrapper-faq' data-category="deposits">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
-                                <span className='question-icon'>⏰</span>
+                                <span className='question-icon'>
+                                    <TbClock size={20}/>
+                                </span>
                                 <div className='question-text'>
                                     <h3>My deposit hasn't arrived yet. What should I do?</h3>
                                     <p>Troubleshooting delayed deposits</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -432,14 +452,16 @@ function FAQ(props) {
                     <div className='dropdown-faq-wrapper-faq' data-category="security">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
-                                <span className='question-icon'>🛡️</span>
+                                <span className='question-icon'>
+                                    <TbShield size={20}/>
+                                </span>
                                 <div className='question-text'>
                                     <h3>I found a security vulnerability. How do I report it?</h3>
                                     <p>Responsible disclosure and bug bounty information</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -465,14 +487,16 @@ function FAQ(props) {
                     <div className='dropdown-faq-wrapper-faq' data-category="support">
                         <button className='faq-button' onClick={toggleDropdown}>
                             <div className='question-content'>
-                                <span className='question-icon'>💬</span>
+                                <span className='question-icon'>
+                                    <TbHeadset size={20}/>
+                                </span>
                                 <div className='question-text'>
                                     <h3>How can I contact customer support?</h3>
                                     <p>Get help when you need it most</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -501,41 +525,40 @@ function FAQ(props) {
                 max-width: 1200px;
                 height: fit-content;
                 box-sizing: border-box;
-                padding: 40px 20px;
+                padding: 2rem;
                 margin: 0 auto;
-                color: #ADA3EF;
-                font-family: "Geogrotesque Wide", sans-serif;
-                font-size: 14px;
+                color: #8aa3b8;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                font-size: 0.9rem;
                 font-weight: 400;
                 line-height: 1.6;
               }
 
               .header-section {
                 text-align: center;
-                margin-bottom: 40px;
+                margin-bottom: 2rem;
               }
 
               .main-title {
-                color: #FFF;
-                font-family: "Geogrotesque Wide", sans-serif;
-                font-size: 32px;
+                color: #ffffff;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                font-size: 2rem;
                 font-weight: 700;
-                margin: 0 0 15px 0;
-                text-transform: uppercase;
-                letter-spacing: 1px;
+                margin: 0 0 1rem 0;
+                letter-spacing: -0.5px;
               }
 
               .subtitle {
-                color: #ADA3EF;
-                font-size: 16px;
-                font-weight: 400;
+                color: #8aa3b8;
+                font-size: 1rem;
+                font-weight: 500;
                 max-width: 600px;
                 margin: 0 auto;
-                opacity: 0.9;
+                line-height: 1.5;
               }
 
               .search-section {
-                margin-bottom: 40px;
+                margin-bottom: 2rem;
                 display: flex;
                 justify-content: center;
               }
@@ -548,102 +571,104 @@ function FAQ(props) {
 
               .search-icon {
                 position: absolute;
-                left: 15px;
+                left: 1rem;
                 top: 50%;
                 transform: translateY(-50%);
-                color: #ADA3EF;
-                opacity: 0.6;
+                color: #8aa3b8;
+                opacity: 0.7;
               }
 
               .search-input {
                 width: 100%;
-                padding: 15px 15px 15px 50px;
-                background: rgba(42, 37, 88, 0.2);
-                border: 1px solid rgba(42, 37, 88, 0.5);
+                padding: 1rem 1rem 1rem 3rem;
+                background: rgba(26, 35, 50, 0.7);
+                border: 1px solid rgba(78, 205, 196, 0.15);
                 border-radius: 12px;
-                color: #FFF;
+                color: #ffffff;
                 font-family: inherit;
-                font-size: 14px;
+                font-size: 0.9rem;
                 outline: none;
-                transition: all 0.3s ease;
+                transition: all 0.2s ease;
+                backdrop-filter: blur(10px);
               }
 
               .search-input:focus {
-                border-color: #6366f1;
-                background: rgba(42, 37, 88, 0.3);
+                border-color: rgba(78, 205, 196, 0.3);
+                background: rgba(26, 35, 50, 0.8);
               }
 
               .search-input::placeholder {
-                color: #ADA3EF;
-                opacity: 0.6;
+                color: #8aa3b8;
+                opacity: 0.7;
               }
 
               .categories-section {
-                margin-bottom: 40px;
+                margin-bottom: 2rem;
                 text-align: center;
               }
 
               .categories-title {
-                color: #FFF;
-                font-size: 20px;
-                font-weight: 700;
-                margin: 0 0 20px 0;
+                color: #ffffff;
+                font-size: 1.25rem;
+                font-weight: 600;
+                margin: 0 0 1rem 0;
               }
 
               .category-tags {
                 display: flex;
                 justify-content: center;
-                gap: 10px;
+                gap: 0.75rem;
                 flex-wrap: wrap;
               }
 
               .category-tag {
-                padding: 8px 16px;
-                background: rgba(42, 37, 88, 0.3);
-                border: 1px solid rgba(42, 37, 88, 0.5);
+                padding: 0.5rem 1rem;
+                background: rgba(78, 205, 196, 0.04);
+                border: 1px solid rgba(78, 205, 196, 0.1);
                 border-radius: 20px;
-                color: #ADA3EF;
-                font-size: 13px;
+                color: #8aa3b8;
+                font-size: 0.8rem;
                 font-weight: 500;
                 cursor: pointer;
-                transition: all 0.3s ease;
+                transition: all 0.2s ease;
                 user-select: none;
               }
 
               .category-tag:hover,
               .category-tag.active {
-                background: linear-gradient(135deg, #6366f1, #8b5cf6);
-                border-color: #6366f1;
-                color: #FFF;
+                background: linear-gradient(135deg, #4ecdc4, #44a08d);
+                border-color: #4ecdc4;
+                color: #ffffff;
               }
 
               .faq-sections {
                 display: flex;
                 flex-direction: column;
-                gap: 20px;
+                gap: 1rem;
               }
 
               .dropdown-faq-wrapper-faq {
-                background: rgba(42, 37, 88, 0.1);
-                border: 1px solid rgba(70, 65, 120, 0.6);
+                background: rgba(26, 35, 50, 0.7);
+                border: 1px solid rgba(78, 205, 196, 0.15);
                 border-radius: 12px;
                 overflow: hidden;
-                transition: all 0.3s ease;
+                transition: all 0.2s ease;
+                backdrop-filter: blur(10px);
               }
 
               .dropdown-faq-wrapper-faq:hover {
-                background: rgba(42, 37, 88, 0.15);
-                border-color: rgba(70, 65, 120, 0.8);
+                border-color: rgba(78, 205, 196, 0.25);
+                background: rgba(26, 35, 50, 0.8);
               }
 
               .dropdown-faq-wrapper-faq.active {
-                background: rgba(42, 37, 88, 0.2);
-                border-color: #6366f1;
+                border-color: rgba(78, 205, 196, 0.3);
+                background: rgba(26, 35, 50, 0.8);
               }
 
               .faq-button {
                 width: 100%;
-                padding: 20px 25px;
+                padding: 1.25rem 1.5rem;
                 background: transparent;
                 border: none;
                 cursor: pointer;
@@ -652,48 +677,49 @@ function FAQ(props) {
                 justify-content: space-between;
                 color: inherit;
                 font-family: inherit;
-                transition: all 0.3s ease;
+                transition: all 0.2s ease;
               }
 
               .faq-button:hover {
-                background: rgba(99, 102, 241, 0.05);
+                background: rgba(78, 205, 196, 0.05);
               }
 
               .question-content {
                 display: flex;
                 align-items: center;
-                gap: 15px;
+                gap: 1rem;
                 text-align: left;
               }
 
               .question-icon {
-                font-size: 24px;
                 width: 40px;
                 height: 40px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background: linear-gradient(135deg, #6366f1, #8b5cf6);
+                background: linear-gradient(135deg, #4ecdc4, #44a08d);
                 border-radius: 8px;
                 flex-shrink: 0;
+                color: #ffffff;
               }
 
               .question-text h3 {
-                color: #FFF;
-                font-size: 16px;
+                color: #ffffff;
+                font-size: 1rem;
                 font-weight: 600;
-                margin: 0 0 5px 0;
+                margin: 0 0 0.25rem 0;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
               }
 
               .question-text p {
-                color: #ADA3EF;
-                font-size: 13px;
+                color: #8aa3b8;
+                font-size: 0.8rem;
                 margin: 0;
-                opacity: 0.8;
+                opacity: 0.9;
               }
 
               .chevron {
-                transition: transform 0.3s ease;
+                transition: transform 0.2s ease;
                 flex-shrink: 0;
               }
 
@@ -712,120 +738,131 @@ function FAQ(props) {
               }
 
               .dropdown-faq-content {
-                padding: 0 25px 25px 25px;
-                border-top: 1px solid rgba(70, 65, 120, 0.4);
+                padding: 0 1.5rem 1.5rem 1.5rem;
+                border-top: 1px solid rgba(78, 205, 196, 0.1);
               }
 
               .dropdown-faq-content p {
-                margin: 15px 0;
-                color: #C7C2F0;
+                margin: 1rem 0;
+                color: #8aa3b8;
                 line-height: 1.6;
               }
 
               .info-list {
-                margin: 15px 0;
+                margin: 1rem 0;
                 padding-left: 0;
                 list-style: none;
               }
 
               .info-list li {
                 position: relative;
-                padding-left: 25px;
-                margin-bottom: 8px;
-                color: #C7C2F0;
+                padding-left: 1.5rem;
+                margin-bottom: 0.5rem;
+                color: #8aa3b8;
+                line-height: 1.5;
               }
 
               .info-list li::before {
-                content: "•";
+                content: "→";
                 position: absolute;
                 left: 0;
-                color: #6366f1;
+                color: #4ecdc4;
                 font-weight: bold;
-                font-size: 16px;
+                font-size: 0.9rem;
               }
 
               .info-list li strong {
-                color: #E8E5FF;
+                color: #ffffff;
                 font-weight: 600;
               }
 
               .helpful-info {
-                background: rgba(99, 102, 241, 0.1);
-                border: 1px solid rgba(99, 102, 241, 0.3);
+                background: rgba(78, 205, 196, 0.05);
+                border: 1px solid rgba(78, 205, 196, 0.2);
                 border-radius: 8px;
-                padding: 15px;
-                margin: 15px 0;
-                color: #E8E5FF;
-                font-size: 13px;
+                padding: 1rem;
+                margin: 1rem 0;
+                color: #ffffff;
+                font-size: 0.8rem;
               }
 
               .helpful-info strong {
-                color: #FFF;
+                color: #4ecdc4;
               }
 
               @media (max-width: 768px) {
                 .faq-container {
-                  padding: 20px 15px;
+                  padding: 1.25rem;
                 }
 
                 .main-title {
-                  font-size: 24px;
+                  font-size: 1.5rem;
                 }
 
                 .category-tags {
-                  gap: 8px;
+                  gap: 0.5rem;
                 }
 
                 .category-tag {
-                  padding: 6px 12px;
-                  font-size: 12px;
+                  padding: 0.375rem 0.75rem;
+                  font-size: 0.75rem;
                 }
 
                 .faq-button {
-                  padding: 15px 20px;
+                  padding: 1rem 1.25rem;
                 }
 
                 .question-content {
-                  gap: 12px;
+                  gap: 0.75rem;
                 }
 
                 .question-icon {
                   width: 35px;
                   height: 35px;
-                  font-size: 20px;
                 }
 
                 .question-text h3 {
-                  font-size: 15px;
+                  font-size: 0.95rem;
                 }
 
                 .question-text p {
-                  font-size: 12px;
+                  font-size: 0.75rem;
                 }
 
                 .dropdown-faq-content {
-                  padding: 0 20px 20px 20px;
+                  padding: 0 1.25rem 1.25rem 1.25rem;
                 }
               }
 
               @media (max-width: 480px) {
+                .faq-container {
+                  padding: 1rem;
+                }
+
+                .main-title {
+                  font-size: 1.375rem;
+                }
+
                 .search-input {
-                  padding: 12px 12px 12px 45px;
-                  font-size: 13px;
+                  padding: 0.875rem 0.875rem 0.875rem 2.75rem;
+                  font-size: 0.8rem;
                 }
 
                 .question-content {
-                  gap: 10px;
+                  gap: 0.5rem;
                 }
 
                 .question-icon {
-                  width: 30px;
-                  height: 30px;
-                  font-size: 18px;
+                  width: 32px;
+                  height: 32px;
                 }
 
                 .dropdown-faq-content {
-                  padding: 0 15px 15px 15px;
+                  padding: 0 1rem 1rem 1rem;
+                }
+
+                .info-list li {
+                  padding-left: 1.25rem;
                 }
               }
             `}</style>

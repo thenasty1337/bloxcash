@@ -264,203 +264,254 @@ function AML(props) {
                 max-width: 1200px;
                 height: fit-content;
                 box-sizing: border-box;
-                padding: 40px 20px;
+                padding: 2rem;
                 margin: 0 auto;
-                color: #ADA3EF;
-                font-family: "Geogrotesque Wide", sans-serif;
-                font-size: 14px;
+                color: #8aa3b8;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                font-size: 0.9rem;
                 font-weight: 400;
                 line-height: 1.6;
               }
 
               .header-section {
                 text-align: center;
-                margin-bottom: 50px;
-                padding: 30px 0;
-                border-bottom: 2px solid #2A2558;
+                margin-bottom: 2rem;
+                padding: 2rem 0;
+                border-bottom: 1px solid rgba(78, 205, 196, 0.2);
               }
 
               .main-title {
-                color: #FFF;
-                font-family: "Geogrotesque Wide", sans-serif;
-                font-size: 32px;
+                color: #ffffff;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                font-size: 2rem;
                 font-weight: 700;
-                margin: 0 0 15px 0;
-                text-transform: uppercase;
-                letter-spacing: 1px;
+                margin: 0 0 1rem 0;
+                letter-spacing: -0.5px;
               }
 
               .subtitle {
-                color: #ADA3EF;
-                font-size: 16px;
-                font-weight: 400;
+                color: #8aa3b8;
+                font-size: 1rem;
+                font-weight: 500;
                 max-width: 800px;
                 margin: 0 auto;
-                opacity: 0.9;
+                line-height: 1.5;
               }
 
               .intro-section {
-                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-                padding: 30px;
+                background: rgba(26, 35, 50, 0.7);
+                border: 1px solid rgba(78, 205, 196, 0.15);
+                padding: 1.5rem;
                 border-radius: 12px;
-                margin-bottom: 30px;
-                border: 1px solid #2A2558;
+                margin-bottom: 1.5rem;
+                backdrop-filter: blur(10px);
               }
 
               .intro-text {
-                font-size: 15px;
-                line-height: 1.7;
+                font-size: 0.95rem;
+                line-height: 1.6;
                 margin: 0;
-                color: #E8E5FF;
+                color: #ffffff;
               }
 
               .sections {
                 display: flex;
                 flex-direction: column;
-                gap: 30px;
+                gap: 1.5rem;
               }
 
               .section {
-                background: rgba(42, 37, 88, 0.1);
-                padding: 25px;
-                border-radius: 10px;
-                border: 1px solid rgba(42, 37, 88, 0.3);
-                transition: all 0.3s ease;
+                background: rgba(26, 35, 50, 0.7);
+                border: 1px solid rgba(78, 205, 196, 0.15);
+                padding: 1.5rem;
+                border-radius: 12px;
+                backdrop-filter: blur(10px);
+                transition: all 0.2s ease;
               }
 
               .section:hover {
-                background: rgba(42, 37, 88, 0.15);
-                border-color: rgba(42, 37, 88, 0.5);
+                border-color: rgba(78, 205, 196, 0.25);
+                background: rgba(26, 35, 50, 0.8);
               }
 
               .section-title {
-                color: #FFF;
-                font-family: "Geogrotesque Wide", sans-serif;
-                font-size: 20px;
-                font-weight: 700;
-                margin: 0 0 15px 0;
+                color: #ffffff;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                font-size: 1.25rem;
+                font-weight: 600;
+                margin: 0 0 1rem 0;
                 display: flex;
                 align-items: center;
-                gap: 10px;
+                gap: 0.75rem;
               }
 
               .section-number {
-                background: linear-gradient(135deg, #6366f1, #8b5cf6);
-                color: white;
-                font-size: 14px;
-                font-weight: 700;
-                padding: 6px 12px;
-                border-radius: 6px;
-                min-width: 20px;
+                background: linear-gradient(135deg, #4ecdc4, #44a08d);
+                color: #ffffff;
+                font-size: 0.8rem;
+                font-weight: 600;
+                padding: 0.4rem 0.8rem;
+                border-radius: 8px;
+                min-width: 24px;
                 text-align: center;
+                flex-shrink: 0;
               }
 
               .subsection {
-                margin: 20px 0;
-                padding-left: 20px;
-                border-left: 3px solid #2A2558;
+                margin: 1rem 0;
+                padding-left: 1rem;
+                border-left: 2px solid rgba(78, 205, 196, 0.3);
               }
 
               .subsection-title {
-                color: #E8E5FF;
-                font-family: "Geogrotesque Wide", sans-serif;
-                font-size: 16px;
+                color: #ffffff;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                font-size: 1rem;
                 font-weight: 600;
-                margin: 0 0 10px 0;
+                margin: 0 0 0.5rem 0;
+              }
+
+              .section p {
+                color: #8aa3b8;
+                margin: 0.75rem 0;
+                line-height: 1.6;
               }
 
               .styled-list {
                 padding-left: 0;
-                margin: 15px 0;
+                margin: 1rem 0;
                 list-style: none;
               }
 
               .styled-list li {
                 position: relative;
-                padding-left: 25px;
-                margin-bottom: 8px;
-                color: #C7C2F0;
+                padding-left: 1.5rem;
+                margin-bottom: 0.5rem;
+                color: #8aa3b8;
+                line-height: 1.5;
               }
 
               .styled-list li::before {
-                content: "▸";
+                content: "→";
                 position: absolute;
                 left: 0;
-                color: #6366f1;
+                color: #4ecdc4;
                 font-weight: bold;
-                font-size: 16px;
+                font-size: 0.9rem;
               }
 
               .styled-list li strong {
-                color: #E8E5FF;
+                color: #ffffff;
                 font-weight: 600;
               }
 
               .footer-section {
-                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-                padding: 30px;
+                background: rgba(26, 35, 50, 0.7);
+                border: 1px solid rgba(78, 205, 196, 0.15);
+                padding: 1.5rem;
                 border-radius: 12px;
-                margin-top: 40px;
-                border: 1px solid #2A2558;
+                margin-top: 2rem;
+                backdrop-filter: blur(10px);
               }
 
               .contact-info {
-                margin-bottom: 25px;
+                margin-bottom: 1.5rem;
               }
 
               .contact-title {
-                color: #FFF;
-                font-family: "Geogrotesque Wide", sans-serif;
-                font-size: 18px;
-                font-weight: 700;
-                margin: 0 0 15px 0;
+                color: #ffffff;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin: 0 0 0.75rem 0;
+              }
+
+              .contact-info p {
+                color: #8aa3b8;
+                margin: 0.5rem 0;
               }
 
               .contact-details {
-                background: rgba(42, 37, 88, 0.2);
-                padding: 15px;
+                background: rgba(78, 205, 196, 0.05);
+                border: 1px solid rgba(78, 205, 196, 0.1);
+                padding: 1rem;
                 border-radius: 8px;
-                margin-top: 15px;
+                margin-top: 0.75rem;
               }
 
               .contact-details p {
-                margin: 5px 0;
-                color: #E8E5FF;
+                margin: 0.25rem 0;
+                color: #ffffff;
+              }
+
+              .contact-details strong {
+                color: #4ecdc4;
               }
 
               .effective-date {
-                border-top: 1px solid #2A2558;
-                padding-top: 20px;
-                color: #ADA3EF;
-                font-size: 13px;
+                border-top: 1px solid rgba(78, 205, 196, 0.2);
+                padding-top: 1rem;
+                color: #8aa3b8;
+                font-size: 0.8rem;
               }
 
               .effective-date p {
-                margin: 5px 0;
+                margin: 0.25rem 0;
+              }
+
+              .effective-date strong {
+                color: #4ecdc4;
               }
 
               @media (max-width: 768px) {
                 .aml-container {
-                  padding: 20px 15px;
+                  padding: 1.25rem;
                 }
 
                 .main-title {
-                  font-size: 24px;
+                  font-size: 1.5rem;
                 }
 
                 .section {
-                  padding: 20px 15px;
+                  padding: 1.25rem;
                 }
 
                 .section-title {
-                  font-size: 18px;
+                  font-size: 1.1rem;
                   flex-direction: column;
                   align-items: flex-start;
-                  gap: 5px;
+                  gap: 0.5rem;
                 }
 
                 .subsection {
-                  padding-left: 15px;
+                  padding-left: 0.75rem;
+                }
+
+                .header-section {
+                  padding: 1.5rem 0;
+                }
+
+                .intro-section,
+                .footer-section {
+                  padding: 1.25rem;
+                }
+              }
+
+              @media (max-width: 480px) {
+                .aml-container {
+                  padding: 1rem;
+                }
+
+                .main-title {
+                  font-size: 1.375rem;
+                }
+
+                .section-title {
+                  font-size: 1rem;
+                }
+
+                .styled-list li {
+                  padding-left: 1.25rem;
                 }
               }
             `}</style>

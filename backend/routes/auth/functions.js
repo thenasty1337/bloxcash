@@ -53,6 +53,28 @@ const generateTokens = async (user) => {
     // Create a token family ID to track related refresh tokens
     const familyId = ulid();
     
+    // Get user's session timeout preference (default to 30 days if not set)
+    let sessionTimeoutMinutes = 43200; // Default 30 days
+    try {
+        const [[userSettings]] = await sql.query(
+            'SELECT session_timeout FROM user_settings WHERE userId = ?',
+            [user.id]
+        );
+        if (userSettings && userSettings.session_timeout) {
+            sessionTimeoutMinutes = userSettings.session_timeout;
+        }
+    } catch (error) {
+        console.log('Could not fetch user session timeout, using default:', error.message);
+    }
+    
+    // Convert minutes to seconds for JWT expiresIn
+    const sessionTimeoutSeconds = sessionTimeoutMinutes * 60;
+    
+    // For access token, use a shorter duration (15 min) or user's setting if shorter
+    const accessTokenTimeout = Math.min(900, sessionTimeoutSeconds); // 15 minutes max for access token
+    
+    console.log(`[AUTH] User ${user.id} session timeout: ${sessionTimeoutMinutes} minutes (${sessionTimeoutSeconds}s), access token: ${accessTokenTimeout}s`);
+    
     // Generate access token
     const accessToken = jwt.sign(
         { 
@@ -61,26 +83,26 @@ const generateTokens = async (user) => {
             perms: user.perms || 0,
         },
         tokenSettings.access.secret,
-        { expiresIn: tokenSettings.access.expiresIn }
+        { expiresIn: accessTokenTimeout }
     );
     
-    // Generate refresh token
+    // Generate refresh token using user's full session timeout
     const refreshToken = jwt.sign(
         { 
             userId: user.id,
             family: familyId 
         },
         tokenSettings.refresh.secret,
-        { expiresIn: tokenSettings.refresh.expiresIn }
+        { expiresIn: sessionTimeoutSeconds }
     );
     
     // Store refresh token hash in database
     const refreshTokenHash = await bcrypt.hash(refreshToken, 10);
     const tokenId = ulid();
     
-    // Calculate expiration date
+    // Calculate expiration date based on user's session timeout
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7); // 7 days from now
+    expiresAt.setTime(expiresAt.getTime() + (sessionTimeoutMinutes * 60 * 1000));
     
     try {
         await sql.query(
@@ -92,19 +114,25 @@ const generateTokens = async (user) => {
         throw new Error('Failed to save authentication token');
     }
     
-    return { accessToken, refreshToken, familyId };
+    return { 
+        accessToken, 
+        refreshToken, 
+        familyId,
+        accessTokenTimeout: accessTokenTimeout * 1000, // Return in milliseconds for cookie
+        refreshTokenTimeout: sessionTimeoutMinutes * 60 * 1000 // Return in milliseconds for cookie
+    };
 };
 
 // Set authentication cookies
-const setAuthCookies = (res, accessToken, refreshToken) => {
+const setAuthCookies = (res, accessToken, refreshToken, accessTokenTimeout = 15 * 60 * 1000, refreshTokenTimeout = 7 * 24 * 60 * 60 * 1000) => {
     res.cookie('accessToken', accessToken, {
         ...secureCookieSettings,
-        maxAge: 15 * 60 * 1000 // 15 minutes in milliseconds
+        maxAge: accessTokenTimeout
     });
     
     res.cookie('refreshToken', refreshToken, {
         ...secureCookieSettings,
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
+        maxAge: refreshTokenTimeout
     });
 };
 
@@ -219,10 +247,10 @@ const authenticate = async (req, res, next) => {
             
             try {
                 // Attempt to refresh the tokens
-                const { accessToken, refreshToken: newRefreshToken } = await refreshTokens(refreshToken);
+                const { accessToken, refreshToken: newRefreshToken, accessTokenTimeout, refreshTokenTimeout } = await refreshTokens(refreshToken);
                 
                 // Set new cookies
-                setAuthCookies(res, accessToken, newRefreshToken);
+                setAuthCookies(res, accessToken, newRefreshToken, accessTokenTimeout, refreshTokenTimeout);
                 
                 // Try again with the new token
                 const decoded = jwt.verify(accessToken, tokenSettings.access.secret);

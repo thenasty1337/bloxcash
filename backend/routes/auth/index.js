@@ -58,8 +58,8 @@ router.post('/login', loginLimiter, async (req, res) => {
         }
 
         // Generate tokens and set cookies
-        const { accessToken, refreshToken } = await generateTokens(user);
-        setAuthCookies(res, accessToken, refreshToken);
+        const { accessToken, refreshToken, accessTokenTimeout, refreshTokenTimeout } = await generateTokens(user);
+        setAuthCookies(res, accessToken, refreshToken, accessTokenTimeout, refreshTokenTimeout);
 
         // Return user data (without passwordHash)
         const { passwordHash, ...userInfo } = user;
@@ -120,8 +120,8 @@ router.post('/signup', apiLimiter, async (req, res) => {
         await createUserSeeds(newUser.id);
 
         // Generate tokens and set cookies for automatic login
-        const { accessToken, refreshToken } = await generateTokens(newUser);
-        setAuthCookies(res, accessToken, refreshToken);
+        const { accessToken, refreshToken, accessTokenTimeout, refreshTokenTimeout } = await generateTokens(newUser);
+        setAuthCookies(res, accessToken, refreshToken, accessTokenTimeout, refreshTokenTimeout);
 
         return res.status(201).json({ 
             message: 'Signup successful', 
@@ -178,10 +178,10 @@ router.post('/refresh-token', async (req, res) => {
         }
         
         // This throws an error if token is invalid
-        const { accessToken, refreshToken: newRefreshToken } = await refreshTokens(refreshToken);
+        const { accessToken, refreshToken: newRefreshToken, accessTokenTimeout, refreshTokenTimeout } = await refreshTokens(refreshToken);
         
         // Set new cookies
-        setAuthCookies(res, accessToken, newRefreshToken);
+        setAuthCookies(res, accessToken, newRefreshToken, accessTokenTimeout, refreshTokenTimeout);
         
         res.json({ message: 'Token refreshed successfully' });
     } catch (error) {

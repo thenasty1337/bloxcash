@@ -1,3 +1,5 @@
+import { TbLock, TbCheck, TbTarget, TbBox, TbSwords, TbTrendingUp, TbCoin, TbBomb } from 'solid-icons/tb';
+
 let PROVABLY_CODE = {
     CASES: `const crypto = require('crypto');
 
@@ -151,15 +153,21 @@ function Provably(props) {
                     </p>
                     <div className='trust-indicators'>
                         <div className='indicator'>
-                            <span className='indicator-icon'>🔒</span>
+                            <span className='indicator-icon'>
+                                <TbLock size={16}/>
+                            </span>
                             <span>Cryptographically Secure</span>
                         </div>
                         <div className='indicator'>
-                            <span className='indicator-icon'>✓</span>
+                            <span className='indicator-icon'>
+                                <TbCheck size={16}/>
+                            </span>
                             <span>100% Verifiable</span>
                         </div>
                         <div className='indicator'>
-                            <span className='indicator-icon'>🎯</span>
+                            <span className='indicator-icon'>
+                                <TbTarget size={16}/>
+                            </span>
                             <span>Transparent Results</span>
                         </div>
                     </div>
@@ -181,14 +189,16 @@ function Provably(props) {
                     <div className='dropdown-faq-wrapper-faq'>
                         <button className='game-button' onClick={toggleDropdown}>
                             <div className='button-content'>
-                                <span className='game-icon'>📦</span>
+                                <span className='game-icon'>
+                                    <TbBox size={20}/>
+                                </span>
                                 <div className='button-text'>
                                     <h3>Cases</h3>
                                     <p>Verify case opening results</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -236,14 +246,16 @@ function Provably(props) {
                     <div className='dropdown-faq-wrapper-faq'>
                         <button className='game-button' onClick={toggleDropdown}>
                             <div className='button-content'>
-                                <span className='game-icon'>⚔️</span>
+                                <span className='game-icon'>
+                                    <TbSwords size={20}/>
+                                </span>
                                 <div className='button-text'>
                                     <h3>Case Battles</h3>
                                     <p>Verify battle round outcomes</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -290,14 +302,16 @@ function Provably(props) {
                     <div className='dropdown-faq-wrapper-faq'>
                         <button className='game-button' onClick={toggleDropdown}>
                             <div className='button-content'>
-                                <span className='game-icon'>🎯</span>
+                                <span className='game-icon'>
+                                    <TbTarget size={20}/>
+                                </span>
                                 <div className='button-text'>
                                     <h3>Roulette</h3>
                                     <p>Verify roulette spin results</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -342,14 +356,16 @@ function Provably(props) {
                     <div className='dropdown-faq-wrapper-faq'>
                         <button className='game-button' onClick={toggleDropdown}>
                             <div className='button-content'>
-                                <span className='game-icon'>📈</span>
+                                <span className='game-icon'>
+                                    <TbTrendingUp size={20}/>
+                                </span>
                                 <div className='button-text'>
                                     <h3>Crash</h3>
                                     <p>Verify crash multiplier results</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -393,14 +409,16 @@ function Provably(props) {
                     <div className='dropdown-faq-wrapper-faq'>
                         <button className='game-button' onClick={toggleDropdown}>
                             <div className='button-content'>
-                                <span className='game-icon'>💰</span>
+                                <span className='game-icon'>
+                                    <TbCoin size={20}/>
+                                </span>
                                 <div className='button-text'>
                                     <h3>Jackpot</h3>
                                     <p>Verify jackpot winner selection</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -447,14 +465,16 @@ function Provably(props) {
                     <div className='dropdown-faq-wrapper-faq'>
                         <button className='game-button' onClick={toggleDropdown}>
                             <div className='button-content'>
-                                <span className='game-icon'>🪙</span>
+                                <span className='game-icon'>
+                                    <TbCoin size={20}/>
+                                </span>
                                 <div className='button-text'>
                                     <h3>Coinflip</h3>
                                     <p>Verify coinflip game outcomes</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -498,14 +518,16 @@ function Provably(props) {
                     <div className='dropdown-faq-wrapper-faq'>
                         <button className='game-button' onClick={toggleDropdown}>
                             <div className='button-content'>
-                                <span className='game-icon'>💣</span>
+                                <span className='game-icon'>
+                                    <TbBomb size={20}/>
+                                </span>
                                 <div className='button-text'>
                                     <h3>Mines</h3>
                                     <p>Verify mine placement and results</p>
                                 </div>
                             </div>
                             <svg className='chevron' xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#ADA3EF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4ecdc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             </svg>
                         </button>
 
@@ -558,85 +580,88 @@ function Provably(props) {
                 max-width: 1200px;
                 height: fit-content;
                 box-sizing: border-box;
-                padding: 40px 20px;
+                padding: 2rem;
                 margin: 0 auto;
-                color: #ADA3EF;
-                font-family: "Geogrotesque Wide", sans-serif;
-                font-size: 14px;
+                color: #8aa3b8;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                font-size: 0.9rem;
                 font-weight: 400;
                 line-height: 1.6;
               }
 
               .header-section {
                 text-align: center;
-                margin-bottom: 50px;
-                padding: 30px 0;
-                border-bottom: 2px solid #2A2558;
+                margin-bottom: 2rem;
+                padding: 2rem 0;
+                border-bottom: 1px solid rgba(78, 205, 196, 0.2);
               }
 
               .main-title {
-                color: #FFF;
-                font-family: "Geogrotesque Wide", sans-serif;
-                font-size: 32px;
+                color: #ffffff;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                font-size: 2rem;
                 font-weight: 700;
-                margin: 0 0 15px 0;
-                text-transform: uppercase;
-                letter-spacing: 1px;
+                margin: 0 0 1rem 0;
+                letter-spacing: -0.5px;
               }
 
               .subtitle {
-                color: #ADA3EF;
-                font-size: 16px;
-                font-weight: 400;
+                color: #8aa3b8;
+                font-size: 1rem;
+                font-weight: 500;
                 max-width: 800px;
-                margin: 0 auto 30px auto;
-                opacity: 0.9;
+                margin: 0 auto 1.5rem auto;
+                line-height: 1.5;
               }
 
               .trust-indicators {
                 display: flex;
                 justify-content: center;
-                gap: 30px;
-                margin-top: 30px;
+                gap: 1.5rem;
+                margin-top: 1.5rem;
+                flex-wrap: wrap;
               }
 
               .indicator {
                 display: flex;
                 align-items: center;
-                gap: 8px;
-                padding: 12px 20px;
-                background: rgba(99, 102, 241, 0.1);
-                border: 1px solid rgba(99, 102, 241, 0.3);
+                gap: 0.5rem;
+                padding: 0.75rem 1rem;
+                background: rgba(78, 205, 196, 0.05);
+                border: 1px solid rgba(78, 205, 196, 0.2);
                 border-radius: 8px;
-                font-size: 13px;
+                font-size: 0.8rem;
                 font-weight: 600;
-                color: #E8E5FF;
+                color: #ffffff;
               }
 
               .indicator-icon {
-                font-size: 16px;
+                color: #4ecdc4;
+                display: flex;
+                align-items: center;
               }
 
               .intro-section {
-                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-                padding: 30px;
+                background: rgba(26, 35, 50, 0.7);
+                border: 1px solid rgba(78, 205, 196, 0.15);
+                padding: 1.5rem;
                 border-radius: 12px;
-                margin-bottom: 40px;
-                border: 1px solid #2A2558;
+                margin-bottom: 2rem;
+                backdrop-filter: blur(10px);
                 text-align: center;
               }
 
               .intro-title {
-                color: #FFF;
-                font-size: 24px;
-                font-weight: 700;
-                margin: 0 0 15px 0;
+                color: #ffffff;
+                font-size: 1.5rem;
+                font-weight: 600;
+                margin: 0 0 1rem 0;
               }
 
               .intro-text {
-                color: #E8E5FF;
-                font-size: 15px;
-                line-height: 1.7;
+                color: #8aa3b8;
+                font-size: 0.95rem;
+                line-height: 1.6;
                 margin: 0;
                 max-width: 800px;
                 margin: 0 auto;
@@ -645,38 +670,39 @@ function Provably(props) {
               .games-section {
                 display: flex;
                 flex-direction: column;
-                gap: 20px;
+                gap: 1rem;
               }
 
               .section-title {
-                color: #FFF;
-                font-size: 24px;
-                font-weight: 700;
-                margin: 0 0 30px 0;
+                color: #ffffff;
+                font-size: 1.5rem;
+                font-weight: 600;
+                margin: 0 0 1.5rem 0;
                 text-align: center;
               }
 
               .dropdown-faq-wrapper-faq {
-                background: rgba(42, 37, 88, 0.1);
-                border: 1px solid rgba(42, 37, 88, 0.3);
+                background: rgba(26, 35, 50, 0.7);
+                border: 1px solid rgba(78, 205, 196, 0.15);
                 border-radius: 12px;
                 overflow: hidden;
-                transition: all 0.3s ease;
+                transition: all 0.2s ease;
+                backdrop-filter: blur(10px);
               }
 
               .dropdown-faq-wrapper-faq:hover {
-                background: rgba(42, 37, 88, 0.15);
-                border-color: rgba(42, 37, 88, 0.5);
+                border-color: rgba(78, 205, 196, 0.25);
+                background: rgba(26, 35, 50, 0.8);
               }
 
               .dropdown-faq-wrapper-faq.active {
-                background: rgba(42, 37, 88, 0.2);
-                border-color: #6366f1;
+                border-color: rgba(78, 205, 196, 0.3);
+                background: rgba(26, 35, 50, 0.8);
               }
 
               .game-button {
                 width: 100%;
-                padding: 20px 25px;
+                padding: 1.25rem 1.5rem;
                 background: transparent;
                 border: none;
                 cursor: pointer;
@@ -685,28 +711,28 @@ function Provably(props) {
                 justify-content: space-between;
                 color: inherit;
                 font-family: inherit;
-                transition: all 0.3s ease;
+                transition: all 0.2s ease;
               }
 
               .game-button:hover {
-                background: rgba(99, 102, 241, 0.05);
+                background: rgba(78, 205, 196, 0.05);
               }
 
               .button-content {
                 display: flex;
                 align-items: center;
-                gap: 15px;
+                gap: 1rem;
               }
 
               .game-icon {
-                font-size: 24px;
                 width: 40px;
                 height: 40px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                background: linear-gradient(135deg, #6366f1, #8b5cf6);
+                background: linear-gradient(135deg, #4ecdc4, #44a08d);
                 border-radius: 8px;
+                color: #ffffff;
               }
 
               .button-text {
@@ -714,21 +740,21 @@ function Provably(props) {
               }
 
               .button-text h3 {
-                color: #FFF;
-                font-size: 18px;
-                font-weight: 700;
-                margin: 0 0 5px 0;
+                color: #ffffff;
+                font-size: 1.1rem;
+                font-weight: 600;
+                margin: 0 0 0.25rem 0;
               }
 
               .button-text p {
-                color: #ADA3EF;
-                font-size: 14px;
+                color: #8aa3b8;
+                font-size: 0.8rem;
                 margin: 0;
-                opacity: 0.8;
+                opacity: 0.9;
               }
 
               .chevron {
-                transition: transform 0.3s ease;
+                transition: transform 0.2s ease;
               }
 
               .dropdown-faq-wrapper-faq.active .chevron {
@@ -746,128 +772,134 @@ function Provably(props) {
               }
 
               .dropdown-faq-content {
-                padding: 0 25px 25px 25px;
-                border-top: 1px solid rgba(42, 37, 88, 0.5);
+                padding: 0 1.5rem 1.5rem 1.5rem;
+                border-top: 1px solid rgba(78, 205, 196, 0.1);
               }
 
               .dropdown-faq-content h4 {
-                color: #FFF;
-                font-size: 20px;
-                font-weight: 700;
-                margin: 20px 0 15px 0;
+                color: #ffffff;
+                font-size: 1.25rem;
+                font-weight: 600;
+                margin: 1.25rem 0 1rem 0;
               }
 
               .dropdown-faq-content h5 {
-                color: #E8E5FF;
-                font-size: 16px;
+                color: #ffffff;
+                font-size: 1rem;
                 font-weight: 600;
-                margin: 25px 0 10px 0;
+                margin: 1.5rem 0 0.5rem 0;
+              }
+
+              .dropdown-faq-content p {
+                color: #8aa3b8;
+                margin: 0.75rem 0;
+                line-height: 1.6;
               }
 
               .seed-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                gap: 15px;
-                margin: 20px 0;
+                gap: 1rem;
+                margin: 1.25rem 0;
               }
 
               .seed-item {
-                background: rgba(26, 26, 46, 0.5);
-                padding: 15px;
+                background: rgba(78, 205, 196, 0.05);
+                border: 1px solid rgba(78, 205, 196, 0.1);
+                padding: 1rem;
                 border-radius: 8px;
-                border: 1px solid rgba(42, 37, 88, 0.3);
               }
 
               .seed-item strong {
                 display: block;
-                color: #FFF;
+                color: #ffffff;
                 font-weight: 600;
-                margin-bottom: 5px;
+                margin-bottom: 0.25rem;
               }
 
               .seed-item span {
-                color: #C7C2F0;
-                font-size: 13px;
+                color: #8aa3b8;
+                font-size: 0.8rem;
               }
 
               .explanation {
-                margin: 20px 0;
+                margin: 1.25rem 0;
               }
 
               .explanation p {
-                margin: 15px 0;
-                color: #C7C2F0;
+                margin: 1rem 0;
+                color: #8aa3b8;
                 line-height: 1.6;
               }
 
               .seed-display {
-                background: rgba(26, 26, 46, 0.5);
-                padding: 20px;
+                background: rgba(78, 205, 196, 0.05);
+                border: 1px solid rgba(78, 205, 196, 0.1);
+                padding: 1.25rem;
                 border-radius: 8px;
-                margin: 15px 0;
-                border: 1px solid rgba(42, 37, 88, 0.3);
+                margin: 1rem 0;
               }
 
               .seed-display p {
-                margin: 10px 0 5px 0;
-                color: #E8E5FF;
+                margin: 0.75rem 0 0.25rem 0;
+                color: #ffffff;
                 font-weight: 600;
               }
 
               .seed-hash {
                 display: block;
                 background: rgba(0, 0, 0, 0.3);
-                padding: 10px;
+                padding: 0.75rem;
                 border-radius: 4px;
                 font-family: 'Courier New', monospace;
-                font-size: 12px;
-                color: #47C754;
+                font-size: 0.75rem;
+                color: #4ecdc4;
                 word-break: break-all;
-                margin-bottom: 15px;
+                margin-bottom: 1rem;
               }
 
               .code-section {
-                margin-top: 25px;
+                margin-top: 1.5rem;
               }
 
               .code-block {
-                background: linear-gradient(135deg, #1a1a2e 0%, #272549 100%);
-                border: 1px solid #2A2558;
+                background: rgba(26, 35, 50, 0.8);
+                border: 1px solid rgba(78, 205, 196, 0.15);
                 border-radius: 8px;
-                padding: 20px;
+                padding: 1.25rem;
                 overflow-x: auto;
               }
 
               .code-block pre {
                 margin: 0;
                 font-family: 'Courier New', monospace;
-                font-size: 13px;
+                font-size: 0.8rem;
                 line-height: 1.5;
               }
 
               .code-block code {
-                color: #47C754;
+                color: #4ecdc4;
                 white-space: pre;
               }
 
               @media (max-width: 768px) {
                 .provably-container {
-                  padding: 20px 15px;
+                  padding: 1.25rem;
                 }
 
                 .main-title {
-                  font-size: 24px;
+                  font-size: 1.5rem;
                 }
 
                 .trust-indicators {
                   flex-direction: column;
-                  gap: 15px;
+                  gap: 0.75rem;
                   align-items: center;
                 }
 
                 .indicator {
-                  padding: 10px 15px;
-                  font-size: 12px;
+                  padding: 0.625rem 0.875rem;
+                  font-size: 0.75rem;
                 }
 
                 .seed-grid {
@@ -875,56 +907,63 @@ function Provably(props) {
                 }
 
                 .game-button {
-                  padding: 15px 20px;
+                  padding: 1rem 1.25rem;
                 }
 
                 .button-content {
-                  gap: 12px;
+                  gap: 0.75rem;
                 }
 
                 .game-icon {
                   width: 35px;
                   height: 35px;
-                  font-size: 20px;
                 }
 
                 .button-text h3 {
-                  font-size: 16px;
+                  font-size: 1rem;
                 }
 
                 .button-text p {
-                  font-size: 13px;
+                  font-size: 0.75rem;
                 }
 
                 .dropdown-faq-content {
-                  padding: 0 20px 20px 20px;
+                  padding: 0 1.25rem 1.25rem 1.25rem;
                 }
 
                 .code-block {
-                  padding: 15px;
+                  padding: 1rem;
                 }
 
                 .code-block pre {
-                  font-size: 12px;
+                  font-size: 0.75rem;
                 }
               }
 
               @media (max-width: 480px) {
+                .provably-container {
+                  padding: 1rem;
+                }
+
+                .main-title {
+                  font-size: 1.375rem;
+                }
+
                 .trust-indicators {
-                  gap: 10px;
+                  gap: 0.5rem;
                 }
 
                 .indicator {
-                  padding: 8px 12px;
-                  font-size: 11px;
+                  padding: 0.5rem 0.75rem;
+                  font-size: 0.7rem;
                 }
 
                 .game-button {
-                  padding: 12px 15px;
+                  padding: 0.875rem 1rem;
                 }
 
                 .dropdown-faq-content {
-                  padding: 0 15px 15px 15px;
+                  padding: 0 1rem 1rem 1rem;
                 }
               }
             `}</style>
