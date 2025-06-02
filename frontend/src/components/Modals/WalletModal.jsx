@@ -434,8 +434,10 @@ function WalletModal(props) {
                 </div>
                 
                 <div class='withdraw-dropdowns'>
+                  
                   <div class={`dropdown-wrapper ${depositCurrencyDropdownOpen() ? 'active' : ''}`} 
                       onClick={(e) => { setDepositCurrencyDropdownOpen(!depositCurrencyDropdownOpen()); e.stopPropagation(); }}>
+                        
                       <p>Currency: </p>
                       <Show when={depositCurrencySymbol()} fallback={<p class='white bold'>Select</p>}>
                           <img src={depositCurrencyImg()} 
@@ -448,11 +450,19 @@ function WalletModal(props) {
                       <img class='arrow' src='/assets/icons/dropdownarrow.svg' alt=''/>
                       <div class='dropdown-container modal-dropdown-options' onClick={(e) => e.stopPropagation()}>
                           <For each={DEPOSIT_CRYPTO_METHODS}>{(method) =>
-                              <p class='option' onClick={() => handleDepositCurrencySelect(method)}>
-                                  <img src={method.img} 
-                                      height='18' alt={method.id} onError={(e) => e.currentTarget.style.display = 'none'}/> 
-                                  {method.id}
-                              </p>
+                              <div class='option' onClick={() => handleDepositCurrencySelect(method)}>
+                                  <div class='option-left'>
+                                      <img src={method.img} 
+                                          height='20' alt={method.id} onError={(e) => e.currentTarget.style.display = 'none'}/> 
+                                      <div class='option-text'>
+                                          <span class='currency-name'>{method.id}</span>
+                                          <span class='currency-full-name'>{method.name}</span>
+                                      </div>
+                                  </div>
+                                  <Show when={getDisplayNetworkFromApiId(method.apiId)}>
+                                      <span class='network-badge'>{getDisplayNetworkFromApiId(method.apiId)}</span>
+                                  </Show>
+                              </div>
                           }</For>
                       </div>
                   </div>
@@ -465,7 +475,7 @@ function WalletModal(props) {
                             <div style={{padding: '20px', textAlign: 'center'}}><Loader text={`Fetching ${depositCurrencySymbol() || selectedDepositCurrencyApiId()} address...`}/></div>
                         </Show>
                       }>
-                    <div style={{"margin-top": "20px"}}>
+                    <div style={{"margin-top": "10px"}}>
                         <label class='input-label'>Deposit Address ({selectedDepositCurrencyApiId()})</label>
                         <div class='input deposit-address-display'>
                             <div class='address-text'>
@@ -557,11 +567,8 @@ function WalletModal(props) {
                 <Show when={!withdrawCryptoTypes.loading && withdrawCryptoTypes()} fallback={<Loader/>}>
                     <>
                         <div style={{
-                            "background": "rgba(26, 35, 50, 0.4)",
-                            "border-radius": "12px",
-                            "padding": "18px",
-                            "border": "1px solid rgba(78, 205, 196, 0.15)",
-                            "margin-bottom": "20px"
+                           
+                            "margin-bottom": "10px"
                         }}>
                             <p style={{
                                 "color": "#8aa3b8",
@@ -592,10 +599,18 @@ function WalletModal(props) {
                                              "border-radius": "0 0 8px 8px"
                                          }}>
                                         <For each={withdrawCryptoTypes()}>{(crypto) =>
-                                            <p class='option' onClick={() => { changeWithdrawCrypto(crypto?.id); setWithdrawCurrencyDropdown(false); }}
-                                              style={{"transition": "background 0.2s ease"}}>
-                                                <img src={`/cryptos/${crypto.id.toUpperCase()}.png`} height='18' alt={crypto.id}/> {crypto?.id}
-                                            </p>
+                                            <div class='option' onClick={() => { changeWithdrawCrypto(crypto?.id); setWithdrawCurrencyDropdown(false); }}>
+                                                <div class='option-left'>
+                                                    <img src={`/cryptos/${crypto.id.toUpperCase()}.png`} height='20' alt={crypto.id}/>
+                                                    <div class='option-text'>
+                                                        <span class='currency-name'>{crypto?.id}</span>
+                                                        <span class='currency-full-name'>{crypto?.name || crypto?.id}</span>
+                                                    </div>
+                                                </div>
+                                                <Show when={crypto?.chains && crypto.chains.length > 0}>
+                                                    <span class='network-count'>{crypto.chains.length} network{crypto.chains.length > 1 ? 's' : ''}</span>
+                                                </Show>
+                                            </div>
                                         }</For>
                                     </div>
                                 </div>
@@ -620,10 +635,17 @@ function WalletModal(props) {
                                              "border-radius": "0 0 8px 8px"
                                          }}>
                                         <For each={availableWithdrawChains()}>{(chainOpt) =>
-                                            <p class='option' onClick={() => { setWithdrawChain(chainOpt); setWithdrawNetworkDropdown(false); }}
-                                              style={{"transition": "background 0.2s ease"}}>
-                                              {chainOpt?.id}
-                                            </p>
+                                            <div class='option' onClick={() => { setWithdrawChain(chainOpt); setWithdrawNetworkDropdown(false); }}>
+                                                <div class='option-left'>
+                                                    <div class='option-text'>
+                                                        <span class='currency-name'>{chainOpt?.id}</span>
+                                                        <span class='currency-full-name'>{chainOpt?.coinName || chainOpt?.name || chainOpt?.id}</span>
+                                                    </div>
+                                                </div>
+                                                <Show when={chainOpt?.fee}>
+                                                    <span class='network-fee'>Fee: {chainOpt.fee}</span>
+                                                </Show>
+                                            </div>
                                         }</For>
                                     </div>
                                 </div>
@@ -903,7 +925,6 @@ function WalletModal(props) {
         .withdraw-dropdowns {
           display: flex;
           gap: 12px;
-          margin-bottom: 15px;
         }
 
         .dropdown-wrapper {
@@ -967,16 +988,16 @@ function WalletModal(props) {
 
         .dropdown-container .option {
           background: rgba(45, 75, 105, 0.2);
-          height: 40px;
-          padding: 0 12px;
+          min-height: 56px;
+          padding: 12px 16px;
           display: flex;
           align-items: center;
-          gap: 8px;
+          justify-content: space-between;
           color: #ffffff;
           border-bottom: 1px solid rgba(78, 205, 196, 0.1);
-          white-space: nowrap;
           font-size: 13px;
           transition: all 0.3s ease;
+          cursor: pointer;
         }
 
         .dropdown-container .option:hover {
@@ -986,6 +1007,61 @@ function WalletModal(props) {
 
         .dropdown-container .option:last-child {
           border-bottom: none;
+        }
+
+        .option-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex: 1;
+        }
+
+        .option-text {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+
+        .currency-name {
+          font-weight: 600;
+          font-size: 14px;
+          color: #ffffff;
+        }
+
+        .currency-full-name {
+          font-weight: 400;
+          font-size: 12px;
+          color: #8aa3b8;
+          opacity: 0.8;
+        }
+
+        .network-badge {
+          background: rgba(78, 205, 196, 0.2);
+          color: #4ecdc4;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 11px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .network-count {
+          background: rgba(138, 163, 184, 0.2);
+          color: #8aa3b8;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 11px;
+          font-weight: 500;
+        }
+
+        .network-fee {
+          background: rgba(255, 138, 138, 0.2);
+          color: #ff8a8a;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 11px;
+          font-weight: 500;
         }
 
         .input-label {
