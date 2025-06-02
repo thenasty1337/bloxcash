@@ -13,8 +13,8 @@ function Toggle(props) {
                   width: 19px;
                   height: 19px;
 
-                  background: #302E5A;
-                  border: 1px solid #383666;
+                  background: #192230;
+                  border: 1px solid #4cc8bd4f;
                   border-radius: 3px;
                   
                   display: flex;

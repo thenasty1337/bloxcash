@@ -40,18 +40,19 @@ function FancySlotBanner(props) {
         }
 
         .slot-frame {
-          background: rgba(54, 48, 98, 0.6);
+          background: rgba(26, 35, 50, 0.4);
           border-radius: 8px;
           padding: 3px;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
           overflow: hidden;
           transition: box-shadow 0.2s ease, border 0.2s ease;
-          border: 1px solid rgba(84, 76, 146, 0.3);
+          border: 1px solid rgba(78, 205, 196, 0.1);
+          backdrop-filter: blur(8px);
         }
         
         .slot-container:hover .slot-frame {
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-          border: 2px solid rgba(255, 255, 255, 0.6);
+          box-shadow: 0 8px 16px rgba(78, 205, 196, 0.2);
+          border: 2px solid rgba(78, 205, 196, 0.4);
           padding: 2px;
         }
 
@@ -91,14 +92,16 @@ function FancySlotBanner(props) {
         }
         
         .new-tag {
-          background-color: #59E878;
-          color: #0D2611;
+          background: linear-gradient(135deg, #4ecdc4, #44a08d);
+          color: #ffffff;
+          box-shadow: 0 2px 8px rgba(78, 205, 196, 0.3);
         }
         
         .jackpot-tag {
-          background: linear-gradient(180deg, #FFC700 0%, #FF7A00 100%);
-          color: #3A2800;
+          background: linear-gradient(180deg, #4ecdc4 0%, #44a08d 100%);
+          color: #ffffff;
           top: 36px;
+          box-shadow: 0 2px 8px rgba(78, 205, 196, 0.4);
         }
         
         @media only screen and (max-width: 1000px) {

@@ -150,17 +150,17 @@ function NavBar(props) {
 
                         {/* Right Side - User Section */}
                         <div class='user-section'>
+                            {/* Chat Button - Available for all users */}
+                            <button 
+                                class={`control-button ${props.chat ? 'active' : ''}`}
+                                onClick={() => props.setChat(!props.chat)}
+                                title="Chat"
+                            >
+                                <AiOutlineMessage size={16} />
+                            </button>
+
                             {props.user ? (
                                 <>
-                                    {/* Control Buttons */}
-                                    <button 
-                                        class={`control-button ${props.chat ? 'active' : ''}`}
-                                        onClick={() => props.setChat(!props.chat)}
-                                        title="Chat"
-                                    >
-                                        <AiOutlineMessage size={16} />
-                                    </button>
-
                                     <Notifications/>
 
                                     <div class={`user-profile ${userDropdown() ? 'active' : ''}`}
@@ -187,10 +187,24 @@ function NavBar(props) {
                                     </div>
                                 </>
                             ) : (
-                                <button class='auth-button' onClick={() => setSearchParams({modal: 'login'})}>
-                                    <FiUser size={16} />
-                                    <span>Sign In</span>
-                                </button>
+                                <div class='auth-buttons'>
+                                    <button 
+                                        class='login-button' 
+                                        onClick={() => setSearchParams({modal: 'login', mode: 'login'})}
+                                        title="Sign in to your account"
+                                    >
+                                        <FiUser size={14} />
+                                        <span>Login</span>
+                                    </button>
+                                    <button 
+                                        class='signup-button' 
+                                        onClick={() => setSearchParams({modal: 'login', mode: 'signup'})}
+                                        title="Create a new account"
+                                    >
+                                        <AiOutlineStar size={14} />
+                                        <span>Sign Up</span>
+                                    </button>
+                                </div>
                             )}
                         </div>
                     </div>

@@ -3,6 +3,8 @@ import {A} from "@solidjs/router";
 import {api} from "../../util/api";
 import Loader from "../Loader/loader";
 import BlurImage from "../UI/BlurImage";
+import { BsDiamond } from 'solid-icons/bs';
+import { AiOutlineEye, AiOutlineArrowLeft, AiOutlineArrowRight } from 'solid-icons/ai';
 
 function SlotsList() {
 
@@ -32,130 +34,242 @@ function SlotsList() {
 
   return (
     <>
-      <div class='games'>
-        <div class='games-button'>
-          <img src='/assets/icons/seven.svg' height='19' width='19' alt=''/>
-
-          <p class='title'>
-            <span class='white bold'>SLOTS</span> (<Show when={!slots.loading} fallback='0'>{slotsInfo()?.total || 0}</Show>)
-          </p>
-
-          <button class='bevel-purple viewall'>
-            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="7" viewBox="0 0 11 7" fill="none">
-              <path d="M5.5 0C3.39833 0 1.49243 1.14984 0.0860693 3.01749C-0.0286898 3.1705 -0.0286898 3.38427 0.0860693 3.53728C1.49243 5.40718 3.39833 6.55702 5.5 6.55702C7.60167 6.55702 9.50757 5.40718 10.9139 3.53953C11.0287 3.38652 11.0287 3.17275 10.9139 3.01974C9.50757 1.14984 7.60167 0 5.5 0ZM5.65076 5.58719C4.25565 5.67495 3.10356 4.52511 3.19132 3.12775C3.26332 1.97566 4.19715 1.04183 5.34924 0.969827C6.74435 0.88207 7.89644 2.03191 7.80868 3.42927C7.73443 4.57911 6.8006 5.51294 5.65076 5.58719ZM5.58101 4.52061C4.82945 4.56786 4.2084 3.94906 4.2579 3.1975C4.29615 2.57645 4.80019 2.07467 5.42124 2.03416C6.1728 1.98691 6.79385 2.60571 6.74435 3.35727C6.70385 3.98057 6.19981 4.48236 5.58101 4.52061Z" fill="#423579"/>
-            </svg>
-
-            SEE ALL
-            <A href='/slots' class='gamemode-link'/>
-          </button>
-
-          <div class='line'/>
-
-          <button class='bevel-purple arrow' onClick={() => scrollGames(-1)}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M12 6L2 6M2 6L7.6 0.999999M2 6L7.6 11" stroke="white" stroke-width="2"/>
-            </svg>
-          </button>
-
-          <button class='bevel-purple arrow' onClick={() => scrollGames(1)}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M1.58933e-07 6L10 6M10 6L4.4 11M10 6L4.4 0.999999" stroke="white" stroke-width="2"/>
-            </svg>
-          </button>
-        </div>
-
-        <div class='slots' ref={slotsRef}>
-          <Show when={!slots.loading} fallback={<Loader small={true}/>}>
-            <For each={slots()}>{(slot, index) =>
-              <div className='slot'>
-                <BlurImage 
-                  src={`${import.meta.env.VITE_SERVER_URL}${slot.img}`}
-                  blurhash={slot.blurhash}
-                  style={{ 'border-radius': '6px' }}
-                />
-                <A href={`/slots/${slot.slug}`} class='gamemode-link'/>
+      <div class='games-container'>
+        <div class='games'>
+          <div class='games-header'>
+            <div class='header-content'>
+              <div class='header-left'>
+                
+                <div class='header-text'>
+                  <h2 class='title'>Slots</h2>
+                  <Show when={!slotsInfo.loading} fallback={<span class='count'>Loading...</span>}>
+                    <span class='count'>{slotsInfo()?.total || 0} games available</span>
+                  </Show>
+                </div>
               </div>
-            }</For>
-          </Show>
+
+              <div class='header-right'>
+                <div class='viewall-btn'>
+                  <AiOutlineEye size={14} />
+                  <span>See All</span>
+                  <A href='/slots' class='gamemode-link'/>
+                </div>
+                
+                <div class='nav-controls'>
+                  <button class='nav-btn' onClick={() => scrollGames(-1)} type="button">
+                    <AiOutlineArrowLeft size={16} />
+                  </button>
+                  
+                  <button class='nav-btn' onClick={() => scrollGames(1)} type="button">
+                    <AiOutlineArrowRight size={16} />
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class='header-divider'></div>
+          </div>
+
+          <div class='slots' ref={slotsRef}>
+            <Show when={!slotsInfo.loading} fallback={<Loader small={true}/>}>
+              <For each={slots()}>{(slot, index) =>
+                <div className='slot'>
+                  <BlurImage 
+                    src={`${slot.img}`}
+                    blurhash={slot.blurhash}
+                    style={{ 'border-radius': '6px' }}
+                  />
+                  <A href={`/slots/${slot.slug}`} class='gamemode-link'/>
+                </div>
+              }</For>
+              
+              {/* View All card at the end */}
+              <div className='slot view-all-slot'>
+                <div class='view-all-content'>
+                  <div class='view-all-icon'>
+                    <AiOutlineEye size={24} />
+                  </div>
+                  <div class='view-all-text'>
+                    <span class='view-all-title'>View All</span>
+                    <span class='view-all-subtitle'>{slotsInfo()?.total || 0} games</span>
+                  </div>
+                </div>
+                <A href='/slots' class='gamemode-link'/>
+              </div>
+            </Show>
+          </div>
         </div>
       </div>
 
       <style jsx>{`
-        .games {
+        .games-container {
           width: 100%;
-          margin-top: 30px;
+          margin-top: 1.5rem;
         }
 
-        .games-button {
-          outline: unset;
-          border: unset;
-
+        .games {
           width: 100%;
-          height: 45px;
+        }
 
-          border-radius: 5px;
-          background: linear-gradient(90deg, rgb(104, 100, 164) -49.01%, rgba(90, 84, 149, 0.655) -5.08%, rgba(66, 53, 121, 0) 98.28%);
+        .games-header {
+          margin-bottom: 1.5rem;
+        }
 
-          padding: 0 15px;
+        .header-content {
           display: flex;
           align-items: center;
-          gap: 12px;
+          justify-content: space-between;
+          margin-bottom: 0.75rem;
+        }
+
+        .header-left {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .header-right {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .header-icon {
+          width: 32px;
+          height: 32px;
+          background: rgba(78, 205, 196, 0.1);
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        .header-icon svg {
+          fill: #4ecdc4;
+          opacity: 0.9;
+        }
+
+        .header-text {
+          display: flex;
+          flex-direction: column;
+          gap: 0.125rem;
         }
 
         .title {
-          color: #ADA3EF;
-          font-size: 18px;
+          font-size: 1.125rem;
           font-weight: 600;
-          user-select: none;
-          
-          display: flex;
-          align-items: center;
-          gap: 4px;
-        }
-        
-        .title .bold {
-          font-weight: 800;
-          font-size: 22px;
-        }
-        
-        .viewall {
-          width: 70px;
-          height: 25px;
-          
-          display: flex;
-          align-items: center;
-          gap: 4px;
-
-          cursor: pointer;
-          position: relative;
-
-          color: rgba(66, 53, 121, 1);
-          font-family: Geogrotesque Wide, sans-serif;
-          font-size: 11px;
-          font-weight: 700;
+          color: #ffffff;
+          margin: 0;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
-        .line {
-          flex: 1;
+        .count {
+          font-size: 0.75rem;
+          color: #8aa3b8;
+          font-weight: 500;
+        }
+
+        .header-divider {
           height: 1px;
+          background: linear-gradient(90deg, 
+            rgba(78, 205, 196, 0.3) 0%, 
+            rgba(78, 205, 196, 0.1) 30%,
+            transparent 100%
+          );
+        }
 
-          border-radius: 2525px;
-          background: linear-gradient(90deg, #5A5499 0%, rgba(90, 84, 153, 0.00) 100%);
+
+
+        .viewall-btn {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 0.75rem;
+          background: rgba(26, 35, 50, 0.8);
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          border-radius: 8px;
+          color: #ffffff;
+          font-size: 0.75rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          backdrop-filter: blur(10px);
+          position: relative;
+          overflow: hidden;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .viewall-btn:hover {
+          border-color: rgba(78, 205, 196, 0.4);
+          background: rgba(78, 205, 196, 0.1);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(78, 205, 196, 0.2);
+        }
+
+        .viewall-btn svg {
+          opacity: 0.8;
+          color: #4ecdc4;
+        }
+
+        .viewall-btn:hover svg {
+          opacity: 1;
+        }
+
+        .nav-controls {
+          display: flex;
+          gap: 0.25rem;
+        }
+
+        .nav-btn {
+          width: 36px;
+          height: 36px;
+          padding: 0;
+          background: rgba(26, 35, 50, 0.8);
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          border-radius: 6px;
+          color: #4ecdc4;
+          cursor: pointer;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          backdrop-filter: blur(10px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .nav-btn:hover {
+          border-color: rgba(78, 205, 196, 0.4);
+          background: rgba(78, 205, 196, 0.1);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(78, 205, 196, 0.2);
+        }
+
+        .nav-btn svg {
+          opacity: 0.8;
+          transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover svg {
+          opacity: 1;
+          transform: scale(1.1);
+        }
+
+        .nav-btn:active {
+          transform: translateY(0);
         }
 
         .slots {
           display: flex;
-          gap: 8px;
-          
-          padding: 8px;
-          margin-top: 15px;
-
-          border-radius: 8px;
-          border: 1px solid rgba(0, 0, 0, 0.00);
-          background: rgba(29, 24, 62, 0.15);
-
+          gap: 1rem;
+          padding: 1rem;
+          border-radius: 12px;
+          border: 1px solid rgba(78, 205, 196, 0.1);
+          background: rgba(26, 35, 50, 0.4);
+          backdrop-filter: blur(20px);
           min-height: 195px;
           overflow-x: auto;
+          scrollbar-width: none;
         }
         
         .slots::-webkit-scrollbar {
@@ -166,30 +280,192 @@ function SlotsList() {
           min-width: 146px;
           width: 146px;
           height: 195px;
-          border-radius: 6px;
-          
-          background-size: 100%;
-          background-position: center;
-          background-repeat: no-repeat;
-
-          transition: background .3s;
+          border-radius: 8px;
           position: relative;
+          overflow: hidden;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          cursor: pointer;
         }
         
         .slot:hover {
-          background-size: 105%;
+          transform: translateY(-4px) scale(1.02);
+          box-shadow: 
+            0 8px 16px rgba(0, 0, 0, 0.15),
+            0 0 0 1px rgba(78, 205, 196, 0.2),
+            0 0 20px rgba(78, 205, 196, 0.1);
         }
-        
-        .arrow {
-          width: 40px;
-          height: 30px;
 
+        .view-all-slot {
+          background: linear-gradient(135deg, 
+            rgba(78, 205, 196, 0.1) 0%, 
+            rgba(26, 35, 50, 0.8) 100%
+          );
+          border: 2px dashed rgba(78, 205, 196, 0.3);
           display: flex;
           align-items: center;
           justify-content: center;
-          
-          cursor: pointer;
-          margin-left: auto;
+          backdrop-filter: blur(10px);
+        }
+
+        .view-all-slot:hover {
+          border-color: rgba(78, 205, 196, 0.6);
+          background: linear-gradient(135deg, 
+            rgba(78, 205, 196, 0.2) 0%, 
+            rgba(26, 35, 50, 0.9) 100%
+          );
+        }
+
+        .view-all-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.75rem;
+          text-align: center;
+          padding: 1rem;
+        }
+
+        .view-all-icon {
+          width: 48px;
+          height: 48px;
+          background: rgba(78, 205, 196, 0.15);
+          border: 1px solid rgba(78, 205, 196, 0.3);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #4ecdc4;
+          transition: all 0.3s ease;
+        }
+
+        .view-all-slot:hover .view-all-icon {
+          background: rgba(78, 205, 196, 0.25);
+          border-color: rgba(78, 205, 196, 0.5);
+          transform: scale(1.1);
+        }
+
+        .view-all-text {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+        }
+
+        .view-all-title {
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: #ffffff;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .view-all-subtitle {
+          font-size: 0.75rem;
+          color: #8aa3b8;
+          font-weight: 500;
+        }
+
+        .gamemode-link {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 2;
+        }
+
+        @media (max-width: 768px) {
+          .games-container {
+            margin-top: 1.25rem;
+          }
+
+          .header-content {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+          }
+
+          .header-right {
+            justify-content: space-between;
+          }
+
+          .title {
+            font-size: 1rem;
+          }
+
+          .slots {
+            gap: 0.75rem;
+            padding: 0.75rem;
+          }
+
+          .slot {
+            min-width: 130px;
+            width: 130px;
+            height: 170px;
+          }
+
+          .view-all-icon {
+            width: 40px;
+            height: 40px;
+          }
+
+          .view-all-title {
+            font-size: 0.8rem;
+          }
+
+          .view-all-subtitle {
+            font-size: 0.7rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .header-left {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+          }
+
+          .header-right {
+            flex-direction: column;
+            gap: 0.5rem;
+          }
+
+          .viewall-btn {
+            align-self: stretch;
+            justify-content: center;
+          }
+
+          .nav-controls {
+            align-self: stretch;
+            justify-content: center;
+          }
+
+          .slots {
+            gap: 0.5rem;
+            padding: 0.5rem;
+          }
+
+          .slot {
+            min-width: 120px;
+            width: 120px;
+            height: 150px;
+          }
+
+          .view-all-icon {
+            width: 36px;
+            height: 36px;
+          }
+
+          .view-all-content {
+            gap: 0.5rem;
+            padding: 0.75rem;
+          }
+
+          .view-all-title {
+            font-size: 0.75rem;
+          }
+
+          .view-all-subtitle {
+            font-size: 0.65rem;
+          }
         }
       `}</style>
     </>

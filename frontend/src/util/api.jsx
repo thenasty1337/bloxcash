@@ -39,7 +39,14 @@ export async function api(path, method, body, notification = false, headers =  {
         return data
     } catch (e) {
         console.log('There was an error when trying to fetch ' + path, e)
-        return null
+        
+        // Return a more informative error object instead of just null
+        return {
+            error: 'NETWORK_ERROR',
+            message: 'Unable to connect to server. Please check your internet connection.',
+            originalError: e.message,
+            path: path
+        }
     }
 }
 

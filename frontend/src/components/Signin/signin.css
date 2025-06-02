@@ -1,0 +1,465 @@
+/* Signin Modal Styles - Sleek & Modern Design */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(20, 24, 35, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: modalFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+}
+
+.signin-container {
+  max-width: 420px;
+  width: 95%;
+  max-height: 90vh;
+  background: rgba(26, 35, 50, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(78, 205, 196, 0.2);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(78, 205, 196, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  animation: containerSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes containerSlideIn {
+  from {
+    transform: scale(0.95) translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  background: rgba(45, 75, 105, 0.4);
+  border: 1px solid rgba(78, 205, 196, 0.2);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  color: #8aa3b8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  z-index: 10;
+}
+
+.close:hover {
+  background: rgba(78, 205, 196, 0.15);
+  border-color: #4ecdc4;
+  color: #4ecdc4;
+  transform: scale(1.05);
+}
+
+.content {
+  padding: 32px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.content h2 {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  color: #6b7f92;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+.content h1 {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: #ffffff;
+  margin: 0 0 24px 0;
+  line-height: 1.2;
+}
+
+.gold {
+  background: linear-gradient(135deg, #4ecdc4, #44a08d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 4px rgba(78, 205, 196, 0.3));
+}
+
+.bar {
+  width: 60px;
+  height: 2px;
+  margin: 0 auto 24px;
+  background: linear-gradient(90deg, #4ecdc4, #44a08d);
+  border-radius: 1px;
+}
+
+.options {
+  display: flex;
+  width: 100%;
+  gap: 6px;
+  margin-bottom: 24px;
+  padding: 4px;
+  background: rgba(20, 24, 35, 0.6);
+  border-radius: 8px;
+  border: 1px solid rgba(78, 205, 196, 0.1);
+}
+
+.option {
+  flex: 1;
+  height: 36px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  color: #8aa3b8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.option:hover {
+  background: rgba(78, 205, 196, 0.08);
+  color: #4ecdc4;
+}
+
+.option.active {
+  background: rgba(78, 205, 196, 0.15);
+  color: #4ecdc4;
+  box-shadow: 0 2px 8px rgba(78, 205, 196, 0.2);
+}
+
+.form-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.label {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 600;
+  font-size: 11px;
+  color: #6b7f92;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-left: 4px;
+}
+
+.credentials {
+  width: 100%;
+  height: 44px;
+  background: rgba(20, 24, 35, 0.8);
+  border: 1px solid rgba(78, 205, 196, 0.2);
+  border-radius: 8px;
+  padding: 0 14px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #ffffff;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.credentials::placeholder {
+  color: #6b7f92;
+  opacity: 0.8;
+}
+
+.credentials:focus {
+  outline: none;
+  border-color: #4ecdc4;
+  background: rgba(20, 24, 35, 0.9);
+  box-shadow: 0 0 0 2px rgba(78, 205, 196, 0.1);
+}
+
+.tos {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 8px 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  color: #8aa3b8;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.tos a {
+  color: #4ecdc4;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.tos a:hover {
+  color: #5dd3d1;
+}
+
+.signin {
+  width: 100%;
+  height: 44px;
+  background: linear-gradient(135deg, #4ecdc4, #44a08d);
+  border: none;
+  border-radius: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(78, 205, 196, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.signin:hover:not(:disabled) {
+  background: linear-gradient(135deg, #5dd3d1, #4fb3a0);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(78, 205, 196, 0.3);
+}
+
+.signin:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.signin:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading state */
+.signin.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.art {
+  background: 
+    radial-gradient(circle at 50% 0%, rgba(78, 205, 196, 0.08) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(26, 35, 50, 0.4), transparent);
+  padding: 20px 28px 28px;
+  text-align: center;
+  border-top: 1px solid rgba(78, 205, 196, 0.08);
+}
+
+.art img {
+  max-width: 80%;
+  height: auto;
+  opacity: 0.6;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 0 10px rgba(78, 205, 196, 0.1));
+}
+
+.confirm {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  color: #6b7f92;
+}
+
+.confirm .bold {
+  font-weight: 600;
+  color: #4ecdc4;
+}
+
+.confirm a {
+  color: #4ecdc4;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.confirm a:hover {
+  color: #5dd3d1;
+}
+
+/* Enhanced Responsive Design */
+@media only screen and (max-width: 768px) {
+  .signin-container {
+    max-width: 380px;
+    margin: 20px;
+  }
+
+  .content {
+    padding: 28px 24px 24px;
+  }
+
+  .content h1 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .form-container {
+    gap: 14px;
+  }
+
+  .credentials {
+    height: 42px;
+  }
+
+  .signin {
+    height: 42px;
+    margin-top: 14px;
+  }
+
+  .art {
+    padding: 16px 24px 24px;
+  }
+
+  .close {
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .modal {
+    padding: 16px;
+  }
+
+  .signin-container {
+    max-width: none;
+    width: 100%;
+    max-height: none;
+    height: auto;
+    border-radius: 12px;
+  }
+
+  .content {
+    padding: 24px 20px 20px;
+  }
+
+  .content h1 {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .bar {
+    margin-bottom: 20px;
+  }
+
+  .options {
+    margin-bottom: 20px;
+  }
+
+  .form-container {
+    gap: 12px;
+  }
+
+  .credentials {
+    height: 40px;
+    font-size: 13px;
+  }
+
+  .signin {
+    height: 40px;
+    font-size: 12px;
+    margin-top: 12px;
+  }
+
+  .art {
+    padding: 12px 20px 20px;
+  }
+
+  .confirm {
+    font-size: 10px;
+    padding: 10px;
+  }
+}
+
+@media only screen and (max-width: 360px) {
+  .content {
+    padding: 20px 16px 16px;
+  }
+
+  .art {
+    padding: 10px 16px 16px;
+  }
+}
+
+/* Focus states for accessibility */
+.option:focus,
+.credentials:focus,
+.signin:focus {
+  outline: 2px solid #4ecdc4;
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .signin-container {
+    border-color: #4ecdc4;
+  }
+  
+  .credentials {
+    border-color: #4ecdc4;
+  }
+  
+  .option.active {
+    background: #4ecdc4;
+    color: #000;
+  }
+}

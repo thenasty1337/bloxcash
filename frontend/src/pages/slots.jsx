@@ -8,6 +8,7 @@ import Bets from "../components/Home/bets";
 import {useUser} from "../contexts/usercontextprovider";
 import FancySlotBanner from "../components/Slots/fancyslotbanner";
 import {Meta, Title} from "@solidjs/meta";
+import { FiFilter, FiChevronDown } from "solid-icons/fi";
 
 const sortingOptions = ['popularity', 'RTP', 'a-z', 'z-a']
 
@@ -20,11 +21,16 @@ function Slots(props) {
   const [slots, setSlots] = createSignal()
   const [categories, setCategories] = createSignal([])
   const [fetching, setFetching] = createSignal(true)
+  const [networkError, setNetworkError] = createSignal(false)
+  const [errorMessage, setErrorMessage] = createSignal('')
   const [slotsData] = createResource(() => ({ sort: params.sort, provider: params.provider, search: params.search, category: params.category }), fetchSlots)
   const [providers] = createResource(fetchProviders)
   const [top] = createResource(fetchTopPicks)
   const [providerSearch, setProviderSearch] = createSignal("");
   const [categorySearch, setCategorySearch] = createSignal("");
+  const [showProviderDropdown, setShowProviderDropdown] = createSignal(false);
+  const [showSortDropdown, setShowSortDropdown] = createSignal(false);
+  const [showCategoryDropdown, setShowCategoryDropdown] = createSignal(false);
 
   async function fetchSlots(params) {
     try {
@@ -63,29 +69,61 @@ function Slots(props) {
 
       let res = await api(url, 'GET', null, false);
       
+      // Handle network errors gracefully
+      if (res && res.error) {
+        console.warn('Failed to fetch slots:', res.message || res.error);
+        setFetching(false);
+        setNetworkError(true);
+        setErrorMessage(res.message || res.error);
+        // Set empty slots array but don't crash the app
+        setSlots([]);
+        
+        if (res.error === 'NETWORK_ERROR') {
+          // Could show a user-friendly message
+          // toast.error('Unable to load games. Please check your connection.');
+        }
+        return { data: [], total: 0 };
+      }
+      
       if (!res.data || !Array.isArray(res.data)) {
         setFetching(false);
-        return;
+        setNetworkError(true);
+        setErrorMessage('Unexpected response format');
+        setSlots([]);
+        return { data: [], total: 0 };
       }
 
+      // Reset error state on successful load
+      setNetworkError(false);
+      setErrorMessage('');
       setSlots(res.data);
       setFetching(false);
       return res;
     } catch (e) {
-      console.error(e);
+      console.error('Unexpected error in fetchSlots:', e);
       setFetching(false);
-      return [];
+      setNetworkError(true);
+      setErrorMessage('An unexpected error occurred');
+      setSlots([]);
+      return { data: [], total: 0 };
     }
   }
 
   async function fetchTopPicks() {
     try {
       let res = await api(`/slots/featured`, 'GET', null, false)
+      
+      // Handle network errors gracefully
+      if (res && res.error) {
+        console.warn('Failed to fetch top picks:', res.message || res.error);
+        return []; // Return empty array instead of crashing
+      }
+      
       if (!Array.isArray(res)) return []
 
       return res
     } catch (e) {
-      console.error(e)
+      console.error('Unexpected error in fetchTopPicks:', e)
       return []
     }
   }
@@ -94,17 +132,32 @@ function Slots(props) {
     try {
       // Fetch categories as well
       const catResponse = await api('/slots/categories', 'GET', null, false);
-      if (Array.isArray(catResponse)) {
+      if (catResponse && !catResponse.error && Array.isArray(catResponse)) {
         setCategories(catResponse);
+      } else if (catResponse && catResponse.error) {
+        console.warn('Failed to fetch categories:', catResponse.message || catResponse.error);
+        setCategories([]); // Set empty array as fallback
       }
       
       // Fetch providers
       let res = await api('/slots/providers', 'GET', null, false);
+      
+      // Handle network errors gracefully
+      if (res && res.error) {
+        console.warn('Failed to fetch providers:', res.message || res.error);
+        // Show a user-friendly message but don't crash the app
+        if (res.error === 'NETWORK_ERROR') {
+          // Could show a toast notification here if desired
+          // toast.error('Unable to load providers. Some features may be limited.');
+        }
+        return []; // Return empty array to prevent crashes
+      }
+      
       if (!Array.isArray(res) || res.length < 1) return [];
       return res;
     } catch (e) {
-      console.error(e);
-      return [];
+      console.error('Unexpected error in fetchProviders:', e);
+      return []; // Always return empty array instead of throwing
     }
   }
 
@@ -141,13 +194,25 @@ function Slots(props) {
       const category = params.category || '';
       
       // Build query with offset for pagination and limit to load in multiples of 6
-      let url = `/slots?offset=${slots()?.length}&limit=24&sortOrder=${sortOrder}&sortBy=${sortBy}&provider=${provider}&search=${search}`;
+      let url = `/slots?offset=${slots()?.length || 0}&limit=24&sortOrder=${sortOrder}&sortBy=${sortBy}&provider=${provider}&search=${search}`;
       
       if (category) {
         url += `&category=${category}`;
       }
 
       let res = await api(url, 'GET', null, false);
+      
+      // Handle network errors gracefully
+      if (res && res.error) {
+        console.warn('Failed to fetch more slots:', res.message || res.error);
+        setFetching(false);
+        
+        if (res.error === 'NETWORK_ERROR') {
+          // Could show a user-friendly message
+          // toast.error('Unable to load more games. Please check your connection.');
+        }
+        return;
+      }
       
       if (!res.data || !Array.isArray(res.data)) {
         setFetching(false);
@@ -157,14 +222,13 @@ function Slots(props) {
       setSlots([...slots(), ...res.data]);
       setFetching(false);
     } catch (e) {
-      console.error(e);
+      console.error('Unexpected error in fetchMoreSlots:', e);
       setFetching(false);
-      return [];
     }
   }
 
   function repeatProviders() {
-    if (!providers() || !Array.isArray(providers())) return []
+    if (!providers() || !Array.isArray(providers()) || providers().length === 0) return []
     
     // List of available provider images (those we have in the directory)
     const availableImages = [
@@ -180,10 +244,24 @@ function Slots(props) {
     
     // Filter to only show providers with available images
     const availableProviders = providers().filter(provider => 
-      availableImages.includes(provider.slug.toLowerCase())
+      provider && provider.slug && availableImages.includes(provider.slug.toLowerCase())
     );
     
-    return Array(Math.ceil(6 / availableProviders.length)).fill(availableProviders).flat() || []
+    // If no available providers, return empty array
+    if (availableProviders.length === 0) return []
+    
+    // Ensure we don't try to create an array with invalid length
+    const repeatCount = Math.max(1, Math.ceil(6 / availableProviders.length));
+    
+    // Additional safety check to prevent creating arrays that are too large
+    if (repeatCount > 100) return availableProviders; // Fallback to just the providers
+    
+    try {
+      return Array(repeatCount).fill(availableProviders).flat()
+    } catch (e) {
+      console.warn('Error in repeatProviders:', e);
+      return availableProviders; // Fallback to just the providers
+    }
   }
 
   function scrollProviders(direction) {
@@ -213,18 +291,22 @@ function Slots(props) {
       <Meta name='title' content='Slots'></Meta>
       <Meta name='description' content='Play And Spin The Best Slots On BloxClash To Win Robux On Roblox Gaming!'></Meta>
 
-      <div class='slots-base-container'>
+      <div class='slots-base-container' onClick={() => {
+        setShowProviderDropdown(false);
+        setShowSortDropdown(false);
+        setShowCategoryDropdown(false);
+      }}>
        
 
         <div class='our-picks'>
-          <div style={{ flex: 1, background: 'linear-gradient(270deg, #FF9901 0%, rgba(252, 163, 30, 0.00) 98.59%)', 'min-height': '1px' }}/>
+          <div style={{ flex: 1, background: 'linear-gradient(270deg, #4ecdc4 0%, rgba(252, 163, 30, 0.00) 98.59%)', 'min-height': '1px' }}/>
 
           <p>
             <img src='/assets/icons/fire.svg' height='20' width='15'/>
             OUR HOT PICKS
           </p>
 
-          <div style={{ flex: 1, background: 'linear-gradient(90deg, #FF9901 0%, rgba(252, 163, 30, 0.00) 98.59%)', 'min-height': '1px' }}/>
+          <div style={{ flex: 1, background: 'linear-gradient(90deg, #4ecdc4 0%, rgba(252, 163, 30, 0.00) 98.59%)', 'min-height': '1px' }}/>
         </div>
 
         <div className='top-five'>
@@ -235,114 +317,40 @@ function Slots(props) {
           </Show>
         </div>
 
-        <div class='bar' style={{ background: '#5A5499', width: '100%', 'min-height': '1px', margin: '0 0 20px 0' }}/>
 
         <div class='sort'>
-          <div class='sorting-wrapper' onClick={(e) => e.currentTarget.classList.toggle('active')}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="11" viewBox="0 0 17 11" fill="none">
-              <path
-                d="M5.40909 9.14006e-06C4.93082 0.00135331 4.46466 0.150597 4.07454 0.42728C3.68442 0.703962 3.38942 1.09454 3.23 1.54546H0.772727C0.567787 1.54546 0.371241 1.62688 0.226327 1.77179C0.0814121 1.9167 0 2.11325 0 2.31819C0 2.52313 0.0814121 2.71968 0.226327 2.86459C0.371241 3.00951 0.567787 3.09092 0.772727 3.09092H3.23C3.37176 3.49187 3.62108 3.8461 3.95068 4.11484C4.28028 4.38358 4.67745 4.55648 5.09873 4.6146C5.52001 4.67273 5.94917 4.61386 6.33923 4.44442C6.72929 4.27497 7.06522 4.0015 7.31027 3.65392C7.55531 3.30634 7.70002 2.89805 7.72856 2.47374C7.75709 2.04943 7.66836 1.62544 7.47207 1.24818C7.27577 0.870915 6.97948 0.554921 6.61562 0.334775C6.25177 0.114628 5.83436 -0.00118488 5.40909 9.14006e-06ZM16.2273 1.54546H10.0455C9.84051 1.54546 9.64397 1.62688 9.49905 1.77179C9.35414 1.9167 9.27273 2.11325 9.27273 2.31819C9.27273 2.52313 9.35414 2.71968 9.49905 2.86459C9.64397 3.00951 9.84051 3.09092 10.0455 3.09092H16.2273C16.4322 3.09092 16.6288 3.00951 16.7737 2.86459C16.9186 2.71968 17 2.52313 17 2.31819C17 2.11325 16.9186 1.9167 16.7737 1.77179C16.6288 1.62688 16.4322 1.54546 16.2273 1.54546ZM6.95454 6.95455H0.772727C0.567787 6.95455 0.371241 7.03597 0.226327 7.18088C0.0814121 7.3258 0 7.52234 0 7.72728C0 7.93222 0.0814121 8.12877 0.226327 8.27368C0.371241 8.4186 0.567787 8.50001 0.772727 8.50001H6.95454C7.15948 8.50001 7.35603 8.4186 7.50095 8.27368C7.64586 8.12877 7.72727 7.93222 7.72727 7.72728C7.72727 7.52234 7.64586 7.3258 7.50095 7.18088C7.35603 7.03597 7.15948 6.95455 6.95454 6.95455ZM16.2273 6.95455H13.77C13.5877 6.43898 13.229 6.00444 12.7574 5.72775C12.2857 5.45105 11.7314 5.35001 11.1924 5.44248C10.6534 5.53496 10.1645 5.81499 9.81201 6.23309C9.45954 6.65119 9.26621 7.18043 9.26621 7.72728C9.26621 8.27413 9.45954 8.80338 9.81201 9.22147C10.1645 9.63957 10.6534 9.9196 11.1924 10.0121C11.7314 10.1046 12.2857 10.0035 12.7574 9.72681C13.229 9.45012 13.5877 9.01558 13.77 8.50001H16.2273C16.4322 8.50001 16.6288 8.4186 16.7737 8.27368C16.9186 8.12877 17 7.93222 17 7.72728C17 7.52234 16.9186 7.3258 16.7737 7.18088C16.6288 7.03597 16.4322 6.95455 16.2273 6.95455Z"
-                fill="#FCA31E"/>
-            </svg>
+          <div class='sorting-wrapper' onClick={(e) => {
+            e.stopPropagation();
+            setShowProviderDropdown(!showProviderDropdown());
+            setShowSortDropdown(false);
+            setShowCategoryDropdown(false);
+          }}>
+            <FiFilter size={17} />
 
             <p>
               Filter By: <span class='white'>Providers</span>
             </p>
 
-            <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 9 6" fill="none">
-              <path
-                d="M4.50001 -5.60273e-07C4.66131 -5.74374e-07 4.82259 0.0719308 4.94557 0.215494L8.81537 4.73537C9.06154 5.02289 9.06154 5.48906 8.81537 5.77646C8.5693 6.06387 8.35714 5.99202 7.92407 5.99202L4.50002 5.99202L1.28571 5.99202C0.642858 5.99202 0.430769 6.06373 0.184718 5.77632C-0.0615712 5.48892 -0.0615712 5.02275 0.184718 4.73523L4.05446 0.215353C4.1775 0.0717678 4.33878 -5.46177e-07 4.50001 -5.60273e-07Z"
-                fill="#9489DB"/>
-            </svg>
+            <FiChevronDown size={16} class={showProviderDropdown() ? 'rotated' : ''} />
 
-            <div className='dropdown left' onClick={(e) => e.stopPropagation()}>
-              <div className='search-container'>
-                <input 
-                  type="text" 
-                  placeholder="Search providers..." 
-                  value={providerSearch()} 
-                  onInput={(e) => setProviderSearch(e.target.value)}
-                />
-              </div>
-              <div className='filters'>
-                <For each={filteredProviders()}>{(prov) =>
-                  <div className={'option ' + (params.provider === prov.slug ? 'active' : '')}
-                       onClick={() => setParams({ provider: params?.provider === prov.slug ? null : prov.slug })}>
-                    <p>{prov.name}</p>
-                    <div className='checkbox'>
-                      <img src='/assets/icons/check.svg'/>
-                    </div>
-                  </div>
-                }</For>
-              </div>
-            </div>
-          </div>
-
-          <div className='sorting-wrapper' onClick={(e) => e.currentTarget.classList.toggle('active')}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="11" viewBox="0 0 17 11" fill="none">
-              <path
-                d="M5.40909 9.14006e-06C4.93082 0.00135331 4.46466 0.150597 4.07454 0.42728C3.68442 0.703962 3.38942 1.09454 3.23 1.54546H0.772727C0.567787 1.54546 0.371241 1.62688 0.226327 1.77179C0.0814121 1.9167 0 2.11325 0 2.31819C0 2.52313 0.0814121 2.71968 0.226327 2.86459C0.371241 3.00951 0.567787 3.09092 0.772727 3.09092H3.23C3.37176 3.49187 3.62108 3.8461 3.95068 4.11484C4.28028 4.38358 4.67745 4.55648 5.09873 4.6146C5.52001 4.67273 5.94917 4.61386 6.33923 4.44442C6.72929 4.27497 7.06522 4.0015 7.31027 3.65392C7.55531 3.30634 7.70002 2.89805 7.72856 2.47374C7.75709 2.04943 7.66836 1.62544 7.47207 1.24818C7.27577 0.870915 6.97948 0.554921 6.61562 0.334775C6.25177 0.114628 5.83436 -0.00118488 5.40909 9.14006e-06ZM16.2273 1.54546H10.0455C9.84051 1.54546 9.64397 1.62688 9.49905 1.77179C9.35414 1.9167 9.27273 2.11325 9.27273 2.31819C9.27273 2.52313 9.35414 2.71968 9.49905 2.86459C9.64397 3.00951 9.84051 3.09092 10.0455 3.09092H16.2273C16.4322 3.09092 16.6288 3.00951 16.7737 2.86459C16.9186 2.71968 17 2.52313 17 2.31819C17 2.11325 16.9186 1.9167 16.7737 1.77179C16.6288 1.62688 16.4322 1.54546 16.2273 1.54546ZM6.95454 6.95455H0.772727C0.567787 6.95455 0.371241 7.03597 0.226327 7.18088C0.0814121 7.3258 0 7.52234 0 7.72728C0 7.93222 0.0814121 8.12877 0.226327 8.27368C0.371241 8.4186 0.567787 8.50001 0.772727 8.50001H6.95454C7.15948 8.50001 7.35603 8.4186 7.50095 8.27368C7.64586 8.12877 7.72727 7.93222 7.72727 7.72728C7.72727 7.52234 7.64586 7.3258 7.50095 7.18088C7.35603 7.03597 7.15948 6.95455 6.95454 6.95455ZM16.2273 6.95455H13.77C13.5877 6.43898 13.229 6.00444 12.7574 5.72775C12.2857 5.45105 11.7314 5.35001 11.1924 5.44248C10.6534 5.53496 10.1645 5.81499 9.81201 6.23309C9.45954 6.65119 9.26621 7.18043 9.26621 7.72728C9.26621 8.27413 9.45954 8.80338 9.81201 9.22147C10.1645 9.63957 10.6534 9.9196 11.1924 10.0121C11.7314 10.1046 12.2857 10.0035 12.7574 9.72681C13.229 9.45012 13.5877 9.01558 13.77 8.50001H16.2273C16.4322 8.50001 16.6288 8.4186 16.7737 8.27368C16.9186 8.12877 17 7.93222 17 7.72728C17 7.52234 16.9186 7.3258 16.7737 7.18088C16.6288 7.03597 16.4322 6.95455 16.2273 6.95455Z"
-                fill="#FCA31E"/>
-            </svg>
-
-            <p>
-              Sort By: <span className='white'>{params.sort || 'Popularity'}</span>
-            </p>
-
-            <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 9 6" fill="none">
-              <path
-                d="M4.50001 -5.60273e-07C4.66131 -5.74374e-07 4.82259 0.0719308 4.94557 0.215494L8.81537 4.73537C9.06154 5.02289 9.06154 5.48906 8.81537 5.77646C8.5693 6.06387 8.35714 5.99202 7.92407 5.99202L4.50002 5.99202L1.28571 5.99202C0.642858 5.99202 0.430769 6.06373 0.184718 5.77632C-0.0615712 5.48892 -0.0615712 5.02275 0.184718 4.73523L4.05446 0.215353C4.1775 0.0717678 4.33878 -5.46177e-07 4.50001 -5.60273e-07Z"
-                fill="#9489DB"/>
-            </svg>
-
-            <div class='dropdown' onClick={(e) => e.stopPropagation()}>
-              <div class='filters'>
-                <For each={sortingOptions}>{(sort) =>
-                  <div className={'option ' + (params.sort === sort ? 'active' : '')}
-                       onClick={() => setParams({ sort: sort })}>
-                    <p>{sort}</p>
-                    <div className='checkbox'>
-                      <img src='/assets/icons/check.svg'/>
-                    </div>
-                  </div>
-                }</For>
-              </div>
-            </div>
-          </div>
-          
-          {/* Add Category Filter */}
-          <Show when={categories().length > 0}>
-            <div class='sorting-wrapper' onClick={(e) => e.currentTarget.classList.toggle('active')}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="17" height="11" viewBox="0 0 17 11" fill="none">
-                <path
-                  d="M5.40909 9.14006e-06C4.93082 0.00135331 4.46466 0.150597 4.07454 0.42728C3.68442 0.703962 3.38942 1.09454 3.23 1.54546H0.772727C0.567787 1.54546 0.371241 1.62688 0.226327 1.77179C0.0814121 1.9167 0 2.11325 0 2.31819C0 2.52313 0.0814121 2.71968 0.226327 2.86459C0.371241 3.00951 0.567787 3.09092 0.772727 3.09092H3.23C3.37176 3.49187 3.62108 3.8461 3.95068 4.11484C4.28028 4.38358 4.67745 4.55648 5.09873 4.6146C5.52001 4.67273 5.94917 4.61386 6.33923 4.44442C6.72929 4.27497 7.06522 4.0015 7.31027 3.65392C7.55531 3.30634 7.70002 2.89805 7.72856 2.47374C7.75709 2.04943 7.66836 1.62544 7.47207 1.24818C7.27577 0.870915 6.97948 0.554921 6.61562 0.334775C6.25177 0.114628 5.83436 -0.00118488 5.40909 9.14006e-06ZM16.2273 1.54546H10.0455C9.84051 1.54546 9.64397 1.62688 9.49905 1.77179C9.35414 1.9167 9.27273 2.11325 9.27273 2.31819C9.27273 2.52313 9.35414 2.71968 9.49905 2.86459C9.64397 3.00951 9.84051 3.09092 10.0455 3.09092H16.2273C16.4322 3.09092 16.6288 3.00951 16.7737 2.86459C16.9186 2.71968 17 2.52313 17 2.31819C17 2.11325 16.9186 1.9167 16.7737 1.77179C16.6288 1.62688 16.4322 1.54546 16.2273 1.54546ZM6.95454 6.95455H0.772727C0.567787 6.95455 0.371241 7.03597 0.226327 7.18088C0.0814121 7.3258 0 7.52234 0 7.72728C0 7.93222 0.0814121 8.12877 0.226327 8.27368C0.371241 8.4186 0.567787 8.50001 0.772727 8.50001H6.95454C7.15948 8.50001 7.35603 8.4186 7.50095 8.27368C7.64586 8.12877 7.72727 7.93222 7.72727 7.72728C7.72727 7.52234 7.64586 7.3258 7.50095 7.18088C7.35603 7.03597 7.15948 6.95455 6.95454 6.95455ZM16.2273 6.95455H13.77C13.5877 6.43898 13.229 6.00444 12.7574 5.72775C12.2857 5.45105 11.7314 5.35001 11.1924 5.44248C10.6534 5.53496 10.1645 5.81499 9.81201 6.23309C9.45954 6.65119 9.26621 7.18043 9.26621 7.72728C9.26621 8.27413 9.45954 8.80338 9.81201 9.22147C10.1645 9.63957 10.6534 9.9196 11.1924 10.0121C11.7314 10.1046 12.2857 10.0035 12.7574 9.72681C13.229 9.45012 13.5877 9.01558 13.77 8.50001H16.2273C16.4322 8.50001 16.6288 8.4186 16.7737 8.27368C16.9186 8.12877 17 7.93222 17 7.72728C17 7.52234 16.9186 7.3258 16.7737 7.18088C16.6288 7.03597 16.4322 6.95455 16.2273 6.95455Z"
-                  fill="#FCA31E"/>
-              </svg>
-
-              <p>
-                Filter By: <span class='white'>Categories</span>
-              </p>
-
-              <svg xmlns="http://www.w3.org/2000/svg" width="9" height="6" viewBox="0 0 9 6" fill="none">
-                <path
-                  d="M4.50001 -5.60273e-07C4.66131 -5.74374e-07 4.82259 0.0719308 4.94557 0.215494L8.81537 4.73537C9.06154 5.02289 9.06154 5.48906 8.81537 5.77646C8.5693 6.06387 8.35714 5.99202 7.92407 5.99202L4.50002 5.99202L1.28571 5.99202C0.642858 5.99202 0.430769 6.06373 0.184718 5.77632C-0.0615712 5.48892 -0.0615712 5.02275 0.184718 4.73523L4.05446 0.215353C4.1775 0.0717678 4.33878 -5.46177e-07 4.50001 -5.60273e-07Z"
-                  fill="#9489DB"/>
-              </svg>
-
-              <div className='dropdown left' onClick={(e) => e.stopPropagation()}>
+            <Show when={showProviderDropdown()}>
+              <div className='filter-dropdown left' onClick={(e) => e.stopPropagation()}>
                 <div className='search-container'>
                   <input 
                     type="text" 
-                    placeholder="Search categories..." 
-                    value={categorySearch()} 
-                    onInput={(e) => setCategorySearch(e.target.value)}
+                    placeholder="Search providers..." 
+                    value={providerSearch()} 
+                    onInput={(e) => setProviderSearch(e.target.value)}
                   />
                 </div>
                 <div className='filters'>
-                  <For each={filteredCategories()}>{(cat) =>
-                    <div className={'option ' + (params.category === cat ? 'active' : '')}
-                         onClick={() => setParams({ category: params?.category === cat ? null : cat })}>
-                      <p>{cat}</p>
+                  <For each={filteredProviders()}>{(prov) =>
+                    <div className={'option ' + (params.provider === prov.slug ? 'active' : '')}
+                         onClick={() => {
+                           setParams({ provider: params?.provider === prov.slug ? null : prov.slug });
+                           setShowProviderDropdown(false);
+                         }}>
+                      <p>{prov.name}</p>
                       <div className='checkbox'>
                         <img src='/assets/icons/check.svg'/>
                       </div>
@@ -350,40 +358,155 @@ function Slots(props) {
                   }</For>
                 </div>
               </div>
+            </Show>
+          </div>
+
+          <div className='sorting-wrapper' onClick={(e) => {
+            e.stopPropagation();
+            setShowSortDropdown(!showSortDropdown());
+            setShowProviderDropdown(false);
+            setShowCategoryDropdown(false);
+          }}>
+            <FiFilter size={17} />
+
+            <p>
+              Sort By: <span className='white'>{params.sort || 'Popularity'}</span>
+            </p>
+
+            <FiChevronDown size={16} class={showSortDropdown() ? 'rotated' : ''} />
+
+            <Show when={showSortDropdown()}>
+              <div class='filter-dropdown' onClick={(e) => e.stopPropagation()}>
+                <div class='filters'>
+                  <For each={sortingOptions}>{(sort) =>
+                    <div className={'option ' + (params.sort === sort ? 'active' : '')}
+                         onClick={() => {
+                           setParams({ sort: sort });
+                           setShowSortDropdown(false);
+                         }}>
+                      <p>{sort}</p>
+                      <div className='checkbox'>
+                        <img src='/assets/icons/check.svg'/>
+                      </div>
+                    </div>
+                  }</For>
+                </div>
+              </div>
+            </Show>
+          </div>
+          
+          {/* Add Category Filter */}
+          <Show when={categories().length > 0}>
+            <div class='sorting-wrapper' onClick={(e) => {
+              e.stopPropagation();
+              setShowCategoryDropdown(!showCategoryDropdown());
+              setShowProviderDropdown(false);
+              setShowSortDropdown(false);
+            }}>
+              <FiFilter size={17} />
+
+              <p>
+                Filter By: <span class='white'>Categories</span>
+              </p>
+
+              <FiChevronDown size={16} class={showCategoryDropdown() ? 'rotated' : ''} />
+
+                             <Show when={showCategoryDropdown()}>
+                 <div className='filter-dropdown left' onClick={(e) => e.stopPropagation()}>
+                   <div className='search-container'>
+                     <input 
+                       type="text" 
+                       placeholder="Search categories..." 
+                       value={categorySearch()} 
+                       onInput={(e) => setCategorySearch(e.target.value)}
+                     />
+                   </div>
+                   <div className='filters'>
+                     <For each={filteredCategories()}>{(cat) =>
+                       <div className={'option ' + (params.category === cat ? 'active' : '')}
+                            onClick={() => {
+                              setParams({ category: params?.category === cat ? null : cat });
+                              setShowCategoryDropdown(false);
+                            }}>
+                         <p>{cat}</p>
+                         <div className='checkbox'>
+                           <img src='/assets/icons/check.svg'/>
+                         </div>
+                       </div>
+                     }</For>
+                   </div>
+                 </div>
+               </Show>
             </div>
           </Show>
         </div>
 
-        <div className='slots'>
-          <Show when={!slotsData.loading} fallback={<Loader/>}>
-            <For each={slots()}>{(slot, index) =>
-              <div className='slot-container'>
-                <div className='slot-frame'>
-                  <div className='slot'>
-                    <A href={`/slots/${slot.slug}`} class='gamemode-link'>
-                      <BlurImage 
-                        src={slot.img} 
-                        blurhash={slot.blurhash}
-                        style={{'border-radius': '6px'}}
-                      />
-                    </A>
-                  </div>
-                </div>
-                {slot.isNew && <div class="new-tag">NEW</div>}
-                {slot.hasJackpot && <div class="jackpot-tag">JACKPOT</div>}
+        <Show when={networkError()}>
+          <div className='connection-error'>
+            <div className='error-banner'>
+              <div className='error-icon'>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 8V12M12 16H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#ff6b6b" stroke-width="2" stroke-linecap="round"/>
+                </svg>
               </div>
-            }</For>
-          </Show>
-        </div>
+              <div className='error-text'>
+                <span className='error-title'>Connection Issue</span>
+                <span className='error-desc'>Unable to load games</span>
+              </div>
+              <button className='error-retry' onClick={() => {
+                setNetworkError(false);
+                setErrorMessage('');
+                slotsData.refetch();
+              }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path d="M1 4V10H7M23 20V14H17M20.49 9A9 9 0 0 0 5.64 5.64L1 10M3.51 15A9 9 0 0 0 18.36 18.36L23 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Retry
+              </button>
+            </div>
+          </div>
+        </Show>
 
-        <div class='pagination'>
-          <p class='displaying'>DISPLAYING <span class='white'>{slots()?.length}</span> OUT
-            OF {slotsData()?.total} SLOTS</p>
+        <Show when={!networkError()}>
+          <div className='slots'>
+            <Show when={!slotsData.loading} fallback={<Loader/>}>
+              <Show when={slots() && slots().length > 0} fallback={
+                <div className='no-slots'>
+                  <p>No games found. Try adjusting your filters.</p>
+                </div>
+              }>
+                <For each={slots()}>{(slot, index) =>
+                  <div className='slot-container'>
+                    <div className='slot-frame'>
+                      <div className='slot'>
+                        <A href={`/slots/${slot.slug}`} class='gamemode-link'>
+                          <BlurImage 
+                            src={slot.img} 
+                            blurhash={slot.blurhash}
+                            style={{'border-radius': '6px'}}
+                          />
+                        </A>
+                      </div>
+                    </div>
+                    {slot.isNew && <div class="new-tag">NEW</div>}
+                    {slot.hasJackpot && <div class="jackpot-tag">JACKPOT</div>}
+                  </div>
+                }</For>
+              </Show>
+            </Show>
+          </div>
+        </Show>
 
-          <button class='bevel-purple load' onClick={() => fetchMoreSlots()}>
-            LOAD MORE
-          </button>
-        </div>
+        <Show when={!networkError() && slots() && slots().length > 0}>
+          <div class='pagination'>
+            <p class='displaying'>DISPLAYING <span class='white'>{slots()?.length || 0}</span> OUT
+              OF {slotsData()?.total || 0} SLOTS</p>
+
+            <button class='bevel-purple load' onClick={() => fetchMoreSlots()}>
+              LOAD MORE
+            </button>
+          </div>
+        </Show>
 
         <div class='providers-wrapper'>
           <div className='banner'>
@@ -409,14 +532,27 @@ function Slots(props) {
           </div>
 
           <div class='providers' ref={providersRef}>
-            <For each={repeatProviders()}>{(provider, index) =>
-              <div class='provider' onClick={() => setParams({ provider: params?.provider === provider.slug ? null : provider.slug })}>
-                <img src={`${import.meta.env.VITE_BASE_URL}${provider.img}`} height='50'/>
+            <Show when={repeatProviders().length > 0} fallback={
+              <div className='no-providers'>
+                <span>Providers will be available once connection is restored.</span>
               </div>
-            }</For>
-            <div class='provider more-providers'>
-              <span>and more...</span>
-            </div>
+            }>
+              <For each={repeatProviders()}>{(provider, index) =>
+                <div class='provider' onClick={() => setParams({ provider: params?.provider === provider.slug ? null : provider.slug })}>
+                  <img src={`${import.meta.env.VITE_BASE_URL}${provider.img}`} height='50' 
+                       onError={(e) => {
+                         // Fallback if image fails to load
+                         e.target.style.display = 'none';
+                         e.target.parentElement.innerHTML = `<span style="color: #8aa3b8; font-size: 14px;">${provider.name || 'Provider'}</span>`;
+                       }}/>
+                </div>
+              }</For>
+              <Show when={repeatProviders().length > 0}>
+                <div class='provider more-providers'>
+                  <span>and more...</span>
+                </div>
+              </Show>
+            </Show>
           </div>
         </div>
 
@@ -446,16 +582,17 @@ function Slots(props) {
           
           line-height: 40px;
           
-          border-radius: 4.63px;
-          border: 1.543px solid #B17818;
-          background: linear-gradient(0deg, rgba(255, 190, 24, 0.25) 0%, rgba(255, 190, 24, 0.25) 100%), linear-gradient(253deg, #1A0E33 -27.53%, #423C7A 175.86%);
+          border-radius: 8px;
+          border: 1px solid rgba(78, 205, 196, 0.3);
+          background: rgba(26, 35, 50, 0.4);
+          backdrop-filter: blur(8px);
 
           font-family: Geogrotesque Wide, sans-serif;
           font-size: 18px;
           font-weight: 700;
-          color: var(--gold);
+          color: #4ecdc4;
           
-          filter: drop-shadow(0 0 15px rgba(252,163,30, 0.3));
+          filter: drop-shadow(0 0 15px rgba(78, 205, 196, 0.3));
           
           display: flex;
           align-items: center;
@@ -482,9 +619,13 @@ function Slots(props) {
           
           padding: 8px 16px;
 
-          border-radius: 8px;
-          border: 1px solid rgba(134, 111, 234, 0.15);
-          background: linear-gradient(0deg, rgba(64, 57, 118, 0.65) 0%, rgba(64, 57, 118, 0.65) 100%), radial-gradient(60% 60% at 50% 50%, rgba(147, 126, 236, 0.15) 0%, rgba(102, 83, 184, 0.15) 100%);
+          border-radius: 10px;
+          border: 1px solid rgba(78, 205, 196, 0.1);
+          background: rgba(26, 35, 50, 0.4);
+          backdrop-filter: blur(8px);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+          position: relative;
+          z-index: 3;
         }
 
         .sorting-wrapper {
@@ -493,13 +634,19 @@ function Slots(props) {
           gap: 8px;
 
           position: relative;
+          z-index: 1001;
 
-          color: #9189D3;
+          color: #8aa3b8;
           font-family: Geogrotesque Wide, sans-serif;
           font-size: 16px;
           font-weight: 600;
           
           cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .sorting-wrapper:hover {
+          color: #4ecdc4;
         }
 
         .sorting-wrapper p {
@@ -507,122 +654,167 @@ function Slots(props) {
           text-transform: capitalize;
         }
         
-        .dropdown {
+        .sorting-wrapper svg {
+          transition: all 0.3s ease;
+        }
+        
+        .sorting-wrapper svg.rotated {
+          transform: rotate(180deg);
+        }
+        
+        .sorting-wrapper:hover svg {
+          color: #4ecdc4;
+        }
+        
+        .filter-dropdown {
           position: absolute;
           right: 0;
           
-          z-index: 10;
+          z-index: 99999;
           top: 40px;
 
-          width: 245px;
-          display: none;
-          background: #26214A;
-          border: 1px solid #3A336D;
-          border-radius: 6px;
+          width: 280px;
+          background: rgba(26, 35, 50, 0.95);
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          border-radius: 8px;
           overflow: hidden;
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+          backdrop-filter: blur(12px);
         }
         
-        .dropdown.left {
+        .filter-dropdown.left {
           left: 0;
           right: unset;
         }
         
-        .active .dropdown {
-          display: block;
-        }
-        
         .search-container {
-          padding: 8px 8px 0 8px;
+          padding: 12px;
+          border-bottom: 1px solid rgba(78, 205, 196, 0.1);
         }
         
         .search-container input {
           width: 100%;
-          height: 36px;
-          background: #342E5F;
-          border: 1px solid #494182;
-          border-radius: 4px;
+          height: 40px;
+          background: rgba(45, 75, 105, 0.3);
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          border-radius: 6px;
           padding: 0 12px;
           color: #FFF;
           font-family: Geogrotesque Wide, sans-serif;
-          font-size: 13px;
+          font-size: 14px;
+          transition: all 0.3s ease;
+          box-sizing: border-box;
         }
         
         .search-container input::placeholder {
-          color: rgba(255, 255, 255, 0.4);
+          color: #8aa3b8;
         }
         
         .search-container input:focus {
           outline: none;
-          border-color: #9489DB;
+          border-color: #4ecdc4;
+          box-shadow: 0 0 0 2px rgba(78, 205, 196, 0.15);
         }
         
         .filters {
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 2px;
           
           padding: 8px;
-          max-height: 300px;
+          max-height: 320px;
           overflow-y: auto;
         }
         
         .filters::-webkit-scrollbar {
-          width: 8px;
+          width: 4px;
         }
         
         .filters::-webkit-scrollbar-track {
-          background: #342E5F;
-          border-radius: 4px;
+          background: rgba(45, 75, 105, 0.2);
+          border-radius: 2px;
         }
         
         .filters::-webkit-scrollbar-thumb {
-          background: #494182;
-          border-radius: 4px;
+          background: rgba(78, 205, 196, 0.3);
+          border-radius: 2px;
         }
         
         .filters::-webkit-scrollbar-thumb:hover {
-          background: #5A5499;
+          background: rgba(78, 205, 196, 0.5);
         }
         
         .option {
           width: 100%;
-          max-width: 245px;
-          height: 50px;
+          height: 44px;
+          min-height: 44px;
           
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 0 16px;
+          padding: 0 12px;
           text-transform: capitalize;
+          box-sizing: border-box;
 
-          border-radius: 3px;
-          border: 1px solid rgba(134, 111, 234, 0.15);
-          background: rgba(64, 57, 118, 0.65);
+          border-radius: 6px;
+          border: 1px solid rgba(78, 205, 196, 0.08);
+          background: rgba(45, 75, 105, 0.2);
+          color: #9db3c8;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          
+          font-family: Geogrotesque Wide, sans-serif;
+          font-size: 14px;
+          font-weight: 500;
+        }
+        
+        .option p {
+          flex: 1;
+          margin: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          padding-right: 8px;
+        }
+        
+        .option:hover {
+          background: rgba(78, 205, 196, 0.12);
+          border-color: rgba(78, 205, 196, 0.25);
+          color: #ffffff;
+          transform: translateX(2px);
         }
         
         .checkbox {
           display: flex;
           align-items: center;
           justify-content: center;
+          flex-shrink: 0;
           
-          width: 30px;
-          height: 30px;
+          width: 18px;
+          height: 18px;
 
           border-radius: 3px;
-          border: 1px solid #494182;
-          background: #342E5F;
-          
-          transition: all .3s;
+          border: 1px solid rgba(78, 205, 196, 0.25);
+          background: rgba(26, 35, 50, 0.6);
+
+          transition: all 0.2s ease;
         }
         
         .checkbox img {
           display: none;
+          width: 10px;
+          height: 10px;
+        }
+        
+        .option.active {
+          background: rgba(78, 205, 196, 0.18);
+          border-color: rgba(78, 205, 196, 0.4);
+          color: #ffffff;
         }
         
         .option.active .checkbox {
-          border: 1px solid #59E878;
-          background: rgba(89, 232, 120, 0.25);
+          border-color: #4ecdc4;
+          background: rgba(78, 205, 196, 0.3);
         }
         
         .option.active .checkbox img {
@@ -637,6 +829,105 @@ function Slots(props) {
           min-height: 195px;
           overflow-x: auto;
           padding: 4px;
+        }
+
+        .connection-error {
+          margin: 20px 0;
+        }
+        
+        .error-banner {
+          width: 100%;
+          height: 60px;
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          padding: 0 20px;
+          
+          border-radius: 10px;
+          border: 1px solid rgba(255, 107, 107, 0.2);
+          background: rgba(26, 35, 50, 0.4);
+          backdrop-filter: blur(8px);
+          box-shadow: 0 4px 16px rgba(255, 107, 107, 0.1);
+        }
+        
+        .error-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+        
+        .error-text {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+        
+        .error-title {
+          color: #ff6b6b;
+          font-family: Geogrotesque Wide, sans-serif;
+          font-size: 15px;
+          font-weight: 600;
+          line-height: 1;
+        }
+        
+        .error-desc {
+          color: #8aa3b8;
+          font-family: Geogrotesque Wide, sans-serif;
+          font-size: 13px;
+          font-weight: 500;
+          line-height: 1;
+        }
+        
+        .error-retry {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 8px 16px;
+          height: 36px;
+          
+          background: rgba(78, 205, 196, 0.15);
+          border: 1px solid rgba(78, 205, 196, 0.25);
+          border-radius: 6px;
+          backdrop-filter: blur(8px);
+          
+          color: #4ecdc4;
+          font-family: Geogrotesque Wide, sans-serif;
+          font-size: 13px;
+          font-weight: 600;
+          
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        
+        .error-retry:hover {
+          background: rgba(78, 205, 196, 0.25);
+          border-color: #4ecdc4;
+          color: #ffffff;
+          transform: translateY(-1px);
+        }
+        
+        .no-slots {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 200px;
+          color: #8aa3b8;
+          font-family: Geogrotesque Wide, sans-serif;
+          font-size: 16px;
+        }
+        
+        .no-providers {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 80px;
+          color: #8aa3b8;
+          font-family: Geogrotesque Wide, sans-serif;
+          font-size: 14px;
+          text-align: center;
+          padding: 20px;
         }
 
         .slots::-webkit-scrollbar {
@@ -655,18 +946,19 @@ function Slots(props) {
         }
 
         .slot-frame {
-          background: rgba(54, 48, 98, 0.6);
+          background: rgba(26, 35, 50, 0.4);
           border-radius: 8px;
           padding: 3px;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
           overflow: hidden;
           transition: box-shadow 0.2s ease, border 0.2s ease;
-          border: 1px solid rgba(84, 76, 146, 0.3);
+          border: 1px solid rgba(78, 205, 196, 0.1);
+          backdrop-filter: blur(8px);
         }
         
         .slot-container:hover .slot-frame {
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-          border: 2px solid rgba(255, 255, 255, 0.6);
+          box-shadow: 0 8px 16px rgba(78, 205, 196, 0.2);
+          border: 2px solid rgba(78, 205, 196, 0.4);
           padding: 2px;
         }
 
@@ -709,14 +1001,16 @@ function Slots(props) {
         }
         
         .new-tag {
-          background-color: #59E878;
-          color: #0D2611;
+          background: linear-gradient(135deg, #4ecdc4, #44a08d);
+          color: #ffffff;
+          box-shadow: 0 2px 8px rgba(78, 205, 196, 0.3);
         }
         
         .jackpot-tag {
-          background: linear-gradient(180deg, #FFC700 0%, #FF7A00 100%);
-          color: #3A2800;
+          background: linear-gradient(180deg, #4ecdc4 0%, #44a08d 100%);
+          color: #ffffff;
           top: ${(params.category || params.provider) ? '36px' : '8px'};
+          box-shadow: 0 2px 8px rgba(78, 205, 196, 0.4);
         }
 
         .pagination {
@@ -732,11 +1026,13 @@ function Slots(props) {
           height: 45px;
           width: 100%;
 
-          border-radius: 555px;
-          background: radial-gradient(60% 60% at 50% 50%, rgba(147, 126, 236, 0.15) 0%, rgba(102, 83, 184, 0.15) 100%);
+          border-radius: 8px;
+          background: rgba(26, 35, 50, 0.4);
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(78, 205, 196, 0.1);
           box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
 
-          color: #9189D3;
+          color: #8aa3b8;
           font-family: Geogrotesque Wide, sans-serif;
           font-size: 16px;
           font-weight: 600;
@@ -749,12 +1045,26 @@ function Slots(props) {
           width: 180px;
           height: 45px;
 
-          color: #333061;
+          background: rgba(78, 205, 196, 0.15);
+          border: 1px solid rgba(78, 205, 196, 0.3);
+          border-radius: 8px;
+          backdrop-filter: blur(8px);
+
+          color: #4ecdc4;
           font-family: Geogrotesque Wide, sans-serif;
           font-size: 15px;
           font-weight: 700;
 
           cursor: pointer;
+          transition: all 0.3s ease;
+        }
+        
+        .load:hover {
+          background: rgba(78, 205, 196, 0.25);
+          border-color: #4ecdc4;
+          color: #ffffff;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(78, 205, 196, 0.2);
         }
 
         .banner {
@@ -764,8 +1074,10 @@ function Slots(props) {
           width: 100%;
           height: 45px;
 
-          border-radius: 5px;
-          background: linear-gradient(90deg, rgb(104, 100, 164) -49.01%, rgba(90, 84, 149, 0.655) -5.08%, rgba(66, 53, 121, 0) 98.28%);
+          border-radius: 8px;
+          background: rgba(26, 35, 50, 0.4);
+          border: 1px solid rgba(78, 205, 196, 0.1);
+          backdrop-filter: blur(8px);
 
           padding: 0 15px;
           display: flex;
@@ -778,7 +1090,7 @@ function Slots(props) {
           height: 1px;
 
           border-radius: 2525px;
-          background: linear-gradient(90deg, #5A5499 0%, rgba(90, 84, 153, 0.00) 100%);
+          background: linear-gradient(90deg, rgba(78, 205, 196, 0.3) 0%, rgba(78, 205, 196, 0.0) 100%);
         }
 
         .arrow {
@@ -791,7 +1103,19 @@ function Slots(props) {
           align-items: center;
           justify-content: center;
 
+          background: rgba(78, 205, 196, 0.15);
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          border-radius: 6px;
+          backdrop-filter: blur(8px);
+          
           cursor: pointer;
+          transition: all 0.3s ease;
+        }
+        
+        .arrow:hover {
+          background: rgba(78, 205, 196, 0.25);
+          border-color: #4ecdc4;
+          transform: translateY(-2px);
         }
         
         .providers {
@@ -812,10 +1136,18 @@ function Slots(props) {
           justify-content: center;
           
           border-radius: 8px;
-          border: 1px solid rgba(134, 111, 234, 0.15);
-          background: linear-gradient(0deg, rgba(64, 57, 118, 0.65) 0%, rgba(64, 57, 118, 0.65) 100%), radial-gradient(60% 60% at 50% 50%, rgba(147, 126, 236, 0.15) 0%, rgba(102, 83, 184, 0.15) 100%);
+          border: 1px solid rgba(78, 205, 196, 0.1);
+          background: rgba(26, 35, 50, 0.4);
+          backdrop-filter: blur(8px);
           
           cursor: pointer;
+          transition: all 0.3s ease;
+        }
+        
+        .provider:hover {
+          border-color: rgba(78, 205, 196, 0.3);
+          background: rgba(78, 205, 196, 0.1);
+          transform: translateY(-2px);
         }
         
         .more-providers {
@@ -826,7 +1158,7 @@ function Slots(props) {
         }
         
         .more-providers span {
-          color: #9489DB;
+          color: #8aa3b8;
           font-family: Geogrotesque Wide, sans-serif;
           font-size: 16px;
           font-weight: 500;
@@ -873,22 +1205,50 @@ function Slots(props) {
             justify-content: space-between;
           }
           
-          .dropdown {
+          .filter-dropdown {
             width: 100%;
             max-width: 100%;
+            left: 0;
+            right: 0;
           }
           
-          .dropdown.left {
+          .filter-dropdown.left {
             left: 0;
             right: 0;
           }
           
           .option {
-            max-width: 100%;
+            padding: 0 16px;
           }
           
           .sorting-wrapper p {
             flex: 1;
+          }
+          
+          .error-banner {
+            height: auto;
+            min-height: 60px;
+            padding: 16px;
+            gap: 12px;
+          }
+          
+          .error-text {
+            gap: 4px;
+          }
+          
+          .error-title {
+            font-size: 14px;
+          }
+          
+          .error-desc {
+            font-size: 12px;
+          }
+          
+          .error-retry {
+            padding: 6px 12px;
+            height: 32px;
+            font-size: 12px;
+            gap: 4px;
           }
         }
       `}</style>

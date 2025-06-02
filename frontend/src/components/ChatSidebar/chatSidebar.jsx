@@ -95,12 +95,12 @@ function ChatSidebar(props) {
 
       <style jsx>{`
         .chat-sidebar-container {
-          min-width: 300px;
-          width: 300px;
+          min-width: 290px;
+          width: 290px;
           height: 100vh;
           max-height: 100vh;
           position: fixed;
-          right: -300px;
+          right: -290px;
           top: 0;
           z-index: 10;
 

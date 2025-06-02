@@ -1,6 +1,7 @@
 import {Routes, Route, useSearchParams, useLocation} from '@solidjs/router'
 import {createEffect, createSignal, ErrorBoundary, lazy, Suspense} from "solid-js";
 import {useUser} from "./contexts/usercontextprovider";
+import { TbAlertTriangle, TbRefresh, TbArrowLeft } from 'solid-icons/tb';
 import GamesSidebar from "./components/GamesSidebar/gamesSidebar";
 import ChatSidebar from "./components/ChatSidebar/chatSidebar";
 import {authedAPI, closeDropdowns, createNotification} from "./util/api";
@@ -80,9 +81,41 @@ function App() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [user, {hasFetched, setBalance, setXP, getUser}] = useUser()
   const [ws] = useWebsocket()
-  const [chat, setChat] = createSignal(false)
-  const [gamesSidebar, setGamesSidebar] = createSignal(false)
+
+  // Utility functions for localStorage
+  const getStoredPreference = (key, defaultValue) => {
+    try {
+      const stored = localStorage.getItem(key);
+      return stored !== null ? JSON.parse(stored) : defaultValue;
+    } catch {
+      return defaultValue;
+    }
+  };
+
+  const setStoredPreference = (key, value) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch {
+      // Silently fail if localStorage is not available
+    }
+  };
+
+  // Initialize states with localStorage persistence
+  // Chat is open by default (true), unless user previously closed it
+  const [chat, setChat] = createSignal(getStoredPreference('chatOpen', true))
+  const [gamesSidebar, setGamesSidebar] = createSignal(getStoredPreference('gamesSidebarOpen', false))
   const [sidebarCollapsed, setSidebarCollapsed] = createSignal(false)
+
+  // Create wrapped setters that also save to localStorage
+  const setChatWithStorage = (value) => {
+    setChat(value);
+    setStoredPreference('chatOpen', value);
+  };
+
+  const setGamesSidebarWithStorage = (value) => {
+    setGamesSidebar(value);
+    setStoredPreference('gamesSidebarOpen', value);
+  };
 
   createEffect(() => {
     if (location.pathname && pageContent) {
@@ -248,17 +281,201 @@ function App() {
               }
 
               return (
-                <>
-                  <p>An error has occurred. Please press f12, copy the red text in the console, and report
-                    this.</p>
+                <div class="error-container">
+                  <div class="error-card">
+                    <div class="error-icon">
+                      <TbAlertTriangle size={32} />
+                    </div>
+                    <h3 class="error-title">Something went wrong</h3>
+                    <p class="error-message">
+                      An unexpected error occurred. Help us fix it by sharing the console details.
+                    </p>
+                    <div class="error-instructions">
+                      <span class="instruction">Press <kbd>F12</kbd> → <strong>Console</strong> → Copy red errors → Report to support</span>
+                    </div>
+                    <div class="error-actions">
+                      <button 
+                        class="btn-primary" 
+                        onClick={() => window.location.reload()}
+                      >
+                        <TbRefresh size={16} />
+                        Reload
+                      </button>
+                      <button 
+                        class="btn-secondary" 
+                        onClick={() => window.history.back()}
+                      >
+                        <TbArrowLeft size={16} />
+                        Go Back
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <style jsx>{`
+                    .error-container {
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      min-height: 100vh;
+                      padding: 20px;
+                      background: linear-gradient(135deg, rgba(26, 35, 50, 0.95) 0%, rgba(32, 45, 65, 0.9) 100%);
+                    }
+                    
+                    .error-card {
+                      background: rgba(26, 35, 50, 0.6);
+                      border: 1px solid rgba(78, 205, 196, 0.2);
+                      border-radius: 10px;
+                      padding: 32px;
+                      max-width: 420px;
+                      width: 100%;
+                      text-align: center;
+                      backdrop-filter: blur(8px);
+                      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+                      transition: all 0.3s ease;
+                    }
+                    
+                    .error-card:hover {
+                      border-color: rgba(78, 205, 196, 0.3);
+                      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+                      transform: translateY(-1px);
+                    }
+                    
+                    .error-icon {
+                      margin-bottom: 16px;
+                      color: #4ecdc4;
+                      display: flex;
+                      justify-content: center;
+                      opacity: 0.9;
+                    }
+                    
+                    .error-title {
+                      color: #ffffff;
+                      font-size: 18px;
+                      font-weight: 600;
+                      margin: 0 0 8px 0;
+                      font-family: inherit;
+                    }
+                    
+                    .error-message {
+                      color: #8aa3b8;
+                      font-size: 14px;
+                      line-height: 1.4;
+                      margin: 0 0 20px 0;
+                    }
+                    
+                    .error-instructions {
+                      background: rgba(45, 75, 105, 0.25);
+                      border: 1px solid rgba(78, 205, 196, 0.15);
+                      border-radius: 8px;
+                      padding: 12px;
+                      margin-bottom: 24px;
+                      backdrop-filter: blur(8px);
+                    }
+                    
+                    .instruction {
+                      color: #8aa3b8;
+                      font-size: 12px;
+                      line-height: 1.3;
+                    }
+                    
+                    .instruction kbd {
+                      background: rgba(78, 205, 196, 0.1);
+                      border: 1px solid rgba(78, 205, 196, 0.2);
+                      border-radius: 4px;
+                      padding: 2px 6px;
+                      font-size: 11px;
+                      font-family: 'Monaco', 'Menlo', monospace;
+                      color: #4ecdc4;
+                      margin: 0 2px;
+                    }
+                    
+                    .instruction strong {
+                      color: #ffffff;
+                      font-weight: 600;
+                    }
+                    
+                    .error-actions {
+                      display: flex;
+                      gap: 10px;
+                      justify-content: center;
+                    }
+                    
+                    .btn-primary, .btn-secondary {
+                      display: flex;
+                      align-items: center;
+                      gap: 6px;
+                      padding: 11px 14px;
+                      border-radius: 8px;
+                      font-size: 13px;
+                      font-weight: 600;
+                      border: none;
+                      cursor: pointer;
+                      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                      font-family: inherit;
+                    }
+                    
+                    .btn-primary {
+                      background: rgba(45, 75, 105, 0.25);
+                      border: 1px solid rgba(78, 205, 196, 0.2);
+                      color: #8aa3b8;
+                      backdrop-filter: blur(8px);
+                    }
+                    
+                    .btn-primary:hover {
+                      background: rgba(78, 205, 196, 0.15);
+                      border-color: #4ecdc4;
+                      color: #4ecdc4;
+                      transform: translateY(-2px);
+                      box-shadow: 0 6px 16px rgba(78, 205, 196, 0.2);
+                    }
+                    
+                    .btn-secondary {
+                      background: rgba(45, 75, 105, 0.2);
+                      color: #8aa3b8;
+                      border: 1px solid rgba(78, 205, 196, 0.15);
+                      backdrop-filter: blur(8px);
+                    }
+                    
+                    .btn-secondary:hover {
+                      background: rgba(78, 205, 196, 0.1);
+                      color: #ffffff;
+                      border-color: rgba(78, 205, 196, 0.2);
+                      transform: translateY(-2px);
+                      box-shadow: 0 4px 12px rgba(78, 205, 196, 0.15);
+                    }
+                    
+                    @media (max-width: 640px) {
+                      .error-card {
+                        padding: 24px;
+                        margin: 0 16px;
+                      }
+                      
+                      .error-title {
+                        font-size: 16px;
+                      }
+                      
+                      .error-message {
+                        font-size: 13px;
+                      }
+                      
+                      .error-actions {
+                        flex-direction: column;
+                      }
+                      
+                      .btn-primary, .btn-secondary {
+                        width: 100%;
+                        justify-content: center;
+                      }
+                    }
+                  `}</style>
                   {console.log(err)}
-                </>
+                </div>
               )
             }}>
             <div class='app' onClick={() => closeDropdowns()}>
               <GamesSidebar 
                 gamesSidebar={gamesSidebar()} 
-                setGamesSidebar={setGamesSidebar} 
+                setGamesSidebar={setGamesSidebarWithStorage} 
                 user={user()} 
                 collapsed={sidebarCollapsed()}
               />
@@ -266,9 +483,9 @@ function App() {
               <Navbar 
                 user={user()} 
                 chat={chat()} 
-                setChat={setChat} 
+                setChat={setChatWithStorage} 
                 gamesSidebar={gamesSidebar()} 
-                setGamesSidebar={setGamesSidebar}
+                setGamesSidebar={setGamesSidebarWithStorage}
                 sidebarCollapsed={sidebarCollapsed()}
                 setSidebarCollapsed={setSidebarCollapsed}
               />
@@ -522,7 +739,7 @@ function App() {
                 <Footer/>
               </div>
 
-              <ChatSidebar chat={chat()} setChat={setChat}/>
+                              <ChatSidebar chat={chat()} setChat={setChatWithStorage}/>
             </div>
           </ErrorBoundary>
         </>
@@ -556,7 +773,7 @@ function App() {
         }
 
         .center.chat-open {
-          margin-right: 300px; /* Account for chat sidebar */
+          margin-right: 310px; /* Account for chat sidebar */
         }
 
         .center::-webkit-scrollbar {
