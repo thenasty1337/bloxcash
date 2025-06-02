@@ -153,7 +153,7 @@ function CryptoWithdraw(props) {
                 e.stopPropagation()
               }}>
                 <p>Currency: </p>
-                <img src={`${import.meta.env.VITE_SERVER_URL}/public/cryptos/${symbol()}.png`} height='18'/>
+                <img src={`/assets/cryptos/branded/${symbol()}.svg`} height='18'/>
                 <p className='white bold'>{symbol()}</p>
                 <img class='arrow' src='/assets/icons/dropdownarrow.svg' alt=''/>
 
@@ -163,7 +163,7 @@ function CryptoWithdraw(props) {
                       changeCrypto(crypto?.id)
                       setCurrencyDropdown(false)
                     }}>
-                      <img src={`${import.meta.env.VITE_SERVER_URL}/public/cryptos/${crypto.id}.png`} height='18'/>
+                      <img src={`/assets/cryptos/branded/${crypto.id}.svg`} height='18'/>
                       {crypto?.id}
                     </p>
                   }</For>
@@ -238,7 +238,7 @@ function CryptoWithdraw(props) {
                 </svg>
 
                 <div className='input'>
-                  <img src={`${import.meta.env.VITE_SERVER_URL}/public/cryptos/${symbol()}.png`} height='16' width='16' alt=''/>
+                  <img src={`/assets/cryptos/branded/${symbol()}.svg`} height='16' width='16' alt=''/>
                   <input type='number' value={crypto()} onInput={(e) => convertAmounts(0, 0, e.target.valueAsNumber)}/>
                 </div>
               </div>

@@ -32,6 +32,7 @@ function NavBar(props) {
     const [userDropdown, setUserDropdown] = createSignal(false)
     const [balanceDropdown, setBalanceDropdown] = createSignal(false)
     const [showWalletModal, setShowWalletModal] = createSignal(false)
+    const [selectedCrypto, setSelectedCrypto] = createSignal(null)
     const [wagered, setWagered] = createSignal(0)
     const [ws] = useWebsocket()
 
@@ -42,6 +43,23 @@ function NavBar(props) {
         if (ws() && ws().connected) {
             ws().on('totalWagered', (amt) => setWagered(amt))
         }
+    })
+
+    // Listen for custom event to open wallet modal with selected crypto
+    createEffect(() => {
+        const handleOpenWalletModal = (event) => {
+            if (event.detail && event.detail.crypto) {
+                setSelectedCrypto(event.detail.crypto);
+                setShowWalletModal(true);
+            }
+        };
+
+        window.addEventListener('openWalletModal', handleOpenWalletModal);
+        
+        // Cleanup function
+        return () => {
+            window.removeEventListener('openWalletModal', handleOpenWalletModal);
+        };
     })
 
     // Toggle collapsed state for sidebar
@@ -220,7 +238,15 @@ function NavBar(props) {
             </div>
           
             <Show when={showWalletModal()}>
-                <WalletModal show={showWalletModal()} close={() => setShowWalletModal(false)} />
+                <WalletModal 
+                    show={showWalletModal()} 
+                    close={() => {
+                        setShowWalletModal(false);
+                        setSelectedCrypto(null); // Clear selected crypto when closing
+                    }}
+                    user={props.user}
+                    selectedCrypto={selectedCrypto()}
+                />
             </Show>
         </>
     );

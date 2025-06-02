@@ -8,60 +8,61 @@ import {createNotification} from "../util/api";
 import SlotsList from "../components/Home/slotslist";
 import SurveysBanner from "../components/Surveys/surveysbanner";
 
+
 const METHODS = {
-    'limiteds': {
-        src: '/assets/icons/limiteds.png',
-        name: 'LIMITEDS',
-        url: 'limiteds',
-        width: '54'
-    },
-    'robux': {
-        src: '/assets/icons/coin.svg',
-        name: 'ROBUX',
-        url: 'robux',
-        width: '54'
-    },
     'bitcoin': {
-        src: '/assets/icons/bitcoin.png',
-        name: 'BITCOIN',
-        url: 'bitcoin',
-        width: '45'
+        src: '/assets/cryptos/branded/BTC.svg',
+        name: 'Bitcoin',
+        symbol: 'BTC',
+        url: 'bitcoin'
+    },
+    'tether': {
+        src: '/assets/cryptos/branded/USDT.svg',
+        name: 'Tether',
+        symbol: 'USDT',
+        url: 'tether'
+    },
+    'usdc': {
+        src: '/assets/cryptos/branded/USDC.svg',
+        name: 'USDC',
+        symbol: 'USDC',
+        url: 'usdc'
     },
     'ethereum': {
-        src: '/assets/icons/ethereum.png',
-        name: 'ETHEREUM',
-        url: 'ethereum',
-        width: '45'
+        src: '/assets/cryptos/branded/ETH.svg',
+        name: 'Ethereum',
+        symbol: 'ETH',
+        url: 'ethereum'
+    },
+    'ripple': {
+        src: '/assets/cryptos/branded/XRP.svg',
+        name: 'Ripple',
+        symbol: 'XRP',
+        url: 'ripple'
+    },
+    'tron': {
+        src: '/assets/cryptos/branded/TRX.svg',
+        name: 'TRON',
+        symbol: 'TRX',
+        url: 'tron'
     },
     'litecoin': {
-        src: '/assets/icons/litecoin.png',
-        name: 'LITECOIN',
-        url: 'litecoin',
-        width: '45'
+        src: '/assets/cryptos/branded/LTC.svg',
+        name: 'Litecoin',
+        symbol: 'LTC',
+        url: 'litecoin'
     },
-    'visa': {
-        src: '/assets/icons/visa.png',
-        name: 'VISA',
-        url: 'credit card',
-        width: '82'
+    'dogecoin': {
+        src: '/assets/cryptos/branded/DOGE.svg',
+        name: 'Dogecoin',
+        symbol: 'DOGE',
+        url: 'dogecoin'
     },
-    'mastercard': {
-        src: '/assets/icons/mastercard.png',
-        name: 'MASTERCARD',
-        url: 'credit card',
-        width: '54'
-    },
-    'googlepay': {
-        src: '/assets/icons/googlepay.png',
-        name: 'GOOGLE PAY',
-        url: 'credit card',
-        width: '76'
-    },
-    'paypal': {
-        src: '/assets/icons/paypal.png',
-        name: 'PAYPAL',
-        url: 'credit card',
-        width: '33'
+    'bnb': {
+        src: '/assets/cryptos/branded/BNB.svg',
+        name: 'BNB',
+        symbol: 'BNB',
+        url: 'bnb'
     }
 }
 
@@ -69,6 +70,8 @@ function Home(props) {
 
     const [method, setMethod] = createSignal('')
     const navigate = useNavigate()
+
+
 
     return (
         <>
@@ -84,37 +87,70 @@ function Home(props) {
 
                 <SurveysBanner/>
 
-                <div class='deposit-methods-bar'/>
-
-                <div class='deposit-methods'>
-                    <div class='header'>
-                        <p><span class='gold'>BLOXCLASH</span> OFFERS VARIOUS DEPOSIT METHODS</p>
-                        <div class='bar'/>
-                        <p class={'method-name ' + (METHODS[method()] ? 'active' : '')}>{METHODS[method()]?.name || 'NONE'}</p>
+                <div class='crypto-carousel-container'>
+                    <div class='crypto-carousel'>
+                        <div class='crypto-track'>
+                            <For each={[...Object.keys(METHODS), ...Object.keys(METHODS), ...Object.keys(METHODS)]}>{(key, index) => (
+                                <div class={'crypto-method ' + (method() === key ? ' selected' : '') + (method() !== '' && method() !== key ? ' unactive' : '')}
+                                     onClick={() => method() === key ? setMethod('') : setMethod(key)}>
+                                    <img src={METHODS[key].src} alt={METHODS[key].name} draggable={false}/>
+                                    <div class='crypto-info'>
+                                        <span class='crypto-name'>{METHODS[key].name}</span>
+                                        <span class='crypto-symbol'>{METHODS[key].symbol}</span>
+                                    </div>
+                                </div>
+                            )}</For>
+                        </div>
                     </div>
-
-                    <div class='methods'>
-                        <For each={Object.keys(METHODS)}>{(key, index) => (
-                            <img onClick={() => method() === key ? setMethod('') : setMethod(key)}
-                                 class={'method ' + (method() !== '' && method() !== key ? 'unactive' : '')}
-                                 src={METHODS[key].src} width={METHODS[key].width || '54'} alt={METHODS[key].name}
-                                 draggable={false}/>
-                        )}</For>
+                    
+                    <div class='selected-crypto-info'>
+                        {METHODS[method()] ? (
+                            <div class='selected-display'>
+                                <span class='selected-text'>Selected: <span class='gold'>{METHODS[method()].name} ({METHODS[method()].symbol})</span></span>
+                            </div>
+                        ) : (
+                            <div class='selected-display'>
+                                <span class='selected-text'>Click any cryptocurrency to select</span>
+                            </div>
+                        )}
                     </div>
                 </div>
 
                 <div class='deposit-container'>
-                    <button class='deposit bevel-gold' disabled={!METHODS[method()]} onClick={() => {
-                        if (!METHODS[method()]) return
-                        if (!props?.user) return createNotification('error', 'Please login first.')
-                        navigate(`/deposit?type=${METHODS[method()]?.url}`)
+                    <button class='deposit-button' disabled={!METHODS[method()]} onClick={() => {
+                        // Dispatch custom event to trigger wallet modal
+                        const selectedCrypto = METHODS[method()];
+                        if (selectedCrypto) {
+                            const event = new CustomEvent('openWalletModal', {
+                                detail: {
+                                    crypto: {
+                                        name: selectedCrypto.name,
+                                        id: selectedCrypto.symbol,
+                                        apiId: selectedCrypto.symbol === 'USDT' ? 'USDT.ERC20' : 
+                                               selectedCrypto.symbol === 'BNB' ? 'BNB.BSC' : 
+                                               selectedCrypto.symbol,
+                                        img: `/cryptos/${selectedCrypto.symbol}.png`
+                                    }
+                                }
+                            });
+                            window.dispatchEvent(event);
+                        }
                     }}>
-                        DEPOSIT
+                        <div class='deposit-button-content'>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            <span>DEPOSIT {METHODS[method()]?.symbol || 'CRYPTO'}</span>
+                        </div>
                     </button>
                 </div>
 
                 <Bets user={props.user}/>
             </div>
+
+
 
             <style jsx>{`
               .home-container {
@@ -134,79 +170,199 @@ function Home(props) {
                 gap: 12px;
               }
 
-              .deposit-methods-bar {
-                margin: 50px auto 0 auto;
-                max-width: 650px;
-                height: 1px;
-                background: linear-gradient(270deg, rgba(90, 84, 153, 0.00) 0%, #5A5499 49.47%, rgba(90, 84, 153, 0.00) 100%);
-              }
-
-              .deposit-methods {
-                max-width: 980px;
-                border-radius: 5px;
-                margin: 30px auto;
-                overflow: hidden;
-
-                border-bottom: 1px solid #5665BA;
-              }
-
-              .header {
+              .crypto-carousel-container {
                 width: 100%;
-                height: 30px;
+                max-width: 1000px;
+                margin: 40px auto;
+                padding: 0 20px;
+              }
 
-                font-size: 14px;
-                font-family: Geogrotesque Wide;
+              .crypto-carousel {
+                background: rgba(26, 35, 50, 0.4);
+                border: 1px solid rgba(78, 205, 196, 0.1);
+                border-radius: 10px;
+                overflow: hidden;
+                backdrop-filter: blur(8px);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+                position: relative;
+                padding: 20px 0;
+              }
+
+              .crypto-carousel::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 60px;
+                height: 100%;
+                background: linear-gradient(90deg, rgba(26, 35, 50, 0.9), transparent);
+                z-index: 2;
+                pointer-events: none;
+              }
+
+              .crypto-carousel::after {
+                content: '';
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 60px;
+                height: 100%;
+                background: linear-gradient(270deg, rgba(26, 35, 50, 0.9), transparent);
+                z-index: 2;
+                pointer-events: none;
+              }
+
+              .crypto-track {
+                display: flex;
+                gap: 16px;
+                animation: scroll 80s linear infinite;
+                width: max-content;
+                padding: 0 60px;
+              }
+
+              @keyframes scroll {
+                0% {
+                  transform: translateX(0);
+                }
+                100% {
+                  transform: translateX(-33.33%);
+                }
+              }
+
+              .crypto-carousel:hover .crypto-track {
+                animation-play-state: paused;
+              }
+
+              .selected-crypto-info {
+                text-align: center;
+                margin-top: 16px;
+                padding: 14px 20px;
+                background: rgba(26, 35, 50, 0.3);
+                border: 1px solid rgba(78, 205, 196, 0.08);
+                border-radius: 8px;
+                backdrop-filter: blur(8px);
+              }
+
+              .selected-display {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                font-size: 13px;
+                font-weight: 600;
+                color: #8aa3b8;
+              }
+
+              .selected-text .gold {
+                color: #4ecdc4;
                 font-weight: 700;
-                color: white;
+              }
 
+              .crypto-method {
                 display: flex;
+                flex-direction: column;
                 align-items: center;
-                padding: 15px;
-                gap: 15px;
-
-                background: linear-gradient(90deg, rgba(90, 84, 149, 0.65) 0%, rgba(90, 84, 149, 0.45) 29.82%, rgba(66, 53, 121, 0) 100%);
-              }
-
-              .bar {
-                flex: 1;
-                height: 1px;
-
-                background: #5A5499;
-              }
-
-              .method-name {
-                color: #8D86CD;
-              }
-
-              .method-name.active {
-                color: var(--gold);
-              }
-
-              .methods {
-                display: flex;
-                align-items: center;
-                padding: 15px 0;
-                justify-content: space-evenly;
-
-                background: linear-gradient(0deg, rgba(29, 24, 62, 0.15), rgba(29, 24, 62, 0.15)), linear-gradient(269.89deg, rgb(104, 100, 164) -49.01%, rgba(90, 84, 149, 0.655) -5.08%, rgba(66, 53, 121, 0) 98.28%);
-              }
-
-              .method {
+                gap: 8px;
+                padding: 14px 12px;
+                border-radius: 8px;
                 cursor: pointer;
-                transition: all .3s;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                background: rgba(45, 75, 105, 0.25);
+                border: 1px solid rgba(78, 205, 196, 0.15);
+                backdrop-filter: blur(8px);
+                min-width: 88px;
+                flex-shrink: 0;
+                position: relative;
+                color: #8aa3b8;
               }
 
-              .method.unactive {
-                -webkit-filter: grayscale(100%);
-                -moz-filter: grayscale(100%);
-                -o-filter: grayscale(100%);
+              .crypto-method::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 0;
+                background: linear-gradient(90deg, rgba(78, 205, 196, 0.2), transparent);
+                transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                border-radius: 8px 0 0 8px;
+              }
+
+              .crypto-method:hover::before {
+                width: 3px;
+              }
+
+              .crypto-method:hover {
+                background: rgba(78, 205, 196, 0.15);
+                border-color: #4ecdc4;
+                color: #ffffff;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(78, 205, 196, 0.2);
+              }
+
+              .crypto-method.selected {
+                background: rgba(78, 205, 196, 0.2);
+                border-color: #4ecdc4;
+                color: #ffffff;
+                box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+                transform: translateY(-1px);
+              }
+
+              .crypto-method.selected::before {
+                width: 3px;
+                background: linear-gradient(90deg, #4ecdc4, rgba(78, 205, 196, 0.5));
+              }
+
+              .crypto-method.unactive {
                 filter: grayscale(100%);
-
-                opacity: 0.5;
+                opacity: 0.4;
               }
 
-              .method:hover {
-                transform: translateY(-5px);
+              .crypto-method img {
+                width: 36px;
+                height: 36px;
+                object-fit: contain;
+                transition: all 0.3s ease;
+                opacity: 0.7;
+              }
+
+              .crypto-method:hover img {
+                opacity: 1;
+                filter: drop-shadow(0 0 4px rgba(78, 205, 196, 0.3));
+              }
+
+              .crypto-method.selected img {
+                opacity: 1;
+                filter: drop-shadow(0 0 6px rgba(78, 205, 196, 0.4));
+              }
+
+              .crypto-info {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2px;
+                text-align: center;
+              }
+
+              .crypto-name {
+                font-size: 11px;
+                font-weight: 600;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                line-height: 1.1;
+                transition: color 0.3s ease;
+                color: inherit;
+              }
+
+              .crypto-symbol {
+                font-size: 9px;
+                font-weight: 500;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                transition: color 0.3s ease;
+                color: #6b7f92;
+                opacity: 0.8;
+              }
+
+              .crypto-method:hover .crypto-symbol,
+              .crypto-method.selected .crypto-symbol {
+                color: #4ecdc4;
+                opacity: 1;
               }
 
               .deposit-container {
@@ -218,6 +374,8 @@ function Home(props) {
 
                 position: relative;
                 margin-bottom: 50px;
+                z-index: 5;
+                pointer-events: auto;
               }
 
               .deposit-container:before {
@@ -226,30 +384,70 @@ function Home(props) {
                 position: absolute;
                 content: '';
                 left: 0;
+                top: 50%;
                 background: linear-gradient(270deg, rgba(90, 84, 153, 0.00) 0%, #5A5499 49.47%, rgba(90, 84, 153, 0.00) 100%);
                 z-index: -1;
+                pointer-events: none;
               }
 
-              .deposit {
-                width: 130px;
-                height: 30px;
-
-                color: white;
-                font-size: 14px;
-                font-weight: 700;
-
-                outline: unset;
-                border: unset;
-
+              .deposit-button {
+                background: rgba(45, 75, 105, 0.25);
+                border: 1px solid rgba(78, 205, 196, 0.2);
+                border-radius: 8px;
+                color: #8aa3b8;
                 cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                backdrop-filter: blur(8px);
+                box-sizing: border-box;
+                position: relative;
+                outline: none;
+                min-width: 180px;
+                height: 48px;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                font-weight: 600;
+                font-size: 13px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                z-index: 10;
+                pointer-events: auto;
               }
 
-              .deposit:disabled {
-                border-radius: 3px;
-                background: #6760A9;
-                box-shadow: 0px 2px 0px 0px #524D8A, 0px -2px 0px 0px #7F77C6;
+              .deposit-button:hover:not(:disabled) {
+                background: rgba(78, 205, 196, 0.15);
+                border-color: #4ecdc4;
+                color: #ffffff;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(78, 205, 196, 0.2);
+              }
 
-                color: #8D86CD;
+              .deposit-button:active:not(:disabled) {
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(78, 205, 196, 0.15);
+              }
+
+              .deposit-button:disabled {
+                background: rgba(45, 75, 105, 0.15);
+                border-color: rgba(78, 205, 196, 0.1);
+                color: #6b7f92;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+              }
+
+              .deposit-button-content {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                height: 100%;
+              }
+
+              .deposit-button-content svg {
+                transition: transform 0.2s ease;
+              }
+
+              .deposit-button:hover:not(:disabled) .deposit-button-content svg {
+                transform: translateY(1px);
               }
 
               @media only screen and (max-width: 1000px) {
@@ -259,6 +457,103 @@ function Home(props) {
 
                 .banners {
                   flex-direction: column;
+                }
+
+                .crypto-carousel-container {
+                  padding: 0 15px;
+                }
+
+                .crypto-track {
+                  gap: 14px;
+                  padding: 0 50px;
+                }
+
+                .crypto-method {
+                  padding: 12px 10px;
+                  gap: 6px;
+                  min-width: 80px;
+                }
+
+                .crypto-method img {
+                  width: 32px;
+                  height: 32px;
+                }
+
+                .crypto-name {
+                  font-size: 10px;
+                }
+
+                .crypto-symbol {
+                  font-size: 8px;
+                }
+
+                .selected-display {
+                  font-size: 12px;
+                }
+
+                .crypto-carousel::before,
+                .crypto-carousel::after {
+                  width: 50px;
+                }
+              }
+
+              @media only screen and (max-width: 600px) {
+                .crypto-carousel-container {
+                  padding: 0 10px;
+                }
+
+                .crypto-carousel {
+                  padding: 16px 0;
+                }
+
+                .crypto-track {
+                  gap: 12px;
+                  animation: scroll 60s linear infinite;
+                  padding: 0 40px;
+                }
+
+                .crypto-method {
+                  padding: 10px 8px;
+                  gap: 5px;
+                  min-width: 72px;
+                }
+
+                .crypto-method img {
+                  width: 28px;
+                  height: 28px;
+                }
+
+                .crypto-name {
+                  font-size: 9px;
+                }
+
+                .crypto-symbol {
+                  font-size: 8px;
+                }
+
+                .selected-display {
+                  font-size: 11px;
+                }
+
+                .selected-crypto-info {
+                  padding: 12px 16px;
+                  margin-top: 12px;
+                }
+
+                .crypto-carousel::before,
+                .crypto-carousel::after {
+                  width: 40px;
+                }
+
+                .deposit-button {
+                  min-width: 160px;
+                  height: 44px;
+                  font-size: 12px;
+                }
+
+                .deposit-button-content svg {
+                  width: 14px;
+                  height: 14px;
                 }
               }
             `}</style>

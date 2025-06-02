@@ -9,13 +9,15 @@ import CryptoTX from "../Transactions/cryptotx";
 // import CryptoWithdrawContent from '../Withdraws/CryptoWithdrawContent'; // Example
 
 const DEPOSIT_CRYPTO_METHODS = [
-  { name: 'Bitcoin', id: 'BTC', apiId: 'BTC', img: '/assets/icons/bitcoin.png' }, // apiId is what your backend expects for currency
-  { name: 'Ethereum', id: 'ETH', apiId: 'ETH', img: '/assets/icons/ethereum.png' },
-  { name: 'Litecoin', id: 'LTC', apiId: 'LTC', img: '/assets/icons/litecoin.png' },
-  { name: 'BNB', id: 'BNB', apiId: 'BNB.BSC', img: '/assets/icons/bnb.png' }, // Example: apiId might differ
-  { name: 'USDC', id: 'USDC', apiId: 'USDC', img: '/assets/icons/usdc.png' },
-  { name: 'USDT', id: 'USDT', apiId: 'USDT.ERC20', img: '/assets/icons/usdt.png' },
-  { name: 'Dogecoin', id: 'DOGE', apiId: 'DOGE', img: '/assets/icons/dogecoin.png' }
+  { name: 'Bitcoin', id: 'BTC', apiId: 'BTC', img: '/assets/cryptos/branded/BTC.svg' },
+  { name: 'Tether', id: 'USDT', apiId: 'USDT.ERC20', img: '/assets/cryptos/branded/USDT.svg' },
+  { name: 'USDC', id: 'USDC', apiId: 'USDC', img: '/assets/cryptos/branded/USDC.svg' },
+  { name: 'Ethereum', id: 'ETH', apiId: 'ETH', img: '/assets/cryptos/branded/ETH.svg' },
+  { name: 'Ripple', id: 'XRP', apiId: 'XRP', img: '/assets/cryptos/branded/XRP.svg' },
+  { name: 'TRON', id: 'TRX', apiId: 'TRX', img: '/assets/cryptos/branded/TRX.svg' },
+  { name: 'Litecoin', id: 'LTC', apiId: 'LTC', img: '/assets/cryptos/branded/LTC.svg' },
+  { name: 'Dogecoin', id: 'DOGE', apiId: 'DOGE', img: '/assets/cryptos/branded/DOGE.svg' },
+  { name: 'BNB', id: 'BNB', apiId: 'BNB.BSC', img: '/assets/cryptos/branded/BNB.svg' }
 ];
 
 function WalletModal(props) {
@@ -46,6 +48,19 @@ function WalletModal(props) {
         setDepositCurrencySymbol(initialCurrency.id);
         setDepositCurrencyImg(initialCurrency.img);
         console.log("[WalletModal - Deposit] Initial effect set display symbols for:", initialCurrency.id);
+    }
+  });
+
+  // Effect to handle pre-selected crypto from carousel
+  createEffect(() => {
+    if (props.selectedCrypto && props.show && activeTab() === 'deposit') {
+      const matchingMethod = DEPOSIT_CRYPTO_METHODS.find(method => 
+        method.id === props.selectedCrypto.id || method.apiId === props.selectedCrypto.apiId
+      );
+      
+      if (matchingMethod) {
+        setSelectedDepositCurrencyApiId(matchingMethod.apiId);
+      }
     }
   });
 
@@ -389,6 +404,7 @@ function WalletModal(props) {
 
   return (
     <>
+
       <div class='modal fadein' onClick={() => props.close()}>
         <div class='wallet-modal-container' onClick={(e) => e.stopPropagation()}>
           <div class='header'>
@@ -408,8 +424,13 @@ function WalletModal(props) {
           <div class='content-area'>
             <Show when={activeTab() === 'deposit'}>
               <div class='crypto-deposit-content-wrapper'>
-                <div class='modal-section-header' style={{"margin-bottom": "10px"}}>
+                <div class='modal-section-header' style={{"margin-bottom": "15px"}}>
                     <p class='type'>Deposit with Crypto</p>
+                    <div class="bar"></div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ecdc4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="12" y1="19" x2="12" y2="5"></line>
+                      <polyline points="5 12 12 5 19 12"></polyline>
+                    </svg>
                 </div>
                 
                 <div class='withdraw-dropdowns'>
@@ -437,7 +458,7 @@ function WalletModal(props) {
                   </div>
                 </div>
 
-                { console.log("[WalletModal - Deposit] Rendering Address Section. Loading:", depositAddress.loading, "Address Value:", depositAddress(), "Selected API ID:", selectedDepositCurrencyApiId()) }
+
                 <Show when={selectedDepositCurrencyApiId() && !depositAddress.loading && depositAddress()} 
                       fallback={
                         <Show when={selectedDepositCurrencyApiId() && depositAddress.loading} keyed>
@@ -527,7 +548,7 @@ function WalletModal(props) {
                 <div class='modal-section-header' style={{"margin-bottom": "15px"}}>
                     <p class='type'>Withdraw Crypto</p>
                     <div class="bar"></div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#59E878" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ecdc4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <line x1="12" y1="5" x2="12" y2="19"></line>
                       <polyline points="19 12 12 19 5 12"></polyline>
                     </svg>
@@ -536,14 +557,14 @@ function WalletModal(props) {
                 <Show when={!withdrawCryptoTypes.loading && withdrawCryptoTypes()} fallback={<Loader/>}>
                     <>
                         <div style={{
-                            "background": "linear-gradient(140deg, rgba(73, 66, 119, 0.4) 0%, rgba(44, 41, 82, 0.4) 100%)",
+                            "background": "rgba(26, 35, 50, 0.4)",
                             "border-radius": "12px",
                             "padding": "18px",
-                            "border": "1px solid rgba(75, 72, 135, 0.6)",
+                            "border": "1px solid rgba(78, 205, 196, 0.15)",
                             "margin-bottom": "20px"
                         }}>
                             <p style={{
-                                "color": "#ADA3EF",
+                                "color": "#8aa3b8",
                                 "font-size": "13px",
                                 "font-weight": "600",
                                 "margin-bottom": "12px"
@@ -553,8 +574,8 @@ function WalletModal(props) {
                                 <div class={`dropdown-wrapper ${withdrawCurrencyDropdown() ? 'active' : ''}`} 
                                      onClick={(e) => { setWithdrawCurrencyDropdown(!withdrawCurrencyDropdown()); e.stopPropagation(); }}
                                      style={{
-                                         "background": "#322F5F",
-                                         "border": "1px solid #524893",
+                                         "background": "rgba(45, 75, 105, 0.3)",
+                                         "border": "1px solid rgba(78, 205, 196, 0.2)",
                                          "border-radius": "8px",
                                          "box-shadow": "0 2px 4px rgba(0,0,0,0.1)"
                                      }}>
@@ -566,8 +587,8 @@ function WalletModal(props) {
                                     <img class='arrow' src='/assets/icons/dropdownarrow.svg' alt=''/>
                                     <div class='dropdown-container modal-dropdown-options' onClick={(e) => e.stopPropagation()}
                                          style={{
-                                             "box-shadow": "0 4px 12px rgba(0,0,0,0.2)",
-                                             "border": "1px solid #524893",
+                                             "box-shadow": "0 4px 12px rgba(0,0,0,0.3)",
+                                             "border": "1px solid rgba(78, 205, 196, 0.2)",
                                              "border-radius": "0 0 8px 8px"
                                          }}>
                                         <For each={withdrawCryptoTypes()}>{(crypto) =>
@@ -582,8 +603,8 @@ function WalletModal(props) {
                                 <div class={`dropdown-wrapper ${withdrawNetworkDropdown() ? 'active' : ''}`} 
                                      onClick={(e) => { setWithdrawNetworkDropdown(!withdrawNetworkDropdown()); e.stopPropagation(); }}
                                      style={{
-                                         "background": "#322F5F",
-                                         "border": "1px solid #524893",
+                                         "background": "rgba(45, 75, 105, 0.3)",
+                                         "border": "1px solid rgba(78, 205, 196, 0.2)",
                                          "border-radius": "8px",
                                          "box-shadow": "0 2px 4px rgba(0,0,0,0.1)"
                                      }}>
@@ -594,8 +615,8 @@ function WalletModal(props) {
                                     <img class='arrow' src='/assets/icons/dropdownarrow.svg' alt=''/>
                                     <div class='dropdown-container modal-dropdown-options' onClick={(e) => e.stopPropagation()}
                                          style={{
-                                             "box-shadow": "0 4px 12px rgba(0,0,0,0.2)",
-                                             "border": "1px solid #524893",
+                                             "box-shadow": "0 4px 12px rgba(0,0,0,0.3)",
+                                             "border": "1px solid rgba(78, 205, 196, 0.2)",
                                              "border-radius": "0 0 8px 8px"
                                          }}>
                                         <For each={availableWithdrawChains()}>{(chainOpt) =>
@@ -611,27 +632,27 @@ function WalletModal(props) {
 
                         {/* Amount and Address Input Container */}
                         <div class='withdraw-input-fields-container' style={{
-                            "background": "linear-gradient(140deg, #322F5F 0%, #2C2952 100%)",
+                            "background": "rgba(26, 35, 50, 0.4)",
                             "border-radius": "12px",
                             "padding": "20px",
-                            "border": "1px solid #423B78",
+                            "border": "1px solid rgba(78, 205, 196, 0.15)",
                             "box-shadow": "0 4px 12px rgba(0,0,0,0.1)"
                         }}>
                             {/* Amount Input */}
                             <div>
-                                <label class='input-label' style={{ "margin-bottom": "8px", "display": "block", "color": "#ADA3EF", "font-size": "14px", "font-weight": "600" }}>
+                                <label class='input-label' style={{ "margin-bottom": "8px", "display": "block", "color": "#8aa3b8", "font-size": "14px", "font-weight": "600" }}>
                                     Amount in USD
                                 </label>
                                 <div class='input withdraw-input' style={{
                                     "height": "45px", 
-                                    "background": "#383165", 
-                                    "border": "1px solid #6258AB", 
-                                    "border-radius": "6px", 
+                                    "background": "rgba(45, 75, 105, 0.3)", 
+                                    "border": "1px solid rgba(78, 205, 196, 0.2)", 
+                                    "border-radius": "8px", 
                                     "padding": "0 12px",
                                     "display": "flex",
                                     "align-items": "center"
                                 }}>
-                                    <div style={{ "color": "#ADA3EF", "font-size": "13px", "font-weight": "600" }}>$</div>
+                                    <div style={{ "color": "#8aa3b8", "font-size": "13px", "font-weight": "600" }}>$</div>
                                     <input
                                         type='number'
                                         placeholder="0.00"
@@ -644,7 +665,7 @@ function WalletModal(props) {
                                             "margin-left": "8px"
                                         }}
                                     />
-                                    <span style={{ "color": "#ADA3EF", "font-size": "13px", "font-weight": "600", "margin-left": "auto" }}>USD</span>
+                                    <span style={{ "color": "#8aa3b8", "font-size": "13px", "font-weight": "600", "margin-left": "auto" }}>USD</span>
                                 </div>
                                 
                                 <div style={{
@@ -653,11 +674,11 @@ function WalletModal(props) {
                                     "margin-top": "8px",
                                     "padding": "0 5px"
                                 }}>
-                                    <span style={{ "color": "#9489DB", "font-size": "12px" }}>
+                                    <span style={{ "color": "#8aa3b8", "font-size": "12px" }}>
                                         <img src='/assets/icons/coin.svg' height='10' alt="Robux" style={{ "vertical-align": "middle", "margin-right": "3px" }} />
                                        {withdrawCryptoValue()} {withdrawSymbol()}
                                     </span>
-                                    <span style={{ "color": "#9489DB", "font-size": "12px" }}>
+                                    <span style={{ "color": "#8aa3b8", "font-size": "12px" }}>
                                         Network fee: <span style={{"color": "white"}}>${formatNumber( ( (withdrawChain()?.fee || 0) * withdrawPrice() ) )} USD</span>
                                     </span>
                                 </div>
@@ -665,19 +686,19 @@ function WalletModal(props) {
 
                             {/* Address Input */}
                             <div style={{ "margin-top": "20px" }}>
-                                <label class='input-label' style={{ "margin-bottom": "8px", "display": "block", "color": "#ADA3EF", "font-size": "14px", "font-weight": "600" }}>
+                                <label class='input-label' style={{ "margin-bottom": "8px", "display": "block", "color": "#8aa3b8", "font-size": "14px", "font-weight": "600" }}>
                                     Your {withdrawSymbol() || 'Crypto'} Address
                                     <Show when={withdrawChain()?.id}>
-                                        <span style={{ "font-weight": "normal", "color": "#9489DB", "margin-left": "6px", "font-size": "0.9em" }}>
+                                        <span style={{ "font-weight": "normal", "color": "#8aa3b8", "margin-left": "6px", "font-size": "0.9em" }}>
                                             ({withdrawChain().id} Network)
                                         </span>
                                     </Show>
                                 </label>
                                 <div class='input withdraw-input' style={{
                                     "height": "45px", 
-                                    "background": "#383165", 
-                                    "border": "1px solid #6258AB", 
-                                    "border-radius": "6px", 
+                                    "background": "rgba(45, 75, 105, 0.3)", 
+                                    "border": "1px solid rgba(78, 205, 196, 0.2)", 
+                                    "border-radius": "8px", 
                                     "padding": "0 12px",
                                     "display": "flex",
                                     "align-items": "center"
@@ -742,13 +763,13 @@ function WalletModal(props) {
           left: 0;
           width: 100vw;
           height: 100vh;
-          background: rgba(24, 23, 47, 0.55);
+          background: rgba(24, 23, 47, 0.65);
           display: flex;
           align-items: center;
           justify-content: center;
           z-index: 1000;
-          opacity: 0;
-          transition: opacity 0.3s ease-in-out;
+          opacity: 1;
+          backdrop-filter: blur(4px);
         }
 
         .modal.fadein {
@@ -757,323 +778,580 @@ function WalletModal(props) {
 
         .wallet-modal-container {
           width: 100%;
-          max-width: 550px; /* Slightly wider for withdraw info */
-          height: auto; /* Adjusted height */
+          max-width: 550px;
+          height: auto;
           max-height: 90vh;
-          background: #2C2952;
+          background: rgba(26, 35, 50, 0.95);
           display: flex;
           flex-direction: column;
           border-radius: 16px;
           overflow: hidden;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          backdrop-filter: blur(12px);
         }
 
         .header {
           width: 100%;
-          min-height: 60px; /* Adjusted height */
+          min-height: 60px;
           display: flex;
           align-items: center;
           padding: 0 20px;
-          background: #322F5F;
-          justify-content: space-between; /* Align items */
+          background: rgba(45, 75, 105, 0.3);
+          justify-content: space-between;
+          border-bottom: 1px solid rgba(78, 205, 196, 0.15);
         }
 
         .exit {
           width: 25px;
           height: 25px;
-          background: rgba(85, 76, 125, 1);
+          background: rgba(45, 75, 105, 0.4);
           display: flex;
           align-items: center;
           justify-content: center;
-          border: none;
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          border-radius: 6px;
           cursor: pointer;
+          transition: all 0.3s ease;
+        }
+        
+        .exit:hover {
+          background: rgba(78, 205, 196, 0.15);
+          border-color: #4ecdc4;
         }
         
         .exit svg {
-            fill: #ADA3EF;
+          fill: #8aa3b8;
+          transition: fill 0.3s ease;
+        }
+
+        .exit:hover svg {
+          fill: #4ecdc4;
         }
 
         .tabs {
           display: flex;
           gap: 10px;
-          margin-left: auto; /* Pushes tabs to the right, leaving space for a title if needed */
-          margin-right: auto; /* Centers the tabs if exit button is on one side */
+          margin-left: auto;
+          margin-right: auto;
         }
 
         .tab {
           padding: 10px 20px;
           background: transparent;
           border: none;
-          color: #ADA3EF;
+          color: #8aa3b8;
           font-size: 16px;
           font-weight: 600;
           cursor: pointer;
           border-bottom: 2px solid transparent;
-          transition: border-color 0.3s, color 0.3s;
+          transition: all 0.3s ease;
+          border-radius: 6px 6px 0 0;
         }
 
         .tab:hover {
-          color: #FFF;
+          color: #ffffff;
+          background: rgba(78, 205, 196, 0.08);
         }
 
         .tab.active {
-          color: #FFF;
-          border-bottom: 2px solid #59E878; /* Gold color or theme accent */
-        }
-        
-        .title { /* If we want a title like "Wallet" */
-          color: #FFF;
-          font-size: 20px;
-          font-weight: 700;
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          position: absolute;
-          left: 50%;
-          transform: translateX(-50%);
+          color: #ffffff;
+          background: rgba(78, 205, 196, 0.15);
+          border-bottom: 2px solid #4ecdc4;
         }
 
         .content-area {
           padding: 20px;
           overflow-y: auto;
           flex-grow: 1;
-          background: #272248; /* Slightly different bg for content if desired */
+          background: rgba(26, 35, 50, 0.6);
         }
         
-        /* Ensure responsive behavior if needed */
-        @media only screen and (max-width: 768px) {
-          .wallet-modal-container {
-            max-width: 95vw;
-            max-height: 95vh;
-          }
-          .tabs {
-            gap: 5px;
-          }
-          .tab {
-            font-size: 14px;
-            padding: 8px 15px;
-          }
+        /* Crypto Deposit Content */
+        .crypto-deposit-content-wrapper {
+          width: 100%;
+          height: fit-content;
+          display: flex;
+          flex-direction: column;
         }
 
-        /* Styles from CryptoDeposit, adapted for modal */
-        .crypto-deposit-content-wrapper { /* Wrapper for deposit content */
-            width: 100%;
-            height: fit-content;
-            display: flex;
-            flex-direction: column;
-            /* padding: 25px 50px; /* Original padding, adjust if needed for modal */
+        .modal-section-header {
+          display: flex;
+          width: 100%;
+          color: #8aa3b8;
+          font-family: 'Geogrotesque Wide', sans-serif;
+          font-size: 13px;
+          font-weight: 600;
+          gap: 8px;
+          align-items: center;
+          margin-bottom: 15px;
         }
 
-        .deposit-header {
-            display: flex;
-            width: 100%;
-            color: #ADA3EF;
-            font-family: 'Geogrotesque Wide', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            gap: 8px;
-            align-items: center; /* Vertically align items */
+        .modal-section-header .type {
+          color: #ffffff;
+          font-size: 18px;
+          font-weight: 700;
         }
 
         .bar {
-            flex: 1;
-            height: 1px;
-            min-height: 1px;
-            background: #4B4887;
+          flex: 1;
+          height: 1px;
+          min-height: 1px;
+          background: rgba(78, 205, 196, 0.2);
         }
 
-        .type {
-            margin-right: auto;
-        }
-        
-        .deposit-header .white {
-            color: #FFF;
+        .withdraw-dropdowns {
+          display: flex;
+          gap: 12px;
+          margin-bottom: 15px;
         }
 
-        .inputs {
-            display: flex;
-            flex-wrap: wrap;
-            width: 100%;
-            gap: 10px;
+        .dropdown-wrapper {
+          flex: 1;
+          height: 45px;
+          border-radius: 8px;
+          background: rgba(45, 75, 105, 0.3);
+          color: #8aa3b8;
+          font-family: 'Geogrotesque Wide', sans-serif;
+          font-size: 14px;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+          cursor: pointer;
+          position: relative;
+          padding: 0 12px;
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          transition: all 0.3s ease;
+        }
+
+        .dropdown-wrapper:hover {
+          background: rgba(78, 205, 196, 0.15);
+          border-color: #4ecdc4;
+        }
+
+        .dropdown-wrapper img.arrow {
+          margin-left: auto;
+          transition: transform 0.2s;
+          filter: brightness(0) saturate(100%) invert(58%) sepia(12%) saturate(1148%) hue-rotate(169deg) brightness(91%) contrast(87%);
+        }
+
+        .dropdown-wrapper.active img.arrow {
+          transform: rotate(180deg);
+          filter: brightness(0) saturate(100%) invert(80%) sepia(30%) saturate(2000%) hue-rotate(146deg) brightness(106%) contrast(86%);
+        }
+
+        .dropdown-container.modal-dropdown-options {
+          position: absolute;
+          z-index: 100;
+          display: none;
+          top: calc(100% + 2px);
+          left: 0;
+          width: 100%;
+          border-radius: 0px 0px 8px 8px;
+          overflow: hidden;
+          background: rgba(26, 35, 50, 0.95);
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          border-top: none;
+          max-height: 200px;
+          overflow-y: auto;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+          backdrop-filter: blur(8px);
+        }
+
+        .dropdown-wrapper.active .dropdown-container.modal-dropdown-options {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .dropdown-container .option {
+          background: rgba(45, 75, 105, 0.2);
+          height: 40px;
+          padding: 0 12px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #ffffff;
+          border-bottom: 1px solid rgba(78, 205, 196, 0.1);
+          white-space: nowrap;
+          font-size: 13px;
+          transition: all 0.3s ease;
+        }
+
+        .dropdown-container .option:hover {
+          background: rgba(78, 205, 196, 0.15);
+          color: #4ecdc4;
+        }
+
+        .dropdown-container .option:last-child {
+          border-bottom: none;
+        }
+
+        .input-label {
+          color: #8aa3b8;
+          font-size: 13px;
+          font-weight: 600;
+          margin-bottom: 8px;
+          display: block;
         }
 
         .input {
-            border: unset;
-            outline: unset;
-            white-space: nowrap;
-            flex: 1 1 0;
-            height: 45px;
-            border-radius: 3px;
-            border: 1px solid #423B78;
-            background: #2F2A54; /* Match content area or make slightly different */
-            color: #ADA3EF;
-            font-family: 'Geogrotesque Wide', sans-serif;
-            font-size: 12px;
-            font-weight: 700;
-            padding: 0 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+          border: none;
+          outline: none;
+          white-space: nowrap;
+          flex: 1 1 0;
+          height: 45px;
+          border-radius: 8px;
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          background: rgba(45, 75, 105, 0.2);
+          color: #8aa3b8;
+          font-family: 'Geogrotesque Wide', sans-serif;
+          font-size: 12px;
+          font-weight: 600;
+          padding: 0 12px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          transition: all 0.3s ease;
         }
-        
-        .input p {
-            margin: 0; /* Reset margins */
+
+        .input:hover {
+          border-color: rgba(78, 205, 196, 0.4);
+          background: rgba(78, 205, 196, 0.1);
         }
 
         .input input {
-            background: unset;
-            outline: unset;
-            border: unset;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            color: #FFF;
-            font-family: 'Geogrotesque Wide', sans-serif;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .info {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #FFF;
-            font-size: 12px;
-        }
-
-        .thin {
-            font-weight: 400;
+          background: transparent;
+          border: none;
+          outline: none;
+          color: white;
+          font-size: 15px;
+          font-weight: 600;
+          text-align: left;
+          flex-grow: 1;
+          height: 100%;
         }
 
         .copy {
-            border: unset;
-            outline: unset;
-            padding: unset;
-            background: unset;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 32px;
-            height: 32px;
-            border-radius: 4px;
-            transition: all 0.2s;
+          border: none;
+          outline: none;
+          padding: 0;
+          background: transparent;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border-radius: 6px;
+          transition: all 0.3s ease;
         }
 
         .copy:hover {
-            background: rgba(173, 163, 239, 0.1);
+          background: rgba(78, 205, 196, 0.15);
         }
 
         .copy svg {
-            fill: none;
-            stroke: #776EB0;
-            transition: all .2s;
+          fill: none;
+          stroke: #8aa3b8;
+          transition: all 0.3s ease;
         }
 
         .copy:hover svg {
-            stroke: #ADA3EF;
+          stroke: #4ecdc4;
         }
 
         .copy .copy-success {
-            stroke: #59E878;
-            animation: checkmark-appear 0.3s ease-out;
+          stroke: #4ecdc4;
+          animation: checkmark-appear 0.3s ease-out;
         }
 
         @keyframes checkmark-appear {
-            0% { opacity: 0; transform: scale(0.5); }
-            50% { opacity: 1; transform: scale(1.2); }
-            100% { opacity: 1; transform: scale(1); }
+          0% { opacity: 0; transform: scale(0.5); }
+          50% { opacity: 1; transform: scale(1.2); }
+          100% { opacity: 1; transform: scale(1); }
         }
 
-        .conversions-container {
-            display: flex;
-            justify-content: center; /* Center QR and inputs */
-            align-items: flex-start;
-            position: relative;
-            margin: 25px 0; /* Adjusted margin */
-            padding: 10px 0;
-            min-height: 132px;
-            gap: 15px; /* Increased gap */
+        .deposit-address-display {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 12px;
+          background: rgba(26, 35, 50, 0.6);
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          border-radius: 8px;
+          transition: all 0.3s ease;
         }
 
-        .conversions {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            flex-direction: column; /* Stack conversion inputs vertically */
+        .deposit-address-display:hover {
+          border-color: rgba(78, 205, 196, 0.4);
+          background: rgba(78, 205, 196, 0.05);
         }
 
-        .margin-top-15 {
-            margin-top: 15px;
+        .address-text {
+          color: #ffffff;
+          font-weight: 400;
+          word-break: break-all;
+          margin-right: 10px;
+          display: flex;
+          flex-wrap: nowrap;
+          width: 100%;
+          overflow: hidden;
+          font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
         }
 
-        .conversions .input {
-            max-width: 200px; /* Adjust width if needed */
-            min-width: 150px;
+        .address-highlight {
+          color: #4ecdc4;
+          font-weight: 700;
+          text-shadow: 0 0 2px rgba(78, 205, 196, 0.3);
+          letter-spacing: 0.3px;
         }
 
-        .qr {
-            /* position: absolute; */ /* Let it flow with flex */
-            /* top: 0; */
-            /* left: 0; */
-            width: 132px;
-            height: 132px;
+        .deposit-qr-and-info {
+          display: flex;
+          align-items: stretch;
+          gap: 25px;
+          margin-top: 20px;
+          background: rgba(26, 35, 50, 0.4);
+          border-radius: 12px;
+          padding: 20px;
+          border: 1px solid rgba(78, 205, 196, 0.15);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
-        .disclaimer {
-            display: flex;
-            width: 100%;
-            flex-direction: column; /* Stack disclaimer and rate */
-            gap: 15px; /* Add gap between text and rate box */
-            align-items: center; /* Center items */
-            margin-top: 20px;
+        .qr-code-container {
+          background: white;
+          padding: 12px;
+          border-radius: 10px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          overflow: hidden;
         }
 
-        .disclaimer-text {
-            max-width: 90%; /* Allow more width in modal */
-            text-align: center; /* Center text */
-            color: #ADA3EF;
-            font-size: 12px;
-            font-weight: 700;
+        .qr-code-container::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(140deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 100%);
+          pointer-events: none;
         }
 
-        .rate {
-            width: 300px; /* Slightly smaller for modal */
-            height: 60px;
-            border-radius: 7px;
-            background: linear-gradient(59deg, #6159B0 0%, rgba(82, 72, 159, 0.52) 12.49%, rgba(76, 66, 152, 0.32) 16.42%, rgba(67, 55, 141, 0.00) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px; /* Adjusted gap */
-            color: #FFF;
-            font-size: 16px;
-            font-weight: 700;
-            position: relative; /* Change from absolute */
-            /* right: 50px; */ /* Remove absolute positioning */
-            /* bottom: 40px; */
-            margin-top: 10px; /* Add some margin */
+        .deposit-instructions-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 16px;
+          flex: 1;
         }
 
-        .swords {
-            width: 100%;
-            height: 100%;
-            position: absolute !important;
-            z-index: 0;
-            opacity: 0.1;
-            background-image: url("/assets/art/rainswords.png");
-            background-position: center;
-            background-size: cover;
-            border-radius: 8px;
+        .deposit-instruction-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          animation: fadeIn 0.5s ease-out;
         }
 
-        .rate .coin {
-            position: absolute;
-            left: -30px; /* Adjust position */
-            z-index: 10;
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(5px); }
+          to { opacity: 1; transform: translateY(0); }
         }
-        
-        /* Responsive adjustments for modal content if necessary */
+
+        .deposit-instruction-item:nth-child(1) { animation-delay: 0.1s; }
+        .deposit-instruction-item:nth-child(2) { animation-delay: 0.2s; }
+        .deposit-instruction-item:nth-child(3) { animation-delay: 0.3s; }
+
+        .instruction-icon {
+          width: 24px;
+          height: 24px;
+          min-width: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(78, 205, 196, 0.15);
+          border-radius: 50%;
+          box-shadow: 0 2px 4px rgba(78, 205, 196, 0.2);
+        }
+
+        .instruction-icon svg {
+          width: 14px;
+          height: 14px;
+          stroke: #4ecdc4;
+        }
+
+        .deposit-instruction-item p {
+          color: #8aa3b8;
+          font-size: 14px;
+          line-height: 1.5;
+          margin: 0;
+        }
+
+        .deposit-instruction-item .gold {
+          color: #4ecdc4;
+          font-weight: 600;
+        }
+
+        .deposit-warning-box {
+          background: rgba(78, 205, 196, 0.1);
+          border: 1px solid rgba(78, 205, 196, 0.3);
+          padding: 15px;
+          border-radius: 8px;
+          margin-top: 15px;
+        }
+
+        .deposit-warning-box .disclaimer-text {
+          text-align: center;
+          color: #8aa3b8;
+          font-size: 13px;
+          font-weight: 600;
+          margin: 0;
+        }
+
+        .deposit-warning-box .disclaimer-text .gold {
+          color: #4ecdc4;
+          font-weight: 700;
+        }
+
+        .red-text {
+          color: #ff8a8a !important;
+        }
+
+        .text-center {
+          text-align: center;
+        }
+
+        /* Crypto Withdraw Content */
+        .crypto-withdraw-content-wrapper {
+          width: 100%;
+          height: fit-content;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .withdraw-input-fields-container {
+          background: rgba(26, 35, 50, 0.4);
+          border-radius: 12px;
+          padding: 20px;
+          border: 1px solid rgba(78, 205, 196, 0.15);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          margin-bottom: 20px;
+        }
+
+        .withdraw-input {
+          height: 45px;
+          background: rgba(45, 75, 105, 0.3);
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          border-radius: 8px;
+          padding: 0 12px;
+          display: flex;
+          align-items: center;
+          transition: all 0.3s ease;
+        }
+
+        .withdraw-input:hover {
+          border-color: rgba(78, 205, 196, 0.4);
+          background: rgba(78, 205, 196, 0.1);
+        }
+
+        .withdraw-input input {
+          background: transparent;
+          border: none;
+          outline: none;
+          color: white;
+          font-size: 15px;
+          font-weight: 600;
+          text-align: left;
+          flex-grow: 1;
+          height: 100%;
+        }
+
+        .submit-withdraw-button {
+          height: 44px;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+          transition: all 0.3s ease;
+          width: 100%;
+          max-width: 220px;
+          margin: 20px auto 0 auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          background: linear-gradient(135deg, #4ecdc4, #44a08d);
+          border: 1px solid rgba(78, 205, 196, 0.4);
+          color: #ffffff;
+          cursor: pointer;
+          box-shadow: 0 4px 12px rgba(78, 205, 196, 0.25);
+        }
+
+        .submit-withdraw-button:hover {
+          background: linear-gradient(135deg, #5ed4cb, #4db8a4);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(78, 205, 196, 0.35);
+        }
+
+        .submit-withdraw-button:disabled {
+          background: rgba(45, 75, 105, 0.3);
+          border: 1px solid rgba(78, 205, 196, 0.1);
+          color: #8aa3b8;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+        }
+
+        .submit-withdraw-button svg {
+          stroke: currentColor;
+        }
+
+        .white-placeholder::placeholder {
+          color: rgba(138, 163, 184, 0.7);
+          opacity: 1;
+        }
+
+        .white-placeholder::-moz-placeholder {
+          color: rgba(138, 163, 184, 0.7);
+          opacity: 1;
+        }
+
+        .white-placeholder:-ms-input-placeholder {
+          color: rgba(138, 163, 184, 0.7);
+        }
+
+        .white-placeholder::-ms-input-placeholder {
+          color: rgba(138, 163, 184, 0.7);
+        }
+
+        .white-placeholder::-webkit-input-placeholder {
+          color: rgba(138, 163, 184, 0.7);
+        }
+
+        /* Custom scrollbar */
+        .content-area::-webkit-scrollbar {
+          width: 4px;
+        }
+
+        .content-area::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        .content-area::-webkit-scrollbar-thumb {
+          background: rgba(78, 205, 196, 0.3);
+          border-radius: 2px;
+        }
+
+        .content-area::-webkit-scrollbar-thumb:hover {
+          background: rgba(78, 205, 196, 0.5);
+        }
+
+        /* Responsive adjustments */
         @media only screen and (max-width: 768px) {
           .wallet-modal-container {
             max-width: 95vw;
@@ -1086,405 +1364,17 @@ function WalletModal(props) {
             font-size: 14px;
             padding: 8px 15px;
           }
-          .conversions-container {
-            flex-direction: column; /* Stack QR and inputs on small screens */
-            align-items: center;
-          }
-          .conversions {
-            flex-direction: column; /* Already column, ensure consistency */
-          }
-          .qr {
-            margin-bottom: 15px; /* Add space below QR code when stacked */
-          }
-          .disclaimer-text {
-            max-width: 100%;
-          }
-          .rate {
-            width: 90%;
-            font-size: 14px;
-          }
-          .rate .coin {
-            left: -20px;
-            height: 60px;
-            width: auto;
-          }
-        }
-
-        /* Withdraw content specific styles */
-        .crypto-withdraw-content-wrapper {
-            width: 100%;
-            height: fit-content;
-            display: flex;
+          .deposit-qr-and-info {
             flex-direction: column;
-        }
-        .modal-section-header { /* Common style for headers in modal sections */
-            display: flex; width: 100%; color: #ADA3EF;
-            font-family: 'Geogrotesque Wide', sans-serif; font-size: 13px; font-weight: 600;
-            gap: 8px; align-items: center;
-        }
-        .modal-section-header .white { color: #FFF; }
-        .withdraw-dropdowns {
-            display: flex; gap: 12px;
-        }
-        .dropdown-wrapper {
-            flex: 1; height: 45px; border-radius: 5px 5px 0 0; background: rgba(82, 72, 155, 0.41);
-            color: #ADA3EF; font-family: 'Geogrotesque Wide', sans-serif; font-size: 14px; font-weight: 600;
-            display: flex; align-items: center; gap: 8px; cursor: pointer; position: relative; padding: 0 12px;
-        }
-        .dropdown-wrapper img.arrow { margin-left: auto; transition: transform 0.2s; }
-        .dropdown-wrapper.active img.arrow { transform: rotate(180deg); }
-        .dropdown-wrapper .dropdown-container.modal-dropdown-options {
-            position: absolute; z-index: 100; display: none; top: 45px; left: 0; width: 100%;
-            border-radius: 0px 0px 5px 5px; overflow: hidden; background: #3A336D; /* Darker bg for options */
-            max-height: 200px; overflow-y: auto; 
-        }
-        .dropdown-wrapper.active .dropdown-container.modal-dropdown-options { display: flex; flex-direction: column; }
-        .dropdown-container .option {
-            background: #473E83; height: 40px; line-height: 40px; padding: 0 16px;
-            display: flex; align-items: center; gap: 8px; color: #FFF; /* White text for options */
-            border-bottom: 1px solid #3A336D; /* Separator */
-        }
-        .dropdown-container .option:hover { background: #524893; }
-        .dropdown-container .option:last-child { border-bottom: none; }
-        .dropdown-container .option img { border-radius: 3px; /* if crypto icons need it */ }
-
-        .modal-inputs-flex-column .input { flex-basis: 100%; } /* For address input to take full width */
-        .withdraw-address-input input.thin {
-             text-align: left; padding-left: 10px; /* Align placeholder/text left */
-        }
-        .input.withdraw-address-input {
-            border: 1px dashed #6258AB; background: #383165;
-        }
-        .withdraw-conversions-container { margin: 20px 0; }
-        .withdraw-rate-box { /* Similar to deposit .rate but can be adjusted */
-            width: 270px; height: 45px; margin: 0 auto 20px auto; /* Centered */
-             /* ... other .rate styles if shared ... */
-        }
-        .withdraw-conversions .input { max-width: 180px; }
-        .submit-withdraw-button {
-            width: 200px; height: 40px; margin: 20px auto; display: block; /* Centered */
-            font-size: 14px;
-        }
-        .submit-withdraw-button:disabled { 
-            background: #555; border: 1px solid #444; color: #888; cursor: not-allowed; 
-            box-shadow: unset;
-        }
-        .disclaimer.withdraw-disclaimer {
-            border-radius: 8px; background: rgba(252, 163, 30, 0.12);
-            padding: 12px 18px; margin-top: 15px; margin-bottom: 20px;
-            text-align: center; font-size: 13px;
-        }
-        .disclaimer.withdraw-disclaimer .white { font-weight: bold; color: #FFF; }
-        .disclaimer.withdraw-disclaimer img { vertical-align: middle; margin: 0 2px; }
-
-        .past-withdrawals-section { margin-top: 30px; }
-        .section-title { color: #FFF; font-size: 16px; font-weight: 600; text-align: center; margin-bottom: 5px; }
-        .no-transactions-text { text-align: center; color: #ADA3EF; margin-top: 15px; }
-        .transactions-list { 
-            display: flex; flex-direction: column; gap: 10px; 
-            max-height: 300px; overflow-y: auto; padding-right: 5px; /* For scrollbar */
-        }
-        .modal-section-header .type { color: #FFF; font-size: 18px; }
-        .input-label { color: #ADA3EF; font-size: 12px; font-weight: 600; margin-bottom: 6px; display: block; }
-        .input-label.text-center { text-align: center; }
-        .text-center { text-align: center; }
-        .small-text { font-size: 11px; opacity: 0.8; }
-        .bold-text { font-weight: bold; }
-        .red-text { color: #FC4747; }
-        .deposit-address-display { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #272248; border: 1px solid #423B78; border-radius: 3px; }
-        .address-text { 
-            color: #FFF; 
-            font-weight: 400; 
-            word-break: break-all; 
-            margin-right: 10px;
-            display: flex;
-            flex-wrap: nowrap;
-            width: 100%;
-            overflow: hidden;
-        }
-        
-        .address-highlight {
-            color: #FFC107;
-            font-weight: 700;
-            text-shadow: 0 0 1px rgba(255, 193, 7, 0.2);
-            letter-spacing: 0.5px;
-        }
-
-        .deposit-qr-and-info {
-            display: flex;
-            align-items: stretch;
-            gap: 25px;
-            margin-top: 20px;
-            background: linear-gradient(140deg, #322F5F 0%, #2C2952 100%);
-            border-radius: 12px;
-            padding: 18px;
-            border: 1px solid #423B78;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        .qr-code-container {
-            background: white;
-            padding: 8px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            display: flex;
             align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .qr-code-container::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(140deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 100%);
-            pointer-events: none;
-        }
-        
-        .qr-code-container .qr {
-            border: none;
-            border-radius: 0;
-        }
-        
-        .deposit-instructions-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 14px;
-            flex: 1;
-        }
-        
-        .deposit-instruction-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            animation: fadeIn 0.5s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .deposit-instruction-item:nth-child(1) { animation-delay: 0.1s; }
-        .deposit-instruction-item:nth-child(2) { animation-delay: 0.2s; }
-        .deposit-instruction-item:nth-child(3) { animation-delay: 0.3s; }
-        
-        .instruction-icon {
-            width: 24px;
-            height: 24px;
-            min-width: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(173, 163, 239, 0.1);
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.1);
-        }
-        
-        .instruction-icon svg {
-            width: 14px;
-            height: 14px;
-        }
-        
-        .deposit-instruction-item p {
-            color: #ADA3EF;
-            font-size: 14px;
-            line-height: 1.5;
-            margin: 0;
-        }
-        
-        .deposit-instruction-item .gold {
-            color: #FFC107;
-            font-weight: 600;
-        }
-
-        .deposit-warning-box { background: rgba(252, 71, 71, 0.1); border: 1px solid rgba(252, 71, 71, 0.3); padding: 15px; border-radius: 5px; margin-top: 15px; }
-        .deposit-warning-box .disclaimer-text .gold { color: #FFC107; }
-        .dropdown-wrapper { background: #383165; /* ... other styles */ }
-        .dropdown-wrapper.active .dropdown-container.modal-dropdown-options { border: 1px solid #4B4887; /* ... */ }
-
-        /* Styles for Dropdowns (inspired by withdraw, ensure consistency) */
-        .input-label {
-            color: #ADA3EF; font-size: 12px; font-weight: 600; margin-bottom: 6px; display: block;
-        }
-        .dropdown-wrapper {
-            flex: 1; /* For use in flex containers if needed */
-            height: 45px;
-            border-radius: 5px; /* Rounded corners for the whole selector */
-            background: #383165; /* Match withdraw dropdown bg */
-            color: #ADA3EF;
-            font-family: 'Geogrotesque Wide', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: space-between; /* Pushes arrow to the right */
-            gap: 8px;
-            cursor: pointer;
-            position: relative;
-            padding: 0 12px;
-            border: 1px solid #4B4887; /* Consistent border */
-        }
-        .selected-currency-display {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            overflow: hidden; /* Prevent text overflow */
-            white-space: nowrap;
-        }
-        .currency-icon {
-            width: 18px; height: 18px; /* Explicit size */
-            object-fit: contain;
-        }
-        .currency-symbol-text.white.bold { color: #FFF; font-weight: 700; }
-        .currency-network-text {
-            font-size: 0.85em;
-            color: #9489DB; /* Muted network color */
-            margin-left: 4px;
-        }
-        .placeholder-text { color: #ADA3EF; }
-
-        .dropdown-wrapper img.arrow {
-            margin-left: auto; /* Keeps arrow to the far right if selected display shrinks */
-            transition: transform 0.2s;
-        }
-        .dropdown-wrapper.active img.arrow { transform: rotate(180deg); }
-
-        .dropdown-container.modal-dropdown-options {
-            position: absolute;
-            z-index: 100;
-            display: none;
-            top: calc(100% + 2px); /* Position below the wrapper */
-            left: 0;
-            width: 100%;
-            border-radius: 0px 0px 5px 5px;
-            overflow: hidden;
-            background: #3A336D; /* Darker bg for options */
-            border: 1px solid #4B4887;
-            border-top: none; /* Avoid double border with wrapper */
-            max-height: 200px; 
-            overflow-y: auto;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        .dropdown-wrapper.active .dropdown-container.modal-dropdown-options { display: flex; flex-direction: column; }
-        
-        .dropdown-container .option {
-            background: #473E83; /* Option background */
-            height: 40px;
-            padding: 0 12px; /* Consistent padding */
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #FFF; 
-            border-bottom: 1px solid #3A336D; 
-            white-space: nowrap;
-            font-size: 13px; /* Slightly smaller for options list */
-        }
-        .dropdown-container .option:hover { background: #524893; }
-        .dropdown-container .option:last-child { border-bottom: none; }
-        .dropdown-container .option .currency-name-text.muted {
-            color: #B0AACF; /* Lighter than symbol, for name */
-            font-size: 0.9em;
-            margin-left: 4px;
-        }
-        .dropdown-container .option .currency-network-text-option.muted {
-             color: #9489DB; font-size: 0.85em; margin-left: auto; /* Push to right */
-        }
-
-        /* Withdraw section styles */
-        .withdraw-dropdowns {
-            display: flex;
-            gap: 12px;
-        }
-
-        .withdraw-converter {
-            display: flex;
-            flex-direction: column;
-            margin: 20px 0;
-            gap: 20px;
-        }
-
-        .withdraw-rate-info {
-            display: flex;
-            justify-content: center;
-        }
-        
-        .withdraw-amounts {
-            display: flex;
-            flex-direction: column;
             gap: 15px;
-        }
-        
-        .input.usd-input {
-            background: #383165;
-            height: 55px;
-            border-radius: 8px;
-            border: 1px solid #6258AB;
-            padding: 0 15px;
-            font-size: 14px;
-        }
-        
-        .input.usd-input p {
-            color: #ADA3EF;
-            font-weight: 600;
-        }
-        
-        .input.usd-input input {
-            color: white;
-            font-size: 16px;
-            font-weight: 700;
-            text-align: right;
-        }
-        
-        .withdraw-other-amounts {
-            display: flex;
-            gap: 10px;
-            justify-content: space-between;
-        }
-        
-        .input.robux-input,
-        .input.crypto-input {
-            flex: 1;
-            height: 45px;
-            background: #322F5F;
-            border-radius: 6px;
-        }
-        
-        .input.robux-input input,
-        .input.crypto-input input {
-            text-align: right;
-            font-size: 14px;
-        }
-
-        .white-placeholder::placeholder {
-          color: rgba(255, 255, 255, 0.7);
-          opacity: 1;
-        }
-        
-        /* For Firefox */
-        .white-placeholder::-moz-placeholder {
-          color: rgba(255, 255, 255, 0.7);
-          opacity: 1;
-        }
-        
-        /* For Internet Explorer */
-        .white-placeholder:-ms-input-placeholder {
-          color: rgba(255, 255, 255, 0.7);
-        }
-        
-        /* For Edge */
-        .white-placeholder::-ms-input-placeholder {
-          color: rgba(255, 255, 255, 0.7);
-        }
-        
-        /* For WebKit browsers like Chrome and Safari */
-        .white-placeholder::-webkit-input-placeholder {
-          color: rgba(255, 255, 255, 0.7);
+          }
+          .qr-code-container {
+            margin-bottom: 0;
+          }
+          .deposit-warning-box .disclaimer-text {
+            font-size: 12px;
+          }
         }
       `}</style>
     </>

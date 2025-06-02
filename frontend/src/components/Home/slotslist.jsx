@@ -15,13 +15,13 @@ function SlotsList() {
   async function fetchSlots() {
     try {
       let res = await api('/slots?limit=25', 'GET', null, false)
-      if (!Array.isArray(res.data)) return
+      if (!Array.isArray(res.data)) return null
 
       setSlots(res.data)
       return res
     } catch (e) {
       console.error(e)
-      return []
+      return null
     }
   }
 
@@ -32,8 +32,17 @@ function SlotsList() {
     })
   }
 
+  // Don't render if loading, error, or no games available
+  const shouldRender = () => {
+    if (slotsInfo.loading) return false
+    if (!slotsInfo()) return false
+    if (!slotsInfo()?.total || slotsInfo()?.total === 0) return false
+    if (!slots() || slots().length === 0) return false
+    return true
+  }
+
   return (
-    <>
+    <Show when={shouldRender()}>
       <div class='games-container'>
         <div class='games'>
           <div class='games-header'>
@@ -42,9 +51,7 @@ function SlotsList() {
                 
                 <div class='header-text'>
                   <h2 class='title'>Slots</h2>
-                  <Show when={!slotsInfo.loading} fallback={<span class='count'>Loading...</span>}>
-                    <span class='count'>{slotsInfo()?.total || 0} games available</span>
-                  </Show>
+                  <span class='count'>{slotsInfo()?.total || 0} games available</span>
                 </div>
               </div>
 
@@ -70,32 +77,30 @@ function SlotsList() {
           </div>
 
           <div class='slots' ref={slotsRef}>
-            <Show when={!slotsInfo.loading} fallback={<Loader small={true}/>}>
-              <For each={slots()}>{(slot, index) =>
-                <div className='slot'>
-                  <BlurImage 
-                    src={`${slot.img}`}
-                    blurhash={slot.blurhash}
-                    style={{ 'border-radius': '6px' }}
-                  />
-                  <A href={`/slots/${slot.slug}`} class='gamemode-link'/>
-                </div>
-              }</For>
-              
-              {/* View All card at the end */}
-              <div className='slot view-all-slot'>
-                <div class='view-all-content'>
-                  <div class='view-all-icon'>
-                    <AiOutlineEye size={24} />
-                  </div>
-                  <div class='view-all-text'>
-                    <span class='view-all-title'>View All</span>
-                    <span class='view-all-subtitle'>{slotsInfo()?.total || 0} games</span>
-                  </div>
-                </div>
-                <A href='/slots' class='gamemode-link'/>
+            <For each={slots()}>{(slot, index) =>
+              <div className='slot'>
+                <BlurImage 
+                  src={`${slot.img}`}
+                  blurhash={slot.blurhash}
+                  style={{ 'border-radius': '6px' }}
+                />
+                <A href={`/slots/${slot.slug}`} class='gamemode-link'/>
               </div>
-            </Show>
+            }</For>
+            
+            {/* View All card at the end */}
+            <div className='slot view-all-slot'>
+              <div class='view-all-content'>
+                <div class='view-all-icon'>
+                  <AiOutlineEye size={24} />
+                </div>
+                <div class='view-all-text'>
+                  <span class='view-all-title'>View All</span>
+                  <span class='view-all-subtitle'>{slotsInfo()?.total || 0} games</span>
+                </div>
+              </div>
+              <A href='/slots' class='gamemode-link'/>
+            </div>
           </div>
         </div>
       </div>
@@ -468,7 +473,7 @@ function SlotsList() {
           }
         }
       `}</style>
-    </>
+    </Show>
   );
 }
 

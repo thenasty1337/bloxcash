@@ -183,6 +183,7 @@ function Bets(props) {
                     width: 100%;
                     border-radius: 12px;
                     overflow: hidden;
+                    margin-bottom: 10px;
                 }
 
                 .live-feed-header {
@@ -460,7 +461,7 @@ function Bets(props) {
                 }
 
                 .amount-text {
-                    color: #3b82f6;
+                    color: rgba(255,255,255,0.85);
                     font-size: 12px;
                     font-family: 'Geogrotesque Wide', sans-serif;
                     font-weight: 600;
@@ -493,7 +494,7 @@ function Bets(props) {
                 }
 
                 .payout-text.loss {
-                    color: #06b6d4;
+                    color: rgba(255,255,255,0.85);
                     font-size: 12px;
                     font-weight: 600;
                 }
