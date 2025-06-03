@@ -5,12 +5,14 @@ import { decode } from 'blurhash';
  * BlurImage component that shows a blurhash placeholder while loading the actual image
  * @param {Object} props
  * @param {string} props.src - Image source URL
+ * @param {string} props.isHouse - House game
  * @param {string} props.blurhash - BlurHash string representation
  * @param {string} props.alt - Alt text for the image
  * @param {number} props.width - Width of the image
  * @param {number} props.height - Height of the image
  * @param {string} props.class - CSS class for the image container
  * @param {Object} props.style - Additional inline styles
+ * @param {Function} props.onClick - Click handler
  * @returns {JSX.Element}
  */
 function BlurImage(props) {
@@ -50,6 +52,7 @@ function BlurImage(props) {
       const img = new Image();
       img.src = props.src;
       img.onload = () => setIsLoaded(true);
+      img.onerror = () => console.error('Failed to load image:', props.src);
     }
   });
   
@@ -64,6 +67,7 @@ function BlurImage(props) {
         'border-radius': 'inherit',
         ...(props.style || {})
       }}
+      onClick={props.onClick}
     >
       {/* Blurhash placeholder */}
       <div 
@@ -98,6 +102,8 @@ function BlurImage(props) {
           'background-image': `url(${props.src})`,
           'background-size': 'cover',
           'background-position': 'center',
+          'border': props.isHouse ? '1px solid #fdfdfd3b' : 'none',
+          'border-radius': props.isHouse ? '12px' : 'inherit'
         }}
       />
     </div>

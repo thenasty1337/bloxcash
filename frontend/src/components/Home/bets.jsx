@@ -183,7 +183,6 @@ function Bets(props) {
                     width: 100%;
                     border-radius: 12px;
                     overflow: hidden;
-                    margin-bottom: 10px;
                 }
 
                 .live-feed-header {

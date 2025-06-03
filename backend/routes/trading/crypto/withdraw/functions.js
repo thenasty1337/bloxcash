@@ -12,7 +12,9 @@ const withdrawalCoins = {
     'BNB': {},
     'USDC': {},
     'USDT': {},
-    'DOGE': {}
+    'DOGE': {},
+    'XRP': {},
+    'TRX': {}
 };
 
 const mexc = axios.create({
@@ -78,6 +80,14 @@ const chainsConfig = {
     'Dogecoin(DOGE)': {
         validator: 'doge',
         explorer: 'https://blockchair.com/dogecoin/transaction/{id}'
+    },
+    'Ripple(XRP)': {
+        validator: 'xrp',
+        explorer: 'https://xrpscan.com/tx/{id}'
+    },
+    'Tron(TRX)': {
+        validator: 'trx',
+        explorer: 'https://tronscan.org/#/transaction/{id}'
     }
 }
 

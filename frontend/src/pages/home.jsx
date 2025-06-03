@@ -126,8 +126,8 @@ function Home(props) {
                                     crypto: {
                                         name: selectedCrypto.name,
                                         id: selectedCrypto.symbol,
-                                        apiId: selectedCrypto.symbol === 'USDT' ? 'USDT.ERC20' : 
-                                               selectedCrypto.symbol === 'BNB' ? 'BNB.BSC' : 
+                                                    apiId: selectedCrypto.symbol === 'USDT' ? 'USDT' :
+              selectedCrypto.symbol === 'BNB' ? 'BNB' : 
                                                selectedCrypto.symbol,
                                         img: `/cryptos/${selectedCrypto.symbol}.png`
                                     }

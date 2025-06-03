@@ -17,18 +17,6 @@ const cryptoData = {
             coingeckoId: 'bitcoin',
             confirmations: 2
         },
-        'ETH': {
-            id: 'ETH',
-            name: 'Ethereum',
-            coingeckoId: 'ethereum',
-            confirmations: 3
-        },
-        'LTC': {
-            id: 'LTC',
-            name: 'Litecoin',
-            coingeckoId: 'litecoin',
-            confirmations: 3
-        },
         'USDT.ERC20': {
             id: 'USDT.ERC20',
             name: 'USDT (ERC20)',
@@ -41,16 +29,28 @@ const cryptoData = {
             coingeckoId: 'usd-coin',
             confirmations: 3
         },
-        'BNB.BSC': {
-            id: 'BNB.BSC',
-            name: 'BNB (BSC)',
-            coingeckoId: 'binancecoin',
+        'ETH': {
+            id: 'ETH',
+            name: 'Ethereum',
+            coingeckoId: 'ethereum',
             confirmations: 3
         },
-        'BUSD.BEP20': {
-            id: 'BUSD.BEP20',
-            name: 'BUSD (BEP20)',
-            coingeckoId: 'binance-usd',
+        'XRP': {
+            id: 'XRP',
+            name: 'Ripple',
+            coingeckoId: 'ripple',
+            confirmations: 10
+        },
+        'TRX': {
+            id: 'TRX',
+            name: 'TRON',
+            coingeckoId: 'tron',
+            confirmations: 10
+        },
+        'LTC': {
+            id: 'LTC',
+            name: 'Litecoin',
+            coingeckoId: 'litecoin',
             confirmations: 3
         },
         'DOGE': {
@@ -58,11 +58,13 @@ const cryptoData = {
             name: 'Dogecoin',
             coingeckoId: 'dogecoin',
             confirmations: 3
-        }
-    },
-    robuxRate: {
-        robux: 1000,
-        usd: 3.5
+        },
+        'BNB.BSC': {
+            id: 'BNB.BSC',
+            name: 'BNB (BSC)',
+            coingeckoId: 'binancecoin',
+            confirmations: 3
+        },
     }
 }
 
@@ -71,7 +73,9 @@ async function cacheCryptos() {
     const [cryptos] = await sql.query("SELECT id, name, coingeckoId, price FROM cryptos");
 
     for (const crypto of cryptos) {
-        cryptoData.currencies[crypto.id].price = crypto.price;
+        if (cryptoData.currencies[crypto.id]) {
+            cryptoData.currencies[crypto.id].price = crypto.price;
+        }
     }
 
     if (Object.values(cryptoData.currencies).some(e => !e.price)) {

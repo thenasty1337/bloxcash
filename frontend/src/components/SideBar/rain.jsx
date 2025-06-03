@@ -112,7 +112,6 @@ function SidebarRain(props) {
                 
                 padding: 12px 20px;
 
-                background: linear-gradient(277.39deg,rgba(19,17,41,1) -69.8%,rgba(37,31,78,1) 144.89%);
 
                 color: #FFF;
                 font-family: Geogrotesque Wide, sans-serif;

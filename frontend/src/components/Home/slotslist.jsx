@@ -266,15 +266,12 @@ function SlotsList() {
 
         .slots {
           display: flex;
-          gap: 1rem;
-          padding: 1rem;
-          border-radius: 12px;
-          border: 1px solid rgba(78, 205, 196, 0.1);
-          background: rgba(26, 35, 50, 0.4);
-          backdrop-filter: blur(20px);
-          min-height: 195px;
-          overflow-x: auto;
-          scrollbar-width: none;
+    gap: 1rem;
+    padding: 10px 0 0 0;
+    border-radius: 12px;
+    min-height: 195px;
+    overflow-x: auto;
+    scrollbar-width: none;
         }
         
         .slots::-webkit-scrollbar {

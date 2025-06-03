@@ -588,7 +588,7 @@ function WalletModal(props) {
                                      }}>
                                     <p style={{"font-size": "13px"}}>Currency: </p>
                                     <Show when={withdrawSymbol()} fallback={<p class='white bold'>Select</p>}>
-                                      <img src={`/cryptos/${withdrawSymbol().toUpperCase()}.png`} height='18' alt={withdrawSymbol()}/>
+                                      <img src={`/assets/cryptos/branded/${withdrawSymbol().toUpperCase()}.svg`} height='18' alt={withdrawSymbol()}/>
                                       <p class='white bold'>{withdrawSymbol()}</p>
                                     </Show>
                                     <img class='arrow' src='/assets/icons/dropdownarrow.svg' alt=''/>
@@ -601,7 +601,7 @@ function WalletModal(props) {
                                         <For each={withdrawCryptoTypes()}>{(crypto) =>
                                             <div class='option' onClick={() => { changeWithdrawCrypto(crypto?.id); setWithdrawCurrencyDropdown(false); }}>
                                                 <div class='option-left'>
-                                                    <img src={`/cryptos/${crypto.id.toUpperCase()}.png`} height='20' alt={crypto.id}/>
+                                                    <img src={`/assets/cryptos/branded/${crypto.id.toUpperCase()}.svg`} height='20' alt={crypto.id}/>
                                                     <div class='option-text'>
                                                         <span class='currency-name'>{crypto?.id}</span>
                                                         <span class='currency-full-name'>{crypto?.name || crypto?.id}</span>
