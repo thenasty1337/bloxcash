@@ -26,8 +26,9 @@ function Slot(props) {
   const [errorToast, setErrorToast] = createSignal(null)
   const [isFullWidth, setIsFullWidth] = createSignal(false)
   const [isLiked, setIsLiked] = createSignal(false)
-  const [showGameSelection, setShowGameSelection] = createSignal(true)
+  const [showGameSelection, setShowGameSelection] = createSignal(false)
   const [isGamePreloaded, setIsGamePreloaded] = createSignal(false)
+  const [playMode, setPlayMode] = createSignal("real") // "real" or "demo"
   
   // Hide toast after 5 seconds
   createEffect(() => {
@@ -134,110 +135,80 @@ function Slot(props) {
     }
   }
 
-  // We've removed the auto-launch effect to allow user to choose play mode
-  // The game will only launch when user clicks on one of the play options
-  
-  // New effect to preload real game in background
+  // Auto-launch game when slot is loaded and user is authenticated
   createEffect(async () => {
-    if (slot() && user() && !isGamePreloaded() && !loading()) {
-      try {
-        setIsGamePreloaded(true);
-        setLoading(true);
-        
-        // Silently preload the real game in background
-        const fullSlug = location.pathname.replace(/^\/slots\//, '');
-        const gameSession = await authedAPI(`/slots/play/${fullSlug}`, 'POST', null, false);
-        
-        if (gameSession && gameSession.url) {
-          setURL(gameSession.url);
-          setSessionId(gameSession.sessionId);
-          
-          // Check if we got a demo version as fallback
-          if (gameSession.isDemo) {
-            setIsDemoMode(true);
-            if (gameSession.fallbackReason) {
-              setFallbackMessage(gameSession.fallbackReason);
-            }
-          } else {
-            setIsDemoMode(false);
-          }
-        }
-        
-        setLoading(false);
-      } catch (err) {
-        console.error("Failed to preload game:", err);
-        setLoading(false);
-        // We don't show error toasts for preloading failures
-        // Just set the game as not preloaded so we can try again on user action
-        setIsGamePreloaded(false);
-      }
+    if (slot() && user() && !url() && !loading()) {
+      await launchGame(playMode() === "demo");
     }
   });
   
   async function launchGame(isDemo = false) {
     if (loading()) return;
     
-    // If demo was requested OR if real game failed to preload
-    if (isDemo || !isGamePreloaded()) {
-      try {
-        setLoading(true);
-        
-        // Extract the slug from the full pathname
-        const fullPath = location.pathname;
-        const fullSlug = fullPath.replace(/^\/slots\//, '');
-        
-        // Add demo parameter if demo mode was requested
-        const demoParam = isDemo ? '?demo=true' : '';
-        
-        // Make API request for game session
-        const gameSession = await authedAPI(`/slots/play/${fullSlug}${demoParam}`, 'POST', null, false);
-        
-        if (!gameSession || !gameSession.url) {
-          console.error('Failed to get game URL');
-          setLoading(false);
-          showError("Failed to get game URL");
-          return;
-        }
-        
-        setURL(gameSession.url);
-        setSessionId(gameSession.sessionId);
-        
-        // Check if we got a demo version
-        if (gameSession.isDemo) {
-          setIsDemoMode(true);
-          
-          // Check if this was a fallback
-          if (gameSession.fallbackReason && !isDemo) {
-            setFallbackMessage(gameSession.fallbackReason);
-          } else {
-            setFallbackMessage(isDemo ? "You are playing in demo mode. No real money will be used." : "");
-          }
-        } else {
-          setIsDemoMode(false);
-          setFallbackMessage("");
-        }
-        
-        // Hide the selection UI after loading is complete
-        setShowGameSelection(false);
+    try {
+      setLoading(true);
+      
+      // Extract the slug from the full pathname
+      const fullPath = location.pathname;
+      const fullSlug = fullPath.replace(/^\/slots\//, '');
+      
+      // Add demo parameter if demo mode was requested
+      const demoParam = isDemo ? '?demo=true' : '';
+      
+      // Make API request for game session
+      const gameSession = await authedAPI(`/slots/play/${fullSlug}${demoParam}`, 'POST', null, false);
+      
+      if (!gameSession || !gameSession.url) {
+        console.error('Failed to get game URL');
         setLoading(false);
-      } catch (e) {
-        console.error(e);
-        setLoading(false);
-        
-        // Handle specific error types
-        if (e?.message?.includes("UNAUTHENTICATED") || e?.error === "UNAUTHENTICATED") {
-          showError("Please log in again to play this game");
-        } else if (e?.message?.includes("INSUFFICIENT_FUNDS") || e?.error === "INSUFFICIENT_FUNDS") {
-          showError("Insufficient funds to play this game");
-        } else if (e?.message?.includes("GAME_UNAVAILABLE") || e?.error === "GAME_UNAVAILABLE") {
-          showError("This game is currently unavailable");
-        } else {
-          showError(`Failed to launch game: ${e.message || "Unknown error"}`);
-        }
+        showError("Failed to get game URL");
+        return;
       }
-    } else {
-      // For real play when game is already preloaded, just close the selection UI
-      setShowGameSelection(false);
+      
+      setURL(gameSession.url);
+      setSessionId(gameSession.sessionId);
+      
+      // Check if we got a demo version
+      if (gameSession.isDemo) {
+        setIsDemoMode(true);
+        
+        // Check if this was a fallback
+        if (gameSession.fallbackReason && !isDemo) {
+          setFallbackMessage(gameSession.fallbackReason);
+        } else {
+          setFallbackMessage(isDemo ? "You are playing in demo mode. No real money will be used." : "");
+        }
+      } else {
+        setIsDemoMode(false);
+        setFallbackMessage("");
+      }
+      
+      setLoading(false);
+    } catch (e) {
+      console.error(e);
+      setLoading(false);
+      
+      // Handle specific error types
+      if (e?.message?.includes("UNAUTHENTICATED") || e?.error === "UNAUTHENTICATED") {
+        showError("Please log in again to play this game");
+      } else if (e?.message?.includes("INSUFFICIENT_FUNDS") || e?.error === "INSUFFICIENT_FUNDS") {
+        showError("Insufficient funds to play this game");
+      } else if (e?.message?.includes("GAME_UNAVAILABLE") || e?.error === "GAME_UNAVAILABLE") {
+        showError("This game is currently unavailable");
+      } else {
+        showError(`Failed to launch game: ${e.message || "Unknown error"}`);
+      }
+    }
+  }
+  
+  // Function to handle mode switching
+  function switchPlayMode(newMode) {
+    if (newMode !== playMode()) {
+      setPlayMode(newMode);
+      setURL(null);
+      setSessionId(null);
+      setFallbackMessage("");
+      launchGame(newMode === "demo");
     }
   }
 
@@ -274,96 +245,13 @@ function Slot(props) {
               <div class="game-container">
                 <iframe src={url()} className='game' allow="fullscreen; autoplay" ref={slotRef}/>
                 
-                {/* Game selection overlay - only shown while showGameSelection is true */}
-                <Show when={showGameSelection()}>
-                  <div class="game-selection-overlay">
-                    <div class="game-background-container">
-                      <Show when={slot() && slot().imgPortrait} fallback={
-                        <div class="fallback-background"></div>
-                      }>
-                        <img 
-                          src={slot().imgPortrait} 
-                          alt={slot().name}
-                          class="game-background-image" 
-                          onError={(e) => {
-                            console.error("Image failed to load:", e);
-                            e.target.style.display = "none";
-                            e.target.parentNode.classList.add("fallback-background");
-                          }}
-                        />
-                      </Show>
-                      <div class="game-overlay"></div>
-                    </div>
-                    
-                    <Show when={!loading()} fallback={<Loader />}>
-                      <div class="game-selection-compact">
-                        <h2>Ready to Play?</h2>
-                        <div class="play-options">
-                          <button class="play-btn-fancy" onClick={() => launchGame(false)}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                              <circle cx="12" cy="12" r="10" />
-                              <line x1="12" y1="6" x2="12" y2="18" />
-                              <path d="M16 8H10a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H8" />
-                            </svg>
-                            REAL PLAY
-                          </button>
-                          <span class="or-divider">OR</span>
-                          <button class="demo-btn-fancy" onClick={() => launchGame(true)}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                              <circle cx="12" cy="12" r="10"></circle>
-                              <polygon points="10 8 16 12 10 16 10 8"></polygon>
-                            </svg>
-                            TRY DEMO
-                          </button>
-                        </div>
-                      </div>
-                    </Show>
-                  </div>
-                </Show>
+
               </div>
             </>
           ) : (
-            <div class='game game-with-background'>
-              {/* Direct image approach */}
-              <div class="game-background-container">
-                <Show when={slot() && slot().imgPortrait} fallback={
-                  <div class="fallback-background"></div>
-                }>
-                  <img 
-                    src={slot().imgPortrait} 
-                    alt={slot().name}
-                    class="game-background-image" 
-                    onError={(e) => {
-                      console.error("Image failed to load:", e);
-                      e.target.style.display = "none";
-                      e.target.parentNode.classList.add("fallback-background");
-                    }}
-                  />
-                </Show>
-                <div class="game-overlay"></div>
-              </div>
+            <div class='game'>
               <Show when={!loading()} fallback={<Loader />}>
-                <div class="game-selection-compact">
-                  <h2>Ready to Play?</h2>
-                  <div class="play-options">
-                    <button class="play-btn-fancy" onClick={() => launchGame(false)}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="12" y1="6" x2="12" y2="18" />
-                        <path d="M16 8H10a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H8" />
-                      </svg>
-                      REAL PLAY
-                    </button>
-                    <span class="or-divider">OR</span>
-                    <button class="demo-btn-fancy" onClick={() => launchGame(true)}>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polygon points="10 8 16 12 10 16 10 8"></polygon>
-                      </svg>
-                      TRY DEMO
-                    </button>
-                  </div>
-                </div>
+                <p>Loading game...</p>
               </Show>
             </div>
           )
@@ -374,20 +262,75 @@ function Slot(props) {
         )}
 
         <div class='slot-info'>
-          <div class='info-left'>
-            <GameInfo type='RTP' rtp={slot()?.rtp || 95} margin='unset'/>
-
-            <div className='title-container'>
-              <Show when={!slot.loading} fallback={<h1>Loading...</h1>}>
-                <h1>{slot()?.name}</h1>
-                <p>{slot()?.providerName || slot()?.provider}</p>
+          <div class='game-details'>
+            <div class='game-image'>
+              <Show when={slot() && slot().img} fallback={
+                <div class="image-placeholder">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21,15 16,10 5,21"/>
+                  </svg>
+                </div>
+              }>
+                <img src={slot().img} alt={slot().name} />
               </Show>
             </div>
             
-            <div class='tags-container'>
-              <Show when={!slot.loading}>
-                {slot()?.isNew && <span className="new-tag">NEW</span>}
-                {slot()?.hasJackpot && <span className="jackpot-tag">JACKPOT</span>}
+            <div class='game-meta'>
+              <div className='title-info'>
+                <Show when={!slot.loading} fallback={<h1>Loading...</h1>}>
+                  <h1>{slot()?.name}</h1>
+                  <div class='provider-rtp'>
+                    <span class='provider'>{slot()?.providerName || slot()?.provider}</span>
+                    
+                  </div>
+                </Show>
+              </div>
+              
+              <div class='tags-container'>
+                <Show when={!slot.loading}>
+                  {slot()?.isNew && <span className="new-tag">NEW</span>}
+                  {slot()?.hasJackpot && <span className="jackpot-tag">JACKPOT</span>}
+                </Show>
+              </div>
+            </div>
+          </div>
+
+          <div class='middle-section'>
+            <div class='play-mode-switch'>
+              <div class='switch-container'>
+                <button 
+                  className={`mode-btn ${playMode() === 'real' ? 'active' : ''}`}
+                  onClick={() => switchPlayMode('real')}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="6" x2="12" y2="18" />
+                    <path d="M16 8H10a2 2 0 0 0 0 4h4a2 2 0 0 1 0 4H8" />
+                  </svg>
+                  REAL
+                </button>
+                <button 
+                  className={`mode-btn ${playMode() === 'demo' ? 'active' : ''}`}
+                  onClick={() => switchPlayMode('demo')}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                  </svg>
+                  DEMO
+                </button>
+              </div>
+              <Show when={isDemoMode()}>
+                <div class='demo-indicator'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                  Demo Mode Active
+                </div>
               </Show>
             </div>
           </div>
@@ -397,21 +340,21 @@ function Slot(props) {
           </div>
 
           <div class='controls'>
-            <button className={`favorite-btn ${isLiked() ? 'liked' : ''}`} onClick={toggleLike}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill={isLiked() ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <button className={`control-btn favorite-btn ${isLiked() ? 'liked' : ''}`} onClick={toggleLike} title="Add to Favorites">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill={isLiked() ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
               </svg>
             </button>
-            <button className={`fullwidth-btn ${isFullWidth() ? 'active' : ''}`} onClick={toggleFullWidth}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <button className={`control-btn fullwidth-btn ${isFullWidth() ? 'active' : ''}`} onClick={toggleFullWidth} title="Toggle Full Width">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                 <line x1="8" y1="21" x2="16" y2="21"></line>
                 <line x1="12" y1="17" x2="12" y2="21"></line>
               </svg>
             </button>
             {url() && (
-              <button className='fullscreen-btn' onClick={() => slotRef.requestFullscreen()}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <button className='control-btn fullscreen-btn' onClick={() => slotRef.requestFullscreen()} title="Enter Fullscreen">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
                 </svg>
               </button>
@@ -510,8 +453,8 @@ function Slot(props) {
           outline: unset;
           border: unset;
           border-radius: 15px;
-          border: 1px solid #3F3B77;
-          background-color: #29254E; /* Changed from background to background-color */
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          background-color: rgba(26, 35, 50, 0.4);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -522,6 +465,7 @@ function Slot(props) {
           transition: all 0.3s ease;
           position: relative;
           overflow: hidden;
+          backdrop-filter: blur(8px);
         }
         
         .full-width .game {
@@ -558,15 +502,17 @@ function Slot(props) {
         }
         
         .demo-btn {
-          background: #342E5F;
-          border: 1px solid #494182;
-          color: #9189D3;
+          background: rgba(45, 75, 105, 0.25);
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          color: #8aa3b8;
         }
         
         .demo-btn:hover {
-          background: #3D3770;
+          background: rgba(78, 205, 196, 0.15);
+          border-color: #4ecdc4;
+          color: #4ecdc4;
           transform: translateY(-2px);
-          box-shadow: 0 4px 10px rgba(73, 65, 130, 0.3);
+          box-shadow: 0 4px 10px rgba(78, 205, 196, 0.2);
         }
         
         .demo-btn:active {
@@ -581,7 +527,7 @@ function Slot(props) {
         }
 
         .game-selection-compact {
-          background: rgba(41, 37, 78, 0.6);
+          background: rgba(26, 35, 50, 0.6);
           backdrop-filter: blur(12px);
           padding: 28px;
           border-radius: 16px;
@@ -589,12 +535,12 @@ function Slot(props) {
           width: 90%;
           box-shadow: 
             0 10px 25px rgba(0, 0, 0, 0.4),
-            0 0 0 1px rgba(134, 111, 234, 0.2) inset,
-            0 0 30px rgba(93, 86, 177, 0.2) inset;
+            0 0 0 1px rgba(78, 205, 196, 0.2) inset,
+            0 0 30px rgba(78, 205, 196, 0.1) inset;
           position: relative;
           z-index: 3;
           text-align: center;
-          border: none;
+          border: 1px solid rgba(78, 205, 196, 0.1);
         }
         
         .game-selection-compact h2 {
@@ -659,38 +605,40 @@ function Slot(props) {
         }
         
         .demo-btn-fancy {
-          background: rgba(53, 47, 99, 0.8);
-          border: none;
-          color: #B6B0F1;
+          background: rgba(45, 75, 105, 0.25);
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          color: #8aa3b8;
           box-shadow: 
             0 8px 15px rgba(0, 0, 0, 0.3),
-            0 0 0 1px rgba(134, 111, 234, 0.4) inset,
+            0 0 0 1px rgba(78, 205, 196, 0.3) inset,
             0 -3px 0 rgba(0, 0, 0, 0.2) inset;
           letter-spacing: 0.5px;
+          backdrop-filter: blur(8px);
         }
         
         .demo-btn-fancy:hover {
-          background: rgba(63, 56, 115, 0.9);
+          background: rgba(78, 205, 196, 0.15);
+          border-color: #4ecdc4;
           transform: translateY(-3px);
           box-shadow: 
-            0 12px 20px rgba(0, 0, 0, 0.3),
-            0 0 0 1px rgba(134, 111, 234, 0.6) inset,
+            0 12px 20px rgba(78, 205, 196, 0.2),
+            0 0 0 1px rgba(78, 205, 196, 0.5) inset,
             0 -3px 0 rgba(0, 0, 0, 0.2) inset;
-          color: #CAC5FF;
+          color: #4ecdc4;
         }
         
         .demo-btn-fancy:active {
           transform: translateY(0);
           box-shadow: 
-            0 4px 10px rgba(0, 0, 0, 0.2),
-            0 0 0 1px rgba(134, 111, 234, 0.4) inset,
+            0 4px 10px rgba(78, 205, 196, 0.1),
+            0 0 0 1px rgba(78, 205, 196, 0.3) inset,
             0 2px 0 rgba(0, 0, 0, 0.1) inset;
         }
         
         .or-divider {
           font-size: 14px;
           font-weight: 700;
-          color: #6E67B8;
+          color: #8aa3b8;
           display: inline-block;
           padding: 0 5px;
         }
@@ -723,8 +671,8 @@ function Slot(props) {
         .fallback-background {
           width: 100%;
           height: 100%;
-          background-color: #252144;
-          background-image: linear-gradient(135deg, #2B2858 25%, #322F6B 25%, #322F6B 50%, #2B2858 50%, #2B2858 75%, #322F6B 75%, #322F6B 100%);
+          background-color: rgba(26, 35, 50, 1);
+          background-image: linear-gradient(135deg, rgba(45, 75, 105, 0.5) 25%, rgba(78, 205, 196, 0.1) 25%, rgba(78, 205, 196, 0.1) 50%, rgba(45, 75, 105, 0.5) 50%, rgba(45, 75, 105, 0.5) 75%, rgba(78, 205, 196, 0.1) 75%, rgba(78, 205, 196, 0.1) 100%);
           background-size: 20px 20px;
         }
         
@@ -736,9 +684,9 @@ function Slot(props) {
           height: 100%;
           background: linear-gradient(
             135deg,
-            rgba(20, 17, 45, 0.85) 0%,
-            rgba(29, 25, 64, 0.8) 50%,
-            rgba(32, 28, 71, 0.9) 100%
+            rgba(20, 30, 45, 0.85) 0%,
+            rgba(26, 35, 50, 0.8) 50%,
+            rgba(32, 42, 60, 0.9) 100%
           );
           z-index: 2;
           box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.3);
@@ -760,9 +708,9 @@ function Slot(props) {
         }
         
         .demo-play-icon {
-          background: #342E5F;
-          border: 1px solid #494182;
-          color: #9189D3;
+          background: rgba(45, 75, 105, 0.25);
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          color: #8aa3b8;
         }
         
         .option-details {
@@ -779,7 +727,7 @@ function Slot(props) {
         }
         
         .option-details p {
-          color: #9189D3;
+          color: #8aa3b8;
           font-size: 14px;
           margin: 0;
         }
@@ -800,21 +748,24 @@ function Slot(props) {
         }
         
         .error-toast {
-          background: #381C1C;
+          background: rgba(40, 25, 25, 0.9);
           border: 1px solid #F95555;
           color: #F95555;
+          backdrop-filter: blur(8px);
         }
         
         .success-toast {
-          background: #193516;
+          background: rgba(25, 53, 22, 0.9);
           border: 1px solid #59E878;
           color: #59E878;
+          backdrop-filter: blur(8px);
         }
         
         .info-toast {
-          background: #1E2A3A;
-          border: 1px solid #5DADE2;
-          color: #5DADE2;
+          background: rgba(26, 35, 50, 0.9);
+          border: 1px solid #4ecdc4;
+          color: #4ecdc4;
+          backdrop-filter: blur(8px);
         }
         
         .toast-content {
@@ -850,78 +801,135 @@ function Slot(props) {
         }
         
         .slot-info {
-          height: 70px;
           width: 100%;
-          padding: 0 16px;
-          border-radius: 8px;
-          border: 1px solid rgba(134, 111, 234, 0.15);
-          background: linear-gradient(0deg, rgba(64, 57, 118, 0.65) 0%, rgba(64, 57, 118, 0.65) 100%), radial-gradient(60% 60% at 50% 50%, rgba(147, 126, 236, 0.15) 0%, rgba(102, 83, 184, 0.15) 100%);
+          padding: 5px 10px;
+          border-radius: 12px;
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          background: rgba(26, 35, 50, 0.6);
           margin: 20px 0;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          transition: border-radius 0.3s ease;
+          transition: all 0.3s ease;
+          backdrop-filter: blur(12px);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+          position: relative;
+        }
+        
+        .slot-info:hover {
+          border-color: rgba(78, 205, 196, 0.3);
+          box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
         }
         
         .full-width .slot-info {
-          border-radius: 4px;
+          border-radius: 8px;
         }
         
-        .info-left {
+        .game-details {
           display: flex;
           align-items: center;
           gap: 16px;
+          flex: 1;
         }
-
-        .title-container {
-          color: #9189D3;
-          font-family: Geogrotesque Wide, sans-serif;
-          font-size: 14px;
-          font-weight: 600;
-          text-transform: capitalize;
-          max-width: 280px;
+        
+        .game-image {
+          width: 50px;
+          height: 50px;
+          border-radius: 8px;
+          overflow: hidden;
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          background: rgba(45, 75, 105, 0.3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .game-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        
+        .image-placeholder {
+          color: #8aa3b8;
+          opacity: 0.6;
+        }
+        
+        .game-meta {
           display: flex;
           flex-direction: column;
+          gap: 8px;
+          min-width: 0;
+          flex: 1;
         }
-
-        .title-container h1 {
+        
+        .title-info h1 {
           color: white;
+          font-family: Geogrotesque Wide, sans-serif;
           font-size: 18px;
           font-weight: 800;
           margin: 0;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          line-height: 1.2;
         }
         
-        .title-container p {
+        .provider-rtp {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-top: 4px;
+        }
+        
+        .provider {
+          color: #8aa3b8;
+          font-family: Geogrotesque Wide, sans-serif;
+          font-size: 13px;
+          font-weight: 600;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
         }
         
+        .rtp-badge {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          padding: 4px 8px;
+          background: rgba(78, 205, 196, 0.15);
+          border: 1px solid rgba(78, 205, 196, 0.3);
+          border-radius: 6px;
+          color: #4ecdc4;
+          font-family: Geogrotesque Wide, sans-serif;
+          font-size: 11px;
+          font-weight: 600;
+          white-space: nowrap;
+        }
+        
+        .rtp-badge span {
+          opacity: 0.8;
+        }
+        
+        .rtp-badge strong {
+          font-weight: 700;
+        }
+        
         .tags-container {
           display: flex;
           align-items: center;
-          gap: 8px;
-        }
-        
-        .category {
-          font-size: 12px;
-          color: #9189D3;
-          padding: 2px 8px;
-          border-radius: 4px;
-          background: rgba(145, 137, 211, 0.2);
-          white-space: nowrap;
+          gap: 6px;
         }
         
         .new-tag, .jackpot-tag {
           display: inline-block;
-          padding: 2px 6px;
+          padding: 3px 6px;
           border-radius: 4px;
-          font-size: 10px;
+          font-size: 9px;
           font-weight: 700;
           white-space: nowrap;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
         
         .new-tag {
@@ -937,64 +945,138 @@ function Slot(props) {
         .slot-logo {
           font-family: Geogrotesque Wide, sans-serif;
           font-weight: 800;
-          font-size: 18px;
+          font-size: 16px;
           letter-spacing: 1px;
           color: white;
           text-transform: uppercase;
-          background: linear-gradient(90deg, #9189D3 0%, #594ECE 100%);
+          background: linear-gradient(90deg, #8aa3b8 0%, #4ecdc4 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           user-select: none;
           position: absolute;
           left: 50%;
           transform: translateX(-50%);
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+        
+        .middle-section {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          margin-right: 6px;
+        }
+        
+        .play-mode-switch {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 4px;
+          height: fit-content;
+        }
+        
+        .switch-container {
+          display: flex;
+          background: rgba(45, 75, 105, 0.3);
+          border: 1px solid rgba(78, 205, 196, 0.2);
+          border-radius: 6px;
+          padding: 2px;
+          backdrop-filter: blur(8px);
+          height: 32px;
+          box-sizing: border-box;
+        }
+        
+        .mode-btn {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          padding: 6px 10px;
+          border: none;
+          border-radius: 4px;
+          font-family: Geogrotesque Wide, sans-serif;
+          font-size: 10px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          background: transparent;
+          color: #8aa3b8;
+          white-space: nowrap;
+          height: 26px;
+          box-sizing: border-box;
+        }
+        
+        .mode-btn.active {
+          background: rgba(78, 205, 196, 0.2);
+          color: #4ecdc4;
+          box-shadow: 0 2px 8px rgba(78, 205, 196, 0.2);
+        }
+        
+        .mode-btn:hover:not(.active) {
+          background: rgba(78, 205, 196, 0.1);
+          color: #4ecdc4;
+        }
+        
+        .demo-indicator {
+          display: flex;
+          align-items: center;
+          gap: 3px;
+          color: #8aa3b8;
+          font-size: 9px;
+          font-weight: 600;
+          opacity: 0.8;
+          white-space: nowrap;
         }
         
         .controls {
           display: flex;
-          gap: 12px;
+          gap: 6px;
           align-items: center;
         }
 
-        .favorite-btn, .fullscreen-btn, .fullwidth-btn {
-          width: 36px;
-          height: 36px;
+        .control-btn {
+          width: 32px;
+          height: 32px;
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(84, 76, 146, 0.3);
-          border: 1px solid rgba(134, 111, 234, 0.3);
-          border-radius: 8px;
-          color: #9189D3;
+          background: rgba(45, 75, 105, 0.3);
+          border: 1px solid rgba(78, 205, 196, 0.3);
+          border-radius: 6px;
+          color: #8aa3b8;
           cursor: pointer;
           transition: all 0.2s ease;
+          backdrop-filter: blur(8px);
         }
         
-        .favorite-btn:hover, .fullscreen-btn:hover, .fullwidth-btn:hover {
-          background: rgba(84, 76, 146, 0.5);
+        .control-btn:hover {
+          background: rgba(78, 205, 196, 0.15);
+          border-color: #4ecdc4;
           transform: translateY(-2px);
-          color: white;
+          color: #4ecdc4;
+          box-shadow: 0 4px 12px rgba(78, 205, 196, 0.2);
         }
         
-        .favorite-btn:active, .fullscreen-btn:active, .fullwidth-btn:active {
+        .control-btn:active {
           transform: translateY(0px);
         }
         
-        .fullwidth-btn.active {
-          background: rgba(111, 101, 189, 0.5);
-          color: white;
-          border-color: rgba(154, 137, 235, 0.5);
+        .control-btn.active {
+          background: rgba(78, 205, 196, 0.2);
+          color: #4ecdc4;
+          border-color: rgba(78, 205, 196, 0.5);
         }
         
-        .favorite-btn.liked {
+        .control-btn.liked {
           background: rgba(39, 145, 64, 0.2);
           color: #59E878;
           border-color: rgba(89, 232, 120, 0.3);
         }
         
-        .favorite-btn.liked:hover {
+        .control-btn.liked:hover {
           background: rgba(39, 145, 64, 0.3);
           color: #59E878;
+          box-shadow: 0 4px 12px rgba(89, 232, 120, 0.2);
         }
 
         .featured-section {
@@ -1029,7 +1111,7 @@ function Slot(props) {
           min-width: 100px;
           max-width: 300px;
           border-radius: 2525px;
-          background: linear-gradient(90deg, #5A5499 0%, rgba(90, 84, 153, 0.00) 100%);
+          background: linear-gradient(90deg, #4ecdc4 0%, rgba(78, 205, 196, 0.00) 100%);
           margin-left: 12px;
         }
 
@@ -1042,11 +1124,12 @@ function Slot(props) {
           position: relative;
           overflow: hidden;
           border-radius: 12px;
-          background: rgba(29, 24, 62, 0.35);
+          background: rgba(26, 35, 50, 0.35);
           padding: 16px;
           margin-bottom: 30px;
-          border: 1px solid rgba(134, 111, 234, 0.2);
+          border: 1px solid rgba(78, 205, 196, 0.2);
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+          backdrop-filter: blur(8px);
         }
 
         .slots {
@@ -1082,16 +1165,18 @@ function Slot(props) {
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          background: rgba(84, 76, 146, 0.5);
-          border: 1px solid rgba(134, 111, 234, 0.4);
+          background: rgba(45, 75, 105, 0.5);
+          border: 1px solid rgba(78, 205, 196, 0.4);
           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
           transition: all 0.2s ease;
+          backdrop-filter: blur(8px);
         }
         
         .arrow:hover {
-          background: rgba(114, 106, 176, 0.7);
+          background: rgba(78, 205, 196, 0.2);
+          border-color: #4ecdc4;
           transform: translateY(-2px);
-          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 10px rgba(78, 205, 196, 0.2);
         }
         
         .arrow:active {
@@ -1106,18 +1191,67 @@ function Slot(props) {
         }
  
         @media only screen and (max-width: 768px) {
-          .slot-logo {
-            display: none;
+          .slot-info {
+            flex-direction: column;
+            gap: 16px;
+            padding: 16px;
           }
           
-          .title-container {
-            max-width: 200px;
+          .game-details {
+            width: 100%;
+            justify-content: flex-start;
+          }
+          
+          .slot-logo {
+            font-size: 14px;
+            position: static;
+            transform: none;
+            order: 1;
+            text-align: center;
+          }
+          
+          .middle-section {
+            order: 2;
+            width: 100%;
+            justify-content: center;
+            margin-right: 0;
+            margin-bottom: 8px;
+          }
+          
+          .play-mode-switch {
+            gap: 3px;
+            align-self: center;
+          }
+          
+          .controls {
+            width: 100%;
+            justify-content: center;
+            order: 3;
           }
           
           .toast {
             left: 20px;
             right: 20px;
             max-width: calc(100% - 40px);
+          }
+        }
+        
+        @media only screen and (max-width: 480px) {
+          .game-details {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+          }
+          
+          .provider-rtp {
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+          }
+          
+          .slot-logo {
+            font-size: 12px;
           }
         }
 
@@ -1150,7 +1284,7 @@ function Slot(props) {
         .game-container {
           position: relative;
           width: 100%;
-          aspect-ratio: 1150/637;
+          {/* aspect-ratio: 1150/637; */}
         }
         
         .game-selection-overlay {

@@ -20,16 +20,6 @@ function GamesList() {
             colorSecondary: '#047431',
             isHouse: true
         },
-        // {
-        //     tag: 'new',
-        //     icon: '/assets/icons/slot.svg',
-        //     title: 'SLOTS',
-        //     type: 'PROVIDER',
-        //     image: '/assets/gamemodes/slots.png',
-        //     link: '/slots',
-        //     color: '#4ecdc4',
-        //     colorSecondary: '#44a08d'
-        // },
         {
             tag: 'new',
             icon: '/assets/games/mines.png',
@@ -81,6 +71,17 @@ function GamesList() {
             colorSecondary: '#fdcb6e',
             isHouse: true
         },
+        {
+          tag: 'new',
+          icon: '/assets/games/slots.png',
+          title: 'SLOTS',
+          type: 'PROVIDER',
+          image: '/assets/gamemodes/slots.png',
+          link: '/slots',
+          color: '#4ecdc4',
+          colorSecondary: '#44a08d',
+          isHouse: true
+      }
     ]
 
     return (

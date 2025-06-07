@@ -92,7 +92,7 @@ function Notifications(props) {
         .notifications-button {
           position: relative;
           outline: none !important;
-          border: 1px solid rgba(78, 205, 196, 0.15) !important;
+          {/* border: 1px solid rgba(78, 205, 196, 0.15) !important; */}
         }
 
         .notifications-button::before,
