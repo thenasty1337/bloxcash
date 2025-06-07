@@ -35,41 +35,16 @@
   height: 100%;
 }
 
-/* Sidebar Header in Navbar */
-.sidebar-header-in-navbar {
+/* Left Section - User Level Info */
+.nav-left-section {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  min-width: 240px;
-  width: 240px;
-  height: 36px;
   padding: 0 16px;
+  min-width: 200px;
   gap: 12px;
-  flex-shrink: 0;
 }
 
-.sidebar-header-in-navbar .logo-section {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.sidebar-header-in-navbar .logo-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #4ecdc4;
-}
-
-.sidebar-header-in-navbar .logo-text {
-  color: #ffffff;
-  font-size: 17px;
-  font-weight: 700;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  letter-spacing: 0.3px;
-}
-
-.sidebar-header-in-navbar .collapse-button {
+.collapse-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,10 +59,134 @@
   flex-shrink: 0;
 }
 
-.sidebar-header-in-navbar .collapse-button:hover {
+.collapse-button:hover {
   background: rgba(78, 205, 196, 0.1);
   border-color: #4ecdc4;
   color: #4ecdc4;
+}
+
+.user-rank-display {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, rgba(255, 165, 0, 0.15) 0%, rgba(255, 140, 0, 0.1) 25%, rgb(13 11 39) 70%, rgb(16 14 43) 100%);
+  /* border: 1px solid transparent; */
+  border-radius: 12px;
+  padding: 8px 12px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+  min-width: 180px;
+  width: 180px;
+}
+
+.user-rank-display::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255, 165, 0, 0.5) 0%, rgba(255, 140, 0, 0.4) 25%, rgba(255, 140, 0, 0.1) 40%, transparent 60%);
+  border-radius: 12px;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+}
+
+.user-rank-display::after {
+  content: '✨';
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  font-size: 10px;
+  opacity: 0.7;
+  animation: sparkle 2s ease-in-out infinite alternate;
+  z-index: 2;
+}
+
+@keyframes sparkle {
+  0% { opacity: 0.4; transform: scale(0.8); }
+  100% { opacity: 0.8; transform: scale(1.1); }
+}
+
+.sparkle-1 {
+  position: absolute;
+  top: 6px;
+  left: 12px;
+  font-size: 8px;
+  color: rgba(255, 215, 0, 0.8);
+  animation: sparkle 1.5s ease-in-out infinite alternate;
+  animation-delay: 0.5s;
+}
+
+.sparkle-2 {
+  position: absolute;
+  bottom: 8px;
+  right: 20px;
+  font-size: 6px;
+  color: rgba(255, 165, 0, 0.6);
+  animation: sparkle 2.5s ease-in-out infinite alternate;
+  animation-delay: 1s;
+}
+
+.user-rank-display:hover {
+  background: linear-gradient(135deg, rgba(255, 165, 0, 0.15) 0%, rgba(255, 140, 0, 0.1) 25%, rgb(13 11 39) 70%, rgb(16 14 43) 100%);
+  transform: translateY(-1px);
+}
+
+.user-rank-display:hover::before {
+  background: linear-gradient(135deg, rgba(255, 165, 0, 0.7) 0%, rgba(255, 140, 0, 0.6) 25%, rgba(255, 140, 0, 0.2) 40%, transparent 60%);
+}
+
+.rank-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.rank-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.2;
+}
+
+.xp-display {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #8aa3b8;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.xp-icon {
+  font-size: 12px;
+  color: #4ecdc4;
+}
+
+.xp-text {
+  font-weight: 600;
+  color: #ffffff;
+  font-size: 12px;
+}
+
+/* Center Logo Section */
+.nav-center-logo {
+  display: flex;
+  /* align-items: center;
+  justify-content: center; */
+  flex: 1;
+  padding: 0 50px;
+}
+
+.nav-center-logo .logo-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 /* Center Balance Display */
@@ -99,66 +198,78 @@
   padding: 0 16px;
 }
 
-/* Balance Section Container */
+/* Balance Section Container - New card-like design */
 .balance-section {
   display: flex;
   align-items: center;
-  gap: 12px;
+  border: 1px solid rgba(139, 120, 221, 0.2);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 0;
+  backdrop-filter: blur(8px);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
 }
 
 /* Balance Dropdown Container */
 .balance-dropdown-container {
   position: relative;
+  flex: 1;
 }
 
-/* Deposit Button */
+/* Deposit Button - New integrated design */
 .deposit-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 36px;
-  padding: 0 16px;
-  background: #4ecdc4;
+  height: 32px;
+  padding: 0 14px;
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   color: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-size: 11px;
   font-weight: 700;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  letter-spacing: 0.3px;
+  margin-left: 8px;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
 }
 
 .deposit-button:hover {
-  background: #44a08d;
+  background: linear-gradient(135deg, #f7931e, #ff6b35);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
 }
 
-/* Center Wallet Balance Button - Simplified */
+/* Center Wallet Balance Button - Redesigned for card integration */
 .center-wallet-balance-button {
   display: flex;
   align-items: center;
-  gap: 8px;
-  height: 36px;
-  padding: 0 14px;
-  background: rgba(26, 35, 50, 0.8);
-  border: 1px solid rgba(78, 205, 196, 0.2);
+  gap: 10px;
+  height: 32px;
+  padding: 0 12px;
+  background: transparent;
+  border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
-  color: #8aa3b8;
+  transition: background-color 0.2s ease;
+  color: #9ca3af;
+  flex: 1;
 }
 
-.center-wallet-balance-button:hover,
-.center-wallet-balance-button.active {
-  background: rgba(78, 205, 196, 0.1);
-  border-color: rgba(78, 205, 196, 0.4);
-  color: #4ecdc4;
-}
+
 
 .center-wallet-balance-button svg {
-  color: #4ecdc4;
+  color: #8b78dd;
   flex-shrink: 0;
+
+  width: 14px;
+  height: 14px;
 }
 
 .center-wallet-balance-button .center-balance-display {
@@ -166,49 +277,52 @@
   align-items: baseline;
   gap: 2px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  flex: 1;
+  padding-left: 4px;
 }
 
 .center-wallet-balance-button .currency-symbol {
-  color: #4ecdc4;
+  color: #8b78dd;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .center-wallet-balance-button .center-balance-display .countup-container {
   color: #ffffff;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 16px;
   display: flex;
   align-items: baseline;
   gap: 1px;
 }
 
 .center-wallet-balance-button .center-balance-display .countup-container .decimal-part {
-  font-size: 11px;
+  font-size: 13px;
   color: #b8c8d8;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .center-wallet-balance-button .center-balance-display .gray {
-  font-size: 11px;
-  color: #8aa3b8;
-  font-weight: 500;
+  font-size: 13px;
+  color: #9ca3af;
+  font-weight: 600;
   margin-left: 1px;
 }
 
 /* Balance Dropdown */
 .balance-dropdown {
   position: absolute;
-  top: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 280px;
-  background: rgba(20, 24, 35, 0.98);
-  border: 1px solid rgba(78, 205, 196, 0.2);
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  top: calc(100% + 12px);
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: rgba(27, 23, 56, 0.95);
+  border: 1px solid rgba(139, 120, 221, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   z-index: 1000;
   overflow: hidden;
+  backdrop-filter: blur(12px);
 }
 
 .balance-dropdown-content {
@@ -229,7 +343,7 @@
 }
 
 .crypto-balance-item:hover {
-  background: rgba(78, 205, 196, 0.1);
+  background: rgba(139, 120, 221, 0.15);
 }
 
 .crypto-icon {
@@ -267,7 +381,7 @@
 }
 
 .crypto-balance {
-  color: #4ecdc4;
+  color: #8b78dd;
   font-size: 14px;
   font-weight: 700;
   text-align: right;
@@ -278,7 +392,7 @@
   align-items: center;
   gap: 12px;
   padding: 12px 8px;
-  border-top: 1px solid rgba(78, 205, 196, 0.1);
+  border-top: 1px solid rgba(139, 120, 221, 0.2);
   margin-top: 8px;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -286,18 +400,18 @@
 }
 
 .wallet-settings:hover {
-  background: rgba(78, 205, 196, 0.1);
+  background: rgba(139, 120, 221, 0.15);
 }
 
 .settings-icon {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: rgba(78, 205, 196, 0.2);
+  background: rgba(139, 120, 221, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #4ecdc4;
+  color: #8b78dd;
   font-size: 16px;
 }
 
@@ -325,24 +439,26 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  background: rgba(26, 35, 50, 0.8);
-  border: 1px solid rgba(78, 205, 196, 0.15);
+  background: #1b1738;
+  border: 0px;
   border-radius: 6px;
-  color: #8aa3b8;
+  color: #675E88;
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .control-button:hover {
-  background: rgba(78, 205, 196, 0.1);
-  border-color: rgba(78, 205, 196, 0.3);
-  color: #4ecdc4;
+  background: rgba(139, 120, 221, 0.15);
+  border-color: rgba(139, 120, 221, 0.4);
+  color: #8b78dd;
+  transform: translateY(-1px);
 }
 
 .control-button.active {
-  background: rgba(78, 205, 196, 0.15);
-  border-color: rgba(78, 205, 196, 0.4);
-  color: #4ecdc4;
+  background: rgba(139, 120, 221, 0.2);
+  border-color: rgba(139, 120, 221, 0.5);
+  color: #8b78dd;
+  transform: translateY(-1px);
 }
 
 /* User Profile */
@@ -352,17 +468,18 @@
   gap: 8px;
   height: 36px;
   padding: 0 10px;
-  background: rgba(26, 35, 50, 0.8);
-  border: 1px solid rgba(78, 205, 196, 0.15);
+  background: #1b1738;
+    border:0px;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition: all 0.3s ease;
   position: relative;
 }
 
 .user-profile:hover {
-  background: rgba(78, 205, 196, 0.1);
-  border-color: rgba(78, 205, 196, 0.3);
+  background: rgba(139, 120, 221, 0.15);
+  border-color: rgba(139, 120, 221, 0.4);
+  transform: translateY(-1px);
 }
 
 .user-profile .avatar {
@@ -375,17 +492,17 @@
 
 .dropdown-arrow {
   color: #8aa3b8;
-  transition: transform 0.2s ease, color 0.2s ease;
+  transition: transform 0.3s ease, color 0.3s ease;
   flex-shrink: 0;
 }
 
 .user-profile.active .dropdown-arrow {
   transform: rotate(180deg);
-  color: #4ecdc4;
+  color: #8b78dd;
 }
 
 .user-profile:hover .dropdown-arrow {
-  color: #4ecdc4;
+  color: #8b78dd;
 }
 
 /* Auth Buttons Container */
@@ -407,32 +524,34 @@
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition: all 0.3s ease;
   text-decoration: none;
   letter-spacing: 0.3px;
 }
 
 .login-button {
-  background: rgba(45, 75, 105, 0.4);
-  border: 1px solid rgba(78, 205, 196, 0.2);
-  color: #8aa3b8;
+  background: #1b1738;
+  border: 1px solid rgba(139, 120, 221, 0.2);
+  color: #a8a3c7;
 }
 
 .login-button:hover {
-  background: rgba(78, 205, 196, 0.15);
-  border-color: rgba(78, 205, 196, 0.4);
-  color: #4ecdc4;
+  background: rgba(139, 120, 221, 0.15);
+  border-color: rgba(139, 120, 221, 0.4);
+  color: #8b78dd;
+  transform: translateY(-1px);
 }
 
 .signup-button {
-  background: #4ecdc4;
+  background: linear-gradient(135deg, #8b78dd 0%, #7366c7 100%);
   border: 1px solid transparent;
   color: #ffffff;
   font-weight: 700;
 }
 
 .signup-button:hover {
-  background: #44a08d;
+  background: linear-gradient(135deg, #7366c7 0%, #6454b8 100%);
+  transform: translateY(-1px);
 }
 
 /* Mobile Responsive */
@@ -442,31 +561,42 @@
     width: 100vw;
   }
 
-  .nav-center-balance {
+  /* Hide entire left section on mobile since BottomNavBar handles sidebar */
+  .nav-left-section {
     display: none;
+  }
+
+  /* Reduce logo padding when left section is hidden */
+  .nav-center-logo {
+    padding: 0 20px;
+  }
+
+  /* Keep balance section visible on mobile */
+  .nav-center-balance {
+    display: flex;
   }
 
   .balance-section {
-    display: none;
+    display: flex;
   }
 
   .balance-dropdown-container {
-    display: none;
+    display: block;
   }
 
   .deposit-button {
-    display: none;
+    display: flex;
   }
 
   .navbar-content {
-    justify-content: flex-end;
+    justify-content: space-between;
     gap: 8px;
   }
 
   .main-navbar {
     padding: 0 16px;
-    height: 45px;
-    min-height: 45px;
+    height: 60px;
+    min-height: 60px;
   }
 
   .user-section {
@@ -502,9 +632,9 @@
 
 @media only screen and (max-width: 768px) {
   .balance-dropdown {
-    width: 260px;
-    left: 50%;
-    transform: translateX(-50%);
+    width: 100%;
+    left: 0;
+    right: 0;
   }
 
   .main-navbar {
@@ -540,11 +670,79 @@
   }
 }
 
+/* Hide mobile nav elements from top navbar on very small screens */
+@media only screen and (max-width: 650px) {
+  /* Hide chat button - available in mobile nav */
+  .user-section .control-button {
+    display: none;
+  }
+
+  /* Hide notifications - available in mobile nav */
+  .notifications-button {
+    display: none;
+  }
+
+  /* Hide user profile section - available in mobile nav */
+  .user-profile {
+    display: none;
+  }
+
+  /* Hide auth buttons - login/signup available in mobile nav */
+  .auth-buttons {
+    display: none;
+  }
+
+  /* Reset balance positioning for mobile - move to right side */
+  .nav-center-balance {
+    position: static;
+    transform: none;
+    left: auto;
+    margin-right: 16px;
+    flex: 0 0 auto;
+  }
+
+  /* Logo positioning and centering */
+  .nav-center-logo {
+    padding: 0 16px;
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  /* Better vertical centering for navbar content */
+  .navbar-content {
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    margin-top: 25px;
+  }
+
+  /* Ensure proper height and centering */
+  .main-navbar {
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Adjust user section to not take up space when empty */
+  .user-section {
+    min-width: 0;
+    width: auto;
+  }
+
+  /* Better vertical alignment for balance section */
+  .balance-section {
+    position: static;
+    transform: none;
+    left: auto;
+  }
+}
+
 @media only screen and (max-width: 480px) {
   .balance-dropdown {
-    width: 240px;
-    left: 50%;
-    transform: translateX(-50%);
+    width: 100%;
+    left: 0;
+    right: 0;
   }
 
   .main-navbar {
@@ -567,6 +765,87 @@
   .signup-button {
     padding: 0 6px;
     font-size: 9px;
+  }
+
+  /* Compact balance section for extra small screens */
+  .balance-section {
+    padding: 2px;
+    gap: 4px;
+  }
+
+  .center-wallet-balance-button {
+    height: 28px;
+    padding: 0 8px;
+    min-width: 80px;
+  }
+
+  .center-wallet-balance-button .center-balance-display {
+    gap: 1px;
+  }
+
+  .center-wallet-balance-button .currency-symbol {
+    font-size: 14px;
+  }
+
+  .center-wallet-balance-button .center-balance-display .countup-container {
+    font-size: 14px;
+  }
+
+  .center-wallet-balance-button .center-balance-display .countup-container .decimal-part {
+    font-size: 11px;
+  }
+
+  .deposit-button {
+    height: 28px;
+    padding: 0 8px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  /* Hide balance dropdown on extra small screens - too cramped */
+  .balance-dropdown-container {
+    pointer-events: none;
+  }
+
+  .center-wallet-balance-button svg {
+    display: none;
+  }
+}
+
+/* For extremely small screens (below 400px) */
+@media only screen and (max-width: 400px) {
+  /* Make deposit button icon-only */
+  .deposit-button {
+    width: 32px;
+    padding: 0;
+    font-size: 0;
+    position: relative;
+  }
+
+  .deposit-button::before {
+    content: '+';
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  /* Make balance display even more compact */
+  .center-wallet-balance-button {
+    min-width: 70px;
+    padding: 0 6px;
+  }
+
+  .center-wallet-balance-button .center-balance-display .countup-container {
+    font-size: 13px;
+  }
+
+  .center-wallet-balance-button .center-balance-display .countup-container .decimal-part {
+    font-size: 10px;
+  }
+
+  /* Further reduce logo size */
+  .nav-center-logo img {
+    max-width: 80px !important;
   }
 }
 

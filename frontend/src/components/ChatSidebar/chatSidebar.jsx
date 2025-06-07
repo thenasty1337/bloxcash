@@ -107,12 +107,11 @@ function ChatSidebar(props) {
           display: flex;
           flex-direction: column;
 
-          background: linear-gradient(180deg, rgba(26, 35, 50, 0.95) 0%, rgba(20, 28, 40, 0.95) 100%);
+          background: #181434;
           backdrop-filter: blur(12px);
           overflow: hidden;
           transition: right .3s ease;
-          border-left: 1px solid rgba(78, 205, 196, 0.2);
-          box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+        
         }
 
         .chat-sidebar-container.active {
@@ -203,10 +202,29 @@ function ChatSidebar(props) {
           .chat-sidebar-container {
             width: 100vw;
             right: -100vw;
+            height: calc(100vh - 130px);
+            max-height: calc(100vh - 130px);
+            top: 60px;
           }
 
           .chat-sidebar-container.active {
             right: 0;
+          }
+        }
+
+        @media only screen and (max-width: 768px) {
+          .chat-sidebar-container {
+            height: calc(100vh - 125px);
+            max-height: calc(100vh - 125px);
+            top: 60px;
+          }
+        }
+
+        @media only screen and (max-width: 480px) {
+          .chat-sidebar-container {
+            height: calc(100vh - 125px);
+            max-height: calc(100vh - 125px);
+            top: 60px;
           }
         }
       `}</style>

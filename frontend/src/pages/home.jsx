@@ -117,7 +117,7 @@ function Home(props) {
                 </div>
 
                 <div class='deposit-container'>
-                    <button class='deposit-button' disabled={!METHODS[method()]} onClick={() => {
+                    <button class='deposit-button-home' disabled={!METHODS[method()]} onClick={() => {
                         // Dispatch custom event to trigger wallet modal
                         const selectedCrypto = METHODS[method()];
                         if (selectedCrypto) {
@@ -136,7 +136,7 @@ function Home(props) {
                             window.dispatchEvent(event);
                         }
                     }}>
-                        <div class='deposit-button-content'>
+                        <div class='deposit-button-home-content'>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                 <polyline points="7 10 12 15 17 10"></polyline>
@@ -178,8 +178,7 @@ function Home(props) {
               }
 
               .crypto-carousel {
-                background: rgba(26, 35, 50, 0.4);
-                border: 1px solid rgba(78, 205, 196, 0.1);
+              
                 border-radius: 10px;
                 overflow: hidden;
                 backdrop-filter: blur(8px);
@@ -195,7 +194,7 @@ function Home(props) {
                 top: 0;
                 width: 60px;
                 height: 100%;
-                background: linear-gradient(90deg, rgba(26, 35, 50, 0.9), transparent);
+                background: linear-gradient(90deg, rgb(15 11 39), transparent);
                 z-index: 2;
                 pointer-events: none;
               }
@@ -207,7 +206,7 @@ function Home(props) {
                 top: 0;
                 width: 60px;
                 height: 100%;
-                background: linear-gradient(270deg, rgba(26, 35, 50, 0.9), transparent);
+                background: linear-gradient(270deg, rgb(15 11 39), transparent);
                 z-index: 2;
                 pointer-events: none;
               }
@@ -290,26 +289,18 @@ function Home(props) {
               }
 
               .crypto-method:hover {
-                background: rgba(78, 205, 196, 0.15);
-                border-color: #4ecdc4;
+           
                 color: #ffffff;
                 transform: translateY(-2px);
-                box-shadow: 0 6px 16px rgba(78, 205, 196, 0.2);
               }
 
               .crypto-method.selected {
-                background: rgba(78, 205, 196, 0.2);
-                border-color: #4ecdc4;
+              
                 color: #ffffff;
-                box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
                 transform: translateY(-1px);
               }
 
-              .crypto-method.selected::before {
-                width: 3px;
-                background: linear-gradient(90deg, #4ecdc4, rgba(78, 205, 196, 0.5));
-              }
-
+            
               .crypto-method.unactive {
                 filter: grayscale(100%);
                 opacity: 0.4;
@@ -390,7 +381,7 @@ function Home(props) {
                 pointer-events: none;
               }
 
-              .deposit-button {
+              .deposit-button-home {
                 background: rgba(45, 75, 105, 0.25);
                 border: 1px solid rgba(78, 205, 196, 0.2);
                 border-radius: 8px;
@@ -412,20 +403,17 @@ function Home(props) {
                 pointer-events: auto;
               }
 
-              .deposit-button:hover:not(:disabled) {
+              .deposit-button-home:hover:not(:disabled) {
                 background: rgba(78, 205, 196, 0.15);
-                border-color: #4ecdc4;
                 color: #ffffff;
                 transform: translateY(-2px);
-                box-shadow: 0 6px 16px rgba(78, 205, 196, 0.2);
               }
 
-              .deposit-button:active:not(:disabled) {
+              .deposit-button-home:active:not(:disabled) {
                 transform: translateY(-1px);
-                box-shadow: 0 4px 12px rgba(78, 205, 196, 0.15);
               }
 
-              .deposit-button:disabled {
+              .deposit-button-home:disabled {
                 background: rgba(45, 75, 105, 0.15);
                 border-color: rgba(78, 205, 196, 0.1);
                 color: #6b7f92;
@@ -434,7 +422,7 @@ function Home(props) {
                 box-shadow: none;
               }
 
-              .deposit-button-content {
+              .deposit-button-home-content {
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -442,11 +430,11 @@ function Home(props) {
                 height: 100%;
               }
 
-              .deposit-button-content svg {
+              .deposit-button-home-content svg {
                 transition: transform 0.2s ease;
               }
 
-              .deposit-button:hover:not(:disabled) .deposit-button-content svg {
+              .deposit-button-home:hover:not(:disabled) .deposit-button-home-content svg {
                 transform: translateY(1px);
               }
 
@@ -545,13 +533,13 @@ function Home(props) {
                   width: 40px;
                 }
 
-                .deposit-button {
+                .deposit-button-home {
                   min-width: 160px;
                   height: 44px;
                   font-size: 12px;
                 }
 
-                .deposit-button-content svg {
+                .deposit-button-home-content svg {
                   width: 14px;
                   height: 14px;
                 }

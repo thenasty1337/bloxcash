@@ -773,7 +773,7 @@ function App() {
         }
 
         .center.chat-open {
-          margin-right: 310px; /* Account for chat sidebar */
+          margin-right: 300px; /* Account for chat sidebar */
         }
 
         .center::-webkit-scrollbar {
@@ -822,8 +822,8 @@ function App() {
             margin-left: 0;
             margin-right: 0; /* Reset right margin on mobile */
             padding-bottom: 50px;
-            margin-top: 45px; /* Adjust for smaller navbar on mobile */
-            height: calc(100vh - 45px);
+            margin-top: 70px; /* Adjust for smaller navbar on mobile */
+            height: calc(100vh - 70px);
           }
 
           .center.chat-open {

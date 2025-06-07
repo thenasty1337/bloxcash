@@ -45,61 +45,138 @@ function Level(props) {
                     font-size: 10px;
                     color: white;
 
-                    background: #8F8DA1;
-                    padding: 0 5px;
+                    background: linear-gradient(135deg, #6B6B7D, #8F8DA1);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    padding: 0 6px;
                     height: 18px;
-                    border-radius: 3px;
+                    border-radius: 6px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 
                     display: flex;
                     align-items: center;
-                    gap: 5px;
+                    gap: 4px;
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .level::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 1px;
+                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
                 }
 
                 .level p {
-                    margin-top: -1px;
+                    margin: 0;
+                    font-weight: 800;
+                    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+                    z-index: 1;
                 }
 
                 .level.green {
-                    background: #56B66B;
+                    background: linear-gradient(135deg, #4CAF50, #66BB6A, #81C784);
+                    border: 1px solid #388E3C;
+                    box-shadow: 0 2px 6px rgba(76, 175, 80, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                }
+
+                .level.green p {
+                    color: #E8F5E8;
                 }
 
                 .blue.level {
-                    background: #559EE4;
-                    color: #D9D9D9;
+                    background: linear-gradient(135deg, #2196F3, #42A5F5, #64B5F6);
+                    border: 1px solid #1976D2;
+                    color: #E3F2FD;
+                    box-shadow: 0 2px 6px rgba(33, 150, 243, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                }
+
+                .blue.level p {
+                    color: #E3F2FD;
                 }
 
                 .level.pink {
-                    background: #BF50D1;
-                    color: #D9D9D9;
+                    background: linear-gradient(135deg, #E91E63, #F06292, #F48FB1);
+                    border: 1px solid #C2185B;
+                    color: #FCE4EC;
+                    box-shadow: 0 2px 6px rgba(233, 30, 99, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                }
+
+                .level.pink p {
+                    color: #FCE4EC;
                 }
 
                 .level.gem {
-                    border: 1px solid #04B79D;
-                    background: linear-gradient(90deg, rgba(156, 255, 172, 0.25) 0%, rgba(0, 181, 156, 0.25) 100%);
-                    border-radius: 3px;
+                    background: linear-gradient(135deg, rgba(0, 181, 156, 0.9), rgba(156, 255, 172, 0.8), rgba(0, 181, 156, 0.9));
+                    border: 1px solid #00B59C;
+                    box-shadow: 0 2px 8px rgba(0, 181, 156, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+                    position: relative;
+                }
+
+                .level.gem::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+                    animation: shimmer 2s infinite;
+                }
+
+                @keyframes shimmer {
+                    0% { transform: translateX(-100%); }
+                    100% { transform: translateX(100%); }
                 }
 
                 .level.gem p {
-                    background: linear-gradient(90deg, #9CFFAC 0%, #00B59C 100%);
+                    background: linear-gradient(135deg, #9CFFAC, #00E5CC, #9CFFAC);
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
                     background-clip: text;
                     text-fill-color: transparent;
+                    font-weight: 900;
+                    z-index: 2;
                 }
 
                 .level.fire {
-                    border: 1px solid #FF9900;
-                    background: linear-gradient(53.13deg, rgba(255, 153, 0, 0.25) 54.58%, rgba(249, 172, 57, 0.25) 69.11%);
-                    border-radius: 3px;
+                    background: linear-gradient(135deg, #FF9900, #FFB74D, #FF9900);
+                    border: 1px solid #F57C00;
+                    box-shadow: 0 2px 8px rgba(255, 153, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+                    position: relative;
+                }
+
+                .level.fire::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.15) 50%, transparent 70%);
+                    animation: fireShimmer 1.5s infinite;
+                }
+
+                @keyframes fireShimmer {
+                    0% { transform: translateX(-100%) rotate(45deg); }
+                    100% { transform: translateX(100%) rotate(45deg); }
                 }
 
                 .level.fire p {
-                    background: linear-gradient(53.13deg, #FF9900 54.58%, #F9AC39 69.11%);
+                    background: linear-gradient(135deg, #FFE082, #FFF3C4, #FFE082);
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
                     background-clip: text;
                     text-fill-color: transparent;
-                    font-weight: 700;
+                    font-weight: 900;
+                    z-index: 2;
+                }
+
+                .level img {
+                    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+                    z-index: 2;
                 }
             `}</style>
         </>

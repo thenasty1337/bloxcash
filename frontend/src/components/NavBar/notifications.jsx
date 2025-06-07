@@ -66,7 +66,6 @@ function Notifications(props) {
         )}
 
         <div class={`notifications-dropdown ${active() ? 'active' : ''}`} onClick={(e) => e.stopPropagation()}>
-          <div class='dropdown-arrow'/>
           <div class='dropdown-content'>
             <div class='dropdown-header'>
               <h3>Notifications</h3>
@@ -106,11 +105,10 @@ function Notifications(props) {
         }
 
         .notifications-button.active {
-          background: rgba(78, 205, 196, 0.1) !important;
-          border-color: rgba(78, 205, 196, 0.3) !important;
-          color: #4ecdc4 !important;
+          background: rgba(139, 120, 221, 0.2) !important;
+          border-color: rgba(139, 120, 221, 0.5) !important;
+          color: #8b78dd !important;
           transform: translateY(-1px) !important;
-          box-shadow: 0 4px 12px rgba(78, 205, 196, 0.15) !important;
         }
 
         .notification-badge {
@@ -128,7 +126,7 @@ function Notifications(props) {
           font-size: 10px;
           font-weight: 700;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-          border: 2px solid #1a2332;
+          border: 2px solid #1b1738;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
@@ -139,10 +137,7 @@ function Notifications(props) {
           width: 320px;
           max-height: 0;
           overflow: hidden;
-          background: rgba(26, 35, 50, 0.95);
-          border-radius: 8px;
-          backdrop-filter: blur(20px);
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+         
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           z-index: 1000;
         }
@@ -151,19 +146,6 @@ function Notifications(props) {
           max-height: 400px;
         }
 
-        .dropdown-arrow {
-          position: absolute;
-          top: -6px;
-          right: 12px;
-          width: 12px;
-          height: 12px;
-          background: rgba(26, 35, 50, 0.95);
-          border: 1px solid rgba(78, 205, 196, 0.2);
-          border-bottom: none;
-          border-right: none;
-          transform: rotate(45deg);
-          backdrop-filter: blur(20px);
-        }
 
         .dropdown-content {
           padding: 0;
@@ -174,7 +156,7 @@ function Notifications(props) {
 
         .dropdown-header {
           padding: 16px 20px 12px;
-          border-bottom: 1px solid rgba(78, 205, 196, 0.1);
+          border-bottom: 1px solid rgba(139, 120, 221, 0.2);
         }
 
         .dropdown-header h3 {
@@ -196,17 +178,17 @@ function Notifications(props) {
         }
 
         .notifications-list::-webkit-scrollbar-track {
-          background: rgba(78, 205, 196, 0.1);
+          background: rgba(139, 120, 221, 0.1);
           border-radius: 2px;
         }
 
         .notifications-list::-webkit-scrollbar-thumb {
-          background: rgba(78, 205, 196, 0.3);
+          background: rgba(139, 120, 221, 0.3);
           border-radius: 2px;
         }
 
         .notifications-list::-webkit-scrollbar-thumb:hover {
-          background: rgba(78, 205, 196, 0.5);
+          background: rgba(139, 120, 221, 0.5);
         }
 
         .no-notifications {
@@ -227,9 +209,7 @@ function Notifications(props) {
             right: -8px;
           }
           
-          .dropdown-arrow {
-            right: 20px;
-          }
+        
         }
       `}</style>
     </>

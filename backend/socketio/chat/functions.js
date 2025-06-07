@@ -14,7 +14,7 @@ async function cacheChannels() {
     await Promise.all(channelsIds.map(async channel => {
 
         const [messages] = await sql.query(`
-            SELECT users.username, content, users.role, users.xp, chatMessages.id, chatMessages.content, chatMessages.senderId, chatMessages.type, chatMessages.replyTo, chatMessages.createdAt FROM chatMessages
+            SELECT users.username, content, users.role, users.xp, users.avatar, chatMessages.id, chatMessages.content, chatMessages.senderId, chatMessages.type, chatMessages.replyTo, chatMessages.createdAt FROM chatMessages
             LEFT JOIN users ON users.id = chatMessages.senderId
             WHERE (chatMessages.channelId = ? OR chatMessages.channelId IS NULL) AND deletedAt IS NULL
             ORDER BY chatMessages.id DESC LIMIT ?;
@@ -42,7 +42,8 @@ async function cacheChannels() {
                     id: e.senderId,
                     username: e.username,
                     role: e.role,
-                    xp: e.xp
+                    xp: e.xp,
+                    avatar: e.avatar
                 }
             });
             

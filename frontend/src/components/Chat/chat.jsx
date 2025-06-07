@@ -272,6 +272,7 @@ function Chat(props) {
 
                 mask-image: linear-gradient(to top, black 80%, rgba(0, 0, 0, 0.25) 99%);
                 scrollbar-color: transparent transparent;
+                background: #130f2d;
               }
 
               .messages::-webkit-scrollbar {
@@ -375,9 +376,9 @@ function Chat(props) {
               }
 
               .send-message {
-
                 border-radius: 12px;
                 width: 270px;
+                max-width: calc(100% - 20px);
                 padding: 2px;
                 margin: 0 auto;
                 display: flex;
@@ -505,6 +506,7 @@ function Chat(props) {
                 bottom: 40px;
                 left: -30px;
                 width: 270px;
+                max-width: 90vw;
                 background: rgba(26, 35, 50);
                 border: 1px solid rgba(78, 205, 196, 0.2);
                 border-radius: 8px;
@@ -673,6 +675,214 @@ function Chat(props) {
                 font-style: normal;
                 font-weight: 500;
                 line-height: normal;
+              }
+
+              /* Mobile Responsive Styles */
+              @media only screen and (max-width: 1250px) {
+                .send-message {
+                  width: calc(100% - 20px);
+                  max-width: none;
+                }
+
+                .rules-dropdown {
+                  left: -50px;
+                  width: 280px;
+                }
+              }
+
+              @media only screen and (max-width: 768px) {
+                .send-message {
+                  width: calc(100% - 16px);
+                  padding: 2px;
+                  gap: 6px;
+                }
+
+                .send-message-input {
+                  height: 32px;
+                  font-size: 12px;
+                  padding: 0 10px;
+                }
+
+                .bottom-bar {
+                  gap: 8px;
+                }
+
+                .left-group {
+                  gap: 6px;
+                }
+
+                .right-group {
+                  gap: 4px;
+                }
+
+                .rules-trigger {
+                  width: 28px;
+                  height: 28px;
+                }
+
+                .rules-dropdown {
+                  left: -60px;
+                  width: 260px;
+                  bottom: 35px;
+                }
+
+                .count {
+                  font-size: 13px;
+                }
+
+                .char-count {
+                  padding: 3px 6px;
+                  min-width: 30px;
+                }
+
+                .char-count span {
+                  font-size: 10px;
+                }
+
+                .send-button {
+                  padding: 5px 12px;
+                }
+
+                .send-button span {
+                  font-size: 10px;
+                }
+
+                .scroll-paused-notification {
+                  width: 160px;
+                  height: 32px;
+                  font-size: 11px;
+                  bottom: 90px;
+                }
+              }
+
+              @media only screen and (max-width: 480px) {
+                .send-message {
+                  width: calc(100% - 12px);
+                  gap: 4px;
+                }
+
+                .send-message-input {
+                  height: 28px;
+                  font-size: 11px;
+                  padding: 0 8px;
+                }
+
+                .bottom-bar {
+                  gap: 6px;
+                }
+
+                .left-group {
+                  gap: 4px;
+                }
+
+                .right-group {
+                  gap: 3px;
+                }
+
+                .rules-trigger {
+                  width: 24px;
+                  height: 24px;
+                }
+
+                .user-count {
+                  gap: 4px;
+                }
+
+                .online-indicator {
+                  width: 6px;
+                  height: 6px;
+                }
+
+                .count {
+                  font-size: 12px;
+                }
+
+                .rules-dropdown {
+                  left: -80px;
+                  width: 240px;
+                  bottom: 30px;
+                }
+
+                .rules-header {
+                  padding: 10px 12px;
+                  font-size: 13px;
+                }
+
+                .rules-list {
+                  padding: 10px 12px;
+                  gap: 8px;
+                }
+
+                .rule-text {
+                  font-size: 11px;
+                }
+
+                .char-count {
+                  padding: 2px 5px;
+                  min-width: 25px;
+                }
+
+                .char-count span {
+                  font-size: 9px;
+                }
+
+                .send-button {
+                  padding: 4px 10px;
+                }
+
+                .send-button span {
+                  font-size: 9px;
+                  letter-spacing: 0.3px;
+                }
+
+                .scroll-paused-notification {
+                  width: 140px;
+                  height: 28px;
+                  font-size: 10px;
+                  bottom: 80px;
+                  gap: 6px;
+                }
+
+                .login-prompt {
+                  padding: 6px 10px;
+                }
+
+                .login-text {
+                  font-size: 13px;
+                }
+
+                .smiley-icon {
+                  font-size: 16px;
+                }
+
+                .replyto {
+                  font-size: 12px;
+                  gap: 3px;
+                }
+              }
+
+              @media only screen and (max-width: 320px) {
+                .bottom-bar {
+                  flex-wrap: wrap;
+                  gap: 4px;
+                }
+
+                .rules-dropdown {
+                  left: -100px;
+                  width: 220px;
+                }
+
+                .send-button {
+                  padding: 3px 8px;
+                }
+
+                .send-button span {
+                  font-size: 8px;
+                }
+
+                .char-count span {
+                  font-size: 8px;
+                }
               }
             `}</style>
         </>

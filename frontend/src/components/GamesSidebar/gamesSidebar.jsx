@@ -63,11 +63,10 @@ function GamesSidebar(props) {
             <A href="/" class="all-games-item" title="Home">
               <div class="item-left">
                 <div class="item-icon">
-                  <AiOutlineAppstore size={18} />
+                  <img src="/assets/game-icons/home.svg" alt="Home" width="18" height="18" />
                 </div>
                 <span class="item-text">Home</span>
               </div>
-              <span class="view-all">Browse</span>
             </A>
           </div>
 
@@ -78,7 +77,7 @@ function GamesSidebar(props) {
                 <A href="/slots" class="game-item" title="Slots">
                   <div class="item-left">
                     <div class="game-icon">
-                      <BiSolidDiamond size={18} />
+                      <img src="/assets/game-icons/slots.svg" alt="Slots" width="18" height="18" />
                     </div>
                     <span class="game-text">Slots</span>
                   </div>
@@ -90,7 +89,7 @@ function GamesSidebar(props) {
                 <A href="/battles" class="game-item" title="Case Battles">
                   <div class="item-left">
                     <div class="game-icon">
-                      <BiSolidCube size={18} />
+                      <img src="/assets/game-icons/battles.svg" alt="Case Battles" width="18" height="18" />
                     </div>
                     <span class="game-text">Case Battles</span>
                   </div>
@@ -102,7 +101,7 @@ function GamesSidebar(props) {
                 <A href="/mines" class="game-item" title="Mines">
                   <div class="item-left">
                     <div class="game-icon">
-                      <TbTool size={18} />
+                      <img src="/assets/game-icons/mines.svg" alt="Mines" width="18" height="18" />
                     </div>
                     <span class="game-text">Mines</span>
                   </div>
@@ -113,7 +112,7 @@ function GamesSidebar(props) {
                 <A href="/jackpot" class="game-item" title="Jackpot">
                   <div class="item-left">
                     <div class="game-icon">
-                      <BiSolidTrophy size={18} />
+                      <img src="/assets/game-icons/jackpot.svg" alt="Jackpot" width="18" height="18" />
                     </div>
                     <span class="game-text">Jackpot</span>
                   </div>
@@ -124,7 +123,7 @@ function GamesSidebar(props) {
                 <A href="/coinflip" class="game-item" title="Coinflip">
                   <div class="item-left">
                     <div class="game-icon">
-                      <BiSolidCircle size={18} />
+                      <img src="/assets/game-icons/coin-flip.svg" alt="Coinflip" width="18" height="18" />
                     </div>
                     <span class="game-text">Coinflip</span>
                   </div>
@@ -135,7 +134,7 @@ function GamesSidebar(props) {
                 <A href="/roulette" class="game-item" title="Roulette">
                   <div class="item-left">
                     <div class="game-icon">
-                      <RiMediaPlayCircleFill size={18} />
+                      <img src="/assets/game-icons/roulette.svg" alt="Roulette" width="18" height="18" />
                     </div>
                     <span class="game-text">Roulette</span>
                   </div>
@@ -146,7 +145,7 @@ function GamesSidebar(props) {
                 <A href="/cases" class="game-item" title="Cases">
                   <div class="item-left">
                     <div class="game-icon">
-                      <TbCards size={18} />
+                      <img src="/assets/game-icons/packs.svg" alt="Cases" width="18" height="18" />
                     </div>
                     <span class="game-text">Cases</span>
                   </div>
@@ -164,7 +163,7 @@ function GamesSidebar(props) {
                 >
                   <div class="item-left">
                     <div class="item-icon">
-                      <IoGameController size={18} />
+                    <img src="/assets/game-icons/featured.svg" alt="Featured Games" width="18" height="18" />
                     </div>
                     <span class="item-text">Featured Games</span>
                   </div>
@@ -178,27 +177,27 @@ function GamesSidebar(props) {
                   <A href="/slots" class="game-item" title="Slots">
                     <div class="item-left">
                       <div class="game-icon">
-                        <BiSolidDiamond size={18} />
+                        <img src="/assets/game-icons/slots.svg" alt="Slots" width="18" height="18" />
                       </div>
                       <span class="game-text">Slots</span>
+                      <span class="badge new">NEW</span>
                     </div>
-                    <span class="badge new">NEW</span>
                   </A>
 
                   <A href="/battles" class="game-item" title="Case Battles">
                     <div class="item-left">
                       <div class="game-icon">
-                        <BiSolidCube size={18} />
+                        <img src="/assets/game-icons/battles.svg" alt="Case Battles" width="18" height="18" />
                       </div>
-                      <span class="game-text">Case Battles</span>
+                      <span class="game-text">Battles</span>
+                      <span class="badge hot">HOT</span>
                     </div>
-                    <span class="badge hot">HOT</span>
                   </A>
 
                   <A href="/mines" class="game-item" title="Mines">
                     <div class="item-left">
                       <div class="game-icon">
-                        <TbTool size={18} />
+                        <img src="/assets/game-icons/mines.svg" alt="Mines" width="18" height="18" />
                       </div>
                       <span class="game-text">Mines</span>
                     </div>
@@ -207,7 +206,7 @@ function GamesSidebar(props) {
                   <A href="/jackpot" class="game-item" title="Jackpot">
                     <div class="item-left">
                       <div class="game-icon">
-                        <BiSolidTrophy size={18} />
+                        <img src="/assets/game-icons/jackpot.svg" alt="Jackpot" width="18" height="18" />
                       </div>
                       <span class="game-text">Jackpot</span>
                     </div>
@@ -216,7 +215,7 @@ function GamesSidebar(props) {
                   <A href="/coinflip" class="game-item" title="Coinflip">
                     <div class="item-left">
                       <div class="game-icon">
-                        <BiSolidCircle size={18} />
+                        <img src="/assets/game-icons/coin-flip.svg" alt="Coinflip" width="18" height="18" />
                       </div>
                       <span class="game-text">Coinflip</span>
                     </div>
@@ -225,7 +224,7 @@ function GamesSidebar(props) {
                   <A href="/roulette" class="game-item" title="Roulette">
                     <div class="item-left">
                       <div class="game-icon">
-                        <RiMediaPlayCircleFill size={18} />
+                        <img src="/assets/game-icons/roulette.svg" alt="Roulette" width="18" height="18" />
                       </div>
                       <span class="game-text">Roulette</span>
                     </div>
@@ -234,9 +233,9 @@ function GamesSidebar(props) {
                   <A href="/cases" class="game-item" title="Cases">
                     <div class="item-left">
                       <div class="game-icon">
-                        <TbCards size={18} />
+                        <img src="/assets/game-icons/packs.svg" alt="Cases" width="18" height="18" />
                       </div>
-                      <span class="game-text">Cases</span>
+                      <span class="game-text">Packs</span>
                     </div>
                   </A>
                 </div>
@@ -251,7 +250,7 @@ function GamesSidebar(props) {
                 >
                   <div class="item-left">
                     <div class="item-icon">
-                      <AiOutlineTeam size={18} />
+                      <img src="/assets/game-icons/community.svg" alt="Community" width="18" height="18" />
                     </div>
                     <span class="item-text">Community</span>
                   </div>
@@ -265,7 +264,7 @@ function GamesSidebar(props) {
                   <A href="/leaderboard" class="game-item" title="Leaderboard">
                     <div class="item-left">
                       <div class="game-icon">
-                        <AiOutlineTrophy size={18} />
+                        <img src="/assets/game-icons/leaderboard.svg" alt="Leaderboard" width="18" height="18" />
                       </div>
                       <span class="game-text">Leaderboard</span>
                     </div>
@@ -275,11 +274,11 @@ function GamesSidebar(props) {
                     <A href="/affiliates" class="game-item" title="Affiliates">
                       <div class="item-left">
                         <div class="game-icon">
-                          <AiOutlineDollar size={18} />
+                          <img src="/assets/game-icons/affiliates.svg" alt="Affiliates" width="18" height="18" />
                         </div>
                         <span class="game-text">Affiliates</span>
+                        <span class="badge new">EARN</span>
                       </div>
-                      <span class="badge new">EARN</span>
                     </A>
                   )}
 
@@ -305,7 +304,7 @@ function GamesSidebar(props) {
                 >
                   <div class="item-left">
                     <div class="item-icon">
-                      <AiOutlineFileText size={18} />
+                      <img src="/assets/game-icons/legal.svg" alt="Legal & Support" width="18" height="18" />
                     </div>
                     <span class="item-text">Legal & Support</span>
                   </div>
@@ -319,7 +318,7 @@ function GamesSidebar(props) {
                   <A href="/docs/faq" class="game-item" title="FAQ">
                     <div class="item-left">
                       <div class="game-icon">
-                        <AiOutlineQuestionCircle size={18} />
+                        <img src="/assets/game-icons/faq.svg" alt="FAQ" width="18" height="18" />
                       </div>
                       <span class="game-text">FAQ</span>
                     </div>
@@ -328,7 +327,7 @@ function GamesSidebar(props) {
                   <A href="/docs/provably" class="game-item" title="Fairness">
                     <div class="item-left">
                       <div class="game-icon">
-                        <AiOutlineLock size={18} />
+                        <img src="/assets/game-icons/fairness.svg" alt="Fairness" width="18" height="18" />
                       </div>
                       <span class="game-text">Fairness</span>
                     </div>
@@ -337,7 +336,7 @@ function GamesSidebar(props) {
                   <A href="/docs/tos" class="game-item" title="Terms of Service">
                     <div class="item-left">
                       <div class="game-icon">
-                        <IoDocumentText size={18} />
+                        <img src="/assets/game-icons/tos.svg" alt="Terms of Service" width="18" height="18" />
                       </div>
                       <span class="game-text">Terms of Service</span>
                     </div>
@@ -346,7 +345,7 @@ function GamesSidebar(props) {
                   <A href="/docs/aml" class="game-item" title="AML Policy">
                     <div class="item-left">
                       <div class="game-icon">
-                        <AiOutlineFileText size={18} />
+                        <img src="/assets/game-icons/aml.svg" alt="AML Policy" width="18" height="18" />
                       </div>
                       <span class="game-text">AML Policy</span>
                     </div>
@@ -355,7 +354,7 @@ function GamesSidebar(props) {
                   <A href="/docs/privacy" class="game-item" title="Privacy Policy">
                     <div class="item-left">
                       <div class="game-icon">
-                        <AiOutlineFileText size={18} />
+                        <img src="/assets/game-icons/legal.svg" alt="Privacy Policy" width="18" height="18" />
                       </div>
                       <span class="game-text">Privacy Policy</span>
                     </div>

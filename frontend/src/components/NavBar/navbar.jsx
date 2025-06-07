@@ -87,14 +87,8 @@ function NavBar(props) {
             <div class={`navbar-container ${props.sidebarCollapsed ? 'sidebar-collapsed' : ''} ${props.chat ? 'chat-open' : ''}`}>
                 <div class='main-navbar'>
                     <div class='navbar-content'>
-                        {/* Sidebar Header - Logo and Collapse Button */}
-                        <div class='sidebar-header-in-navbar'>
-                            <A href='/' class='logo-section'>
-                                <div class='logo-icon'>
-                                    <AiOutlineStar size={24} />
-                                </div>
-                                <span class='logo-text'>NOVA CASINO</span>
-                            </A>
+                        {/* Left Side - User Level/Rank Info */}
+                        <div class='nav-left-section'>
                             <button 
                                 class='collapse-button' 
                                 onClick={toggleSidebarCollapsed}
@@ -102,9 +96,52 @@ function NavBar(props) {
                             >
                                 {props.sidebarCollapsed ? <FiChevronRight size={18} /> : <FiChevronLeft size={18} />}
                             </button>
+                            {props.user && (
+                                <div class='user-rank-display'>
+                                    <div class='sparkle-1'>✦</div>
+                                    <div class='sparkle-2'>✧</div>
+                                    <Avatar 
+                                        avatar={props.user?.avatar}
+                                        xp={props.user?.xp}
+                                        height={32}
+                                    />
+                                    <div class='rank-info'>
+                                        <span class='rank-title'>
+                                            {(() => {
+                                                const level = Math.floor(Math.sqrt(props.user?.xp || 0));
+                                                if (level <= 5) return "Bronze Rank";
+                                                if (level <= 15) return "Silver Rank";
+                                                if (level <= 30) return "Gold Rank";
+                                                if (level <= 50) return "Platinum Rank";
+                                                if (level <= 75) return "Diamond Rank";
+                                                return "Master Rank";
+                                            })()}
+                                        </span>
+                                        <div class='xp-display'>
+                                            <span class='xp-icon'>⚡</span>
+                                            <span class='xp-text'>
+                                                {Math.floor(props.user?.xp - (Math.floor(Math.sqrt(props.user?.xp || 0)) ** 2)) || 0}/
+                                                {Math.floor(((Math.floor(Math.sqrt(props.user?.xp || 0)) + 1) ** 2) - (Math.floor(Math.sqrt(props.user?.xp || 0)) ** 2)) || 0}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
-                        {/* Balance Display - Center */}
+                        {/* Center - Logo */}
+                        <div class='nav-center-logo'>
+                            <A href='/' class='logo-section'>
+                                <img 
+                                    src="/assets/logo/nova-logo.png" 
+                                    alt="Nova Casino Logo" 
+                                    class='logo-image'
+                                    style="max-width: 120px; height: auto; filter: drop-shadow(0 0 15px rgba(138, 43, 226, 0.8));"
+                                />
+                            </A>
+                        </div>
+
+                        {/* Balance Display - Center Right */}
                         <div class='nav-center-balance'>
                             {props.user && (
                                 <div class='balance-section'>
@@ -116,52 +153,51 @@ function NavBar(props) {
                                                 e.stopPropagation()
                                             }}
                                         >
-                                            <BiSolidWallet size={16} />
                                             <div class='center-balance-display'>
-                                                <span class='currency-symbol'>$</span>
-                                                <Countup end={props?.user?.balance} gray={true}/>
+                                                {/* <span class='currency-symbol'>$</span> */}
+                                                $<Countup end={props?.user?.balance} gray={true}/>
                                             </div>
                                             {balanceDropdown() ? <FiChevronUp size={12} /> : <FiChevronDown size={12} />}
                                         </button>
-
-                                        <Show when={balanceDropdown()}>
-                                            <div class='balance-dropdown'>
-                                                <div class='balance-dropdown-content'>
-                                                    {cryptoBalances.map((crypto) => (
-                                                        <div class='crypto-balance-item' onClick={() => setShowWalletModal(true)}>
-                                                            {crypto.isCustom ? (
-                                                                <div class='crypto-icon' style={`background-color: ${crypto.color}`}>
-                                                                    $
-                                                                </div>
-                                                            ) : (
-                                                                <Web3Icon 
-                                                                    symbol={crypto.symbol} 
-                                                                    size={32} 
-                                                                    backgroundColor={crypto.color}
-                                                                    fallback={crypto.symbol.toUpperCase().substring(0, 2)}
-                                                                />
-                                                            )}
-                                                            <div class='crypto-info'>
-                                                                <div class='crypto-name'>{crypto.name}</div>
-                                                                <div class='crypto-symbol'>{crypto.symbol.toUpperCase()}</div>
-                                                            </div>
-                                                            <div class='crypto-balance'>
-                                                                ${crypto.balance.toFixed(2)}
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                    <div class='wallet-settings' onClick={() => setShowWalletModal(true)}>
-                                                        <div class='settings-icon'>⚙</div>
-                                                        <span>Wallet Settings</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </Show>
                                     </div>
 
                                     <button class='deposit-button' onClick={() => setShowWalletModal(true)}>
                                         DEPOSIT
                                     </button>
+
+                                    <Show when={balanceDropdown()}>
+                                        <div class='balance-dropdown'>
+                                            <div class='balance-dropdown-content'>
+                                                {cryptoBalances.map((crypto) => (
+                                                    <div class='crypto-balance-item' onClick={() => setShowWalletModal(true)}>
+                                                        {crypto.isCustom ? (
+                                                            <div class='crypto-icon' style={`background-color: ${crypto.color}`}>
+                                                                $
+                                                            </div>
+                                                        ) : (
+                                                            <Web3Icon 
+                                                                symbol={crypto.symbol} 
+                                                                size={32} 
+                                                                backgroundColor={crypto.color}
+                                                                fallback={crypto.symbol.toUpperCase().substring(0, 2)}
+                                                            />
+                                                        )}
+                                                        <div class='crypto-info'>
+                                                            <div class='crypto-name'>{crypto.name}</div>
+                                                            <div class='crypto-symbol'>{crypto.symbol.toUpperCase()}</div>
+                                                        </div>
+                                                        <div class='crypto-balance'>
+                                                            ${crypto.balance.toFixed(2)}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                                <div class='wallet-settings' onClick={() => setShowWalletModal(true)}>
+                                                    <div class='settings-icon'>⚙</div>
+                                                    <span>Wallet Settings</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </Show>
                                 </div>
                             )}
                         </div>

@@ -86,7 +86,7 @@ async function sendMessage(socket, message, replyTo) {
     } else {
 
         if (!enabledFeatures.chat) return sendSystemMessage(socket, 'Chat is disabled.');
-        if (message.length > 300) return sendSystemMessage(socket, 'Message is too long.');
+        if (message.length > 120) return sendSystemMessage(socket, 'Message is too long.');
 
         const [[user]] = await sql.query('SELECT id, username, xp, role, perms, mutedUntil FROM users WHERE id = ?', [socket.userId]);
         const now = Date.now();
@@ -162,6 +162,7 @@ async function sendMessage(socket, message, replyTo) {
             user: {
                 id: user.id,
                 username: user.username,
+                avatar: user.avatar,
                 role: user.role,
                 xp: user.xp
             }

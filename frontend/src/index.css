@@ -9,7 +9,7 @@
   --fifth-bg: #0d1824;
 
   --gold: #FCA31E;
-  --gradient-bg: linear-gradient(180deg, #1a2332 0%, #0f1a26 50%, #0a1420 100%);
+  --gradient-bg: linear-gradient(180deg, #0e0b27 0%, #0e0b27 50%, #0e0b27 100%);
   --accent-color: #4ecdc4;
   --accent-secondary: rgba(78, 205, 196, 0.15);
 }
@@ -27,7 +27,7 @@ body {
   font-family: "Geogrotesque Wide", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(180deg, #1a2332 0%, #0f1a26 50%, #0a1420 100%);
+  background: linear-gradient(180deg, #0e0b27 0%, #0e0b27 50%, #0e0b27 100%);
   min-height: 100vh;
 }
 
@@ -124,7 +124,7 @@ a:-webkit-any-link {
 }
 
 .footer-link {
-  color: #8aa3b8;
+  color: #F9F6EE;
   font-family: Geogrotesque Wide, sans-serif;
   font-size: 15px;
   font-weight: 600;
@@ -138,9 +138,7 @@ a:-webkit-any-link {
   transition: color 0.3s ease;
 }
 
-.footer-link:hover {
-  color: #4ecdc4;
-}
+
 
 .purple {
   color: #5865F2;

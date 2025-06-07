@@ -58,18 +58,19 @@ function RainEnd(props) {
                 width: 100%;
                 min-height: 90px;
                 background: linear-gradient(135deg, 
-                  rgba(26, 35, 50, 0.95) 0%, 
-                  rgba(20, 28, 40, 0.95) 100%
+                  #181434 0%, 
+                  #0e0b27 100%
                 );
-                border: 2px solid transparent;
-                border-radius: 10px;
+                border: 1px solid rgba(139, 120, 221, 0.3);
+                border-radius: 12px;
                 padding: 16px;
                 position: relative;
                 overflow: hidden;
                 animation: fadeInUp 0.6s ease-out;
+                backdrop-filter: blur(12px);
                 box-shadow: 
-                  0 6px 24px rgba(0, 0, 0, 0.3),
-                  0 2px 12px rgba(78, 205, 196, 0.1),
+                  0 6px 24px rgba(0, 0, 0, 0.4),
+                  0 2px 12px rgba(139, 120, 221, 0.2),
                   inset 0 1px 0 rgba(255, 255, 255, 0.08);
               }
               
@@ -81,12 +82,12 @@ function RainEnd(props) {
                 right: 0;
                 bottom: 0;
                 background: linear-gradient(135deg, 
-                  rgba(78, 205, 196, 0.12) 0%, 
-                  rgba(252, 163, 30, 0.08) 30%,
-                  rgba(147, 51, 234, 0.08) 70%,
-                  rgba(78, 205, 196, 0.12) 100%
+                  rgba(139, 120, 221, 0.15) 0%, 
+                  rgba(139, 120, 221, 0.08) 30%,
+                  rgba(139, 120, 221, 0.05) 70%,
+                  rgba(139, 120, 221, 0.12) 100%
                 );
-                border-radius: 10px;
+                border-radius: 12px;
                 z-index: 0;
               }
               
@@ -99,7 +100,7 @@ function RainEnd(props) {
                 bottom: 0;
                 background: linear-gradient(45deg, 
                   transparent 30%, 
-                  rgba(78, 205, 196, 0.08) 50%, 
+                  rgba(139, 120, 221, 0.1) 50%, 
                   transparent 70%
                 );
                 z-index: 0;
@@ -109,9 +110,10 @@ function RainEnd(props) {
                 position: absolute;
                 width: 6px;
                 height: 6px;
-                background: radial-gradient(circle, #fca31e, #4ecdc4);
+                background: radial-gradient(circle, #8b78dd, #7c6bbf);
                 border-radius: 50%;
                 z-index: 1;
+                box-shadow: 0 0 8px rgba(139, 120, 221, 0.6);
               }
               
               .sparkle-1 {
@@ -160,7 +162,7 @@ function RainEnd(props) {
               .celebration-icon {
                 font-size: 24px;
                 animation: float 2.5s ease-in-out infinite;
-                filter: drop-shadow(0 2px 6px rgba(252, 163, 30, 0.3));
+                filter: drop-shadow(0 2px 6px rgba(139, 120, 221, 0.4));
               }
               
               .header-text {
@@ -175,7 +177,7 @@ function RainEnd(props) {
                 margin: 0 0 3px 0;
                 letter-spacing: 0.4px;
                 text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-                background: linear-gradient(135deg, #ffffff, #4ecdc4);
+                background: linear-gradient(135deg, #ffffff, #8b78dd);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 background-clip: text;
@@ -191,10 +193,10 @@ function RainEnd(props) {
               }
               
               .user-count {
-                color: #4ecdc4;
+                color: #8b78dd;
                 font-weight: 700;
                 font-size: 13px;
-                text-shadow: 0 1px 2px rgba(78, 205, 196, 0.3);
+                text-shadow: 0 1px 2px rgba(139, 120, 221, 0.4);
               }
               
               .text {
@@ -211,16 +213,16 @@ function RainEnd(props) {
                 align-items: center;
                 gap: 14px;
                 background: linear-gradient(135deg, 
-                  rgba(26, 35, 50, 0.8) 0%, 
-                  rgba(20, 28, 40, 0.9) 100%
+                  rgba(27, 23, 56, 0.8) 0%, 
+                  rgba(14, 11, 39, 0.9) 100%
                 );
-                border: 1.5px solid rgba(78, 205, 196, 0.2);
+                border: 1.5px solid rgba(139, 120, 221, 0.3);
                 border-radius: 12px;
                 padding: 12px 18px;
                 backdrop-filter: blur(10px);
                 box-shadow: 
                   0 4px 16px rgba(0, 0, 0, 0.25),
-                  0 1px 4px rgba(78, 205, 196, 0.1),
+                  0 1px 4px rgba(139, 120, 221, 0.2),
                   inset 0 1px 0 rgba(255, 255, 255, 0.08);
                 transition: all 0.3s ease;
               }
@@ -229,7 +231,7 @@ function RainEnd(props) {
                 transform: translateY(-1px);
                 box-shadow: 
                   0 6px 20px rgba(0, 0, 0, 0.3),
-                  0 2px 8px rgba(78, 205, 196, 0.15),
+                  0 2px 8px rgba(139, 120, 221, 0.25),
                   inset 0 1px 0 rgba(255, 255, 255, 0.12);
               }
               
@@ -243,7 +245,7 @@ function RainEnd(props) {
               .coin-icon {
                 position: relative;
                 z-index: 2;
-                filter: drop-shadow(0 3px 8px rgba(252, 163, 30, 0.4));
+                filter: drop-shadow(0 3px 8px rgba(139, 120, 221, 0.5));
                 animation: float 3s ease-in-out infinite;
                 transition: transform 0.3s ease;
               }
@@ -260,8 +262,8 @@ function RainEnd(props) {
                 width: 45px;
                 height: 45px;
                 background: radial-gradient(circle, 
-                  rgba(252, 163, 30, 0.3) 0%, 
-                  rgba(252, 163, 30, 0.15) 40%, 
+                  rgba(139, 120, 221, 0.4) 0%, 
+                  rgba(139, 120, 221, 0.2) 40%, 
                   transparent 70%
                 );
                 border-radius: 50%;
@@ -287,7 +289,7 @@ function RainEnd(props) {
                 align-items: baseline;
                 gap: 1px;
                 text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-                background: linear-gradient(135deg, #ffffff, #4ecdc4);
+                background: linear-gradient(135deg, #ffffff, #8b78dd);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 background-clip: text;
@@ -298,7 +300,7 @@ function RainEnd(props) {
                 font-size: 14px;
                 color: #8aa3b8;
                 font-weight: 600;
-                background: linear-gradient(135deg, #8aa3b8, #4ecdc4);
+                background: linear-gradient(135deg, #8aa3b8, #8b78dd);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 background-clip: text;

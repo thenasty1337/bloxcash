@@ -165,35 +165,19 @@ function Footer(props) {
             <style jsx>{`
               .footer-container {
                 width: 100%;
-                background: linear-gradient(180deg, #0A1419 0%, #060D12 100%);
-                border-top: 1px solid rgba(78, 205, 196, 0.15);
-                position: relative;
-                overflow: hidden;
-              }
-              
-              .footer-container::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: 
-                  radial-gradient(circle at 20% 50%, rgba(78, 205, 196, 0.03) 0%, transparent 50%),
-                  radial-gradient(circle at 80% 20%, rgba(78, 205, 196, 0.02) 0%, transparent 50%),
-                  radial-gradient(circle at 40% 80%, rgba(78, 205, 196, 0.01) 0%, transparent 50%);
-                pointer-events: none;
+                margin-top: 10px;
+                background: #1b1738;
+                border-top: 1px solid rgba(139, 120, 221, 0.1);
               }
               
               .footer-content {
                 max-width: 1200px;
                 margin: 0 auto;
-                padding: 80px 40px 60px;
+                padding: 50px 24px;
                 display: grid;
                 grid-template-columns: 1fr 2fr;
                 gap: 80px;
-                position: relative;
-                z-index: 1;
+                align-items: start;
               }
               
               .footer-brand {
@@ -210,12 +194,12 @@ function Footer(props) {
               }
               
               .logo-container img {
-                filter: drop-shadow(0 4px 8px rgba(78, 205, 196, 0.2));
+                display: block;
               }
               
               .brand-description {
-                color: #94A9C9;
-                font-size: 16px;
+                color: #b8b4d1;
+                font-size: 14px;
                 line-height: 1.6;
                 margin: 0;
                 font-weight: 400;
@@ -226,11 +210,10 @@ function Footer(props) {
                 display: flex;
                 align-items: center;
                 gap: 12px;
-                padding: 12px 16px;
-                background: rgba(78, 205, 196, 0.08);
-                border: 1px solid rgba(78, 205, 196, 0.2);
-                border-radius: 8px;
-                backdrop-filter: blur(8px);
+                padding: 8px 12px;
+                background: rgba(139, 120, 221, 0.15);
+                border: 1px solid rgba(139, 120, 221, 0.2);
+                border-radius: 6px;
                 width: fit-content;
               }
               
@@ -241,7 +224,7 @@ function Footer(props) {
               }
               
               .rating-text {
-                color: #4ECDC4;
+                color: #8b78dd;
                 font-size: 13px;
                 font-weight: 600;
               }
@@ -255,29 +238,16 @@ function Footer(props) {
               .link-column {
                 display: flex;
                 flex-direction: column;
-                gap: 24px;
+                gap: 20px;
               }
               
               .column-title {
-                color: #FFFFFF;
-                font-size: 16px;
-                font-weight: 700;
-                margin: 0;
+                color: #e8e5f3;
+                font-size: 14px;
+                font-weight: 600;
+                margin: 0 0 16px 0;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
-                position: relative;
-                padding-bottom: 8px;
-              }
-              
-              .column-title::after {
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 24px;
-                height: 2px;
-                background: linear-gradient(90deg, #4ECDC4 0%, transparent 100%);
-                border-radius: 1px;
               }
               
               .link-list {
@@ -292,41 +262,20 @@ function Footer(props) {
               .footer-link {
                 display: flex;
                 align-items: center;
-                gap: 12px;
-                color: #94A9C9;
+                gap: 10px;
+                color: #a8a3c7;
                 text-decoration: none;
                 font-size: 14px;
-                font-weight: 500;
-                padding: 8px 12px;
-                border-radius: 6px;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                position: relative;
+                font-weight: 400;
+                padding: 6px 0;
                 border: none;
                 background: none;
                 cursor: pointer;
-                width: fit-content;
-              }
-              
-              .footer-link::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 0;
-                height: 100%;
-                background: rgba(78, 205, 196, 0.1);
-                border-radius: 6px;
-                transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                z-index: -1;
-              }
-              
-              .footer-link:hover::before {
-                width: 100%;
+                transition: color 0.2s ease;
               }
               
               .footer-link:hover {
-                color: #4ECDC4;
-                transform: translateX(4px);
+                color: #8b78dd;
               }
               
               .link-arrow {
@@ -388,7 +337,7 @@ function Footer(props) {
                 width: 36px;
                 height: 36px;
                 border-radius: 8px;
-                background: linear-gradient(135deg, #4ECDC4 0%, #44B8AC 100%);
+                background: linear-gradient(135deg, #8b78dd 0%, #7366c7 100%);
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -396,7 +345,7 @@ function Footer(props) {
               }
               
               .email-icon {
-                background: linear-gradient(135deg, #6C5CE7 0%, #5A4FCF 100%);
+                background: linear-gradient(135deg, #8b78dd 0%, #7366c7 100%);
               }
               
               .support-icon svg, .email-icon svg {
@@ -418,16 +367,15 @@ function Footer(props) {
               }
               
               .footer-bottom {
-                border-top: 1px solid rgba(78, 205, 196, 0.1);
-                padding: 32px 0;
-                background: rgba(6, 13, 18, 0.5);
-                backdrop-filter: blur(8px);
+                border-top: 1px solid rgba(139, 120, 221, 0.15);
+                padding: 24px 0;
+                background: rgba(15, 14, 29, 0.7);
               }
               
               .footer-bottom-content {
                 max-width: 1200px;
                 margin: 0 auto;
-                padding: 0 40px;
+                padding: 0 24px;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
@@ -439,7 +387,7 @@ function Footer(props) {
               }
               
               .main-disclaimer {
-                color: #94A9C9;
+                color: #a8a3c7;
                 font-size: 13px;
                 line-height: 1.5;
                 margin: 0 0 12px 0;
@@ -447,7 +395,7 @@ function Footer(props) {
               }
               
               .main-disclaimer strong {
-                color: #4ECDC4;
+                color: #8b78dd;
                 font-weight: 700;
               }
               
@@ -456,7 +404,7 @@ function Footer(props) {
                 align-items: center;
                 gap: 16px;
                 font-size: 12px;
-                color: #6B7F99;
+                color: #8a85a5;
               }
               
               .separator {
@@ -469,7 +417,7 @@ function Footer(props) {
               }
               
               .responsible-gaming {
-                color: #4ECDC4;
+                color: #8b78dd;
                 font-weight: 600;
               }
               
@@ -483,10 +431,10 @@ function Footer(props) {
                 align-items: center;
                 gap: 8px;
                 padding: 8px 12px;
-                background: rgba(78, 205, 196, 0.08);
-                border: 1px solid rgba(78, 205, 196, 0.2);
+                background: rgba(139, 120, 221, 0.12);
+                border: 1px solid rgba(139, 120, 221, 0.25);
                 border-radius: 6px;
-                color: #4ECDC4;
+                color: #8b78dd;
                 font-size: 11px;
                 font-weight: 600;
                 text-transform: uppercase;
@@ -501,35 +449,60 @@ function Footer(props) {
               @media (max-width: 1024px) {
                 .footer-content {
                   grid-template-columns: 1fr;
-                  gap: 60px;
-                  padding: 60px 30px 40px;
+                  gap: 50px;
+                  padding: 40px 20px;
+                }
+                
+                .footer-brand {
+                  text-align: center;
+                }
+                
+                .logo-container {
+                  align-items: center;
+                }
+                
+                .brand-description {
+                  text-align: center;
+                }
+                
+                .rating-badge {
+                  align-self: center;
                 }
                 
                 .footer-links {
-                  grid-template-columns: repeat(2, 1fr);
+                  grid-template-columns: repeat(3, 1fr);
                   gap: 40px;
                 }
                 
                 .footer-bottom-content {
                   flex-direction: column;
                   text-align: center;
-                  gap: 24px;
-                  padding: 0 30px;
+                  gap: 20px;
+                  padding: 0 20px;
                 }
               }
               
               @media (max-width: 768px) {
                 .footer-content {
-                  padding: 40px 20px 30px;
+                  padding: 30px 16px;
+                  gap: 40px;
                 }
                 
                 .footer-links {
                   grid-template-columns: 1fr;
-                  gap: 32px;
+                  gap: 30px;
+                }
+                
+                .column-title {
+                  text-align: center;
+                }
+                
+                .link-list {
+                  align-items: center;
                 }
                 
                 .footer-bottom-content {
-                  padding: 0 20px;
+                  padding: 0 16px;
                 }
                 
                 .security-badges {
@@ -539,21 +512,55 @@ function Footer(props) {
               }
               
               @media (max-width: 480px) {
-                .footer-brand {
-                  text-align: center;
+                .footer-content {
+                  padding: 24px 12px;
+                  gap: 30px;
                 }
                 
-                .logo-container {
-                  align-items: center;
+                .brand-description {
+                  font-size: 13px;
                 }
                 
-                .rating-badge {
-                  align-self: center;
+                .footer-links {
+                  gap: 24px;
+                }
+                
+                .column-title {
+                  font-size: 13px;
+                }
+                
+                .footer-link {
+                  font-size: 13px;
+                }
+                
+                .social-icon {
+                  width: 32px;
+                  height: 32px;
+                }
+                
+                .footer-bottom {
+                  padding: 20px 0;
+                }
+                
+                .footer-bottom-content {
+                  padding: 0 12px;
+                  gap: 16px;
+                }
+                
+                .main-disclaimer {
+                  font-size: 12px;
                 }
                 
                 .legal-links {
                   flex-wrap: wrap;
                   justify-content: center;
+                  font-size: 11px;
+                  gap: 8px;
+                }
+                
+                .security-badge {
+                  padding: 6px 8px;
+                  font-size: 10px;
                 }
               }
             `}</style>
