@@ -1,27 +1,94 @@
 import {createResource, createSignal, For, Show} from "solid-js";
 import {A} from "@solidjs/router";
-import {api} from "../../util/api";
+import {api, authedAPI} from "../../util/api";
 import Loader from "../Loader/loader";
 import BlurImage from "../UI/BlurImage";
+import FavoriteButton from "../UI/FavoriteButton";
 import { BsDiamond } from 'solid-icons/bs';
 import { AiOutlineEye, AiOutlineArrowLeft, AiOutlineArrowRight } from 'solid-icons/ai';
 
-function SlotsList() {
-
+function SlotsList(props) {
   let slotsRef
   const [slots, setSlots] = createSignal([])
+  
+  // Get props with defaults
+  const getTitle = () => props.title || 'Slots';
+  const getType = () => props.type || null; // 'video-slots', 'live'
+  const getShowNewOnly = () => props.showNewOnly || false; // for new releases
+  const getShowFeaturedOnly = () => props.showFeaturedOnly || false; // for featured
+  const getShowPopular = () => props.showPopular || false; // for popular (sort by popularity)
+  const getShowFavoritesOnly = () => props.showFavoritesOnly || false; // for user favorites
+  const getProvider = () => props.provider || null; // filter by provider
+  const getLimit = () => props.limit || 25;
+  const getViewAllLink = () => props.viewAllLink || '/slots';
+  const getIcon = () => props.icon || null; // Icon path
+  const getUser = () => props.user || null; // User for authentication check
+  
   const [slotsInfo] = createResource(fetchSlots)
 
   async function fetchSlots() {
     try {
-      let res = await api('/slots?limit=25', 'GET', null, false)
-      if (!Array.isArray(res.data)) return null
-
-      setSlots(res.data)
-      return res
+      // Build query parameters
+      let queryParams = new URLSearchParams();
+      queryParams.append('limit', getLimit().toString());
+      
+      // Add type filter
+      if (getType()) {
+        queryParams.append('type', getType());
+      }
+      
+      // Add new releases filter
+      if (getShowNewOnly()) {
+        queryParams.append('type', 'video-slots'); // New releases are video slots
+        queryParams.append('isNew', 'true'); // Filter for new releases
+      }
+      
+      // Add popular sorting
+      if (getShowPopular()) {
+        queryParams.append('sortBy', 'popularity');
+        queryParams.append('sortOrder', 'DESC');
+      }
+      
+      // Add provider filter
+      if (getProvider()) {
+        queryParams.append('provider', getProvider());
+      }
+      
+      let endpoint = '/slots';
+      
+      // Use featured endpoint for featured slots
+      if (getShowFeaturedOnly()) {
+        endpoint = '/slots/featured';
+        queryParams = new URLSearchParams(); // Featured endpoint doesn't need other params
+        queryParams.append('limit', getLimit().toString());
+      }
+      
+      // Use favorites endpoint for user favorites
+      if (getShowFavoritesOnly()) {
+        endpoint = '/slots/favorites';
+        queryParams = new URLSearchParams(); // Favorites endpoint doesn't need other params
+        queryParams.append('limit', getLimit().toString());
+      }
+      
+      const queryString = queryParams.toString();
+      const url = queryString ? `${endpoint}?${queryString}` : endpoint;
+      
+      // Use authedAPI for favorites endpoint, api for others
+      let res;
+      if (getShowFavoritesOnly()) {
+        res = await authedAPI(url, 'GET', null, false);
+      } else {
+        res = await api(url, 'GET', null, false);
+      }
+      
+      // All endpoints now return consistent format: { data, total, limit, offset }
+      if (!Array.isArray(res.data)) return null;
+      
+      setSlots(res.data);
+      return res;
     } catch (e) {
-      console.error(e)
-      return null
+      console.error(e);
+      return null;
     }
   }
 
@@ -36,6 +103,10 @@ function SlotsList() {
   const shouldRender = () => {
     if (slotsInfo.loading) return false
     if (!slotsInfo()) return false
+    
+    // For favorites, don't render if user is not authenticated
+    if (getShowFavoritesOnly() && !getUser()) return false
+    
     if (!slotsInfo()?.total || slotsInfo()?.total === 0) return false
     if (!slots() || slots().length === 0) return false
     return true
@@ -48,9 +119,14 @@ function SlotsList() {
           <div class='games-header'>
             <div class='header-content'>
               <div class='header-left'>
+                <Show when={getIcon()}>
+                  <div class='header-icon'>
+                    <img src={getIcon()} alt={getTitle()} />
+                  </div>
+                </Show>
                 
                 <div class='header-text'>
-                  <h2 class='title'>Slots</h2>
+                  <h2 class='title'>{getTitle()}</h2>
                   <span class='count'>{slotsInfo()?.total || 0} games available</span>
                 </div>
               </div>
@@ -59,7 +135,7 @@ function SlotsList() {
                 <div class='viewall-btn'>
                   <AiOutlineEye size={14} />
                   <span>See All</span>
-                  <A href='/slots' class='gamemode-link'/>
+                  <A href={getViewAllLink()} class='gamemode-link'/>
                 </div>
                 
                 <div class='nav-controls'>
@@ -82,8 +158,18 @@ function SlotsList() {
                 <BlurImage 
                   src={`${slot.img}`}
                   blurhash={slot.blurhash}
-                  style={{ 'border-radius': '6px' }}
+                  style={{ 'border-radius': '6px', 'pointer-events': 'none' }}
                 />
+                <div class='slot-overlay'>
+                  <div class='favorite-container'>
+                    <FavoriteButton 
+                      slug={slot.slug}
+                      isAuthenticated={!!getUser()}
+                      isFavorited={slot.isFavorited}
+                      size={14}
+                    />
+                  </div>
+                </div>
                 <A href={`/slots/${slot.slug}`} class='gamemode-link'/>
               </div>
             }</For>
@@ -99,7 +185,7 @@ function SlotsList() {
                   <span class='view-all-subtitle'>{slotsInfo()?.total || 0} games</span>
                 </div>
               </div>
-              <A href='/slots' class='gamemode-link'/>
+              <A href={getViewAllLink()} class='gamemode-link'/>
             </div>
           </div>
         </div>
@@ -141,13 +227,16 @@ function SlotsList() {
         .header-icon {
           width: 32px;
           height: 32px;
-          background: rgba(78, 205, 196, 0.1);
-          border: 1px solid rgba(78, 205, 196, 0.2);
-          border-radius: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
+        }
+
+        .header-icon img {
+          width: 32px;
+          height: 32px;
+        
         }
 
         .header-icon svg {
@@ -177,11 +266,7 @@ function SlotsList() {
 
         .header-divider {
           height: 1px;
-          background: linear-gradient(90deg, 
-            rgba(78, 205, 196, 0.3) 0%, 
-            rgba(78, 205, 196, 0.1) 30%,
-            transparent 100%
-          );
+          background: linear-gradient(90deg, rgb(31 36 68) 0%, rgba(78, 205, 196, 0.1) 30%, transparent 100%);
         }
 
 
@@ -191,8 +276,8 @@ function SlotsList() {
           align-items: center;
           gap: 0.5rem;
           padding: 0.5rem 0.75rem;
-          background: rgba(26, 35, 50, 0.8);
-          border: 1px solid rgba(78, 205, 196, 0.2);
+          
+          border: 1px solid rgb(56 50 93);
           border-radius: 8px;
           color: #ffffff;
           font-size: 0.75rem;
@@ -207,11 +292,10 @@ function SlotsList() {
         }
 
         .viewall-btn:hover {
-          border-color: rgba(78, 205, 196, 0.4);
-          background: rgba(78, 205, 196, 0.1);
-          transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(78, 205, 196, 0.2);
-        }
+          border-color: rgb(31 36 68);
+    background: rgb(20 16 43);
+    transform: translateY(-1px);
+}
 
         .viewall-btn svg {
           opacity: 0.8;
@@ -231,10 +315,10 @@ function SlotsList() {
           width: 36px;
           height: 36px;
           padding: 0;
-          background: rgba(26, 35, 50, 0.8);
-          border: 1px solid rgba(78, 205, 196, 0.2);
+          background: #0F0B27;
+          border:1px solid rgb(56 50 93);
           border-radius: 6px;
-          color: #4ecdc4;
+          color: #ffffff;
           cursor: pointer;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           backdrop-filter: blur(10px);
@@ -244,11 +328,10 @@ function SlotsList() {
         }
 
         .nav-btn:hover {
-          border-color: rgba(78, 205, 196, 0.4);
-          background: rgba(78, 205, 196, 0.1);
-          transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(78, 205, 196, 0.2);
-        }
+          border-color: rgb(31 36 68);
+    background: rgb(20 16 43);
+    transform: translateY(-1px);
+}
 
         .nav-btn svg {
           opacity: 0.8;
@@ -365,13 +448,31 @@ function SlotsList() {
           font-weight: 500;
         }
 
+        .slot-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 12;
+        }
+
+        .favorite-container {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          pointer-events: auto;
+        }
+
         .gamemode-link {
           position: absolute;
           top: 0;
           left: 0;
           width: 100%;
           height: 100%;
-          z-index: 2;
+          z-index: 10;
+          text-decoration: none;
         }
 
         @media (max-width: 768px) {

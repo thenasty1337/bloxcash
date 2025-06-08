@@ -37,6 +37,7 @@ const Crash = lazy(() => import('./pages/crash'))
 
 const Slot = lazy(() => import('./pages/slot'))
 const Slots = lazy(() => import('./pages/slots'))
+const Favorites = lazy(() => import('./pages/favorites'))
 
 const Surveys = lazy(() => import('./pages/surveys'))
 
@@ -573,6 +574,12 @@ function App() {
                     <Route path='/slots' element={
                       <Suspense fallback={<Loader/>}>
                         <Slots/>
+                      </Suspense>
+                    }/>
+
+                    <Route path='/favorites' element={
+                      <Suspense fallback={<Loader/>}>
+                        <Favorites/>
                       </Suspense>
                     }/>
 

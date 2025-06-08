@@ -3,6 +3,7 @@ import {createResource, createSignal, For, Show} from "solid-js";
 import {api} from "../util/api";
 import Loader from "../components/Loader/loader";
 import BlurImage from "../components/UI/BlurImage";
+import FavoriteButton from "../components/UI/FavoriteButton";
 import {A, useSearchParams} from "@solidjs/router";
 import Bets from "../components/Home/bets";
 import {useUser} from "../contexts/usercontextprovider";
@@ -486,6 +487,16 @@ function Slots(props) {
                             style={{'border-radius': '6px'}}
                           />
                         </A>
+                      </div>
+                    </div>
+                    <div class='slot-overlay'>
+                      <div class='favorite-container'>
+                        <FavoriteButton 
+                          slug={slot.slug}
+                          isAuthenticated={!!user()}
+                          isFavorited={slot.isFavorited}
+                          size={16}
+                        />
                       </div>
                     </div>
                     {slot.isNew && <div class="new-tag">NEW</div>}
@@ -978,6 +989,23 @@ function Slots(props) {
           transform: scale(1.03);
         }
         
+        .slot-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 12;
+        }
+
+        .favorite-container {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          pointer-events: auto;
+        }
+
         .gamemode-link {
           position: absolute;
           top: 0;

@@ -7,6 +7,7 @@ import RewardsBanner from "../components/Home/rewardsbanner";
 import {createNotification} from "../util/api";
 import SlotsList from "../components/Home/slotslist";
 import SurveysBanner from "../components/Surveys/surveysbanner";
+import BannerCarousel from "../components/Home/BannerCarousel";
 
 
 const METHODS = {
@@ -77,15 +78,79 @@ function Home(props) {
         <>
             <div class='home-container fadein'>
 
-                <div class='banners'>
+                <BannerCarousel user={props?.user} />
+                
+                {/* <div class='banners'>
                     <RewardsBanner user={props?.user}/>
                     <RainBanner/>
-                </div>
+                </div> */}
+                                 
 
                 <GamesList/>
-                <SlotsList/>
+                
+                {/* User Favorites - only show if user is logged in */}
+                {props.user && (
+                  <SlotsList 
+                    title="Your Favorites"
+                    showFavoritesOnly={true}
+                    limit={15}
+                    viewAllLink="/favorites"
+                    icon="/assets/GameIcons/favourites.svg"
+                    user={props.user}
+                  />
+                )}
+                
+                {/* Featured Slots */}
+                <SlotsList 
+                  title="Featured Slots"
+                  showFeaturedOnly={true}
+                  limit={15}
+                  viewAllLink="/slots?featured=true"
+                  icon="/assets/GameIcons/favourites.svg"
+                  user={props.user}
+                />
+                
+                {/* Video Slots */}
+                <SlotsList 
+                  title="Video Slots"
+                  type="video-slots"
+                  limit={20}
+                  viewAllLink="/slots?type=video-slots"
+                  icon="/assets/GameIcons/provider.svg"
+                  user={props.user}
+                />
+                
+                {/* Game Shows / Live */}
+                <SlotsList 
+                  title="Game Shows"
+                  type="live"
+                  limit={15}
+                  viewAllLink="/slots?type=live"
+                  icon="/assets/GameIcons/game-shows.svg"
+                  user={props.user}
+                />
+                
+                {/* New Releases */}
+                <SlotsList 
+                  title="New Releases"
+                  showNewOnly={true}
+                  limit={15}
+                  viewAllLink="/slots?new=true"
+                  icon="/assets/GameIcons/new.svg"
+                  user={props.user}
+                />
+                
+                {/* Popular Slots */}
+                <SlotsList 
+                  title="Popular Slots"
+                  showPopular={true}
+                  limit={20}
+                  viewAllLink="/slots?popular=true"
+                  icon="/assets/GameIcons/popular.svg"
+                  user={props.user}
+                />
 
-                <SurveysBanner/>
+                {/* <SurveysBanner/> */}
 
                 <div class='crypto-carousel-container'>
                     <div class='crypto-carousel'>
@@ -159,7 +224,7 @@ function Home(props) {
                 height: fit-content;
 
                 box-sizing: border-box;
-                padding: 30px 0 0 10px;
+                padding: 0 0 0 10px;
                 margin: 0 auto;
               }
 
@@ -181,8 +246,7 @@ function Home(props) {
               
                 border-radius: 10px;
                 overflow: hidden;
-                backdrop-filter: blur(8px);
-                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+              
                 position: relative;
                 padding: 20px 0;
               }

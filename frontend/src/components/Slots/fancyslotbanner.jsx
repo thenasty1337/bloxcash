@@ -1,6 +1,7 @@
 import {A} from "@solidjs/router";
 import { createEffect } from "solid-js";
 import BlurImage from "../UI/BlurImage";
+import FavoriteButton from "../UI/FavoriteButton";
 
 function FancySlotBanner(props) {
   return (
@@ -19,6 +20,14 @@ function FancySlotBanner(props) {
               }}
             />
           </A>
+          <div class='favorite-container'>
+            <FavoriteButton 
+              slug={props.slug}
+              isAuthenticated={props.isAuthenticated}
+              isFavorited={props.isFavorited}
+              size={12}
+            />
+          </div>
         </div>
       </div>
       
@@ -78,10 +87,18 @@ function FancySlotBanner(props) {
           z-index: 2;
         }
 
-        .new-tag, .jackpot-tag {
+        .favorite-container {
           position: absolute;
           top: 8px;
           right: 8px;
+          z-index: 3;
+          pointer-events: auto;
+        }
+
+        .new-tag, .jackpot-tag {
+          position: absolute;
+          top: 8px;
+          right: 40px;
           padding: 3px 8px;
           border-radius: 4px;
           font-size: 10px;
@@ -101,6 +118,7 @@ function FancySlotBanner(props) {
           background: linear-gradient(180deg, #4ecdc4 0%, #44a08d 100%);
           color: #ffffff;
           top: 36px;
+          right: 40px;
           box-shadow: 0 2px 8px rgba(78, 205, 196, 0.4);
         }
         

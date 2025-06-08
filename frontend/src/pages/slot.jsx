@@ -1,9 +1,9 @@
 import {A, useParams, useLocation} from "@solidjs/router";
 import {createEffect, createResource, createSignal, For, Show} from "solid-js";
-import {api, authedAPI} from "../util/api";
+import {api, authedAPI, favorites} from "../util/api";
 import {useUser} from "../contexts/usercontextprovider";
 import Loader from "../components/Loader/loader";
-import FancySlotBanner from "../components/Slots/fancyslotbanner";
+import SlotsList from "../components/Home/slotslist";
 import GameInfo from "../components/Home/gameinfo";
 import Bets from "../components/Home/bets";
 import {Title} from "@solidjs/meta";
@@ -11,13 +11,12 @@ import {Title} from "@solidjs/meta";
 function Slot(props) {
 
   let slotRef
-  let slotsRef
   let containerRef
 
   let params = useParams()
   const location = useLocation()
   const [user] = useUser()
-  const [featured, setFeatured] = createSignal([])
+
   const [url, setURL] = createSignal()
   const [sessionId, setSessionId] = createSignal()
   const [loading, setLoading] = createSignal(false)
@@ -26,6 +25,7 @@ function Slot(props) {
   const [errorToast, setErrorToast] = createSignal(null)
   const [isFullWidth, setIsFullWidth] = createSignal(false)
   const [isLiked, setIsLiked] = createSignal(false)
+  const [favoriteLoading, setFavoriteLoading] = createSignal(false)
   const [showGameSelection, setShowGameSelection] = createSignal(false)
   const [isGamePreloaded, setIsGamePreloaded] = createSignal(false)
   const [playMode, setPlayMode] = createSignal("real") // "real" or "demo"
@@ -70,10 +70,35 @@ function Slot(props) {
     }, 300);
   }
   
-  // Function to toggle like status (dummy for now)
-  function toggleLike() {
-    setIsLiked(!isLiked());
-    // Later this would connect to the backend to save the status
+  // Function to toggle favorite status
+  async function toggleLike() {
+    if (!user() || !slot()?.slug || favoriteLoading()) return;
+    
+    try {
+      setFavoriteLoading(true);
+      const result = await favorites.toggle(slot().slug);
+      
+      if (result.success) {
+        const newStatus = result.action === 'added';
+        setIsLiked(newStatus);
+        
+        // Show success message
+        showError(
+          result.action === 'added' ? 'Added to favorites!' : 'Removed from favorites!', 
+          'success'
+        );
+        
+        // Update the slot data to reflect the new favorite status
+        mutate(prev => prev ? { ...prev, isFavorited: newStatus } : prev);
+      } else {
+        showError('Failed to update favorite status');
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      showError('Failed to update favorite status');
+    } finally {
+      setFavoriteLoading(false);
+    }
   }
   
   const [slot, {mutate}] = createResource(() => {
@@ -100,22 +125,9 @@ function Slot(props) {
       console.log("Game image URL:", res.img);
 
 
-      // Ensure each featured game has the necessary properties
-      const mappedFeatured = (res.featured || []).map(game => ({
-        id: game.id,
-        name: game.name,
-        slug: game.slug,
-        img: game.img,
-        provider: game.provider,
-        providerName: game.providerName || game.provider,
-        rtp: game.rtp,
-        isNew: false, // Set default values for properties that might be missing
-        hasJackpot: false
-      }));
-      
-      setFeatured(mappedFeatured)
 
-      return {
+
+      const slotData = {
         id: res.id,
         name: res.name,
         slug: res.slug,
@@ -126,8 +138,14 @@ function Slot(props) {
         rtp: res.rtp,
         isNew: res.isNew,
         hasJackpot: res.hasJackpot,
-        category: res.category
+        category: res.category,
+        isFavorited: res.isFavorited || false
       }
+      
+      // Set the initial favorite status
+      setIsLiked(slotData.isFavorited);
+      
+      return slotData;
     } catch (e) {
       console.error(e)
       showError(`Failed to load game: ${e.message || "Unknown error"}`);
@@ -212,17 +230,7 @@ function Slot(props) {
     }
   }
 
-  function scrollGames(direction) {
-    if (!slotsRef) return;
-    
-    // Scroll by 80% of container width
-    const scrollAmount = slotsRef.clientWidth * 0.8 * direction;
-    
-    slotsRef.scrollBy({
-      left: scrollAmount,
-      behavior: 'smooth'
-    });
-  }
+
 
   return (
     <>
@@ -340,10 +348,21 @@ function Slot(props) {
           </div>
 
           <div class='controls'>
-            <button className={`control-btn favorite-btn ${isLiked() ? 'liked' : ''}`} onClick={toggleLike} title="Add to Favorites">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill={isLiked() ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-              </svg>
+            <button 
+              className={`control-btn favorite-btn ${isLiked() ? 'liked' : ''} ${favoriteLoading() ? 'loading' : ''}`} 
+              onClick={toggleLike} 
+              title={user() ? (isLiked() ? "Remove from Favorites" : "Add to Favorites") : "Login to add favorites"}
+              disabled={!user() || favoriteLoading()}
+            >
+              <Show when={favoriteLoading()} fallback={
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill={isLiked() ? 'currentColor' : 'none'} stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+              }>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12a9 9 0 11-6.219-8.56"/>
+                </svg>
+              </Show>
             </button>
             <button className={`control-btn fullwidth-btn ${isFullWidth() ? 'active' : ''}`} onClick={toggleFullWidth} title="Toggle Full Width">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -394,39 +413,16 @@ function Slot(props) {
           </div>
         </Show>
 
-        <div className='featured-section'>
-          <div className='featured-header'>
-            <div className='featured-title'>
-              <img src='/assets/icons/fire.svg' height='19' width='19' alt=''/>
-              <A href={`/slots?provider=${slot()?.provider}`} className='white bold'>MORE FROM THIS PROVIDER</A>
-              <div className='line'/>
-            </div>
-            
-            <div className='scroll-controls'>
-              <button className='bevel-purple arrow' onClick={() => scrollGames(-1)}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path d="M12 6L2 6M2 6L7.6 0.999999M2 6L7.6 11" stroke="white" stroke-width="2"/>
-                </svg>
-              </button>
-
-              <button className='bevel-purple arrow' onClick={() => scrollGames(1)}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path d="M1.58933e-07 6L10 6M10 6L4.4 11M10 6L4.4 0.999999" stroke="white" stroke-width="2"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-         
-            <div className='slots' ref={slotsRef}>
-              <Show when={!slot.loading} fallback={<Loader small={true}/>}>
-                <For each={featured()}>{(slot, index) =>
-                  <FancySlotBanner {...slot}/>
-                }</For>
-              </Show>
-        
-          </div>
-        </div>
+        <Show when={slot()?.provider}>
+          <SlotsList 
+            title="MORE FROM THIS PROVIDER"
+            provider={slot()?.provider}
+            limit={20}
+            viewAllLink={`/slots?provider=${slot()?.provider}`}
+            icon="/assets/icons/fire.svg"
+            user={user()}
+          />
+        </Show>
 
         <Bets user={user()}/>
       </div>
@@ -1078,111 +1074,28 @@ function Slot(props) {
           color: #59E878;
           box-shadow: 0 4px 12px rgba(89, 232, 120, 0.2);
         }
-
-        .featured-section {
-          margin: 30px 0 50px 0;
-        }
-
-        .featured-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 15px;
-        }
-
-        .featured-title {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .white.bold {
-          color: white;
-          font-family: Geogrotesque Wide, sans-serif;
-          font-weight: 700;
-          font-size: 18px;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-          letter-spacing: 0.5px;
-        }
-
-        .line {
-          flex: 1;
-          height: 1px;
-          min-width: 100px;
-          max-width: 300px;
-          border-radius: 2525px;
-          background: linear-gradient(90deg, #4ecdc4 0%, rgba(78, 205, 196, 0.00) 100%);
-          margin-left: 12px;
-        }
-
-        .scroll-controls {
-          display: flex;
-          gap: 8px;
-        }
-
-        .slots-container {
-          position: relative;
-          overflow: hidden;
-          border-radius: 12px;
-          background: rgba(26, 35, 50, 0.35);
-          padding: 16px;
-          margin-bottom: 30px;
-          border: 1px solid rgba(78, 205, 196, 0.2);
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-          backdrop-filter: blur(8px);
-        }
-
-        .slots {
-          display: flex;
-          gap: 18px;
-          overflow-x: auto;
-          padding: 8px 4px;
-          scroll-behavior: smooth;
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-          min-height: 220px;
-        }
-
-        .slots::-webkit-scrollbar {
-          display: none;
-        }
-
-        .slot {
-          min-width: 150px;
-          width: 150px;
-          height: 220px;
-          border-radius: 8px;
-          background-size: cover;
-          background-repeat: no-repeat;
-          position: relative;
-        }
-
-        .arrow {
-          width: 42px;
-          height: 42px;
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          background: rgba(45, 75, 105, 0.5);
-          border: 1px solid rgba(78, 205, 196, 0.4);
-          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-          transition: all 0.2s ease;
-          backdrop-filter: blur(8px);
+        
+        .control-btn.loading {
+          opacity: 0.7;
+          cursor: not-allowed;
         }
         
-        .arrow:hover {
-          background: rgba(78, 205, 196, 0.2);
-          border-color: #4ecdc4;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 10px rgba(78, 205, 196, 0.2);
+        .control-btn.loading svg {
+          animation: spin 1s linear infinite;
         }
         
-        .arrow:active {
-          transform: translateY(0);
-          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        .control-btn:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          pointer-events: none;
         }
+        
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+
 
         @media only screen and (max-width: 1000px) {
           .slot-base-container {

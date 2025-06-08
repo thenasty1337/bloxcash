@@ -120,7 +120,6 @@ function ChatSidebar(props) {
 
         .chat-options {
           padding: 15px 15px;
-          background: rgba(26, 35, 50, 0.6);
           border-bottom: 1px solid rgba(78, 205, 196, 0.1);
 
           display: flex;
@@ -131,7 +130,6 @@ function ChatSidebar(props) {
         .chat-top-container {
           width: 100%;
           min-height: 180px;
-          background: rgba(26, 35, 50, 0.9);
           position: relative;
           border-bottom: 1px solid rgba(78, 205, 196, 0.2);
           display: flex;
@@ -139,7 +137,6 @@ function ChatSidebar(props) {
           justify-content: center;
           animation: slideDown 0.3s ease-out;
           backdrop-filter: blur(8px);
-          box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
         }
 
         @keyframes slideDown {
