@@ -77,13 +77,13 @@ function SignIn(props) {
                     ×
                 </button>
 
-                <div class='content'>
+                <div class='content-modal'>
                     <h2>{mode() === 0 ? 'SIGN IN' : 'SIGN UP'}</h2>
                     <h1>WELCOME TO <span class='gold'>BLOXCLASH</span></h1>
 
-                    <div class='bar'></div>
+                    <div class='bar-modal'></div>
 
-                    <div class='options'>
+                    <div class='options-modal'>
                         <button 
                             class={`option ${mode() === 0 ? 'active' : ''}`} 
                             onClick={() => setMode(0)}

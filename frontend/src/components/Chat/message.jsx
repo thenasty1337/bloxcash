@@ -5,7 +5,6 @@ import {useSearchParams} from "@solidjs/router";
 import {createSignal, For} from "solid-js";
 
 function Message(props) {
-  console.log('props', props)
 
     const [params, setParams] = useSearchParams()
 

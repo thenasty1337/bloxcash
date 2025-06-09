@@ -201,9 +201,7 @@ function SlotsList(props) {
           width: 100%;
         }
 
-        .games-header {
-          margin-bottom: 1.5rem;
-        }
+    
 
         .header-content {
           display: flex;
@@ -381,11 +379,8 @@ function SlotsList(props) {
         }
 
         .view-all-slot {
-          background: linear-gradient(135deg, 
-            rgba(78, 205, 196, 0.1) 0%, 
-            rgba(26, 35, 50, 0.8) 100%
-          );
-          border: 2px dashed rgba(78, 205, 196, 0.3);
+          background: linear-gradient(135deg, rgb(78 127 205 / 10%) 0%, rgb(26 31 50 / 80%) 100%);
+          border: 2px dashed rgb(95 78 205 / 30%);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -393,11 +388,8 @@ function SlotsList(props) {
         }
 
         .view-all-slot:hover {
-          border-color: rgba(78, 205, 196, 0.6);
-          background: linear-gradient(135deg, 
-            rgba(78, 205, 196, 0.2) 0%, 
-            rgba(26, 35, 50, 0.9) 100%
-          );
+    background: rgb(18 16 50 / 10%);
+    transform: translateY(-2px);
         }
 
         .view-all-content {
@@ -412,19 +404,19 @@ function SlotsList(props) {
         .view-all-icon {
           width: 48px;
           height: 48px;
-          background: rgba(78, 205, 196, 0.15);
-          border: 1px solid rgba(78, 205, 196, 0.3);
+          background: rgb(78 127 205 / 15%);
+          border: 1px solid rgb(95 78 205 / 30%);
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #4ecdc4;
+          color: #8aa3b8;
           transition: all 0.3s ease;
         }
 
         .view-all-slot:hover .view-all-icon {
-          background: rgba(78, 205, 196, 0.25);
-          border-color: rgba(78, 205, 196, 0.5);
+         
+          border-color: rgb(95 78 205 / 50%);
           transform: scale(1.1);
         }
 

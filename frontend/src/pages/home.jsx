@@ -8,6 +8,7 @@ import {createNotification} from "../util/api";
 import SlotsList from "../components/Home/slotslist";
 import SurveysBanner from "../components/Surveys/surveysbanner";
 import BannerCarousel from "../components/Home/BannerCarousel";
+import ProvidersSection from "../components/Slots/ProvidersSection";
 
 
 const METHODS = {
@@ -85,11 +86,8 @@ function Home(props) {
                     <RainBanner/>
                 </div> */}
                                  
-
-                <GamesList/>
-                
-                {/* User Favorites - only show if user is logged in */}
-                {props.user && (
+  {/* User Favorites - only show if user is logged in */}
+  {props.user && (
                   <SlotsList 
                     title="Your Favorites"
                     showFavoritesOnly={true}
@@ -99,6 +97,10 @@ function Home(props) {
                     user={props.user}
                   />
                 )}
+
+                <GamesList/>
+                
+              
                 
                 {/* Featured Slots */}
                 <SlotsList 
@@ -109,6 +111,28 @@ function Home(props) {
                   icon="/assets/GameIcons/favourites.svg"
                   user={props.user}
                 />
+
+                   {/* Popular Slots */}
+                <SlotsList 
+                  title="Popular Slots"
+                  showPopular={true}
+                  limit={20}
+                  viewAllLink="/slots?popular=true"
+                  icon="/assets/GameIcons/popular.svg"
+                  user={props.user}
+                />
+
+                   {/* New Releases */}
+                   <SlotsList 
+                  title="New Releases"
+                  showNewOnly={true}
+                  limit={15}
+                  viewAllLink="/slots?new=true"
+                  icon="/assets/GameIcons/new.svg"
+                  user={props.user}
+                />
+
+                <ProvidersSection />
                 
                 {/* Video Slots */}
                 <SlotsList 
@@ -116,7 +140,7 @@ function Home(props) {
                   type="video-slots"
                   limit={20}
                   viewAllLink="/slots?type=video-slots"
-                  icon="/assets/GameIcons/provider.svg"
+                  icon="/assets/GameIcons/slot.svg"
                   user={props.user}
                 />
                 
@@ -130,25 +154,9 @@ function Home(props) {
                   user={props.user}
                 />
                 
-                {/* New Releases */}
-                <SlotsList 
-                  title="New Releases"
-                  showNewOnly={true}
-                  limit={15}
-                  viewAllLink="/slots?new=true"
-                  icon="/assets/GameIcons/new.svg"
-                  user={props.user}
-                />
+             
                 
-                {/* Popular Slots */}
-                <SlotsList 
-                  title="Popular Slots"
-                  showPopular={true}
-                  limit={20}
-                  viewAllLink="/slots?popular=true"
-                  icon="/assets/GameIcons/popular.svg"
-                  user={props.user}
-                />
+             
 
                 {/* <SurveysBanner/> */}
 

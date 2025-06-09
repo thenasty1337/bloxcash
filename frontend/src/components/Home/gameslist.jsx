@@ -180,9 +180,6 @@ function GamesList() {
                 margin-top: 1.5rem;
               }
 
-              .games-header {
-                margin-bottom: 1.5rem;
-              }
 
               .header-content {
                 display: flex;

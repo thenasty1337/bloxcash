@@ -577,6 +577,12 @@ function App() {
                       </Suspense>
                     }/>
 
+                    <Route path='/slots/featured' element={
+                      <Suspense fallback={<Loader/>}>
+                        <Slots/>
+                      </Suspense>
+                    }/>
+
                     <Route path='/favorites' element={
                       <Suspense fallback={<Loader/>}>
                         <Favorites/>

@@ -3,30 +3,30 @@ import {api} from "../../util/api";
 import {useWebsocket} from "../../contexts/socketprovider";
 import Avatar from "../Level/avatar";
 import {getCents} from "../../util/balance";
+import {useNavigate} from "@solidjs/router";
 
 const tempBets = [0,0,0,0,0,0,0,0]
 
 const gameToImage = {
-    'case': '/assets/icons/cases.svg',
-    'battle': '/assets/icons/battles.svg',
-    'roulette': '/assets/icons/roulette.svg',
-    'crash': '/assets/icons/crash.svg',
-    'coinflip': '/assets/icons/coinflip.svg',
-    'jackpot': '/assets/icons/jackpot.svg',
-    'slot': '/assets/icons/slot.svg',
-    'mines': '/assets/icons/mines.svg'
+    'case': '/assets/game-icons/packs.svg',
+    'battle': '/assets/game-icons/battles.svg',
+    'roulette': '/assets/game-icons/roulette.svg',
+    'crash': '/assets/game-icons/dices.svg',
+    'coinflip': '/assets/game-icons/coin-flip.svg',
+    'jackpot': '/assets/game-icons/jackpot.svg',
+    'slot': '/assets/game-icons/slots.svg',
+    'mines': '/assets/game-icons/mines.svg'
 }
 
 function Bets(props) {
 
     let prevWs
-    let hasEmittedMe = false
     const [ws] = useWebsocket()
-    const [option, setOption] = createSignal('user')
+    const [option, setOption] = createSignal('all')
     const [bets, setBets] = createSignal([])
+    const navigate = useNavigate()
 
-    console.log('props', props)
-    console.log('bets', bets())
+
 
     createEffect(() => {
         if (ws()?.connected && !prevWs?.connected) {
@@ -34,29 +34,62 @@ function Bets(props) {
         }
 
         if (ws()) {
-            ws().on('bets', (type, bets) => {
-                if (type !== option()) {
-                    ws().emit('bets:unsubscribe', option())
-                    setBets([])
+            // Remove any existing listeners to prevent duplicates
+            ws().off('bets')
+            
+            ws().on('bets', (type, receivedBets) => {
+                console.log('🎰 Received bets:', { 
+                    type, 
+                    count: Array.isArray(receivedBets) ? receivedBets.length : 0, 
+                    currentOption: option(),
+                    betsPreview: Array.isArray(receivedBets) ? receivedBets.slice(0, 2).map(b => ({ game: b.game, amount: b.amount })) : 'Invalid data'
+                });
+                
+                // Only process if this matches our current subscription
+                if (type === option()) {
+                    setBets((b) => [...receivedBets, ...b].slice(0, 10))
+                } else {
+                    console.log('🚫 Ignoring bets for type:', type, 'current option:', option());
                 }
-
-                setOption(type)
-                setBets((b) => [...bets, ...b].slice(0, 10))
             })
         }
 
         prevWs = ws()
     })
 
-    createEffect(() => {
-        if (!hasEmittedMe && props.user && ws()) {
-            ws().emit('bets:subscribe', 'me')
-            hasEmittedMe = true
-        }
-    })
+    // Remove the automatic "me" subscription - let user click the button instead
 
     function changeBetChannel(channel) {
+        console.log('🔄 Changing bet channel from', option(), 'to', channel);
+        
+        // Unsubscribe from current channel
+        if (option() !== channel) {
+            ws().emit('bets:unsubscribe', option())
+            setBets([]) // Clear current bets
+        }
+        
+        // Update option and subscribe to new channel
+        setOption(channel)
         ws().emit('bets:subscribe', channel)
+    }
+
+    function handleBetClick(bet) {
+        // Handle slot bets with gameDetails
+        if (bet.game === 'slot' && bet.gameDetails?.gameId) {
+            navigate(`/slots/${bet.gameDetails.gameId}`)
+        }
+        // Handle house games
+        else if (['coinflip', 'mines', 'roulette', 'crash', 'jackpot'].includes(bet.game)) {
+            navigate(`/${bet.game}`)
+        }
+        // Handle battles
+        else if (bet.game === 'battle') {
+            navigate('/battles')
+        }
+        // Handle cases
+        else if (bet.game === 'case') {
+            navigate('/cases')
+        }
     }
 
     return (
@@ -104,23 +137,31 @@ function Bets(props) {
                             <For each={bets()}>{(bet, index) => (
                                 <div class={'feed-row ' + ((bet?.payout / bet?.amount) > 1 ? 'win-row' : 'loss-row')}>
                                     <div class='row-col gamemode-col'>
-                                        <div class='gamemode-info'>
+                                        <div 
+                                            class={'gamemode-info' + (
+                                                (bet.game === 'slot' && bet.gameDetails?.gameId) || 
+                                                ['coinflip', 'mines', 'roulette', 'crash', 'jackpot', 'battle', 'case'].includes(bet.game) 
+                                                ? ' clickable-game' : ''
+                                            )}
+                                            onClick={() => handleBetClick(bet)}
+                                        >
                                             <div class='game-icon-wrapper'>
-                                                <img src={gameToImage[bet.game]} alt='' class='game-icon'/>
+                                                <img src={bet.gameDetails?.image || gameToImage[bet.game]} alt='' class='game-icon'/>
                                             </div>
                                             <span class='game-name'>
-                                                {bet.game === 'battle' ? 'Case Battles' : 
-                                                 bet.game === 'case' ? 'Cases' : 
-                                                 bet.game === 'coinflip' ? 'Coinflip' :
-                                                 bet.game === 'jackpot' ? 'Jackpot' :
-                                                 bet.game.charAt(0).toUpperCase() + bet.game.slice(1)}
+                                                {bet.gameDetails?.name || 
+                                                 (bet.game === 'battle' ? 'Case Battles' : 
+                                                  bet.game === 'case' ? 'Cases' : 
+                                                  bet.game === 'coinflip' ? 'Coinflip' :
+                                                  bet.game === 'jackpot' ? 'Jackpot' :
+                                                  bet.game.charAt(0).toUpperCase() + bet.game.slice(1))}
                                             </span>
                                         </div>
                                     </div>
 
                                     <div class='row-col player-col'>
                                         <div class='player-info'>
-                                        {console.log('bet', bet)}
+                                    
                                             <div class='avatar-wrapper'>
                                                 <Avatar id={bet?.user?.id} xp={bet?.user?.xp || 0} height={28} avatar={bet?.user?.avatar}/>
                                             </div>
@@ -248,37 +289,41 @@ function Bets(props) {
 
                 .feed-options {
                     display: flex;
-                    gap: 4px;
-                    background: rgba(255, 255, 255, 0.03);
-                    padding: 4px;
-                    border-radius: 7px;
-                    border: 1px solid rgba(255, 255, 255, 0.06);
+                    gap: 6px;
+                    background: transparent;
+                    padding: 0;
+                    border-radius: 0;
+                    border: none;
                 }
 
                 .pill-option {
                     position: relative;
-                    padding: 8px 16px;
-                    border-radius: 7px;
-                    border: none;
-                    background: transparent;
-                    color: rgba(255, 255, 255, 0.5);
+                    padding: 10px 16px;
+                    border-radius: 10px;
+                    border: 1px solid rgba(139, 120, 221, 0.1);
+                    background: #0E0B27;
+                    color: #9ca3af;
                     font-size: 13px;
                     font-family: 'Geogrotesque Wide', sans-serif;
                     font-weight: 500;
                     cursor: pointer;
-                    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                    transition: all 0.1s ease;
                     white-space: nowrap;
+                    backdrop-filter: blur(8px);
                 }
 
                 .pill-option:hover {
-                    color: rgba(255, 255, 255, 0.8);
-                    background: rgba(255, 255, 255, 0.05);
+                    background: rgba(139, 120, 221, 0.2);
+                    color: #ffffff;
+                    border-color: rgba(139, 120, 221, 0.3);
+                    transform: translateY(-1px);
                 }
 
                 .pill-option.active {
-                    color: #ffffff;
-                    background: linear-gradient(135deg, #4ecdc4, #44a08d);
-                    box-shadow: 0 2px 8px rgba(78, 205, 196, 0.25)
+                    background: rgba(139, 120, 221, 0.25) !important;
+                    border-color: #8b78dd !important;
+                    color: #ffffff !important;
+                    box-shadow: 0 2px 8px rgba(139, 120, 221, 0.3);
                 }
 
                 .feed-content {
@@ -385,6 +430,16 @@ function Bets(props) {
                     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
                 }
 
+                .gamemode-info.clickable-game {
+                    cursor: pointer;
+                    transition: all 0.15s ease;
+                    border-radius: 6px;
+                    padding: 4px;
+                    margin: -4px;
+                }
+
+               
+
                 .row-col {
                     display: flex;
                     align-items: center;
@@ -411,6 +466,8 @@ function Bets(props) {
                     width: 16px;
                     height: 16px;
                     opacity: 0.9;
+                    object-fit: cover;
+                    border-radius: 2px;
                 }
 
                 .game-name {

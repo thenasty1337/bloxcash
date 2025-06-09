@@ -6,10 +6,27 @@ const express = require('express');
 const router = express.Router();
 const { sql } = require('../database');
 const { Helpers } = require('../utils/spin-shield');
+const { newBets } = require('../socketio/bets');
 
 // Import the active sessions object from slots functions
 const slotsFunctions = require('./games/slots/functions');
 const activeSessions = slotsFunctions.activeSessions || {}; // Use empty object as fallback if not defined
+
+// Helper function to get debit amount for a round
+async function getDebitAmountForRound(roundId, userId, connection) {
+    try {
+        const [[debitTransaction]] = await connection.query(
+            'SELECT amount FROM spinshield_transactions WHERE round_id = ? AND user_id = ? AND action = "debit" ORDER BY id DESC LIMIT 1',
+            [roundId, userId]
+        );
+        return debitTransaction ? (debitTransaction.amount / 100) : 0; // Convert cents to dollars
+    } catch (error) {
+        console.error('Error getting debit amount:', error);
+        return 0;
+        }
+}
+
+
 
 // SpinShield callback handler
 router.get('/', async (req, res) => {
@@ -64,12 +81,12 @@ router.get('/', async (req, res) => {
         
         if (userId) {
             // First try to find by exact ID
-            [[user]] = await sql.query('SELECT id, balance FROM users WHERE id = ?', [userId]);
+            [[user]] = await sql.query('SELECT id, username, xp, role, avatar, balance FROM users WHERE id = ?', [userId]);
         }
         
         // If no user found by ID, try by username
         if (!user) {
-            [[user]] = await sql.query('SELECT id, balance FROM users WHERE username = ?', [baseUsername]);
+            [[user]] = await sql.query('SELECT id, username, xp, role, avatar, balance FROM users WHERE username = ?', [baseUsername]);
         }
         
         if (!user) {
@@ -223,6 +240,61 @@ router.get('/', async (req, res) => {
                          newBalanceAfterDebit, currency, currentTimestamp, type || null, gameplay_final ? 1 : 0]
                     );
                     
+                                        // If this is the final gameplay and a loss (no credit coming), create a bet entry
+                    if (gameplay_final === '1') {
+                        const betAmount = amount / 100; // Convert cents to dollars
+                        const winAmount = 0; // Loss
+                        const edge = Math.round(betAmount * 0.05 * 100) / 100; // 5% house edge
+                        
+                        await debitConnection.query(
+                            `INSERT INTO bets (userId, amount, winnings, edge, game, gameId, spinshield_round_id, spinshield_game_id, provider, completed, createdAt) 
+                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+                            [
+                                user.id,
+                                betAmount,
+                                winAmount,
+                                edge,
+                                'slot',
+                                null, // gameId is null for SpinShield bets (we use spinshield_round_id)
+                                round_id, // Store actual SpinShield round ID
+                                game_id, // Store actual SpinShield game ID
+                                'spinshield', // Provider
+                                1
+                            ]
+                        );
+                        
+                        console.log('✅ Created bet entry for SpinShield round (loss):', round_id, { betAmount, winAmount, edge });
+                        
+                        // Emit to live feed via newBets (after commit)
+                        setTimeout(async () => {
+                            // Fetch game details for rich display
+                            const [[gameDetails]] = await sql.query(
+                                'SELECT game_name, image_url, provider_name FROM spinshield_games WHERE game_id_hash = ?',
+                                [game_id]
+                            );
+                            
+                            const betData = {
+                                user: user,
+                                amount: betAmount,
+                                payout: winAmount,
+                                edge: edge,
+                                game: 'slot'
+                            };
+                            
+                            // Add game details if found
+                            if (gameDetails) {
+                                betData.gameDetails = {
+                                    name: gameDetails.game_name,
+                                    image: gameDetails.image_url,
+                                    provider: gameDetails.provider_name || 'SpinShield',
+                                    gameId: game_id
+                                };
+                            }
+                            
+                            newBets([betData]);
+                        }, 100); // Small delay to ensure transaction is committed
+                    }
+                    
                     // Commit transaction
                     await debitConnection.commit();
                     
@@ -274,6 +346,61 @@ router.get('/', async (req, res) => {
                              ORDER BY id DESC LIMIT 1`,
                             [callbackData.freespins.performed, amount, user.id, game_id]
                         );
+                    }
+                    
+                    // If this is the final gameplay (round complete), create a bet entry
+                    if (gameplay_final === '1') {
+                        const betAmount = await getDebitAmountForRound(round_id, user.id, creditConnection);
+                        const winAmount = parseInt(amount, 10) / 100; // Convert cents to dollars
+                        const edge = Math.round(betAmount * 0.05 * 100) / 100; // 5% house edge
+                        
+                        await creditConnection.query(
+                            `INSERT INTO bets (userId, amount, winnings, edge, game, gameId, spinshield_round_id, spinshield_game_id, provider, completed, createdAt) 
+                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())`,
+                            [
+                                user.id,
+                                betAmount,
+                                winAmount,
+                                edge,
+                                'slot',
+                                null, // gameId is null for SpinShield bets (we use spinshield_round_id)
+                                round_id, // Store actual SpinShield round ID
+                                game_id, // Store actual SpinShield game ID
+                                'spinshield', // Provider
+                                1
+                            ]
+                        );
+                        
+                        console.log('✅ Created bet entry for SpinShield round:', round_id, { betAmount, winAmount, edge });
+                        
+                        // Emit to live feed via newBets (after commit)
+                        setTimeout(async () => {
+                            // Fetch game details for rich display
+                            const [[gameDetails]] = await sql.query(
+                                'SELECT game_name, image_url, provider_name FROM spinshield_games WHERE game_id_hash = ?',
+                                [game_id]
+                            );
+                            
+                            const betData = {
+                                user: user,
+                                amount: betAmount,
+                                payout: winAmount,
+                                edge: edge,
+                                game: 'slot'
+                            };
+                            
+                            // Add game details if found
+                            if (gameDetails) {
+                                betData.gameDetails = {
+                                    name: gameDetails.game_name,
+                                    image: gameDetails.image_url,
+                                    provider: gameDetails.provider_name || 'SpinShield',
+                                    gameId: game_id
+                                };
+                            }
+                            
+                            newBets([betData]);
+                        }, 100); // Small delay to ensure transaction is committed
                     }
                     
                     // Commit transaction

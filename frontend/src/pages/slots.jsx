@@ -1,22 +1,25 @@
 import SlotsHeader from "../components/Slots/slotsheader";
-import {createResource, createSignal, For, Show} from "solid-js";
-import {api} from "../util/api";
+import {createResource, createSignal, For, Show, createEffect} from "solid-js";
+import {api, favorites} from "../util/api";
 import Loader from "../components/Loader/loader";
 import BlurImage from "../components/UI/BlurImage";
 import FavoriteButton from "../components/UI/FavoriteButton";
-import {A, useSearchParams} from "@solidjs/router";
+import {A, useSearchParams, useLocation, useNavigate} from "@solidjs/router";
 import Bets from "../components/Home/bets";
 import {useUser} from "../contexts/usercontextprovider";
 import FancySlotBanner from "../components/Slots/fancyslotbanner";
+import ProvidersSection from "../components/Slots/ProvidersSection";
 import {Meta, Title} from "@solidjs/meta";
 import { FiFilter, FiChevronDown } from "solid-icons/fi";
+import { AiOutlineHeart, AiOutlineEye } from "solid-icons/ai";
 
 const sortingOptions = ['popularity', 'RTP', 'a-z', 'z-a']
 
 function Slots(props) {
 
-  let providersRef
   let [params, setParams] = useSearchParams()
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const [user] = useUser()
   const [slots, setSlots] = createSignal()
@@ -24,8 +27,31 @@ function Slots(props) {
   const [fetching, setFetching] = createSignal(true)
   const [networkError, setNetworkError] = createSignal(false)
   const [errorMessage, setErrorMessage] = createSignal('')
-  const [slotsData] = createResource(() => ({ sort: params.sort, provider: params.provider, search: params.search, category: params.category }), fetchSlots)
-  const [providers] = createResource(fetchProviders)
+  const [favoritesOffset, setFavoritesOffset] = createSignal(0)
+  
+  // Check if we're on the favorites page
+  const isFavoritesPage = () => location.pathname === '/favorites'
+  
+  // Check if we're on the featured page
+  const isFeaturedPage = () => location.pathname === '/slots/featured'
+  
+  // Redirect unauthenticated users from favorites page
+  createEffect(() => {
+    if (isFavoritesPage() && user() === null) {
+      navigate("/?modal=login&mode=login");
+    }
+  });
+  
+  const [slotsData] = createResource(() => ({ 
+    sort: params.sort, 
+    provider: params.provider, 
+    search: params.search, 
+    category: params.category,
+    type: params.type,
+    isNew: params.isNew,
+    isFavoritesPage: isFavoritesPage(),
+    isFeaturedPage: isFeaturedPage()
+  }), fetchSlots)
   const [top] = createResource(fetchTopPicks)
   const [providerSearch, setProviderSearch] = createSignal("");
   const [categorySearch, setCategorySearch] = createSignal("");
@@ -33,8 +59,23 @@ function Slots(props) {
   const [showSortDropdown, setShowSortDropdown] = createSignal(false);
   const [showCategoryDropdown, setShowCategoryDropdown] = createSignal(false);
 
+  // Fetch categories on component mount
+  createEffect(() => {
+    fetchCategories();
+  });
+
   async function fetchSlots(params) {
     try {
+      // If we're on the favorites page, fetch favorites instead
+      if (params.isFavoritesPage) {
+        return await fetchFavorites();
+      }
+      
+      // If we're on the featured page, fetch featured slots
+      if (params.isFeaturedPage) {
+        return await fetchFeaturedSlots();
+      }
+      
       // Convert frontend sort params to backend sort format
       let sortBy = 'popularity';  // default sort field
       let sortOrder = 'DESC';     // default sort order
@@ -57,15 +98,33 @@ function Slots(props) {
         }
       }
       
-      const provider = params.provider || '';
-      const search = params.search || '';
-      const category = params.category || '';
+      const provider = params.provider;
+      const search = params.search;
+      const category = params.category;
+      const type = params.type;
+      const isNew = params.isNew;
       
       // Build query with all parameters
-      let url = `/slots?sortOrder=${sortOrder}&sortBy=${sortBy}&provider=${provider}&search=${search}&limit=48`;
+      let url = `/slots?sortOrder=${sortOrder}&sortBy=${sortBy}&limit=48`;
+      
+      if (provider) {
+        url += `&provider=${provider}`;
+      }
+      
+      if (search) {
+        url += `&search=${search}`;
+      }
       
       if (category) {
         url += `&category=${category}`;
+      }
+      
+      if (type) {
+        url += `&type=${type}`;
+      }
+      
+      if (isNew) {
+        url += `&isNew=${isNew}`;
       }
 
       let res = await api(url, 'GET', null, false);
@@ -110,6 +169,90 @@ function Slots(props) {
     }
   }
 
+  async function fetchFavorites() {
+    try {
+      if (!user()) {
+        setFetching(false);
+        setNetworkError(false);
+        setSlots([]);
+        return { data: [], total: 0 };
+      }
+      
+      let res = await favorites.get(48, 0);
+      
+      // Handle network errors gracefully
+      if (res && res.error) {
+        console.warn('Failed to fetch favorites:', res.message || res.error);
+        setFetching(false);
+        setNetworkError(true);
+        setErrorMessage(res.message || res.error);
+        setSlots([]);
+        return { data: [], total: 0 };
+      }
+      
+      if (!res.data || !Array.isArray(res.data)) {
+        setFetching(false);
+        setNetworkError(true);
+        setErrorMessage('Unexpected response format');
+        setSlots([]);
+        return { data: [], total: 0 };
+      }
+
+      // Reset error state on successful load
+      setNetworkError(false);
+      setErrorMessage('');
+      setSlots(res.data);
+      setFetching(false);
+      setFavoritesOffset(0);
+      return res;
+    } catch (e) {
+      console.error('Unexpected error in fetchFavorites:', e);
+      setFetching(false);
+      setNetworkError(true);
+      setErrorMessage('An unexpected error occurred');
+      setSlots([]);
+      return { data: [], total: 0 };
+    }
+  }
+
+  async function fetchFeaturedSlots() {
+    try {
+      let res = await api('/slots/featured?limit=48', 'GET', null, false);
+      
+      // Handle network errors gracefully
+      if (res && res.error) {
+        console.warn('Failed to fetch featured slots:', res.message || res.error);
+        setFetching(false);
+        setNetworkError(true);
+        setErrorMessage(res.message || res.error);
+        setSlots([]);
+        return { data: [], total: 0 };
+      }
+      
+      if (!res.data || !Array.isArray(res.data)) {
+        setFetching(false);
+        setNetworkError(true);
+        setErrorMessage('Unexpected response format');
+        setSlots([]);
+        return { data: [], total: 0 };
+      }
+
+      // Reset error state on successful load
+      setNetworkError(false);
+      setErrorMessage('');
+      setSlots(res.data);
+      setFetching(false);
+      return res;
+    } catch (e) {
+      console.error('Unexpected error in fetchFeaturedSlots:', e);
+      setFetching(false);
+      setNetworkError(true);
+      setErrorMessage('An unexpected error occurred');
+      setSlots([]);
+      return { data: [], total: 0 };
+    }
+  }
+
   async function fetchTopPicks() {
     try {
       let res = await api(`/slots/featured`, 'GET', null, false)
@@ -129,9 +272,9 @@ function Slots(props) {
     }
   }
 
-  async function fetchProviders() {
+  async function fetchCategories() {
     try {
-      // Fetch categories as well
+      // Fetch categories
       const catResponse = await api('/slots/categories', 'GET', null, false);
       if (catResponse && !catResponse.error && Array.isArray(catResponse)) {
         setCategories(catResponse);
@@ -139,26 +282,9 @@ function Slots(props) {
         console.warn('Failed to fetch categories:', catResponse.message || catResponse.error);
         setCategories([]); // Set empty array as fallback
       }
-      
-      // Fetch providers
-      let res = await api('/slots/providers', 'GET', null, false);
-      
-      // Handle network errors gracefully
-      if (res && res.error) {
-        console.warn('Failed to fetch providers:', res.message || res.error);
-        // Show a user-friendly message but don't crash the app
-        if (res.error === 'NETWORK_ERROR') {
-          // Could show a toast notification here if desired
-          // toast.error('Unable to load providers. Some features may be limited.');
-        }
-        return []; // Return empty array to prevent crashes
-      }
-      
-      if (!Array.isArray(res) || res.length < 1) return [];
-      return res;
     } catch (e) {
-      console.error('Unexpected error in fetchProviders:', e);
-      return []; // Always return empty array instead of throwing
+      console.error('Unexpected error in fetchCategories:', e);
+      setCategories([]);
     }
   }
 
@@ -167,6 +293,29 @@ function Slots(props) {
 
     try {
       setFetching(true)
+
+      // Handle favorites pagination differently
+      if (isFavoritesPage()) {
+        const newOffset = favoritesOffset() + 24;
+        let res = await favorites.get(24, newOffset);
+        
+        // Handle network errors gracefully
+        if (res && res.error) {
+          console.warn('Failed to fetch more favorites:', res.message || res.error);
+          setFetching(false);
+          return;
+        }
+        
+        if (!res.data || !Array.isArray(res.data)) {
+          setFetching(false);
+          return;
+        }
+
+        setSlots([...slots(), ...res.data]);
+        setFavoritesOffset(newOffset);
+        setFetching(false);
+        return;
+      }
 
       // Convert frontend sort params to backend sort format
       let sortBy = 'game_name';  // default sort field
@@ -190,15 +339,33 @@ function Slots(props) {
         }
       }
       
-      const provider = params.provider || '';
-      const search = params.search || '';
-      const category = params.category || '';
+      const provider = params.provider;
+      const search = params.search;
+      const category = params.category;
+      const type = params.type;
+      const isNew = params.isNew;
       
       // Build query with offset for pagination and limit to load in multiples of 6
-      let url = `/slots?offset=${slots()?.length || 0}&limit=24&sortOrder=${sortOrder}&sortBy=${sortBy}&provider=${provider}&search=${search}`;
+      let url = `/slots?offset=${slots()?.length || 0}&limit=24&sortOrder=${sortOrder}&sortBy=${sortBy}`;
+      
+      if (provider) {
+        url += `&provider=${provider}`;
+      }
+      
+      if (search) {
+        url += `&search=${search}`;
+      }
       
       if (category) {
         url += `&category=${category}`;
+      }
+      
+      if (type) {
+        url += `&type=${type}`;
+      }
+      
+      if (isNew) {
+        url += `&isNew=${isNew}`;
       }
 
       let res = await api(url, 'GET', null, false);
@@ -228,55 +395,9 @@ function Slots(props) {
     }
   }
 
-  function repeatProviders() {
-    if (!providers() || !Array.isArray(providers()) || providers().length === 0) return []
-    
-    // List of available provider images (those we have in the directory)
-    const availableImages = [
-      "3-oaks-gaming", "avatarux", "b-gaming", "backseatgaming", "belatra", 
-      "bigtimegaming", "blueprint", "bullsharkgames", "elk-studios", "endorphina", 
-      "evolution-gaming", "fantasma-games", "fat-panda", "game-art", "games-global", 
-      "gamomat", "hacksaw", "jade-rabbit", "just-slots", "live88", "massive-studios", 
-      "netent", "nolimit", "novomatic", "octoplay", "onetouch", "petersons", "pgsoft", 
-      "playn-go", "pragmatic-play", "print-studios", "push-gaming", "quickspin", 
-      "red-rake-gaming", "red-tiger", "relax-gaming", "shady-lady", "slotmill", 
-      "spinomenal", "titan-gaming", "truelab", "twist-gaming", "voltent"
-    ];
-    
-    // Filter to only show providers with available images
-    const availableProviders = providers().filter(provider => 
-      provider && provider.slug && availableImages.includes(provider.slug.toLowerCase())
-    );
-    
-    // If no available providers, return empty array
-    if (availableProviders.length === 0) return []
-    
-    // Ensure we don't try to create an array with invalid length
-    const repeatCount = Math.max(1, Math.ceil(6 / availableProviders.length));
-    
-    // Additional safety check to prevent creating arrays that are too large
-    if (repeatCount > 100) return availableProviders; // Fallback to just the providers
-    
-    try {
-      return Array(repeatCount).fill(availableProviders).flat()
-    } catch (e) {
-      console.warn('Error in repeatProviders:', e);
-      return availableProviders; // Fallback to just the providers
-    }
-  }
-
-  function scrollProviders(direction) {
-    providersRef.scrollBy({
-      left: providersRef.clientWidth * direction,
-      behavior: 'smooth'
-    })
-  }
-
   function filteredProviders() {
-    if (!providers() || !Array.isArray(providers())) return [];
-    const search = providerSearch().toLowerCase();
-    if (!search) return providers();
-    return providers().filter(p => p.name.toLowerCase().includes(search));
+    // This will be handled by the ProvidersSection component
+    return [];
   }
   
   function filteredCategories() {
@@ -288,9 +409,9 @@ function Slots(props) {
 
   return (
     <>
-      <Title>BloxClash | Slots</Title>
-      <Meta name='title' content='Slots'></Meta>
-      <Meta name='description' content='Play And Spin The Best Slots On BloxClash To Win Robux On Roblox Gaming!'></Meta>
+      <Title>{isFavoritesPage() ? 'BloxClash | My Favorites' : 'BloxClash | Slots'}</Title>
+      <Meta name='title' content={isFavoritesPage() ? 'My Favorites' : 'Slots'}></Meta>
+      <Meta name='description' content={isFavoritesPage() ? 'Your favorite slots collection on BloxClash - Play your most loved games to win Robux!' : 'Play And Spin The Best Slots On BloxClash To Win Robux On Roblox Gaming!'}></Meta>
 
       <div class='slots-base-container' onClick={() => {
         setShowProviderDropdown(false);
@@ -299,148 +420,165 @@ function Slots(props) {
       }}>
        
 
-        <div class='our-picks'>
-          <div style={{ flex: 1, background: 'linear-gradient(270deg, #4ecdc4 0%, rgba(252, 163, 30, 0.00) 98.59%)', 'min-height': '1px' }}/>
-
-          <p>
-            <img src='/assets/icons/fire.svg' height='20' width='15'/>
-            OUR HOT PICKS
-          </p>
-
-          <div style={{ flex: 1, background: 'linear-gradient(90deg, #4ecdc4 0%, rgba(252, 163, 30, 0.00) 98.59%)', 'min-height': '1px' }}/>
-        </div>
-
-        <div className='top-five'>
-          <Show when={!top.loading}>
-            <For each={top()}>{(slot) =>
-              <FancySlotBanner {...slot}/>
-            }</For>
-          </Show>
-        </div>
-
-
-        <div class='sort'>
-          <div class='sorting-wrapper' onClick={(e) => {
-            e.stopPropagation();
-            setShowProviderDropdown(!showProviderDropdown());
-            setShowSortDropdown(false);
-            setShowCategoryDropdown(false);
-          }}>
-            <FiFilter size={17} />
+        <Show when={!isFavoritesPage()}>
+          <div class='our-picks'>
+            <div style={{ flex: 1, background: 'linear-gradient(270deg, #3b4376 0%, rgba(252, 163, 30, 0.00) 98.59%)', 'min-height': '1px' }}/>
 
             <p>
-              Filter By: <span class='white'>Providers</span>
+              <img src='/assets/icons/fire.svg' height='20' width='15'/>
+              OUR HOT PICKS
             </p>
 
-            <FiChevronDown size={16} class={showProviderDropdown() ? 'rotated' : ''} />
-
-            <Show when={showProviderDropdown()}>
-              <div className='filter-dropdown left' onClick={(e) => e.stopPropagation()}>
-                <div className='search-container'>
-                  <input 
-                    type="text" 
-                    placeholder="Search providers..." 
-                    value={providerSearch()} 
-                    onInput={(e) => setProviderSearch(e.target.value)}
-                  />
-                </div>
-                <div className='filters'>
-                  <For each={filteredProviders()}>{(prov) =>
-                    <div className={'option ' + (params.provider === prov.slug ? 'active' : '')}
-                         onClick={() => {
-                           setParams({ provider: params?.provider === prov.slug ? null : prov.slug });
-                           setShowProviderDropdown(false);
-                         }}>
-                      <p>{prov.name}</p>
-                      <div className='checkbox'>
-                        <img src='/assets/icons/check.svg'/>
-                      </div>
-                    </div>
-                  }</For>
-                </div>
-              </div>
-            </Show>
+            <div style={{ flex: 1, background: 'linear-gradient(90deg, #3b4376 0%, rgba(252, 163, 30, 0.00) 98.59%)', 'min-height': '1px' }}/>
           </div>
 
-          <div className='sorting-wrapper' onClick={(e) => {
-            e.stopPropagation();
-            setShowSortDropdown(!showSortDropdown());
-            setShowProviderDropdown(false);
-            setShowCategoryDropdown(false);
-          }}>
-            <FiFilter size={17} />
+          <div className='top-five'>
+            <Show when={!top.loading}>
+              <For each={top()}>{(slot) =>
+                <FancySlotBanner {...slot}/>
+              }</For>
+            </Show>
+          </div>
+        </Show>
+
+        <Show when={isFavoritesPage()}>
+          <div class='our-picks'>
+            <div style={{ flex: 1, background: 'linear-gradient(270deg, #3b4376 0%, rgba(252, 163, 30, 0.00) 98.59%)', 'min-height': '1px' }}/>
 
             <p>
-              Sort By: <span className='white'>{params.sort || 'Popularity'}</span>
+              <AiOutlineHeart size={20} color="#dc2626"/>
+              MY FAVORITES
             </p>
 
-            <FiChevronDown size={16} class={showSortDropdown() ? 'rotated' : ''} />
-
-            <Show when={showSortDropdown()}>
-              <div class='filter-dropdown' onClick={(e) => e.stopPropagation()}>
-                <div class='filters'>
-                  <For each={sortingOptions}>{(sort) =>
-                    <div className={'option ' + (params.sort === sort ? 'active' : '')}
-                         onClick={() => {
-                           setParams({ sort: sort });
-                           setShowSortDropdown(false);
-                         }}>
-                      <p>{sort}</p>
-                      <div className='checkbox'>
-                        <img src='/assets/icons/check.svg'/>
-                      </div>
-                    </div>
-                  }</For>
-                </div>
-              </div>
-            </Show>
+            <div style={{ flex: 1, background: 'linear-gradient(90deg, #3b4376 0%, rgba(252, 163, 30, 0.00) 98.59%)', 'min-height': '1px' }}/>
           </div>
-          
-          {/* Add Category Filter */}
-          <Show when={categories().length > 0}>
+        </Show>
+
+
+        <Show when={!isFavoritesPage()}>
+          <div class='sort'>
             <div class='sorting-wrapper' onClick={(e) => {
               e.stopPropagation();
-              setShowCategoryDropdown(!showCategoryDropdown());
-              setShowProviderDropdown(false);
+              setShowProviderDropdown(!showProviderDropdown());
               setShowSortDropdown(false);
+              setShowCategoryDropdown(false);
             }}>
               <FiFilter size={17} />
 
               <p>
-                Filter By: <span class='white'>Categories</span>
+                Filter By: <span class='white'>Providers</span>
               </p>
 
-              <FiChevronDown size={16} class={showCategoryDropdown() ? 'rotated' : ''} />
+              <FiChevronDown size={16} class={showProviderDropdown() ? 'rotated' : ''} />
 
-                             <Show when={showCategoryDropdown()}>
-                 <div className='filter-dropdown left' onClick={(e) => e.stopPropagation()}>
-                   <div className='search-container'>
-                     <input 
-                       type="text" 
-                       placeholder="Search categories..." 
-                       value={categorySearch()} 
-                       onInput={(e) => setCategorySearch(e.target.value)}
-                     />
-                   </div>
-                   <div className='filters'>
-                     <For each={filteredCategories()}>{(cat) =>
-                       <div className={'option ' + (params.category === cat ? 'active' : '')}
-                            onClick={() => {
-                              setParams({ category: params?.category === cat ? null : cat });
-                              setShowCategoryDropdown(false);
-                            }}>
-                         <p>{cat}</p>
-                         <div className='checkbox'>
-                           <img src='/assets/icons/check.svg'/>
-                         </div>
-                       </div>
-                     }</For>
-                   </div>
-                 </div>
-               </Show>
+              <Show when={showProviderDropdown()}>
+                <div className='filter-dropdown left' onClick={(e) => e.stopPropagation()}>
+                  <div className='search-container'>
+                    <input 
+                      type="text" 
+                      placeholder="Search providers..." 
+                      value={providerSearch()} 
+                      onInput={(e) => setProviderSearch(e.target.value)}
+                    />
+                  </div>
+                  <div className='filters'>
+                    <For each={filteredProviders()}>{(prov) =>
+                      <div className={'option ' + (params.provider === prov.slug ? 'active' : '')}
+                           onClick={() => {
+                             setParams({ provider: params?.provider === prov.slug ? null : prov.slug });
+                             setShowProviderDropdown(false);
+                           }}>
+                        <p>{prov.name}</p>
+                        <div className='checkbox'>
+                          <img src='/assets/icons/check.svg'/>
+                        </div>
+                      </div>
+                    }</For>
+                  </div>
+                </div>
+              </Show>
             </div>
-          </Show>
-        </div>
+
+            <div className='sorting-wrapper' onClick={(e) => {
+              e.stopPropagation();
+              setShowSortDropdown(!showSortDropdown());
+              setShowProviderDropdown(false);
+              setShowCategoryDropdown(false);
+            }}>
+              <FiFilter size={17} />
+
+              <p>
+                Sort By: <span className='white'>{params.sort || 'Popularity'}</span>
+              </p>
+
+              <FiChevronDown size={16} class={showSortDropdown() ? 'rotated' : ''} />
+
+              <Show when={showSortDropdown()}>
+                <div class='filter-dropdown' onClick={(e) => e.stopPropagation()}>
+                  <div class='filters'>
+                    <For each={sortingOptions}>{(sort) =>
+                      <div className={'option ' + (params.sort === sort ? 'active' : '')}
+                           onClick={() => {
+                             setParams({ sort: sort });
+                             setShowSortDropdown(false);
+                           }}>
+                        <p>{sort}</p>
+                        <div className='checkbox'>
+                          <img src='/assets/icons/check.svg'/>
+                        </div>
+                      </div>
+                    }</For>
+                  </div>
+                </div>
+              </Show>
+            </div>
+            
+            {/* Add Category Filter */}
+            <Show when={categories().length > 0}>
+              <div class='sorting-wrapper' onClick={(e) => {
+                e.stopPropagation();
+                setShowCategoryDropdown(!showCategoryDropdown());
+                setShowProviderDropdown(false);
+                setShowSortDropdown(false);
+              }}>
+                <FiFilter size={17} />
+
+                <p>
+                  Filter By: <span class='white'>Categories</span>
+                </p>
+
+                <FiChevronDown size={16} class={showCategoryDropdown() ? 'rotated' : ''} />
+
+                               <Show when={showCategoryDropdown()}>
+                   <div className='filter-dropdown left' onClick={(e) => e.stopPropagation()}>
+                     <div className='search-container'>
+                       <input 
+                         type="text" 
+                         placeholder="Search categories..." 
+                         value={categorySearch()} 
+                         onInput={(e) => setCategorySearch(e.target.value)}
+                       />
+                     </div>
+                     <div className='filters'>
+                       <For each={filteredCategories()}>{(cat) =>
+                         <div className={'option ' + (params.category === cat ? 'active' : '')}
+                              onClick={() => {
+                                setParams({ category: params?.category === cat ? null : cat });
+                                setShowCategoryDropdown(false);
+                              }}>
+                           <p>{cat}</p>
+                           <div className='checkbox'>
+                             <img src='/assets/icons/check.svg'/>
+                           </div>
+                         </div>
+                       }</For>
+                     </div>
+                   </div>
+                 </Show>
+              </div>
+            </Show>
+          </div>
+        </Show>
 
         <Show when={networkError()}>
           <div className='connection-error'>
@@ -473,7 +611,18 @@ function Slots(props) {
             <Show when={!slotsData.loading} fallback={<Loader/>}>
               <Show when={slots() && slots().length > 0} fallback={
                 <div className='no-slots'>
-                  <p>No games found. Try adjusting your filters.</p>
+                  <Show when={isFavoritesPage()} fallback={
+                    <p>No games found. Try adjusting your filters.</p>
+                  }>
+                    <div className='favorites-empty'>
+                      <AiOutlineHeart size={48} color="#8aa3b8"/>
+                      <h3>No favorites yet</h3>
+                      <p>Discover amazing games and add them to your favorites collection</p>
+                      <A href="/slots" class="browse-button">
+                        Browse Games
+                      </A>
+                    </div>
+                  </Show>
                 </div>
               }>
                 <For each={slots()}>{(slot, index) =>
@@ -491,12 +640,18 @@ function Slots(props) {
                     </div>
                     <div class='slot-overlay'>
                       <div class='favorite-container'>
-                        <FavoriteButton 
-                          slug={slot.slug}
-                          isAuthenticated={!!user()}
-                          isFavorited={slot.isFavorited}
-                          size={16}
-                        />
+                                              <FavoriteButton 
+                        slug={slot.slug}
+                        isAuthenticated={!!user()}
+                        isFavorited={slot.isFavorited}
+                        size={16}
+                        onToggle={(isFavorited) => {
+                          // If we're on favorites page and item was unfavorited, refresh the list
+                          if (isFavoritesPage() && !isFavorited) {
+                            slotsData.refetch();
+                          }
+                        }}
+                      />
                       </div>
                     </div>
                     {slot.isNew && <div class="new-tag">NEW</div>}
@@ -511,61 +666,19 @@ function Slots(props) {
         <Show when={!networkError() && slots() && slots().length > 0}>
           <div class='pagination'>
             <p class='displaying'>DISPLAYING <span class='white'>{slots()?.length || 0}</span> OUT
-              OF {slotsData()?.total || 0} SLOTS</p>
+              OF {slotsData()?.total || 0} {isFavoritesPage() ? 'FAVORITES' : 'SLOTS'}</p>
 
-            <button class='bevel-purple load' onClick={() => fetchMoreSlots()}>
-              LOAD MORE
-            </button>
+            <Show when={(slots()?.length || 0) < (slotsData()?.total || 0)}>
+              <button class='load' onClick={() => fetchMoreSlots()}>
+                LOAD MORE
+              </button>
+            </Show>
           </div>
         </Show>
 
-        <div class='providers-wrapper'>
-          <div className='banner'>
-            <img src='/assets/icons/providers.svg' height='19' width='19' alt=''/>
-
-            <p className='title'>
-              <span className='white bold'>PROVIDERS</span>
-            </p>
-
-            <div className='line'/>
-
-            <button className='bevel-purple arrow' onClick={() => scrollProviders(-1)}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M12 6L2 6M2 6L7.6 0.999999M2 6L7.6 11" stroke="white" stroke-width="2"/>
-              </svg>
-            </button>
-
-            <button className='bevel-purple arrow' onClick={() => scrollProviders(1)}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M1.58933e-07 6L10 6M10 6L4.4 11M10 6L4.4 0.999999" stroke="white" stroke-width="2"/>
-              </svg>
-            </button>
-          </div>
-
-          <div class='providers' ref={providersRef}>
-            <Show when={repeatProviders().length > 0} fallback={
-              <div className='no-providers'>
-                <span>Providers will be available once connection is restored.</span>
-              </div>
-            }>
-              <For each={repeatProviders()}>{(provider, index) =>
-                <div class='provider' onClick={() => setParams({ provider: params?.provider === provider.slug ? null : provider.slug })}>
-                  <img src={`${import.meta.env.VITE_BASE_URL}${provider.img}`} height='50' 
-                       onError={(e) => {
-                         // Fallback if image fails to load
-                         e.target.style.display = 'none';
-                         e.target.parentElement.innerHTML = `<span style="color: #8aa3b8; font-size: 14px;">${provider.name || 'Provider'}</span>`;
-                       }}/>
-                </div>
-              }</For>
-              <Show when={repeatProviders().length > 0}>
-                <div class='provider more-providers'>
-                  <span>and more...</span>
-                </div>
-              </Show>
-            </Show>
-          </div>
-        </div>
+       
+          <ProvidersSection />
+        
 
         <Bets user={user()}/>
       </div>
@@ -594,14 +707,14 @@ function Slots(props) {
           line-height: 40px;
           
           border-radius: 8px;
-          border: 1px solid rgba(78, 205, 196, 0.3);
-          background: rgba(26, 35, 50, 0.4);
+          border: 1px solid #3b43764d;
+          
           backdrop-filter: blur(8px);
 
           font-family: Geogrotesque Wide, sans-serif;
           font-size: 18px;
           font-weight: 700;
-          color: #4ecdc4;
+          color: #8aa3b8;
           
           filter: drop-shadow(0 0 15px rgba(78, 205, 196, 0.3));
           
@@ -929,6 +1042,56 @@ function Slots(props) {
           font-size: 16px;
         }
         
+        .favorites-empty {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 16px;
+          padding: 40px 20px;
+          text-align: center;
+        }
+        
+        .favorites-empty h3 {
+          margin: 0;
+          color: #ffffff;
+          font-family: Geogrotesque Wide, sans-serif;
+          font-size: 24px;
+          font-weight: 700;
+        }
+        
+        .favorites-empty p {
+          margin: 0;
+          color: #8aa3b8;
+          font-family: Geogrotesque Wide, sans-serif;
+          font-size: 16px;
+          max-width: 400px;
+        }
+        
+        .browse-button {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 24px;
+          background: rgba(78, 205, 196, 0.15);
+          border: 1px solid rgba(78, 205, 196, 0.3);
+          border-radius: 8px;
+          backdrop-filter: blur(8px);
+          color: #4ecdc4;
+          text-decoration: none;
+          font-family: Geogrotesque Wide, sans-serif;
+          font-size: 15px;
+          font-weight: 600;
+          transition: all 0.3s ease;
+        }
+        
+        .browse-button:hover {
+          background: rgba(78, 205, 196, 0.25);
+          border-color: #4ecdc4;
+          color: #ffffff;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(78, 205, 196, 0.2);
+        }
+        
         .no-providers {
           display: flex;
           align-items: center;
@@ -1045,8 +1208,6 @@ function Slots(props) {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 30px;
-
           margin: 35px 0 50px 0;
         }
 
@@ -1055,10 +1216,9 @@ function Slots(props) {
           width: 100%;
 
           border-radius: 8px;
-          background: rgba(26, 35, 50, 0.4);
+         
           backdrop-filter: blur(8px);
-          border: 1px solid rgba(78, 205, 196, 0.1);
-          box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
+         
 
           color: #8aa3b8;
           font-family: Geogrotesque Wide, sans-serif;
@@ -1070,29 +1230,45 @@ function Slots(props) {
         }
 
         .load {
-          width: 180px;
-          height: 45px;
-
-          background: rgba(78, 205, 196, 0.15);
-          border: 1px solid rgba(78, 205, 196, 0.3);
+          padding: 12px 32px;
+          
+          background: transparent;
+          border: none;
           border-radius: 8px;
-          backdrop-filter: blur(8px);
-
+          
           color: #4ecdc4;
           font-family: Geogrotesque Wide, sans-serif;
-          font-size: 15px;
-          font-weight: 700;
-
+          font-size: 14px;
+          font-weight: 500;
+          letter-spacing: 0.5px;
+          
           cursor: pointer;
           transition: all 0.3s ease;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .load::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: linear-gradient(135deg, rgba(78, 205, 196, 0.1), rgba(78, 205, 196, 0.05));
+          border-radius: 8px;
+          transition: all 0.3s ease;
+          z-index: -1;
         }
         
         .load:hover {
-          background: rgba(78, 205, 196, 0.25);
-          border-color: #4ecdc4;
           color: #ffffff;
           transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(78, 205, 196, 0.2);
+        }
+        
+        .load:hover::before {
+          background: linear-gradient(135deg, rgba(78, 205, 196, 0.2), rgba(78, 205, 196, 0.1));
+          box-shadow: 0 8px 25px rgba(78, 205, 196, 0.2);
         }
 
         .banner {

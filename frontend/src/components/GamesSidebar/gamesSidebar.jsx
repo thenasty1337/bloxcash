@@ -1,4 +1,4 @@
-import { A, useSearchParams } from "@solidjs/router";
+import { A, useSearchParams, useLocation } from "@solidjs/router";
 import {openSupport} from "../../util/support";
 import { createSignal } from "solid-js";
 import { 
@@ -35,22 +35,64 @@ import { RiMediaPlayCircleFill } from 'solid-icons/ri';
 import "./gamesSidebar.css";
 
 function GamesSidebar(props) {
-  const [featuredExpanded, setFeaturedExpanded] = createSignal(true);
+  const [houseGamesExpanded, setHouseGamesExpanded] = createSignal(false);
+  const [slotsExpanded, setSlotsExpanded] = createSignal(true);
   const [communityExpanded, setCommunityExpanded] = createSignal(false);
   const [legalExpanded, setLegalExpanded] = createSignal(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
 
   // Function to handle dropdown toggling - simple toggle behavior
   const toggleDropdown = (dropdown) => {
     if (props.collapsed) return; // Don't allow dropdown toggling when collapsed
     
-    if (dropdown === 'featured') {
-      setFeaturedExpanded(!featuredExpanded());
+    if (dropdown === 'houseGames') {
+      setHouseGamesExpanded(!houseGamesExpanded());
+    } else if (dropdown === 'slots') {
+      setSlotsExpanded(!slotsExpanded());
     } else if (dropdown === 'community') {
       setCommunityExpanded(!communityExpanded());
     } else if (dropdown === 'legal') {
       setLegalExpanded(!legalExpanded());
     }
+  };
+
+  // Function to check if a link is active
+  const isActive = (href) => {
+    const currentPath = location.pathname;
+    const currentSearch = location.search;
+    
+    // Handle query-based URLs like /slots?sort=popularity
+    if (href.includes('?')) {
+      const [linkPath, linkQuery] = href.split('?');
+      
+      // Path must match exactly
+      if (linkPath !== currentPath) return false;
+      
+      // For query-based links, check exact parameter match
+      const currentParams = new URLSearchParams(currentSearch);
+      const linkParams = new URLSearchParams(linkQuery);
+      
+      // Must have same number of parameters
+      if (currentParams.size !== linkParams.size) return false;
+      
+      // All link parameters must match current parameters exactly
+      for (const [key, value] of linkParams) {
+        if (currentParams.get(key) !== value) return false;
+      }
+      
+      return true;
+    } else {
+      // Handle direct path URLs like /slots/featured, /, /favorites
+      return href === currentPath;
+    }
+  };
+
+  // Function to check if a link is active, but only for the current view mode
+  const isActiveForCurrentView = (href, isCollapsedView) => {
+    // Only apply active state to links in the currently visible section
+    if (props.collapsed !== isCollapsedView) return false;
+    return isActive(href);
   };
 
   return (
@@ -60,7 +102,7 @@ function GamesSidebar(props) {
         <div class="sidebar-content">
           {/* All Games Card */}
           <div class="games-card">
-            <A href="/" class="all-games-item" title="Home">
+            <A href="/" class={`all-games-item ${isActive('/') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Home">
               <div class="item-left">
                 <div class="item-icon">
                   <img src="/assets/game-icons/home.svg" alt="Home" width="18" height="18" />
@@ -70,23 +112,88 @@ function GamesSidebar(props) {
             </A>
           </div>
 
-          {/* When collapsed, show individual game icons */}
+                        {/* When collapsed, show individual game icons */}
           {props.collapsed ? (
             <>
               <div class="games-card">
-                <A href="/slots" class="game-item" title="Slots">
+                <button 
+                  class="featured-header"
+                  onClick={() => toggleDropdown('slots')}
+                  title="Slots"
+                >
                   <div class="item-left">
-                    <div class="game-icon">
+                    <div class="item-icon">
                       <img src="/assets/game-icons/slots.svg" alt="Slots" width="18" height="18" />
                     </div>
-                    <span class="game-text">Slots</span>
+                    <span class="item-text">Slots</span>
                   </div>
-                  <span class="badge new">NEW</span>
-                </A>
+                  <FiChevronDown 
+                    size={16}
+                    class={`expand-arrow ${slotsExpanded() ? 'expanded' : ''}`}
+                  />
+                </button>
+                
+                <div class={`featured-games-list ${slotsExpanded() ? 'expanded' : ''}`}>
+                  <A href="/slots/featured" class={`game-item ${isActiveForCurrentView('/slots/featured', true) ? 'active' : ''}`} activeClass="" inactiveClass="" title="Featured Slots">
+                    <div class="item-left">
+                      <div class="game-icon">
+                        <img src="/assets/GameIcons/favourites.svg" alt="Featured Slots" width="18" height="18" />
+                      </div>
+                      <span class="game-text">Featured Slots</span>
+                    </div>
+                  </A>
+
+                  <A href="/slots?sort=popularity" class={`game-item ${isActive('/slots?sort=popularity') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Popular Slots">
+                    <div class="item-left">
+                      <div class="game-icon">
+                        <img src="/assets/GameIcons/popular.svg" alt="Popular Slots" width="18" height="18" />
+                      </div>
+                      <span class="game-text">Popular Slots</span>
+                    </div>
+                  </A>
+
+                  <A href="/slots?isNew=true" class={`game-item ${isActive('/slots?isNew=true') ? 'active' : ''}`} activeClass="" inactiveClass="" title="New Releases">
+                    <div class="item-left">
+                      <div class="game-icon">
+                        <img src="/assets/GameIcons/new.svg" alt="New Releases" width="18" height="18" />
+                      </div>
+                      <span class="game-text">New Releases</span>
+                    </div>
+                  </A>
+
+                  <A href="/slots?type=video-slots" class={`game-item ${isActive('/slots?type=video-slots') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Video Slots">
+                    <div class="item-left">
+                      <div class="game-icon">
+                        <img src="/assets/GameIcons/slot.svg" alt="Video Slots" width="18" height="18" />
+                      </div>
+                      <span class="game-text">Video Slots</span>
+                    </div>
+                  </A>
+
+                  <A href="/slots?type=live" class={`game-item ${isActive('/slots?type=live') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Game Shows">
+                    <div class="item-left">
+                      <div class="game-icon">
+                        <img src="/assets/GameIcons/game-shows.svg" alt="Game Shows" width="18" height="18" />
+                      </div>
+                      <span class="game-text">Game Shows</span>
+                    </div>
+                  </A>
+
+                  {props.user && (
+                    <A href="/favorites" class={`game-item ${isActive('/favorites') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Your Favorites">
+                      <div class="item-left">
+                        <div class="game-icon">
+                          <img src="/assets/GameIcons/favourites.svg" alt="Your Favorites" width="18" height="18" />
+                        </div>
+                        <span class="game-text">Your Favorites</span>
+                      </div>
+                    </A>
+                  )}
+                </div>
               </div>
 
               <div class="games-card">
-                <A href="/battles" class="game-item" title="Case Battles">
+                <A href="/battles" class={`game-item ${isActive('/battles') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Case Battles">
                   <div class="item-left">
                     <div class="game-icon">
                       <img src="/assets/game-icons/battles.svg" alt="Case Battles" width="18" height="18" />
@@ -98,7 +205,7 @@ function GamesSidebar(props) {
               </div>
 
               <div class="games-card">
-                <A href="/mines" class="game-item" title="Mines">
+                <A href="/mines" class={`game-item ${isActive('/mines') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Mines">
                   <div class="item-left">
                     <div class="game-icon">
                       <img src="/assets/game-icons/mines.svg" alt="Mines" width="18" height="18" />
@@ -109,7 +216,7 @@ function GamesSidebar(props) {
               </div>
 
               <div class="games-card">
-                <A href="/jackpot" class="game-item" title="Jackpot">
+                <A href="/jackpot" class={`game-item ${isActive('/jackpot') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Jackpot">
                   <div class="item-left">
                     <div class="game-icon">
                       <img src="/assets/game-icons/jackpot.svg" alt="Jackpot" width="18" height="18" />
@@ -120,7 +227,7 @@ function GamesSidebar(props) {
               </div>
 
               <div class="games-card">
-                <A href="/coinflip" class="game-item" title="Coinflip">
+                <A href="/coinflip" class={`game-item ${isActive('/coinflip') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Coinflip">
                   <div class="item-left">
                     <div class="game-icon">
                       <img src="/assets/game-icons/coin-flip.svg" alt="Coinflip" width="18" height="18" />
@@ -131,7 +238,7 @@ function GamesSidebar(props) {
               </div>
 
               <div class="games-card">
-                <A href="/roulette" class="game-item" title="Roulette">
+                <A href="/roulette" class={`game-item ${isActive('/roulette') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Roulette">
                   <div class="item-left">
                     <div class="game-icon">
                       <img src="/assets/game-icons/roulette.svg" alt="Roulette" width="18" height="18" />
@@ -142,7 +249,7 @@ function GamesSidebar(props) {
               </div>
 
               <div class="games-card">
-                <A href="/cases" class="game-item" title="Cases">
+                <A href="/cases" class={`game-item ${isActive('/cases') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Cases">
                   <div class="item-left">
                     <div class="game-icon">
                       <img src="/assets/game-icons/packs.svg" alt="Cases" width="18" height="18" />
@@ -154,37 +261,105 @@ function GamesSidebar(props) {
             </>
           ) : (
             <>
-              {/* Featured Games Card - when not collapsed */}
+              {/* Slots Card - when not collapsed */}
               <div class="games-card">
                 <button 
                   class="featured-header"
-                  onClick={() => toggleDropdown('featured')}
-                  title="Featured Games"
+                  onClick={() => toggleDropdown('slots')}
+                  title="Slots"
                 >
                   <div class="item-left">
                     <div class="item-icon">
-                    <img src="/assets/game-icons/featured.svg" alt="Featured Games" width="18" height="18" />
+                      <img src="/assets/game-icons/slots.svg" alt="Slots" width="18" height="18" />
                     </div>
-                    <span class="item-text">Featured Games</span>
+                    <span class="item-text">Slots</span>
                   </div>
                   <FiChevronDown 
                     size={16}
-                    class={`expand-arrow ${featuredExpanded() ? 'expanded' : ''}`}
+                    class={`expand-arrow ${slotsExpanded() ? 'expanded' : ''}`}
                   />
                 </button>
                 
-                <div class={`featured-games-list ${featuredExpanded() ? 'expanded' : ''}`}>
-                  <A href="/slots" class="game-item" title="Slots">
+                <div class={`featured-games-list ${slotsExpanded() ? 'expanded' : ''}`}>
+                  <A href="/slots/featured" class={`game-item ${isActive('/slots/featured') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Featured Slots">
                     <div class="item-left">
                       <div class="game-icon">
-                        <img src="/assets/game-icons/slots.svg" alt="Slots" width="18" height="18" />
+                        <img src="/assets/GameIcons/favourites.svg" alt="Featured Slots" width="18" height="18" />
                       </div>
-                      <span class="game-text">Slots</span>
-                      <span class="badge new">NEW</span>
+                      <span class="game-text">Featured Slots</span>
                     </div>
                   </A>
 
-                  <A href="/battles" class="game-item" title="Case Battles">
+                  <A href="/slots?sort=popularity" class={`game-item ${isActive('/slots?sort=popularity') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Popular Slots">
+                    <div class="item-left">
+                      <div class="game-icon">
+                        <img src="/assets/GameIcons/popular.svg" alt="Popular Slots" width="18" height="18" />
+                      </div>
+                      <span class="game-text">Popular Slots</span>
+                    </div>
+                  </A>
+
+                  <A href="/slots?isNew=true" class={`game-item ${isActive('/slots?isNew=true') ? 'active' : ''}`} activeClass="" inactiveClass="" title="New Releases">
+                    <div class="item-left">
+                      <div class="game-icon">
+                        <img src="/assets/GameIcons/new.svg" alt="New Releases" width="18" height="18" />
+                      </div>
+                      <span class="game-text">New Releases</span>
+                    </div>
+                  </A>
+
+                  <A href="/slots?type=video-slots" class={`game-item ${isActive('/slots?type=video-slots') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Video Slots">
+                    <div class="item-left">
+                      <div class="game-icon">
+                        <img src="/assets/GameIcons/slot.svg" alt="Video Slots" width="18" height="18" />
+                      </div>
+                      <span class="game-text">Video Slots</span>
+                    </div>
+                  </A>
+
+                  <A href="/slots?type=live" class={`game-item ${isActive('/slots?type=live') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Game Shows">
+                    <div class="item-left">
+                      <div class="game-icon">
+                        <img src="/assets/GameIcons/game-shows.svg" alt="Game Shows" width="18" height="18" />
+                      </div>
+                      <span class="game-text">Game Shows</span>
+                    </div>
+                  </A>
+
+                  {props.user && (
+                    <A href="/favorites" class={`game-item ${isActive('/favorites') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Your Favorites">
+                      <div class="item-left">
+                        <div class="game-icon">
+                          <img src="/assets/GameIcons/favourites.svg" alt="Your Favorites" width="18" height="18" />
+                        </div>
+                        <span class="game-text">Your Favorites</span>
+                      </div>
+                    </A>
+                  )}
+                </div>
+              </div>
+
+              {/* House Games Card - when not collapsed */}
+              <div class="games-card">
+                <button 
+                  class="featured-header"
+                  onClick={() => toggleDropdown('houseGames')}
+                  title="House Games"
+                >
+                  <div class="item-left">
+                    <div class="item-icon">
+                    <img src="/assets/game-icons/featured.svg" alt="House Games" width="18" height="18" />
+                    </div>
+                    <span class="item-text">House Games</span>
+                  </div>
+                  <FiChevronDown 
+                    size={16}
+                    class={`expand-arrow ${houseGamesExpanded() ? 'expanded' : ''}`}
+                  />
+                </button>
+                
+                <div class={`featured-games-list ${houseGamesExpanded() ? 'expanded' : ''}`}>
+                  <A href="/battles" class={`game-item ${isActive('/battles') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Case Battles">
                     <div class="item-left">
                       <div class="game-icon">
                         <img src="/assets/game-icons/battles.svg" alt="Case Battles" width="18" height="18" />
@@ -194,7 +369,7 @@ function GamesSidebar(props) {
                     </div>
                   </A>
 
-                  <A href="/mines" class="game-item" title="Mines">
+                  <A href="/mines" class={`game-item ${isActive('/mines') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Mines">
                     <div class="item-left">
                       <div class="game-icon">
                         <img src="/assets/game-icons/mines.svg" alt="Mines" width="18" height="18" />
@@ -203,7 +378,7 @@ function GamesSidebar(props) {
                     </div>
                   </A>
 
-                  <A href="/jackpot" class="game-item" title="Jackpot">
+                  <A href="/jackpot" class={`game-item ${isActive('/jackpot') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Jackpot">
                     <div class="item-left">
                       <div class="game-icon">
                         <img src="/assets/game-icons/jackpot.svg" alt="Jackpot" width="18" height="18" />
@@ -212,7 +387,7 @@ function GamesSidebar(props) {
                     </div>
                   </A>
 
-                  <A href="/coinflip" class="game-item" title="Coinflip">
+                  <A href="/coinflip" class={`game-item ${isActive('/coinflip') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Coinflip">
                     <div class="item-left">
                       <div class="game-icon">
                         <img src="/assets/game-icons/coin-flip.svg" alt="Coinflip" width="18" height="18" />
@@ -221,7 +396,7 @@ function GamesSidebar(props) {
                     </div>
                   </A>
 
-                  <A href="/roulette" class="game-item" title="Roulette">
+                  <A href="/roulette" class={`game-item ${isActive('/roulette') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Roulette">
                     <div class="item-left">
                       <div class="game-icon">
                         <img src="/assets/game-icons/roulette.svg" alt="Roulette" width="18" height="18" />
@@ -230,7 +405,7 @@ function GamesSidebar(props) {
                     </div>
                   </A>
 
-                  <A href="/cases" class="game-item" title="Cases">
+                  <A href="/cases" class={`game-item ${isActive('/cases') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Cases">
                     <div class="item-left">
                       <div class="game-icon">
                         <img src="/assets/game-icons/packs.svg" alt="Cases" width="18" height="18" />
@@ -261,7 +436,7 @@ function GamesSidebar(props) {
                 </button>
                 
                 <div class={`featured-games-list ${communityExpanded() ? 'expanded' : ''}`}>
-                  <A href="/leaderboard" class="game-item" title="Leaderboard">
+                  <A href="/leaderboard" class={`game-item ${isActive('/leaderboard') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Leaderboard">
                     <div class="item-left">
                       <div class="game-icon">
                         <img src="/assets/game-icons/leaderboard.svg" alt="Leaderboard" width="18" height="18" />
@@ -271,7 +446,7 @@ function GamesSidebar(props) {
                   </A>
 
                   {props.user && (
-                    <A href="/affiliates" class="game-item" title="Affiliates">
+                    <A href="/affiliates" class={`game-item ${isActive('/affiliates') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Affiliates">
                       <div class="item-left">
                         <div class="game-icon">
                           <img src="/assets/game-icons/affiliates.svg" alt="Affiliates" width="18" height="18" />
@@ -283,7 +458,7 @@ function GamesSidebar(props) {
                   )}
 
                   {props.user && (
-                    <A href="/surveys" class="game-item" title="Surveys">
+                    <A href="/surveys" class={`game-item ${isActive('/surveys') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Surveys">
                       <div class="item-left">
                         <div class="game-icon">
                           <TbFileDescription size={18} />
@@ -315,7 +490,7 @@ function GamesSidebar(props) {
                 </button>
                 
                 <div class={`featured-games-list ${legalExpanded() ? 'expanded' : ''}`}>
-                  <A href="/docs/faq" class="game-item" title="FAQ">
+                  <A href="/docs/faq" class={`game-item ${isActive('/docs/faq') ? 'active' : ''}`} activeClass="" inactiveClass="" title="FAQ">
                     <div class="item-left">
                       <div class="game-icon">
                         <img src="/assets/game-icons/faq.svg" alt="FAQ" width="18" height="18" />
@@ -324,7 +499,7 @@ function GamesSidebar(props) {
                     </div>
                   </A>
 
-                  <A href="/docs/provably" class="game-item" title="Fairness">
+                  <A href="/docs/provably" class={`game-item ${isActive('/docs/provably') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Fairness">
                     <div class="item-left">
                       <div class="game-icon">
                         <img src="/assets/game-icons/fairness.svg" alt="Fairness" width="18" height="18" />
@@ -333,7 +508,7 @@ function GamesSidebar(props) {
                     </div>
                   </A>
 
-                  <A href="/docs/tos" class="game-item" title="Terms of Service">
+                  <A href="/docs/tos" class={`game-item ${isActive('/docs/tos') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Terms of Service">
                     <div class="item-left">
                       <div class="game-icon">
                         <img src="/assets/game-icons/tos.svg" alt="Terms of Service" width="18" height="18" />
@@ -342,7 +517,7 @@ function GamesSidebar(props) {
                     </div>
                   </A>
 
-                  <A href="/docs/aml" class="game-item" title="AML Policy">
+                  <A href="/docs/aml" class={`game-item ${isActive('/docs/aml') ? 'active' : ''}`} activeClass="" inactiveClass="" title="AML Policy">
                     <div class="item-left">
                       <div class="game-icon">
                         <img src="/assets/game-icons/aml.svg" alt="AML Policy" width="18" height="18" />
@@ -351,7 +526,7 @@ function GamesSidebar(props) {
                     </div>
                   </A>
 
-                  <A href="/docs/privacy" class="game-item" title="Privacy Policy">
+                  <A href="/docs/privacy" class={`game-item ${isActive('/docs/privacy') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Privacy Policy">
                     <div class="item-left">
                       <div class="game-icon">
                         <img src="/assets/game-icons/legal.svg" alt="Privacy Policy" width="18" height="18" />

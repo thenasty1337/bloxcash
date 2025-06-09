@@ -81,7 +81,7 @@
   transform: translateY(-1px);
 }
 
-.content {
+.content-modal {
   padding: 32px 28px 28px;
   display: flex;
   flex-direction: column;
@@ -89,7 +89,7 @@
   text-align: center;
 }
 
-.content h2 {
+.content-modal h2 {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-weight: 500;
   font-size: 12px;
@@ -99,7 +99,7 @@
   letter-spacing: 1.2px;
 }
 
-.content h1 {
+.content-modal h1 {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-weight: 700;
   font-size: 24px;
@@ -116,7 +116,7 @@
   filter: drop-shadow(0 0 4px rgba(139, 120, 221, 0.3));
 }
 
-.bar {
+.bar-modal {
   width: 60px;
   height: 2px;
   margin: 0 auto 24px;
@@ -124,7 +124,7 @@
   border-radius: 1px;
 }
 
-.options {
+.options-modal {
   display: flex;
   width: 100%;
   gap: 6px;
@@ -339,11 +339,11 @@
     margin: 20px;
   }
 
-  .content {
+  .content-modal {
     padding: 28px 24px 24px;
   }
 
-  .content h1 {
+  .content-modal h1 {
     font-size: 22px;
     margin-bottom: 20px;
   }
@@ -387,20 +387,20 @@
     border-radius: 12px;
   }
 
-  .content {
+  .content-modal {
     padding: 24px 20px 20px;
   }
 
-  .content h1 {
+  .content-modal h1 {
     font-size: 20px;
     margin-bottom: 16px;
   }
 
-  .bar {
+  .bar-modal {
     margin-bottom: 20px;
   }
 
-  .options {
+  .options-modal {
     margin-bottom: 20px;
   }
 
@@ -430,7 +430,7 @@
 }
 
 @media only screen and (max-width: 360px) {
-  .content {
+  .content-modal {
     padding: 20px 16px 16px;
   }
 

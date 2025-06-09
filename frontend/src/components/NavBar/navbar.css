@@ -39,7 +39,7 @@
 .nav-left-section {
   display: flex;
   align-items: center;
-  padding: 0 16px;
+  padding: 0 10px;
   min-width: 200px;
   gap: 12px;
 }

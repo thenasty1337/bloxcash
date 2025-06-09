@@ -18,26 +18,57 @@ const maxLength = 10;
 async function cacheBets() {
 
     const [all] = await sql.query(`
-        SELECT bets.amount, bets.winnings, bets.game, bets.createdAt, users.id, users.username, users.xp, users.role, users.anon, users.avatar FROM bets
-        INNER JOIN users ON bets.userId = users.id WHERE bets.completed = 1 ORDER BY bets.id DESC LIMIT ${maxLength}
+        SELECT 
+            bets.amount, bets.winnings, bets.game, bets.createdAt, bets.provider, bets.spinshield_game_id,
+            users.id, users.username, users.xp, users.role, users.anon, users.avatar,
+            sg.game_name, sg.image_url, sg.provider_name
+        FROM bets
+        INNER JOIN users ON bets.userId = users.id 
+        LEFT JOIN spinshield_games sg ON bets.spinshield_game_id = sg.game_id_hash
+        WHERE bets.completed = 1 ORDER BY bets.id DESC LIMIT ${maxLength}
     `);
+
+    // Debug: Log what games we're getting
+    const gameTypes = all.reduce((acc, bet) => {
+        acc[bet.game] = (acc[bet.game] || 0) + 1;
+        return acc;
+    }, {});
+    console.log('📊 Cached bets by game type:', gameTypes);
 
     cachedBets.all = all.map(e => mapBet(e));
 
     const [high] = await sql.query(`
-        SELECT bets.amount, bets.winnings, bets.game, bets.createdAt, users.id, users.username, users.xp, users.role, users.anon, users.avatar FROM bets
-        INNER JOIN users ON bets.userId = users.id WHERE bets.completed = 1 AND bets.amount > ${highBetAmount} ORDER BY bets.id DESC LIMIT ${maxLength}
+        SELECT 
+            bets.amount, bets.winnings, bets.game, bets.createdAt, bets.provider, bets.spinshield_game_id,
+            users.id, users.username, users.xp, users.role, users.anon, users.avatar,
+            sg.game_name, sg.image_url, sg.provider_name
+        FROM bets
+        INNER JOIN users ON bets.userId = users.id 
+        LEFT JOIN spinshield_games sg ON bets.spinshield_game_id = sg.game_id_hash
+        WHERE bets.completed = 1 AND bets.amount > ${highBetAmount} ORDER BY bets.id DESC LIMIT ${maxLength}
     `);
 
     cachedBets.high = high.map(e => mapBet(e));
 
     const [lucky] = await sql.query(`
-        SELECT bets.amount, bets.winnings, bets.game, bets.createdAt, users.id, users.username, users.xp, users.role, users.anon, users.avatar FROM bets
-        INNER JOIN users ON bets.userId = users.id WHERE bets.completed = 1 AND bets.winnings / bets.amount > ${luckyBetMultiplier}
+        SELECT 
+            bets.amount, bets.winnings, bets.game, bets.createdAt, bets.provider, bets.spinshield_game_id,
+            users.id, users.username, users.xp, users.role, users.anon, users.avatar,
+            sg.game_name, sg.image_url, sg.provider_name
+        FROM bets
+        INNER JOIN users ON bets.userId = users.id 
+        LEFT JOIN spinshield_games sg ON bets.spinshield_game_id = sg.game_id_hash
+        WHERE bets.completed = 1 AND bets.winnings / bets.amount > ${luckyBetMultiplier}
         ORDER BY bets.id DESC LIMIT ${maxLength}
     `);
 
     cachedBets.lucky = lucky.map(e => mapBet(e));
+
+    // Debug: Log socket emissions
+    console.log('📡 Emitting cached bets to socket rooms');
+    console.log('  - bets:all room has', io.sockets.adapter.rooms.get('bets:all')?.size || 0, 'clients');
+    console.log('  - bets:high room has', io.sockets.adapter.rooms.get('bets:high')?.size || 0, 'clients');
+    console.log('  - bets:lucky room has', io.sockets.adapter.rooms.get('bets:lucky')?.size || 0, 'clients');
 
     io.to('bets:all').emit('bets', 'all', cachedBets.all);
     io.to('bets:high').emit('bets', 'high', cachedBets.high);
@@ -46,15 +77,25 @@ async function cacheBets() {
 }
 
 function mapBet(e) {
-
-    return {
+    const bet = {
         user: e.anon ? null : mapUser(e),
         amount: e.amount,
         payout: e.winnings,
         game: e.game,
         createdAt: e.createdAt
+    };
+
+    // Add SpinShield game details if available
+    if (e.provider === 'spinshield' && e.game_name) {
+        bet.gameDetails = {
+            name: e.game_name,
+            image: e.image_url,
+            provider: e.provider_name || 'SpinShield',
+            gameId: e.spinshield_game_id
+        };
     }
 
+    return bet;
 }
 
 const gamesNames = {
@@ -69,6 +110,16 @@ const gamesNames = {
 }
 
 async function newBets(bets) {
+
+    // Debug: Log incoming bets
+    console.log('🎰 newBets called with:', bets.map(b => ({ 
+        game: b.game, 
+        amount: b.amount, 
+        payout: b.payout, 
+        user: b.user?.username,
+        hasGameDetails: !!b.gameDetails,
+        gameName: b.gameDetails?.name 
+    })));
 
     const allBets = [];
     const highBets = [];
@@ -85,7 +136,7 @@ async function newBets(bets) {
 
     const sponsorGame = bets.some(bet => sponsorLockedUsers.has(bet.user.id));
 
-    for (const { user, amount, payout, game, edge } of bets) {
+    for (const { user, amount, payout, game, edge, gameDetails } of bets) {
 
         const countsTowardsRewards = !sponsorLockedUsers.has(user.id) && user.role == 'USER';
 
@@ -102,7 +153,8 @@ async function newBets(bets) {
             amount,
             payout,
             game,
-            createdAt
+            createdAt,
+            gameDetails // Preserve game details for slots
         };
 
         if (countsTowardsRewards) total += amount;
@@ -191,7 +243,14 @@ async function getBets(type, userId) {
         const [[user]] = await sql.query('SELECT id, username, xp, role, avatar FROM users WHERE id = ?', [userId]);
         if (!user) return false;
 
-        const [bets] = await sql.query('SELECT amount, winnings, game, createdAt FROM bets WHERE userId = ? AND completed = 1 ORDER BY id DESC LIMIT 10', [userId]);
+        const [bets] = await sql.query(`
+            SELECT 
+                bets.amount, bets.winnings, bets.game, bets.createdAt, bets.provider, bets.spinshield_game_id,
+                sg.game_name, sg.image_url, sg.provider_name
+            FROM bets
+            LEFT JOIN spinshield_games sg ON bets.spinshield_game_id = sg.game_id_hash
+            WHERE bets.userId = ? AND bets.completed = 1 ORDER BY bets.id DESC LIMIT 10
+        `, [userId]);
         
         const formattedBets = bets.map(bet => mapBet({ ...bet, ...user }));
         return formattedBets;
@@ -220,6 +279,15 @@ async function emitTotalWagered(amountToIncrease = 0, socket = io) {
 
 }
 
+
+// Periodically refresh cached bets to ensure slots and other completed bets appear
+setInterval(async () => {
+    try {
+        await cacheBets();
+    } catch (error) {
+        console.error('❌ Error refreshing cached bets:', error);
+    }
+}, 10000); // Refresh every 10 seconds
 
 module.exports = {
     cacheBets,

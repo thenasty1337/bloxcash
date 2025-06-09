@@ -1,6 +1,6 @@
 .games-sidebar {
-  width: 240px;
-  min-width: 240px;
+  width: 230px;
+  min-width: 230px;
   height: 100vh;
   position: fixed;
   left: 0;
@@ -75,7 +75,7 @@
   border-radius: 8px;
   color: #9ca3af;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(8px);
   box-sizing: border-box;
   position: relative;
@@ -115,7 +115,7 @@
   border-radius: 8px;
   color: #9ca3af;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(8px);
   box-sizing: border-box;
   position: relative;
@@ -224,16 +224,16 @@
 .sidebar-content {
   flex: 1;
   padding: 16px 12px;
-  padding-bottom: 140px; /* Space for footer */
+  padding-bottom: 200px; /* Much larger space for footer */
   display: flex;
   flex-direction: column;
   gap: 4px;
-  transition: padding 0.3s ease;
+  transition: padding 0.1s ease;
 }
 
 .games-sidebar.collapsed .sidebar-content {
   padding: 8px 6px;
-  padding-bottom: 80px; /* Reduced space for smaller footer */
+  padding-bottom: 140px; /* Much larger space for collapsed footer */
   gap: 2px;
 }
 
@@ -262,7 +262,7 @@
   border-radius: 15px;
   overflow: visible;
   backdrop-filter: none;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
   margin-bottom: 4px;
   padding: 0px;
 }
@@ -287,7 +287,7 @@
   padding: 12px 16px;
   color: #9ca3af;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
   cursor: pointer;
   background: #100e2b;
   border-radius: 12px;
@@ -314,7 +314,7 @@
   justify-content: center;
   color: #8b78dd; /* Updated icon color to purple */
   opacity: 0.7;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
 }
 
 .all-games-item:hover .item-icon,
@@ -338,7 +338,7 @@
   text-transform: uppercase;
   letter-spacing: 0.8px;
   opacity: 0.8;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.1s ease;
 }
 
 .all-games-item:hover .view-all {
@@ -357,7 +357,7 @@
   border-radius: 12px;
   color: #9ca3af;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
   text-align: left;
   margin-bottom: 8px;
 }
@@ -385,7 +385,7 @@
   align-items: center;
   justify-content: center;
   color: #9ca3af;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: center;
 }
 
@@ -403,7 +403,7 @@
   background: transparent;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.1s ease;
   opacity: 0;
   padding: 0;
   margin-top: 2px;
@@ -422,7 +422,7 @@
   padding: 10px 10px;
   color: #9ca3af;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
   cursor: pointer;
   background: #0E0B27;
   /* border: 1px solid rgba(139, 120, 221, 0.1); */
@@ -470,7 +470,7 @@
   align-items: center;
   justify-content: center;
   color: #7c6bbf;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
   opacity: 0.7;
 }
 
@@ -478,6 +478,29 @@
   color: #8b78dd;
   opacity: 1;
   filter: drop-shadow(0 0 4px rgba(139, 120, 221, 0.3));
+}
+
+/* Active state styles */
+.game-item.active,
+.all-games-item.active {
+  background: rgba(139, 120, 221, 0.25) !important;
+  border-color: #8b78dd !important;
+  color: #ffffff !important;
+}
+
+.game-item.active .game-icon,
+.all-games-item.active .item-icon {
+  color: #8b78dd !important;
+  opacity: 1 !important;
+  filter: drop-shadow(0 0 6px rgba(139, 120, 221, 0.4)) !important;
+}
+
+.games-sidebar.collapsed .game-item.active,
+.games-sidebar.collapsed .all-games-item.active {
+  background: rgba(139, 120, 221, 0.3) !important;
+  border-color: #8b78dd !important;
+  color: #8b78dd !important;
+  box-shadow: 0 6px 16px rgba(139, 120, 221, 0.4) !important;
 }
 
 .game-text {
@@ -517,7 +540,7 @@
   padding: 12px 16px;
   color: #9ca3af;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
   cursor: pointer;
   background: #1B1738;
   border-radius: 12px;
@@ -536,7 +559,7 @@
   align-items: center;
   justify-content: center;
   color: #9ca3af;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
   opacity: 0.6;
 }
 
@@ -555,11 +578,11 @@
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 240px;
+  width: 230px;
   z-index: 20;
   height: auto;
   min-height: 120px;
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.1s ease;
 }
 
 .games-sidebar.collapsed .sidebar-footer {
@@ -591,7 +614,7 @@
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-weight: 600;
   font-size: 13px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
   margin-bottom: 14px;
   backdrop-filter: blur(8px);
   box-sizing: border-box;
@@ -610,7 +633,7 @@
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
 }
 
 .social-icon {
@@ -626,7 +649,7 @@
   border-radius: 6px;
   color: #9ca3af;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(8px);
   margin: 0 3px;
   position: relative;
@@ -665,7 +688,7 @@
 /* Mobile Responsive */
 @media only screen and (max-width: 1250px) {
   .games-sidebar {
-    left: -240px;
+    left: -230px;
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
   }
@@ -676,7 +699,7 @@
 
   /* Move footer with sidebar on mobile */
   .sidebar-footer {
-    left: -240px;
+    left: -230px;
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     bottom: 70px; /* Add margin above mobile menu */
   }
@@ -718,6 +741,7 @@
 
   .sidebar-content {
     padding: 10px;
+    padding-bottom: 180px; /* Larger space for footer on tablet */
     gap: 8px;
   }
 
@@ -755,6 +779,7 @@
 
   .sidebar-content {
     padding: 8px;
+    padding-bottom: 160px; /* Larger space for footer on mobile */
   }
 
   .item-text,
