@@ -148,7 +148,7 @@ function Provably(props) {
                 <div className='header-section'>
                     <h1 className='main-title'>Provably Fair Gaming</h1>
                     <p className='subtitle'>
-                        Transparency and fairness are at the core of BloxClash. Our provably fair system 
+                        Transparency and fairness are at the core of Nova Casino. Our provably fair system 
                         ensures that every game outcome is verifiable and cannot be manipulated.
                     </p>
                     <div className='trust-indicators'>
@@ -209,7 +209,7 @@ function Provably(props) {
                                 <div className='seed-grid'>
                                     <div className='seed-item'>
                                         <strong>Server Seed</strong>
-                                        <span>Provided by BloxClash</span>
+                                        <span>Provided by Nova Casino</span>
                                     </div>
                                     <div className='seed-item'>
                                         <strong>Client Seed</strong>

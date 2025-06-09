@@ -295,9 +295,9 @@ function Jackpot(props) {
 
     return (
         <>
-            <Title>BloxClash | Jackpot</Title>
+            <Title>Nova Casino | Jackpot</Title>
             <Meta name='title' content='Jackpot'></Meta>
-            <Meta name='description' content='Win Robux & Limiteds On BloxClash In Big Jackpots In Roblox Gaming!'></Meta>
+            <Meta name='description' content='Win Robux & Limiteds On Nova Casino In Big Jackpots In Roblox Gaming!'></Meta>
 
             {join() && (
                 <JackpotJoin close={() => setJoin(false)}/>

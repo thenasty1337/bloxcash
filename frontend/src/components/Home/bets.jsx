@@ -180,8 +180,8 @@ function Bets(props) {
 
                                     <div class='row-col amount-col'>
                                         <div class='amount-info'>
-                                            <img src='/assets/icons/coin.svg' alt='' class='coin-icon'/>
-                                            <span class='amount-text'>{Math.floor(bet?.amount || 0)}<span class='cents'>.{getCents(bet?.amount || 0)}</span></span>
+                                            <img src='/assets/cryptos/branded/USDT.svg' alt='' class='coin-icon'/>
+                                            <span class='amount-text'>${Math.floor(bet?.amount || 0)}<span class='cents'>.{getCents(bet?.amount || 0)}</span></span>
                                         </div>
                                     </div>
 
@@ -193,9 +193,9 @@ function Bets(props) {
 
                                     <div class='row-col payout-col large'>
                                         <div class='payout-info'>
-                                            <img src='/assets/icons/coin.svg' alt='' class='coin-icon'/>
+                                            <img src='/assets/cryptos/branded/USDT.svg' alt='' class='coin-icon'/>
                                             <span class={'payout-text ' + ((bet?.payout / bet?.amount) > 1 ? 'win' : 'loss')}>
-                                                {(bet?.payout / bet?.amount > 1) ? '+' : ''}{Math.floor(bet?.payout || 0)}<span class='cents'>.{getCents(bet?.payout || 0)}</span>
+                                                {(bet?.payout / bet?.amount > 1) ? '+' : ''}${Math.floor(bet?.payout || 0)}<span class='cents'>.{getCents(bet?.payout || 0)}</span>
                                             </span>
                                         </div>
                                     </div>
@@ -511,8 +511,8 @@ function Bets(props) {
                 }
 
                 .coin-icon {
-                    width: 14px;
-                    height: 14px;
+                    width: 22px;
+                    height: 22px;
                     opacity: 0.8;
                 }
 

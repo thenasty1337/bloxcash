@@ -83,89 +83,117 @@ function Notification(props) {
         .notification {
           width: 100%;
           height: fit-content;
+          margin-bottom: 8px;
 
-          border-radius: 3px;
-          border: 1px solid #3A326F;
-          background: rgba(49, 42, 94, 0.50);
+          border-radius: 10px;
+          border: 1px solid rgba(139, 120, 221, 0.2);
+          background: rgba(14, 11, 39, 0.6);
+          backdrop-filter: blur(8px);
 
           display: flex;
           flex-direction: column;
 
-          font-family: Geogrotesque Wide, sans-serif;
-          font-size: 15px;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-size: 13px;
           font-weight: 500;
 
           position: relative;
+          transition: all 0.2s ease;
+        }
+        
+        .notification:hover {
+          background: rgba(14, 11, 39, 0.8);
+          border-color: rgba(139, 120, 221, 0.3);
+          transform: translateY(-1px);
         }
 
         .title {
-          height: 25px;
+          height: auto;
           width: fit-content;
-          padding: 0 12px;
+          padding: 8px 12px 6px;
+          margin: 0;
 
-          border-radius: 3px 0px;
-          background: linear-gradient(0deg, rgba(255, 190, 24, 0.25) 0%, rgba(255, 190, 24, 0.25) 100%), linear-gradient(253deg, #1A0E33 -27.53%, #423C7A 175.86%), #312A5E;
+          border-radius: 10px 10px 0 0;
+          background: rgba(139, 120, 221, 0.15);
+          border-bottom: 1px solid rgba(139, 120, 221, 0.2);
 
-          color: #FFF;
-          font-family: Geogrotesque Wide, sans-serif;
-          font-size: 15px;
+          color: #8b78dd;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          font-size: 12px;
           font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
 
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 6px;
         }
         
         .trash {
-          height: 25px;
-          width: 36px;
+          height: 28px;
+          width: 28px;
           
-          background: #3E3570;
-          border-radius: 24px;
+          background: rgba(139, 120, 221, 0.15);
+          border: 1px solid rgba(139, 120, 221, 0.3);
+          border-radius: 6px;
           
-          outline: unset;
-          border: unset;
+          outline: none;
+          cursor: pointer;
+          transition: all 0.2s ease;
           
           position: absolute;
-          top: 4px;
+          top: 8px;
           right: 8px;
-          cursor: pointer;
+          
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .trash:hover {
+          background: rgba(139, 120, 221, 0.25);
+          border-color: rgba(139, 120, 221, 0.5);
+          transform: translateY(-1px);
         }
 
         .content {
-          padding: 12px;
-          color: rgba(154, 144, 209, 0.75);
+          padding: 12px 16px 16px;
+          color: #a8a3c7;
         }
 
         .content > div, .content > p {
           display: flex;
           flex-wrap: wrap;
           gap: 6px;
+          font-size: 13px;
+          line-height: 1.4;
 
           cursor: initial;
           align-items: center;
         }
 
         .gold {
-          color: rgba(252, 163, 30, 0.75) !important;
+          color: #8b78dd !important;
+          font-weight: 600;
         }
 
         .fancyamt {
-          border-radius: 4px;
-          border: 1px solid #866FEA;
-          background: radial-gradient(60% 60% at 50% 50%, rgba(147, 126, 236, 0.15) 0%, rgba(102, 83, 184, 0.15) 100%), linear-gradient(253deg, #1A0E33 -27.53%, #423C7A 175.86%);
-          box-shadow: 0px 0px 35px 0px rgba(180, 22, 255, 0.10), 0px 1px 5px 0px rgba(0, 0, 0, 0.25) inset;
+          border-radius: 6px;
+          border: 1px solid rgba(139, 120, 221, 0.4);
+          background: linear-gradient(135deg, rgba(139, 120, 221, 0.2), rgba(139, 120, 221, 0.1));
+          box-shadow: 0 2px 8px rgba(139, 120, 221, 0.2);
 
-          height: 30px;
-          padding: 0 8px;
+          height: 28px;
+          padding: 0 10px;
 
-          color: white;
-          text-shadow: 0px 2px 0px #513E82;
-          font-weight: 700;
+          color: #ffffff;
+          font-weight: 600;
+          font-size: 13px;
 
           display: flex;
           align-items: center;
           gap: 6px;
+          backdrop-filter: blur(8px);
         }
         
         .flex {

@@ -62,18 +62,25 @@ function Chat(props) {
 
         chatRef.onscroll = (e) => {
             let maxScroll = e.target.scrollHeight - e.target.clientHeight
-            if (e.target.scrollTop >= maxScroll) {
+            let currentScrollTop = e.target.scrollTop
+            
+            // Add a small tolerance for bottom detection (2px) to handle precision issues
+            if (currentScrollTop >= maxScroll - 2) {
                 setScroll(true)
+                setTop(currentScrollTop)
                 return
             }
 
-            if (!top()) return setTop(e.target.scrollTop)
+            if (!top()) return setTop(currentScrollTop)
 
-            if (e.target.scrollTop < top() - 100) {
+            if (currentScrollTop < top() - 100) {
                 setScroll(false)
-                setTop(e.target.scrollTop)
+                setTop(currentScrollTop)
                 return
             }
+            
+            // Update top position for any other scroll movement
+            setTop(currentScrollTop)
         }
     })
 
@@ -194,7 +201,7 @@ function Chat(props) {
                         <div class='left-group'>
                         <div class='user-count'>
                                 <div class='online-indicator'></div>
-                                <span class='count'>{props.onlineCount || 0}</span>
+                                <span class='count'>{props.onlineCount || 1}</span>
                             </div>
 
                             <div class='rules-trigger' onClick={(e) => {
@@ -261,7 +268,7 @@ function Chat(props) {
                 width: 100%;
                 height: 100%;
 
-                padding: 0 15px;
+                padding: 0 0 0 15px;
 
                 display: flex;
                 flex-direction: column;
@@ -299,13 +306,13 @@ function Chat(props) {
                 width: 180px;
                 padding: 0 16px;
                 
-                background: rgba(26, 35, 50, 0.85);
-                border: 1px solid rgba(78, 205, 196, 0.4);
+                background: rgba(14, 11, 39, 0.85);
+                border: 1px solid rgba(139, 120, 221, 0.4);
                 border-radius: 18px;
                 backdrop-filter: blur(12px);
                 box-shadow: 
                   0 4px 16px rgba(0, 0, 0, 0.4),
-                  0 2px 8px rgba(78, 205, 196, 0.15),
+                  0 2px 8px rgba(139, 120, 221, 0.15),
                   inset 0 1px 0 rgba(255, 255, 255, 0.1);
                 
                 cursor: pointer;
@@ -315,7 +322,7 @@ function Chat(props) {
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                 font-size: 12px;
                 font-weight: 600;
-                color: #4ecdc4;
+                color: #8b78dd;
               }
               
               .scroll-paused-notification.animating-out {
@@ -338,19 +345,19 @@ function Chat(props) {
                 position: absolute;
                 inset: -1px;
                 border-radius: 18px;
-                background: linear-gradient(135deg, rgba(78, 205, 196, 0.3), rgba(78, 205, 196, 0.1));
+                background: linear-gradient(135deg, rgba(139, 120, 221, 0.3), rgba(139, 120, 221, 0.1));
                 opacity: 0;
                 transition: opacity 0.3s ease;
                 z-index: -1;
               }
               
               .scroll-paused-notification:hover {
-                background: rgba(26, 35, 50, 0.9);
-                border-color: rgba(78, 205, 196, 0.6);
+                background: rgba(14, 11, 39, 0.9);
+                border-color: rgba(139, 120, 221, 0.6);
                 transform: translateX(-50%) translateY(-2px);
                 box-shadow: 
                   0 6px 24px rgba(0, 0, 0, 0.5),
-                  0 4px 12px rgba(78, 205, 196, 0.25),
+                  0 4px 12px rgba(139, 120, 221, 0.25),
                   inset 0 1px 0 rgba(255, 255, 255, 0.15);
                 color: #ffffff;
               }
@@ -392,16 +399,16 @@ function Chat(props) {
                 align-items: center;
                 justify-content: space-between;
                 padding: 8px 12px;
-                background: rgba(45, 75, 105, 0.3);
+                background: rgba(27, 23, 56, 0.6);
                 border-radius: 8px;
-                border: 1px solid rgba(78, 205, 196, 0.1);
+                border: 1px solid rgba(139, 120, 221, 0.1);
               }
               
               .login-text {
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                 font-size: 14px;
                 font-weight: 500;
-                color: #8aa3b8;
+                color: #9ca3af;
               }
               
               .smiley-icon {
@@ -418,20 +425,22 @@ function Chat(props) {
               .send-message-input {
                 width: 100%;
                 height: 36px;
-                background: rgba(45, 75, 105, 0.3);
-                border: 1px solid rgba(78, 205, 196, 0.15);
+                background: rgba(27, 23, 56, 0.6);
+                border: 1px solid rgba(139, 120, 221, 0.15);
                 border-radius: 8px;
                 outline: none;
                 padding: 0 12px;
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                 font-weight: 400;
                 font-size: 13px;
-                color: #8aa3b8;
-                transition: border-color 0.2s ease;
+                color: #9ca3af;
+                transition: all 0.2s ease;
               }
               
               .send-message-input:focus {
-                border-color: rgba(78, 205, 196, 0.3);
+                border-color: rgba(139, 120, 221, 0.4);
+                background: rgba(27, 23, 56, 0.8);
+                color: #ffffff;
               }
 
               .send-message-input::placeholder {
@@ -470,9 +479,9 @@ function Chat(props) {
               .online-indicator {
                 width: 8px;
                 height: 8px;
-                background: #4ecdc4;
+                background: #8b78dd;
                 border-radius: 50%;
-                box-shadow: 0 0 4px rgba(78, 205, 196, 0.6);
+                box-shadow: 0 0 4px rgba(139, 120, 221, 0.6);
               }
               
               .count {
@@ -492,12 +501,12 @@ function Chat(props) {
                 cursor: pointer;
                 transition: all 0.2s ease;
                 position: relative;
-                color: #4ecdc4;
+                color: #8b78dd;
               }
               
               .rules-trigger:hover {
-                background: rgba(78, 205, 196, 0.15);
-                border-color: rgba(78, 205, 196, 0.4);
+                background: rgba(139, 120, 221, 0.15);
+                border-color: rgba(139, 120, 221, 0.4);
                 color: #ffffff;
               }
               
@@ -507,8 +516,8 @@ function Chat(props) {
                 left: -30px;
                 width: 270px;
                 max-width: 90vw;
-                background: rgba(26, 35, 50);
-                border: 1px solid rgba(78, 205, 196, 0.2);
+                background: rgba(14, 11, 39, 0.95);
+                border: 1px solid rgba(139, 120, 221, 0.2);
                 border-radius: 8px;
                 backdrop-filter: blur(12px);
                 box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
@@ -529,11 +538,11 @@ function Chat(props) {
               
               .rules-header {
                 padding: 12px 16px;
-                border-bottom: 1px solid rgba(78, 205, 196, 0.1);
+                border-bottom: 1px solid rgba(139, 120, 221, 0.1);
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                 font-size: 14px;
                 font-weight: 600;
-                color: #4ecdc4;
+                color: #8b78dd;
               }
               
               .rules-list {
@@ -552,8 +561,8 @@ function Chat(props) {
               }
               
               .rule-number {
-                background: rgba(78, 205, 196, 0.15);
-                border: 1px solid rgba(78, 205, 196, 0.3);
+                background: rgba(139, 120, 221, 0.15);
+                border: 1px solid rgba(139, 120, 221, 0.3);
                 border-radius: 4px;
                 width: 18px;
                 height: 18px;
@@ -563,7 +572,7 @@ function Chat(props) {
                 justify-content: center;
                 font-size: 10px;
                 font-weight: 600;
-                color: #4ecdc4;
+                color: #8b78dd;
                 margin-top: 1px;
               }
               
@@ -571,7 +580,7 @@ function Chat(props) {
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                 font-size: 12px;
                 font-weight: 500;
-                color: #8aa3b8;
+                color: #9ca3af;
                 line-height: 1.4;
               }
               
@@ -579,8 +588,8 @@ function Chat(props) {
                 display: flex;
                 align-items: center;
                 padding: 4px 8px;
-                background: rgba(45, 75, 105, 0.3);
-                border: 1px solid rgba(78, 205, 196, 0.1);
+                background: rgba(27, 23, 56, 0.6);
+                border: 1px solid rgba(139, 120, 221, 0.1);
                 border-radius: 6px;
                 min-width: 35px;
                 justify-content: center;
@@ -590,7 +599,7 @@ function Chat(props) {
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                 font-size: 11px;
                 font-weight: 600;
-                color: #8aa3b8;
+                color: #9ca3af;
                 transition: color 0.2s ease;
               }
               
@@ -599,24 +608,24 @@ function Chat(props) {
               }
               
               .send-button {
-                background: linear-gradient(135deg, #4ecdc4, #44a08d);
+                background: linear-gradient(135deg, #8b78dd, #7c6bbf);
                 border: none;
                 border-radius: 6px;
                 padding: 6px 16px;
                 cursor: pointer;
                 transition: all 0.2s ease;
-                box-shadow: 0 2px 8px rgba(78, 205, 196, 0.25);
+                box-shadow: 0 2px 8px rgba(139, 120, 221, 0.25);
               }
               
               .send-button:hover {
-                background: linear-gradient(135deg, #1a8ea9, #1a8ea9);
+                background: linear-gradient(135deg, #9d8de6, #8b78dd);
                 transform: translateY(-1px);
-                box-shadow: 0 4px 8px #50c9e54d;
+                box-shadow: 0 4px 12px rgba(139, 120, 221, 0.4);
               }
               
               .send-button:active {
                 transform: translateY(0);
-                box-shadow: 0 1px 2px #50c9e54d;
+                box-shadow: 0 1px 4px rgba(139, 120, 221, 0.3);
               }
               
               .send-button span {
@@ -669,7 +678,7 @@ function Chat(props) {
                 align-items: center;
                 gap: 4px;
                 
-                color: #4ecdc4;
+                color: #8b78dd;
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                 font-size: 13px;
                 font-style: normal;

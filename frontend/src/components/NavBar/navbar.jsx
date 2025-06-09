@@ -162,7 +162,7 @@ function NavBar(props) {
                                     </div>
 
                                     <button class='deposit-button' onClick={() => setShowWalletModal(true)}>
-                                        DEPOSIT
+                                        WALLET
                                     </button>
 
                                     <Show when={balanceDropdown()}>

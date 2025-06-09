@@ -88,9 +88,9 @@ function Mines(props) {
 
     return (
         <>
-            <Title>BloxClash | Mines</Title>
+            <Title>Nova Casino | Mines</Title>
             <Meta name='title' content='Mines'></Meta>
-            <Meta name='description' content='Play Mines On BloxClash And Multiply Your Robux By 100x On The Best Roblox Gaming Platform'></Meta>
+            <Meta name='description' content='Play Mines On Nova Casino And Multiply Your Robux By 100x On The Best Roblox Gaming Platform'></Meta>
 
             <div class='mines-container fadein'>
                 <div className='betting-container'>

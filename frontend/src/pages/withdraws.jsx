@@ -63,7 +63,7 @@ function Withdraws(props) {
 
   return (
     <>
-      <Title>BloxClash | Withdraw</Title>
+      <Title>Nova Casino | Withdraw</Title>
 
       {(challengeId()) && (
         <LimitedsMFA close={() => setChallengeId(null)} complete={async (code) => {

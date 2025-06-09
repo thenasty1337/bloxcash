@@ -314,9 +314,9 @@ function Transactions(props) {
 
                                             <div class="tx-cell amount">
                                                 <div class="amount-display">
-                                                    <img src='/assets/icons/coin.svg' height='16' width='16'/>
+                                                    <img src='/assets/cryptos/branded/USDT.svg' height='24' width='24'/>
                                                     <span class="amount-value">
-                                                        {tx?.amount?.toLocaleString(undefined, {
+                                                        ${tx?.amount?.toLocaleString(undefined, {
                                                             minimumFractionDigits: 0,
                                                             maximumFractionDigits: 2
                                                         })}
@@ -341,9 +341,9 @@ function Transactions(props) {
                                             <div class="detail-row">
                                                 <span class="detail-label">Amount:</span>
                                                 <div class="amount-display">
-                                                    <img src='/assets/icons/coin.svg' height='14' width='14'/>
+                                                    <img src='/assets/cryptos/branded/USDT.svg' height='24' width='24'/>
                                                     <span class="amount-value">
-                                                        {tx?.amount?.toLocaleString(undefined, {
+                                                        ${tx?.amount?.toLocaleString(undefined, {
                                                             minimumFractionDigits: 0,
                                                             maximumFractionDigits: 2
                                                         })}
@@ -390,8 +390,8 @@ function Transactions(props) {
                     gap: 0.75rem;
                     margin-bottom: 1.5rem;
                     padding: 1rem 1.25rem;
-                    background: rgba(78, 205, 196, 0.04);
-                    border: 1px solid rgba(78, 205, 196, 0.15);
+                    background: rgba(139, 120, 221, 0.04);
+                    border: 1px solid rgba(139, 120, 221, 0.15);
                     border-radius: 12px;
                     backdrop-filter: blur(10px);
                 }
@@ -399,13 +399,13 @@ function Transactions(props) {
                 .header-icon {
                     width: 32px;
                     height: 32px;
-                    background: linear-gradient(135deg, rgba(78, 205, 196, 0.15), rgba(68, 160, 141, 0.1));
-                    border: 1px solid rgba(78, 205, 196, 0.25);
+                    background: linear-gradient(135deg, rgba(139, 120, 221, 0.15), rgba(124, 107, 191, 0.1));
+                    border: 1px solid rgba(139, 120, 221, 0.25);
                     border-radius: 8px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: #4ecdc4;
+                    color: #8b78dd;
                     flex-shrink: 0;
                 }
 
@@ -436,8 +436,8 @@ function Transactions(props) {
                     gap: 0.5rem;
                     margin-bottom: 1.5rem;
                     padding: 1rem;
-                    background: rgba(26, 35, 50, 0.6);
-                    border: 1px solid rgba(78, 205, 196, 0.12);
+                    background: rgba(24, 20, 52, 0.6);
+                    border: 1px solid rgba(139, 120, 221, 0.12);
                     border-radius: 12px;
                     backdrop-filter: blur(15px);
                 }
@@ -457,23 +457,23 @@ function Transactions(props) {
                 }
 
                 .filter-tab:hover {
-                    background: rgba(78, 205, 196, 0.1);
-                    border-color: rgba(78, 205, 196, 0.2);
+                    background: rgba(139, 120, 221, 0.1);
+                    border-color: rgba(139, 120, 221, 0.2);
                     color: #ffffff;
                 }
 
                 .filter-tab.active {
-                    background: linear-gradient(135deg, #4ecdc4, #44a08d);
-                    border-color: #4ecdc4;
+                    background: linear-gradient(135deg, #8b78dd, #7c6bbf);
+                    border-color: #8b78dd;
                     color: #ffffff;
                     font-weight: 600;
-                    box-shadow: 0 2px 8px rgba(78, 205, 196, 0.25);
+                    box-shadow: 0 2px 8px rgba(139, 120, 221, 0.25);
                 }
 
                 /* Content */
                 .transactions-content {
-                    background: rgba(26, 35, 50, 0.6);
-                    border: 1px solid rgba(78, 205, 196, 0.12);
+                    background: rgba(24, 20, 52, 0.6);
+                    border: 1px solid rgba(139, 120, 221, 0.12);
                     border-radius: 14px;
                     overflow: hidden;
                     backdrop-filter: blur(15px);
@@ -491,13 +491,13 @@ function Transactions(props) {
                 .empty-icon {
                     width: 80px;
                     height: 80px;
-                    background: rgba(78, 205, 196, 0.1);
-                    border: 1px solid rgba(78, 205, 196, 0.2);
+                    background: rgba(139, 120, 221, 0.1);
+                    border: 1px solid rgba(139, 120, 221, 0.2);
                     border-radius: 20px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: #4ecdc4;
+                    color: #8b78dd;
                     margin-bottom: 1rem;
                 }
 
@@ -521,8 +521,8 @@ function Transactions(props) {
                     display: flex;
                     align-items: center;
                     padding: 1rem 1.25rem;
-                    background: linear-gradient(135deg, rgba(78, 205, 196, 0.06), rgba(68, 160, 141, 0.03));
-                    border-bottom: 1px solid rgba(78, 205, 196, 0.1);
+                    background: linear-gradient(135deg, rgba(139, 120, 221, 0.06), rgba(124, 107, 191, 0.03));
+                    border-bottom: 1px solid rgba(139, 120, 221, 0.1);
                     font-size: 0.8rem;
                     font-weight: 600;
                     color: #8aa3b8;
@@ -548,7 +548,7 @@ function Transactions(props) {
                 }
 
                 .transaction-card {
-                    border-bottom: 1px solid rgba(78, 205, 196, 0.08);
+                    border-bottom: 1px solid rgba(139, 120, 221, 0.08);
                     transition: all 0.2s ease;
                     position: relative;
                 }
@@ -558,7 +558,7 @@ function Transactions(props) {
                 }
 
                 .transaction-card:hover {
-                    background: rgba(78, 205, 196, 0.04);
+                    background: rgba(139, 120, 221, 0.04);
                 }
 
                 .transaction-card:hover::before {
@@ -568,7 +568,7 @@ function Transactions(props) {
                     top: 0;
                     bottom: 0;
                     width: 3px;
-                    background: linear-gradient(180deg, #4ecdc4, #44a08d);
+                    background: linear-gradient(180deg, #8b78dd, #7c6bbf);
                     opacity: 1;
                 }
 
@@ -579,7 +579,7 @@ function Transactions(props) {
                     top: 0;
                     bottom: 0;
                     width: 3px;
-                    background: linear-gradient(180deg, #4ecdc4, #44a08d);
+                    background: linear-gradient(180deg, #8b78dd, #7c6bbf);
                     opacity: 0;
                     transition: opacity 0.3s ease;
                 }
@@ -655,7 +655,7 @@ function Transactions(props) {
                 }
 
                 .status-badge.completed {
-                    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+                    background: linear-gradient(135deg, #8b78dd, #7c6bbf);
                     color: #ffffff;
                 }
 
@@ -687,11 +687,11 @@ function Transactions(props) {
 
                 /* Mobile Layout */
                 .mobile-only {
-                    display: none;
+                    display: none !important;
                 }
 
                 .desktop-only {
-                    display: flex;
+                    display: flex !important;
                 }
 
                 /* Mobile Transaction Layout */
@@ -736,14 +736,14 @@ function Transactions(props) {
                     display: flex;
                     align-items: center;
                     padding: 1rem 1.25rem;
-                    background: linear-gradient(135deg, rgba(78, 205, 196, 0.06), rgba(68, 160, 141, 0.03));
-                    border-bottom: 1px solid rgba(78, 205, 196, 0.1);
+                    background: linear-gradient(135deg, rgba(139, 120, 221, 0.06), rgba(124, 107, 191, 0.03));
+                    border-bottom: 1px solid rgba(139, 120, 221, 0.1);
                     gap: 1rem;
                 }
 
                 .skeleton-header-cell {
                     height: 12px;
-                    background: rgba(78, 205, 196, 0.1);
+                    background: rgba(139, 120, 221, 0.1);
                     border-radius: 6px;
                     animation: skeleton-pulse 1.5s ease-in-out infinite;
                 }
@@ -759,7 +759,7 @@ function Transactions(props) {
                 }
 
                 .skeleton-card {
-                    border-bottom: 1px solid rgba(78, 205, 196, 0.08);
+                    border-bottom: 1px solid rgba(139, 120, 221, 0.08);
                     animation: skeleton-fade-in 0.6s ease-out forwards;
                     opacity: 0;
                 }
@@ -800,7 +800,7 @@ function Transactions(props) {
                 .skeleton-emoji {
                     width: 20px;
                     height: 20px;
-                    background: rgba(78, 205, 196, 0.1);
+                    background: rgba(139, 120, 221, 0.1);
                     border-radius: 4px;
                     animation: skeleton-pulse 1.5s ease-in-out infinite;
                 }
@@ -808,7 +808,7 @@ function Transactions(props) {
                 .skeleton-method-name {
                     width: 80px;
                     height: 14px;
-                    background: rgba(78, 205, 196, 0.1);
+                    background: rgba(139, 120, 221, 0.1);
                     border-radius: 7px;
                     animation: skeleton-pulse 1.5s ease-in-out infinite;
                 }
@@ -816,7 +816,7 @@ function Transactions(props) {
                 .skeleton-type-badge {
                     width: 80px;
                     height: 24px;
-                    background: rgba(78, 205, 196, 0.1);
+                    background: rgba(139, 120, 221, 0.1);
                     border-radius: 6px;
                     animation: skeleton-pulse 1.5s ease-in-out infinite;
                 }
@@ -824,7 +824,7 @@ function Transactions(props) {
                 .skeleton-status-badge {
                     width: 90px;
                     height: 28px;
-                    background: rgba(78, 205, 196, 0.1);
+                    background: rgba(139, 120, 221, 0.1);
                     border-radius: 6px;
                     animation: skeleton-pulse 1.5s ease-in-out infinite;
                 }
@@ -832,7 +832,7 @@ function Transactions(props) {
                 .skeleton-date-text {
                     width: 120px;
                     height: 14px;
-                    background: rgba(78, 205, 196, 0.1);
+                    background: rgba(139, 120, 221, 0.1);
                     border-radius: 7px;
                     animation: skeleton-pulse 1.5s ease-in-out infinite;
                 }
@@ -840,7 +840,7 @@ function Transactions(props) {
                 .skeleton-amount {
                     width: 90px;
                     height: 14px;
-                    background: rgba(78, 205, 196, 0.1);
+                    background: rgba(139, 120, 221, 0.1);
                     border-radius: 7px;
                     animation: skeleton-pulse 1.5s ease-in-out infinite;
                 }
@@ -875,7 +875,7 @@ function Transactions(props) {
                 .skeleton-label {
                     width: 60px;
                     height: 12px;
-                    background: rgba(78, 205, 196, 0.1);
+                    background: rgba(139, 120, 221, 0.1);
                     border-radius: 6px;
                     animation: skeleton-pulse 1.5s ease-in-out infinite;
                 }
@@ -883,7 +883,7 @@ function Transactions(props) {
                 .skeleton-date-small, .skeleton-amount-small {
                     width: 80px;
                     height: 12px;
-                    background: rgba(78, 205, 196, 0.1);
+                    background: rgba(139, 120, 221, 0.1);
                     border-radius: 6px;
                     animation: skeleton-pulse 1.5s ease-in-out infinite;
                 }
@@ -891,7 +891,7 @@ function Transactions(props) {
                 .skeleton-status-small {
                     width: 70px;
                     height: 20px;
-                    background: rgba(78, 205, 196, 0.1);
+                    background: rgba(139, 120, 221, 0.1);
                     border-radius: 6px;
                     animation: skeleton-pulse 1.5s ease-in-out infinite;
                 }
@@ -902,14 +902,14 @@ function Transactions(props) {
                     align-items: center;
                     justify-content: space-between;
                     padding: 1rem 1.25rem;
-                    background: linear-gradient(135deg, rgba(78, 205, 196, 0.04), rgba(68, 160, 141, 0.02));
-                    border-top: 1px solid rgba(78, 205, 196, 0.08);
+                    background: linear-gradient(135deg, rgba(139, 120, 221, 0.04), rgba(124, 107, 191, 0.02));
+                    border-top: 1px solid rgba(139, 120, 221, 0.08);
                 }
 
                 .skeleton-btn {
                     width: 80px;
                     height: 36px;
-                    background: rgba(78, 205, 196, 0.1);
+                    background: rgba(139, 120, 221, 0.1);
                     border-radius: 8px;
                     animation: skeleton-pulse 1.5s ease-in-out infinite;
                 }
@@ -917,7 +917,7 @@ function Transactions(props) {
                 .skeleton-page-info {
                     width: 60px;
                     height: 16px;
-                    background: rgba(78, 205, 196, 0.1);
+                    background: rgba(139, 120, 221, 0.1);
                     border-radius: 8px;
                     animation: skeleton-pulse 1.5s ease-in-out infinite;
                 }
@@ -946,11 +946,11 @@ function Transactions(props) {
                 /* Responsive Design */
                 @media (max-width: 768px) {
                     .mobile-only {
-                        display: block;
+                        display: block !important;
                     }
 
                     .desktop-only {
-                        display: none;
+                        display: none !important;
                     }
 
                     .transactions-container {

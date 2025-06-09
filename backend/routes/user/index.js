@@ -103,7 +103,7 @@ router.get('/transactions', isAuthed, async (req, res) => {
 
 });
 
-const allowedGames = ['battle', 'case', 'coinflip', 'crash', 'jackpot', 'roulette'];
+const allowedGames = ['battle', 'case', 'coinflip', 'crash', 'jackpot', 'roulette', 'slot', 'mines'];
 
 router.get('/bets', isAuthed, async (req, res) => {
 
@@ -128,7 +128,51 @@ router.get('/bets', isAuthed, async (req, res) => {
     const pages = Math.ceil(total / resultsPerPage);
 
     if (page > pages) return res.status(404).json({ error: 'PAGE_NOT_FOUND' });
-    const [data] = await sql.query(`SELECT amount, winnings, game, gameId, completed, createdAt FROM bets ${where} ORDER BY id DESC LIMIT ? OFFSET ?`, [...args, resultsPerPage, offset]);
+    
+    // Get bets with slot game details if applicable (matching bets.js structure)
+    const [bets] = await sql.query(`
+        SELECT 
+            b.amount, 
+            b.winnings, 
+            b.game, 
+            b.gameId, 
+            b.completed, 
+            b.createdAt,
+            b.provider,
+            b.spinshield_game_id,
+            sg.game_name,
+            sg.image_url,
+            sg.provider_name
+        FROM bets b
+        LEFT JOIN spinshield_games sg ON b.spinshield_game_id = sg.game_id_hash
+        ${where} 
+        ORDER BY b.id DESC 
+        LIMIT ? OFFSET ?
+    `, [...args, resultsPerPage, offset]);
+    
+    // Format the data to include gameDetails for slots (matching bets.js mapBet function)
+    const data = bets.map(bet => {
+        const formattedBet = {
+            amount: bet.amount,
+            winnings: bet.winnings,
+            game: bet.game,
+            gameId: bet.gameId,
+            completed: bet.completed,
+            createdAt: bet.createdAt
+        };
+        
+        // Add SpinShield game details if available (matching bets.js logic)
+        if (bet.provider === 'spinshield' && bet.game_name) {
+            formattedBet.gameDetails = {
+                name: bet.game_name,
+                image: bet.image_url,
+                provider: bet.provider_name || 'SpinShield',
+                gameId: bet.spinshield_game_id
+            };
+        }
+        
+        return formattedBet;
+    });
     
     res.json({
         page,

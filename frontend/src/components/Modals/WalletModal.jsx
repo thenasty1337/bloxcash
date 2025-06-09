@@ -571,7 +571,7 @@ function WalletModal(props) {
                             "margin-bottom": "10px"
                         }}>
                             <p style={{
-                                "color": "#8aa3b8",
+                                "color": "#a8a3c7",
                                 "font-size": "13px",
                                 "font-weight": "600",
                                 "margin-bottom": "12px"
@@ -581,8 +581,8 @@ function WalletModal(props) {
                                 <div class={`dropdown-wrapper ${withdrawCurrencyDropdown() ? 'active' : ''}`} 
                                      onClick={(e) => { setWithdrawCurrencyDropdown(!withdrawCurrencyDropdown()); e.stopPropagation(); }}
                                      style={{
-                                         "background": "rgba(45, 75, 105, 0.3)",
-                                         "border": "1px solid rgba(78, 205, 196, 0.2)",
+                                         "background": "rgba(139, 120, 221, 0.08)",
+                                         "border": "1px solid rgba(139, 120, 221, 0.2)",
                                          "border-radius": "8px",
                                          "box-shadow": "0 2px 4px rgba(0,0,0,0.1)"
                                      }}>
@@ -595,7 +595,7 @@ function WalletModal(props) {
                                     <div class='dropdown-container modal-dropdown-options' onClick={(e) => e.stopPropagation()}
                                          style={{
                                              "box-shadow": "0 4px 12px rgba(0,0,0,0.3)",
-                                             "border": "1px solid rgba(78, 205, 196, 0.2)",
+                                             "border": "1px solid rgba(139, 120, 221, 0.3)",
                                              "border-radius": "0 0 8px 8px"
                                          }}>
                                         <For each={withdrawCryptoTypes()}>{(crypto) =>
@@ -618,8 +618,8 @@ function WalletModal(props) {
                                 <div class={`dropdown-wrapper ${withdrawNetworkDropdown() ? 'active' : ''}`} 
                                      onClick={(e) => { setWithdrawNetworkDropdown(!withdrawNetworkDropdown()); e.stopPropagation(); }}
                                      style={{
-                                         "background": "rgba(45, 75, 105, 0.3)",
-                                         "border": "1px solid rgba(78, 205, 196, 0.2)",
+                                         "background": "rgba(139, 120, 221, 0.08)",
+                                         "border": "1px solid rgba(139, 120, 221, 0.2)",
                                          "border-radius": "8px",
                                          "box-shadow": "0 2px 4px rgba(0,0,0,0.1)"
                                      }}>
@@ -631,15 +631,17 @@ function WalletModal(props) {
                                     <div class='dropdown-container modal-dropdown-options' onClick={(e) => e.stopPropagation()}
                                          style={{
                                              "box-shadow": "0 4px 12px rgba(0,0,0,0.3)",
-                                             "border": "1px solid rgba(78, 205, 196, 0.2)",
+                                             "border": "1px solid rgba(139, 120, 221, 0.3)",
                                              "border-radius": "0 0 8px 8px"
                                          }}>
                                         <For each={availableWithdrawChains()}>{(chainOpt) =>
+                                       
                                             <div class='option' onClick={() => { setWithdrawChain(chainOpt); setWithdrawNetworkDropdown(false); }}>
                                                 <div class='option-left'>
                                                     <div class='option-text'>
-                                                        <span class='currency-name'>{chainOpt?.id}</span>
-                                                        <span class='currency-full-name'>{chainOpt?.coinName || chainOpt?.name || chainOpt?.id}</span>
+                                                        <span class='currency-name'>{chainOpt?.id?.replace(/\(.*?\)/, '')?.trim() || chainOpt?.id}</span>
+                                                        <span class='currency-full-name'>{chainOpt?.id?.match(/\((.*?)\)/)?.[1] || chainOpt?.id}</span>
+                                                      
                                                     </div>
                                                 </div>
                                                 <Show when={chainOpt?.fee}>
@@ -654,27 +656,27 @@ function WalletModal(props) {
 
                         {/* Amount and Address Input Container */}
                         <div class='withdraw-input-fields-container' style={{
-                            "background": "rgba(26, 35, 50, 0.4)",
+                            "background": "rgba(27, 23, 56, 0.4)",
                             "border-radius": "12px",
                             "padding": "20px",
-                            "border": "1px solid rgba(78, 205, 196, 0.15)",
+                            "border": "1px solid rgba(139, 120, 221, 0.15)",
                             "box-shadow": "0 4px 12px rgba(0,0,0,0.1)"
                         }}>
                             {/* Amount Input */}
                             <div>
-                                <label class='input-label' style={{ "margin-bottom": "8px", "display": "block", "color": "#8aa3b8", "font-size": "14px", "font-weight": "600" }}>
+                                <label class='input-label' style={{ "margin-bottom": "8px", "display": "block", "color": "#a8a3c7", "font-size": "14px", "font-weight": "600" }}>
                                     Amount in USD
                                 </label>
                                 <div class='input withdraw-input' style={{
                                     "height": "45px", 
-                                    "background": "rgba(45, 75, 105, 0.3)", 
-                                    "border": "1px solid rgba(78, 205, 196, 0.2)", 
+                                    "background": "rgba(139, 120, 221, 0.08)", 
+                                    "border": "1px solid rgba(139, 120, 221, 0.2)", 
                                     "border-radius": "8px", 
                                     "padding": "0 12px",
                                     "display": "flex",
                                     "align-items": "center"
                                 }}>
-                                    <div style={{ "color": "#8aa3b8", "font-size": "13px", "font-weight": "600" }}>$</div>
+                                    <div style={{ "color": "#a8a3c7", "font-size": "13px", "font-weight": "600" }}>$</div>
                                     <input
                                         type='number'
                                         placeholder="0.00"
@@ -687,7 +689,7 @@ function WalletModal(props) {
                                             "margin-left": "8px"
                                         }}
                                     />
-                                    <span style={{ "color": "#8aa3b8", "font-size": "13px", "font-weight": "600", "margin-left": "auto" }}>USD</span>
+                                    <span style={{ "color": "#a8a3c7", "font-size": "13px", "font-weight": "600", "margin-left": "auto" }}>USD</span>
                                 </div>
                                 
                                 <div style={{
@@ -696,11 +698,11 @@ function WalletModal(props) {
                                     "margin-top": "8px",
                                     "padding": "0 5px"
                                 }}>
-                                    <span style={{ "color": "#8aa3b8", "font-size": "12px" }}>
+                                    <span style={{ "color": "#a8a3c7", "font-size": "12px" }}>
                                         <img src='/assets/icons/coin.svg' height='10' alt="Robux" style={{ "vertical-align": "middle", "margin-right": "3px" }} />
                                        {withdrawCryptoValue()} {withdrawSymbol()}
                                     </span>
-                                    <span style={{ "color": "#8aa3b8", "font-size": "12px" }}>
+                                    <span style={{ "color": "#a8a3c7", "font-size": "12px" }}>
                                         Network fee: <span style={{"color": "white"}}>${formatNumber( ( (withdrawChain()?.fee || 0) * withdrawPrice() ) )} USD</span>
                                     </span>
                                 </div>
@@ -708,18 +710,18 @@ function WalletModal(props) {
 
                             {/* Address Input */}
                             <div style={{ "margin-top": "20px" }}>
-                                <label class='input-label' style={{ "margin-bottom": "8px", "display": "block", "color": "#8aa3b8", "font-size": "14px", "font-weight": "600" }}>
+                                <label class='input-label' style={{ "margin-bottom": "8px", "display": "block", "color": "#a8a3c7", "font-size": "14px", "font-weight": "600" }}>
                                     Your {withdrawSymbol() || 'Crypto'} Address
                                     <Show when={withdrawChain()?.id}>
-                                        <span style={{ "font-weight": "normal", "color": "#8aa3b8", "margin-left": "6px", "font-size": "0.9em" }}>
+                                        <span style={{ "font-weight": "normal", "color": "#a8a3c7", "margin-left": "6px", "font-size": "0.9em" }}>
                                             ({withdrawChain().id} Network)
                                         </span>
                                     </Show>
                                 </label>
                                 <div class='input withdraw-input' style={{
                                     "height": "45px", 
-                                    "background": "rgba(45, 75, 105, 0.3)", 
-                                    "border": "1px solid rgba(78, 205, 196, 0.2)", 
+                                    "background": "rgba(139, 120, 221, 0.08)", 
+                                    "border": "1px solid rgba(139, 120, 221, 0.2)", 
                                     "border-radius": "8px", 
                                     "padding": "0 12px",
                                     "display": "flex",
@@ -785,7 +787,7 @@ function WalletModal(props) {
           left: 0;
           width: 100vw;
           height: 100vh;
-          background: rgba(24, 23, 47, 0.65);
+          background: rgba(14, 11, 39, 0.65);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -803,13 +805,13 @@ function WalletModal(props) {
           max-width: 550px;
           height: auto;
           max-height: 90vh;
-          background: rgba(26, 35, 50, 0.95);
+          background: rgba(14, 11, 39, 0.95);
           display: flex;
           flex-direction: column;
           border-radius: 16px;
           overflow: hidden;
           box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-          border: 1px solid rgba(78, 205, 196, 0.2);
+          border: 1px solid rgba(139, 120, 221, 0.2);
           backdrop-filter: blur(12px);
         }
 
@@ -819,36 +821,36 @@ function WalletModal(props) {
           display: flex;
           align-items: center;
           padding: 0 20px;
-          background: rgba(45, 75, 105, 0.3);
+          background: rgba(27, 23, 56, 0.6);
           justify-content: space-between;
-          border-bottom: 1px solid rgba(78, 205, 196, 0.15);
+          border-bottom: 1px solid rgba(139, 120, 221, 0.2);
         }
 
         .exit {
           width: 25px;
           height: 25px;
-          background: rgba(45, 75, 105, 0.4);
+          background: rgba(139, 120, 221, 0.15);
           display: flex;
           align-items: center;
           justify-content: center;
-          border: 1px solid rgba(78, 205, 196, 0.2);
+          border: 1px solid rgba(139, 120, 221, 0.3);
           border-radius: 6px;
           cursor: pointer;
           transition: all 0.3s ease;
         }
         
         .exit:hover {
-          background: rgba(78, 205, 196, 0.15);
-          border-color: #4ecdc4;
+          background: rgba(139, 120, 221, 0.25);
+          border-color: #8b78dd;
         }
         
         .exit svg {
-          fill: #8aa3b8;
+          fill: #a8a3c7;
           transition: fill 0.3s ease;
         }
 
         .exit:hover svg {
-          fill: #4ecdc4;
+          fill: #8b78dd;
         }
 
         .tabs {
@@ -862,7 +864,7 @@ function WalletModal(props) {
           padding: 10px 20px;
           background: transparent;
           border: none;
-          color: #8aa3b8;
+          color: #a8a3c7;
           font-size: 16px;
           font-weight: 600;
           cursor: pointer;
@@ -873,20 +875,20 @@ function WalletModal(props) {
 
         .tab:hover {
           color: #ffffff;
-          background: rgba(78, 205, 196, 0.08);
+          background: rgba(139, 120, 221, 0.15);
         }
 
         .tab.active {
           color: #ffffff;
-          background: rgba(78, 205, 196, 0.15);
-          border-bottom: 2px solid #4ecdc4;
+          background: rgba(139, 120, 221, 0.25);
+          border-bottom: 2px solid #8b78dd;
         }
 
         .content-area {
           padding: 20px;
           overflow-y: auto;
           flex-grow: 1;
-          background: rgba(26, 35, 50, 0.6);
+          background: rgba(27, 23, 56, 0.4);
         }
         
         /* Crypto Deposit Content */
@@ -900,7 +902,7 @@ function WalletModal(props) {
         .modal-section-header {
           display: flex;
           width: 100%;
-          color: #8aa3b8;
+          color: #a8a3c7;
           font-family: 'Geogrotesque Wide', sans-serif;
           font-size: 13px;
           font-weight: 600;
@@ -919,7 +921,7 @@ function WalletModal(props) {
           flex: 1;
           height: 1px;
           min-height: 1px;
-          background: rgba(78, 205, 196, 0.2);
+          background: rgba(139, 120, 221, 0.3);
         }
 
         .withdraw-dropdowns {
@@ -931,8 +933,8 @@ function WalletModal(props) {
           flex: 1;
           height: 45px;
           border-radius: 8px;
-          background: rgba(45, 75, 105, 0.3);
-          color: #8aa3b8;
+          background: rgba(139, 120, 221, 0.08);
+          color: #a8a3c7;
           font-family: 'Geogrotesque Wide', sans-serif;
           font-size: 14px;
           font-weight: 600;
@@ -943,24 +945,24 @@ function WalletModal(props) {
           cursor: pointer;
           position: relative;
           padding: 0 12px;
-          border: 1px solid rgba(78, 205, 196, 0.2);
+          border: 1px solid rgba(139, 120, 221, 0.2);
           transition: all 0.3s ease;
         }
 
         .dropdown-wrapper:hover {
-          background: rgba(78, 205, 196, 0.15);
-          border-color: #4ecdc4;
+          background: rgba(139, 120, 221, 0.15);
+          border-color: #8b78dd;
         }
 
         .dropdown-wrapper img.arrow {
           margin-left: auto;
           transition: transform 0.2s;
-          filter: brightness(0) saturate(100%) invert(58%) sepia(12%) saturate(1148%) hue-rotate(169deg) brightness(91%) contrast(87%);
+          filter: brightness(0) saturate(100%) invert(70%) sepia(15%) saturate(1148%) hue-rotate(248deg) brightness(91%) contrast(87%);
         }
 
         .dropdown-wrapper.active img.arrow {
           transform: rotate(180deg);
-          filter: brightness(0) saturate(100%) invert(80%) sepia(30%) saturate(2000%) hue-rotate(146deg) brightness(106%) contrast(86%);
+          filter: brightness(0) saturate(100%) invert(60%) sepia(30%) saturate(1500%) hue-rotate(248deg) brightness(106%) contrast(86%);
         }
 
         .dropdown-container.modal-dropdown-options {
@@ -972,8 +974,8 @@ function WalletModal(props) {
           width: 100%;
           border-radius: 0px 0px 8px 8px;
           overflow: hidden;
-          background: rgba(26, 35, 50, 0.95);
-          border: 1px solid rgba(78, 205, 196, 0.2);
+          background: rgba(14, 11, 39, 0.95);
+          border: 1px solid rgba(139, 120, 221, 0.3);
           border-top: none;
           max-height: 200px;
           overflow-y: auto;
@@ -987,22 +989,22 @@ function WalletModal(props) {
         }
 
         .dropdown-container .option {
-          background: rgba(45, 75, 105, 0.2);
+          background: rgba(139, 120, 221, 0.08);
           min-height: 56px;
           padding: 12px 16px;
           display: flex;
           align-items: center;
           justify-content: space-between;
           color: #ffffff;
-          border-bottom: 1px solid rgba(78, 205, 196, 0.1);
+          border-bottom: 1px solid rgba(139, 120, 221, 0.15);
           font-size: 13px;
           transition: all 0.3s ease;
           cursor: pointer;
         }
 
         .dropdown-container .option:hover {
-          background: rgba(78, 205, 196, 0.15);
-          color: #4ecdc4;
+          background: rgba(139, 120, 221, 0.2);
+          color: #8b78dd;
         }
 
         .dropdown-container .option:last-child {
@@ -1031,13 +1033,13 @@ function WalletModal(props) {
         .currency-full-name {
           font-weight: 400;
           font-size: 12px;
-          color: #8aa3b8;
+          color: #a8a3c7;
           opacity: 0.8;
         }
 
         .network-badge {
-          background: rgba(78, 205, 196, 0.2);
-          color: #4ecdc4;
+          background: rgba(139, 120, 221, 0.2);
+          color: #8b78dd;
           padding: 4px 8px;
           border-radius: 4px;
           font-size: 11px;
@@ -1047,8 +1049,8 @@ function WalletModal(props) {
         }
 
         .network-count {
-          background: rgba(138, 163, 184, 0.2);
-          color: #8aa3b8;
+          background: rgba(168, 163, 199, 0.2);
+          color: #a8a3c7;
           padding: 4px 8px;
           border-radius: 4px;
           font-size: 11px;
@@ -1065,7 +1067,7 @@ function WalletModal(props) {
         }
 
         .input-label {
-          color: #8aa3b8;
+          color: #a8a3c7;
           font-size: 13px;
           font-weight: 600;
           margin-bottom: 8px;
@@ -1079,9 +1081,9 @@ function WalletModal(props) {
           flex: 1 1 0;
           height: 45px;
           border-radius: 8px;
-          border: 1px solid rgba(78, 205, 196, 0.2);
-          background: rgba(45, 75, 105, 0.2);
-          color: #8aa3b8;
+          border: 1px solid rgba(139, 120, 221, 0.2);
+          background: rgba(139, 120, 221, 0.08);
+          color: #a8a3c7;
           font-family: 'Geogrotesque Wide', sans-serif;
           font-size: 12px;
           font-weight: 600;
@@ -1093,8 +1095,8 @@ function WalletModal(props) {
         }
 
         .input:hover {
-          border-color: rgba(78, 205, 196, 0.4);
-          background: rgba(78, 205, 196, 0.1);
+          border-color: rgba(139, 120, 221, 0.4);
+          background: rgba(139, 120, 221, 0.15);
         }
 
         .input input {
@@ -1125,21 +1127,21 @@ function WalletModal(props) {
         }
 
         .copy:hover {
-          background: rgba(78, 205, 196, 0.15);
+          background: rgba(139, 120, 221, 0.15);
         }
 
         .copy svg {
           fill: none;
-          stroke: #8aa3b8;
+          stroke: #a8a3c7;
           transition: all 0.3s ease;
         }
 
         .copy:hover svg {
-          stroke: #4ecdc4;
+          stroke: #8b78dd;
         }
 
         .copy .copy-success {
-          stroke: #4ecdc4;
+          stroke: #8b78dd;
           animation: checkmark-appear 0.3s ease-out;
         }
 
@@ -1154,15 +1156,15 @@ function WalletModal(props) {
           align-items: center;
           justify-content: space-between;
           padding: 12px;
-          background: rgba(26, 35, 50, 0.6);
-          border: 1px solid rgba(78, 205, 196, 0.2);
+          background: rgba(27, 23, 56, 0.6);
+          border: 1px solid rgba(139, 120, 221, 0.2);
           border-radius: 8px;
           transition: all 0.3s ease;
         }
 
         .deposit-address-display:hover {
-          border-color: rgba(78, 205, 196, 0.4);
-          background: rgba(78, 205, 196, 0.05);
+          border-color: rgba(139, 120, 221, 0.4);
+          background: rgba(139, 120, 221, 0.08);
         }
 
         .address-text {
@@ -1178,9 +1180,9 @@ function WalletModal(props) {
         }
 
         .address-highlight {
-          color: #4ecdc4;
+          color: #8b78dd;
           font-weight: 700;
-          text-shadow: 0 0 2px rgba(78, 205, 196, 0.3);
+          text-shadow: 0 0 2px rgba(139, 120, 221, 0.3);
           letter-spacing: 0.3px;
         }
 
@@ -1189,10 +1191,10 @@ function WalletModal(props) {
           align-items: stretch;
           gap: 25px;
           margin-top: 20px;
-          background: rgba(26, 35, 50, 0.4);
+          background: rgba(27, 23, 56, 0.4);
           border-radius: 12px;
           padding: 20px;
-          border: 1px solid rgba(78, 205, 196, 0.15);
+          border: 1px solid rgba(139, 120, 221, 0.15);
           box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
 
@@ -1250,32 +1252,32 @@ function WalletModal(props) {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(78, 205, 196, 0.15);
+          background: rgba(139, 120, 221, 0.15);
           border-radius: 50%;
-          box-shadow: 0 2px 4px rgba(78, 205, 196, 0.2);
+          box-shadow: 0 2px 4px rgba(139, 120, 221, 0.2);
         }
 
         .instruction-icon svg {
           width: 14px;
           height: 14px;
-          stroke: #4ecdc4;
+          stroke: #8b78dd;
         }
 
         .deposit-instruction-item p {
-          color: #8aa3b8;
+          color: #a8a3c7;
           font-size: 14px;
           line-height: 1.5;
           margin: 0;
         }
 
         .deposit-instruction-item .gold {
-          color: #4ecdc4;
+          color: #8b78dd;
           font-weight: 600;
         }
 
         .deposit-warning-box {
-          background: rgba(78, 205, 196, 0.1);
-          border: 1px solid rgba(78, 205, 196, 0.3);
+          background: rgba(139, 120, 221, 0.1);
+          border: 1px solid rgba(139, 120, 221, 0.3);
           padding: 15px;
           border-radius: 8px;
           margin-top: 15px;
@@ -1283,14 +1285,14 @@ function WalletModal(props) {
 
         .deposit-warning-box .disclaimer-text {
           text-align: center;
-          color: #8aa3b8;
+          color: #a8a3c7;
           font-size: 13px;
           font-weight: 600;
           margin: 0;
         }
 
         .deposit-warning-box .disclaimer-text .gold {
-          color: #4ecdc4;
+          color: #8b78dd;
           font-weight: 700;
         }
 
@@ -1311,18 +1313,18 @@ function WalletModal(props) {
         }
 
         .withdraw-input-fields-container {
-          background: rgba(26, 35, 50, 0.4);
+          background: rgba(27, 23, 56, 0.4);
           border-radius: 12px;
           padding: 20px;
-          border: 1px solid rgba(78, 205, 196, 0.15);
+          border: 1px solid rgba(139, 120, 221, 0.15);
           box-shadow: 0 4px 12px rgba(0,0,0,0.1);
           margin-bottom: 20px;
         }
 
         .withdraw-input {
           height: 45px;
-          background: rgba(45, 75, 105, 0.3);
-          border: 1px solid rgba(78, 205, 196, 0.2);
+          background: rgba(139, 120, 221, 0.08);
+          border: 1px solid rgba(139, 120, 221, 0.2);
           border-radius: 8px;
           padding: 0 12px;
           display: flex;
@@ -1331,8 +1333,8 @@ function WalletModal(props) {
         }
 
         .withdraw-input:hover {
-          border-color: rgba(78, 205, 196, 0.4);
-          background: rgba(78, 205, 196, 0.1);
+          border-color: rgba(139, 120, 221, 0.4);
+          background: rgba(139, 120, 221, 0.15);
         }
 
         .withdraw-input input {
@@ -1361,23 +1363,23 @@ function WalletModal(props) {
           align-items: center;
           justify-content: center;
           gap: 8px;
-          background: linear-gradient(135deg, #4ecdc4, #44a08d);
-          border: 1px solid rgba(78, 205, 196, 0.4);
+          background: linear-gradient(135deg, #8b78dd, #6b5cb8);
+          border: 1px solid rgba(139, 120, 221, 0.4);
           color: #ffffff;
           cursor: pointer;
-          box-shadow: 0 4px 12px rgba(78, 205, 196, 0.25);
+          box-shadow: 0 4px 12px rgba(139, 120, 221, 0.25);
         }
 
         .submit-withdraw-button:hover {
-          background: linear-gradient(135deg, #5ed4cb, #4db8a4);
+          background: linear-gradient(135deg, #9d8de5, #7866c4);
           transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(78, 205, 196, 0.35);
+          box-shadow: 0 6px 16px rgba(139, 120, 221, 0.35);
         }
 
         .submit-withdraw-button:disabled {
-          background: rgba(45, 75, 105, 0.3);
-          border: 1px solid rgba(78, 205, 196, 0.1);
-          color: #8aa3b8;
+          background: rgba(139, 120, 221, 0.2);
+          border: 1px solid rgba(139, 120, 221, 0.1);
+          color: #a8a3c7;
           cursor: not-allowed;
           transform: none;
           box-shadow: none;
@@ -1388,25 +1390,25 @@ function WalletModal(props) {
         }
 
         .white-placeholder::placeholder {
-          color: rgba(138, 163, 184, 0.7);
+          color: rgba(168, 163, 199, 0.7);
           opacity: 1;
         }
 
         .white-placeholder::-moz-placeholder {
-          color: rgba(138, 163, 184, 0.7);
+          color: rgba(168, 163, 199, 0.7);
           opacity: 1;
         }
 
         .white-placeholder:-ms-input-placeholder {
-          color: rgba(138, 163, 184, 0.7);
+          color: rgba(168, 163, 199, 0.7);
         }
 
         .white-placeholder::-ms-input-placeholder {
-          color: rgba(138, 163, 184, 0.7);
+          color: rgba(168, 163, 199, 0.7);
         }
 
         .white-placeholder::-webkit-input-placeholder {
-          color: rgba(138, 163, 184, 0.7);
+          color: rgba(168, 163, 199, 0.7);
         }
 
         /* Custom scrollbar */
@@ -1419,12 +1421,37 @@ function WalletModal(props) {
         }
 
         .content-area::-webkit-scrollbar-thumb {
-          background: rgba(78, 205, 196, 0.3);
+          background: rgba(139, 120, 221, 0.3);
           border-radius: 2px;
         }
 
         .content-area::-webkit-scrollbar-thumb:hover {
-          background: rgba(78, 205, 196, 0.5);
+          background: rgba(139, 120, 221, 0.5);
+        }
+
+        /* Dropdown scrollbar */
+        .dropdown-container.modal-dropdown-options::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .dropdown-container.modal-dropdown-options::-webkit-scrollbar-track {
+          background: rgba(139, 120, 221, 0.1);
+          border-radius: 3px;
+        }
+
+        .dropdown-container.modal-dropdown-options::-webkit-scrollbar-thumb {
+          background: rgba(139, 120, 221, 0.4);
+          border-radius: 3px;
+        }
+
+        .dropdown-container.modal-dropdown-options::-webkit-scrollbar-thumb:hover {
+          background: rgba(139, 120, 221, 0.6);
+        }
+
+        /* Firefox scrollbar */
+        .dropdown-container.modal-dropdown-options {
+          scrollbar-width: thin;
+          scrollbar-color: rgba(139, 120, 221, 0.4) rgba(139, 120, 221, 0.1);
         }
 
         /* Responsive adjustments */

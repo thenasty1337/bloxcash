@@ -79,7 +79,7 @@ function SignIn(props) {
 
                 <div class='content-modal'>
                     <h2>{mode() === 0 ? 'SIGN IN' : 'SIGN UP'}</h2>
-                    <h1>WELCOME TO <span class='gold'>BLOXCLASH</span></h1>
+                    <h1>WELCOME TO <span class='gold'>Nova Casino</span></h1>
 
                     <div class='bar-modal'></div>
 
@@ -170,7 +170,7 @@ function SignIn(props) {
 
                     <div class='art'>
                         <p class='confirm'>
-                            By accessing <span class='bold'>BloxClash</span>, I attest that I am at least 18 years old and have read the <A href='/docs/tos' class='white bold strip'>Terms & Conditions.</A>
+                            By accessing <span class='bold'>Nova Casino</span>, I attest that I am at least 18 years old and have read the <A href='/docs/tos' class='white bold strip'>Terms & Conditions.</A>
                         </p>
                     </div>
                 </div>

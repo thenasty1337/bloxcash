@@ -181,7 +181,7 @@ function Settings(props) {
     function createTrail() {
         if (!slider) return;
         let value = (slider.value - 0) / 100 * 100
-        slider.style.background = `linear-gradient(90deg, #4ecdc4 0%, #44a08d ${value}%, rgba(255, 255, 255, 0.1) ${value}%, rgba(255, 255, 255, 0.1) 100%)`
+        slider.style.background = `linear-gradient(90deg, #8b78dd 0%, #7c6bbf ${value}%, rgba(255, 255, 255, 0.1) ${value}%, rgba(255, 255, 255, 0.1) 100%)`
     }
 
     // Custom Switch Component
@@ -988,8 +988,8 @@ function Settings(props) {
                     gap: 0.75rem;
                     margin-bottom: 1.5rem;
                     padding: 1rem 1.25rem;
-                    background: rgba(78, 205, 196, 0.04);
-                    border: 1px solid rgba(78, 205, 196, 0.15);
+                    background: rgba(139, 120, 221, 0.04);
+                    border: 1px solid rgba(139, 120, 221, 0.15);
                     border-radius: 12px;
                     backdrop-filter: blur(10px);
                 }
@@ -997,13 +997,13 @@ function Settings(props) {
                 .header-icon {
                     width: 32px;
                     height: 32px;
-                    background: linear-gradient(135deg, rgba(78, 205, 196, 0.15), rgba(68, 160, 141, 0.1));
-                    border: 1px solid rgba(78, 205, 196, 0.25);
+                    background: linear-gradient(135deg, rgba(139, 120, 221, 0.15), rgba(124, 107, 191, 0.1));
+                    border: 1px solid rgba(139, 120, 221, 0.25);
                     border-radius: 8px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: #4ecdc4;
+                    color: #8b78dd;
                     flex-shrink: 0;
                 }
 
@@ -1036,8 +1036,8 @@ function Settings(props) {
                 }
 
                 .settings-section {
-                    background: rgba(26, 35, 50, 0.6);
-                    border: 1px solid rgba(78, 205, 196, 0.12);
+                    background: rgba(24, 20, 52, 0.6);
+                    border: 1px solid rgba(139, 120, 221, 0.12);
                     border-radius: 14px;
                     overflow: hidden;
                     backdrop-filter: blur(15px);
@@ -1046,7 +1046,7 @@ function Settings(props) {
                 }
 
                 .settings-section:hover {
-                    border-color: rgba(78, 205, 196, 0.2);
+                    border-color: rgba(139, 120, 221, 0.2);
                     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
                 }
 
@@ -1055,20 +1055,20 @@ function Settings(props) {
                     align-items: center;
                     gap: 0.75rem;
                     padding: 1rem 1.25rem 0.75rem;
-                    background: linear-gradient(135deg, rgba(78, 205, 196, 0.06), rgba(68, 160, 141, 0.03));
-                    border-bottom: 1px solid rgba(78, 205, 196, 0.1);
+                    background: linear-gradient(135deg, rgba(139, 120, 221, 0.06), rgba(124, 107, 191, 0.03));
+                    border-bottom: 1px solid rgba(139, 120, 221, 0.1);
                 }
 
                 .section-icon {
                     width: 28px;
                     height: 28px;
-                    background: rgba(78, 205, 196, 0.15);
-                    border: 1px solid rgba(78, 205, 196, 0.25);
+                    background: rgba(139, 120, 221, 0.15);
+                    border: 1px solid rgba(139, 120, 221, 0.25);
                     border-radius: 7px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: #4ecdc4;
+                    color: #8b78dd;
                     flex-shrink: 0;
                 }
 
@@ -1095,7 +1095,7 @@ function Settings(props) {
                     align-items: center;
                     justify-content: space-between;
                     padding: 1rem 1.25rem;
-                    border-bottom: 1px solid rgba(78, 205, 196, 0.08);
+                    border-bottom: 1px solid rgba(139, 120, 221, 0.08);
                     transition: all 0.2s ease;
                     position: relative;
                 }
@@ -1105,7 +1105,7 @@ function Settings(props) {
                 }
 
                 .setting-item:hover {
-                    background: rgba(78, 205, 196, 0.04);
+                    background: rgba(139, 120, 221, 0.04);
                 }
 
                 .setting-item:hover::before {
@@ -1115,7 +1115,7 @@ function Settings(props) {
                     top: 0;
                     bottom: 0;
                     width: 3px;
-                    background: linear-gradient(180deg, #4ecdc4, #44a08d);
+                    background: linear-gradient(180deg, #8b78dd, #7c6bbf);
                     opacity: 1;
                 }
 
@@ -1126,7 +1126,7 @@ function Settings(props) {
                     top: 0;
                     bottom: 0;
                     width: 3px;
-                    background: linear-gradient(180deg, #4ecdc4, #44a08d);
+                    background: linear-gradient(180deg, #8b78dd, #7c6bbf);
                     opacity: 0;
                     transition: opacity 0.3s ease;
                 }
@@ -1142,13 +1142,13 @@ function Settings(props) {
                 .setting-icon {
                     width: 28px;
                     height: 28px;
-                    background: rgba(78, 205, 196, 0.1);
-                    border: 1px solid rgba(78, 205, 196, 0.2);
+                    background: rgba(139, 120, 221, 0.1);
+                    border: 1px solid rgba(139, 120, 221, 0.2);
                     border-radius: 7px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: #4ecdc4;
+                    color: #8b78dd;
                     flex-shrink: 0;
                 }
 
@@ -1188,9 +1188,9 @@ function Settings(props) {
                 }
 
                 .verification-status.verified {
-                    background: rgba(78, 205, 196, 0.15);
-                    color: #4ecdc4;
-                    border: 1px solid rgba(78, 205, 196, 0.25);
+                    background: rgba(139, 120, 221, 0.15);
+                    color: #8b78dd;
+                    border: 1px solid rgba(139, 120, 221, 0.25);
                 }
 
                 .verification-status.unverified {
@@ -1226,8 +1226,8 @@ function Settings(props) {
                 }
 
                 .setting-input:focus {
-                    background: rgba(78, 205, 196, 0.08);
-                    border-color: rgba(78, 205, 196, 0.3);
+                    background: rgba(139, 120, 221, 0.08);
+                    border-color: rgba(139, 120, 221, 0.3);
                 }
 
                 .setting-input::placeholder {
@@ -1236,7 +1236,7 @@ function Settings(props) {
 
                 .input-button {
                     padding: 0.5rem 0.875rem;
-                    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+                    background: linear-gradient(135deg, #8b78dd, #7c6bbf);
                     border: none;
                     border-radius: 6px;
                     color: #ffffff;
@@ -1250,9 +1250,9 @@ function Settings(props) {
                 }
 
                 .input-button:hover {
-                    background: linear-gradient(135deg, #44a08d, #3d9980);
+                    background: linear-gradient(135deg, #7c6bbf, #6b5ba6);
                     transform: translateY(-1px);
-                    box-shadow: 0 3px 8px rgba(78, 205, 196, 0.3);
+                    box-shadow: 0 3px 8px rgba(139, 120, 221, 0.3);
                 }
 
                 .setting-select {
@@ -1269,8 +1269,8 @@ function Settings(props) {
                 }
 
                 .setting-select:focus {
-                    background: rgba(78, 205, 196, 0.08);
-                    border-color: rgba(78, 205, 196, 0.3);
+                    background: rgba(139, 120, 221, 0.08);
+                    border-color: rgba(139, 120, 221, 0.3);
                 }
 
                 .action-button {
@@ -1295,9 +1295,9 @@ function Settings(props) {
                 }
 
                 .action-button.secondary:hover {
-                    background: rgba(78, 205, 196, 0.12);
-                    border-color: rgba(78, 205, 196, 0.25);
-                    color: #4ecdc4;
+                    background: rgba(139, 120, 221, 0.12);
+                    border-color: rgba(139, 120, 221, 0.25);
+                    color: #8b78dd;
                     transform: translateY(-1px);
                 }
 
@@ -1325,33 +1325,33 @@ function Settings(props) {
                     appearance: none;
                     width: 14px;
                     height: 14px;
-                    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+                    background: linear-gradient(135deg, #8b78dd, #7c6bbf);
                     border: 2px solid #ffffff;
                     border-radius: 50%;
                     cursor: pointer;
-                    box-shadow: 0 2px 6px rgba(78, 205, 196, 0.3);
+                    box-shadow: 0 2px 6px rgba(139, 120, 221, 0.3);
                     transition: all 0.2s ease;
                 }
 
                 .volume-slider::-webkit-slider-thumb:hover {
                     transform: scale(1.1);
-                    box-shadow: 0 3px 8px rgba(78, 205, 196, 0.4);
+                    box-shadow: 0 3px 8px rgba(139, 120, 221, 0.4);
                 }
 
                 .volume-slider::-moz-range-thumb {
                     width: 14px;
                     height: 14px;
-                    background: linear-gradient(135deg, #4ecdc4, #44a08d);
+                    background: linear-gradient(135deg, #8b78dd, #7c6bbf);
                     border: 2px solid #ffffff;
                     border-radius: 50%;
                     cursor: pointer;
-                    box-shadow: 0 2px 6px rgba(78, 205, 196, 0.3);
+                    box-shadow: 0 2px 6px rgba(139, 120, 221, 0.3);
                 }
 
                 .volume-value {
                     font-size: 0.8rem;
                     font-weight: 600;
-                    color: #4ecdc4;
+                    color: #8b78dd;
                     min-width: 35px;
                     text-align: right;
                     font-variant-numeric: tabular-nums;
@@ -1376,9 +1376,9 @@ function Settings(props) {
                 }
 
                 .custom-switch.active .switch-track {
-                    background: linear-gradient(135deg, #4ecdc4, #44a08d);
-                    border-color: #4ecdc4;
-                    box-shadow: 0 0 10px rgba(78, 205, 196, 0.25);
+                    background: linear-gradient(135deg, #8b78dd, #7c6bbf);
+                    border-color: #8b78dd;
+                    box-shadow: 0 0 10px rgba(139, 120, 221, 0.25);
                 }
 
                 .switch-thumb {
@@ -1405,17 +1405,17 @@ function Settings(props) {
                     gap: 0.5rem;
                     margin-top: 0.3rem;
                     font-size: 0.75rem;
-                    color: #4ecdc4;
+                    color: #8b78dd;
                     font-weight: 500;
                 }
 
                 .status-dot {
                     width: 6px;
                     height: 6px;
-                    background: #4ecdc4;
+                    background: #8b78dd;
                     border-radius: 50%;
                     animation: pulse 2s infinite;
-                    box-shadow: 0 0 6px rgba(78, 205, 196, 0.4);
+                    box-shadow: 0 0 6px rgba(139, 120, 221, 0.4);
                 }
 
                 @keyframes pulse {

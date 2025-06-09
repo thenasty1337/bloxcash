@@ -3,26 +3,22 @@ import {createEffect, createSignal, For} from "solid-js";
 
 const rooms = {
     'EN': {
-        icon: '/assets/icons/english.png',
+        icon: '/assets/flags/gb.svg',
         name: 'ENGLISH',
+        shortName: 'EN',
     },
     'TR': {
-        icon: '/assets/icons/turkish.png',
+        icon: '/assets/flags/tr.svg',
         name: 'TURKISH',
+        shortName: 'TR',
         key: 'TR',
     },
     'GR': {
-        icon: '/assets/icons/german.png',
+        icon: '/assets/flags/de.svg',
         name: 'GERMAN',
+        shortName: 'DE',
     },
-    'BEG': {
-        icon: '/assets/icons/begging.png',
-        name: 'BEGGING',
-    },
-    'VIP': {
-        icon: '/assets/icons/whale.png',
-        name: 'WHALE LOUNGE',
-    },
+   
 }
 
 function Chats(props) {
@@ -39,14 +35,14 @@ function Chats(props) {
     return (
         <>
             <div class='chatrooms-container'>
-                <div class='chats bevel' onClick={(e) => {
+                <div class='chats' onClick={(e) => {
                     setActive(!active())
                     e.stopPropagation()
                     e.preventDefault()
                 }}>
                     <img src={rooms[props.room].icon}/>
 
-                    <p class='chat-name'>{rooms[props.room].name}</p>
+                    <p class='chat-name'>{props.room}</p>
 
                     <svg class={active() ? 'active' : ''} width="7" height="5" viewBox="0 0 7 5" fill="none"
                          xmlns="http://www.w3.org/2000/svg">
@@ -64,12 +60,8 @@ function Chats(props) {
                                 tryToSwitchRooms(roomKey)
                             }}>
                                 <img src={rooms[roomKey].icon} width='25' alt=''/>
-                                <p>{rooms[roomKey].name}</p>
+                                <p>{rooms[roomKey].shortName}</p>
 
-                                <div class='online'>
-                                    <div class='dot'/>
-                                    {props?.online?.channels[roomKey]}
-                                </div>
                             </div>
                         }</For>
                     </div>
@@ -78,51 +70,51 @@ function Chats(props) {
 
             <style jsx>{`
               .chatrooms-container {
-                width: 100%;
-                height: 35px;
+                width: 75px;
+                height: 28px;
 
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                 font-weight: 600;
-                font-size: 14px;
-                color: #8aa3b8;
+                font-size: 12px;
+                color: #9ca3af;
                 
                 position: relative;
                 z-index: 3;
               }
               
               .chats {
-                width: 100%;
+                width: auto;
+                min-width: 60px;
                 height: 100%;
 
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
+                gap: 8px;
 
-                padding: 0 15px;
+                padding: 0 10px;
                 cursor: pointer;
                 position: relative;
-                background: rgba(26, 35, 50, 0.4);
-                border: 1px solid rgba(78, 205, 196, 0.2);
-                border-radius: 8px;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                background: rgba(27, 23, 56, 0.6);
+                border: 1px solid rgba(139, 120, 221, 0.15);
+                border-radius: 6px;
+                transition: all 0.2s ease;
                 backdrop-filter: blur(8px);
               }
 
               .chats:hover {
-                background: rgba(78, 205, 196, 0.1);
-                border-color: rgba(78, 205, 196, 0.3);
+                background: rgba(139, 120, 221, 0.15);
+                border-color: rgba(139, 120, 221, 0.3);
                 color: #ffffff;
               }
 
               .chat-name {
-                width: 100%;
-                left: 0;
-                position: absolute;
-                text-align: center;
-
+                text-align: left;
                 user-select: none;
                 color: inherit;
                 font-weight: 600;
+                font-size: 12px;
+                margin: 0;
+                flex: 1;
               }
 
               .dropdown {
@@ -130,19 +122,26 @@ function Chats(props) {
                 width: 100%;
                 max-height: 0;
                 
-                top: 37px;
+                top: 30px;
                 left: 0;
                 z-index: 1;
 
                 border-radius: 8px;
-                transition: max-height .3s;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 overflow: hidden;
                 
                 cursor: default;
               }
 
               .dropdown.active {
-                max-height: 200px;
+                max-height: 250px;
+              }
+
+              svg {
+                transition: transform 0.2s ease;
+                flex-shrink: 0;
+                width: 6px;
+                height: 4px;
               }
 
               svg.active {
@@ -150,38 +149,33 @@ function Chats(props) {
               }
 
               svg path {
-                fill: #4ecdc4;
+                fill: #8b78dd;
+                transition: fill 0.2s ease;
+              }
+
+              .chats:hover svg path {
+                fill: #ffffff;
               }
 
               .decoration-arrow {
-                width: 13px;
-                height: 9px;
-
-                top: 1px;
-                background: rgba(26, 35, 50, 0.9);
-                position: absolute;
-                right: 0;
-                
-                border-left: 1px solid rgba(78, 205, 196, 0.2);
-                border-right: 1px solid rgba(78, 205, 196, 0.2);
-                border-top: 1px solid rgba(78, 205, 196, 0.2);
-
-                clip-path: polygon(0% 100%, 100% 0%, 100% 100%);
+                display: none;
               }
               
               .rooms {
                 display: flex;
                 flex-direction: column;
-                gap: 8px;
-                padding: 10px;
+                gap: 4px;
+                padding: 6px;
+                width: 74px;
+                box-sizing: border-box;
 
-                border: 1px solid rgba(78, 205, 196, 0.2);
-                background: rgba(26, 35, 50, 0.9);
+                border: 1px solid rgba(139, 120, 221, 0.2);
+                background: rgba(14, 11, 39, 0.95);
                 border-radius: 8px;
                 backdrop-filter: blur(12px);
-                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
                 
-                margin-top: 9px;
+                margin-top: 2px;
               }
               
               .room {
@@ -189,86 +183,82 @@ function Chats(props) {
                 align-items: center;
                 text-align: left;
                 
-                height: 30px;
+                height: 28px;
 
-                background: rgba(45, 75, 105, 0.3);
-                border: 1px solid rgba(78, 205, 196, 0.1);
-                border-radius: 6px;
+                background: rgba(27, 23, 56, 0.6);
+                border: 1px solid rgba(139, 120, 221, 0.1);
+                border-radius: 4px;
                 
-                gap: 10px;
-                padding: 0 7px;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                gap: 6px;
+                padding: 0 6px;
+                transition: all 0.2s ease;
                 
                 cursor: pointer;
-                color: #8aa3b8;
+                color: #9ca3af;
               }
               
               .room:hover {
-                background: rgba(78, 205, 196, 0.15);
-                border-color: rgba(78, 205, 196, 0.3);
+                background: rgba(139, 120, 221, 0.2);
+                border-color: rgba(139, 120, 221, 0.3);
                 color: #ffffff;
-                transform: translateX(3px);
+                transform: translateY(-1px);
+              }
+
+              .room img {
+                width: 16px;
+                height: 16px;
+                object-fit: contain;
+                opacity: 0.8;
+                transition: opacity 0.2s ease;
+              }
+
+              .room:hover img {
+                opacity: 1;
+              }
+
+              .room p {
+                margin: 0;
+                font-size: 11px;
+                font-weight: 600;
+                flex: 1;
               }
               
               .online {
-                padding: 3px 5px;
-                background: rgba(78, 205, 196, 0.2);
-                border: 1px solid rgba(78, 205, 196, 0.3);
-                border-radius: 4px;
+                padding: 2px 4px;
+                background: rgba(139, 120, 221, 0.15);
+                border: 1px solid rgba(139, 120, 221, 0.3);
+                border-radius: 3px;
 
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                 font-weight: 600;
-                font-size: 11px;
-                color: #4ecdc4;
-                
-                margin-left: auto;
-                position: relative;
-                z-index: 0;
+                font-size: 9px;
+                color: #8b78dd;
                 
                 display: flex;
                 align-items: center;
-                gap: 5px;
+                gap: 3px;
                 backdrop-filter: blur(4px);
               }
               
-              .online:before {
-                position: absolute;
-                top: 1px;
-                left: 1px;
-                
-                content: '';
-                
-                width: calc(100% - 2px);
-                height: calc(100% - 2px);
-                border-radius: 3px;
-
-                z-index: -1;
-                background: rgba(26, 35, 50, 0.8);
-              }
-              
               .dot {
-                width: 10px;
-                height: 10px;
-
-                background: rgba(78, 205, 196, 0.2);
-                border-radius: 2px;
-                
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                
-                position: relative;
+                width: 4px;
+                height: 4px;
+                background: #8b78dd;
+                border-radius: 50%;
+                box-shadow: 0 0 3px rgba(139, 120, 221, 0.6);
               }
-              
-              .dot:after {
-                height: 5px;
-                width: 5px;
-                
-                content: '';
-                
-                background: #4ecdc4;
-                box-shadow: 0px 0px 4px rgba(78, 205, 196, 0.5);
-                border-radius: 2px;
+
+              .chats img {
+                width: 14px;
+                height: 14px;
+                object-fit: contain;
+                opacity: 0.8;
+                transition: opacity 0.2s ease;
+                flex-shrink: 0;
+              }
+
+              .chats:hover img {
+                opacity: 1;
               }
             `}</style>
         </>

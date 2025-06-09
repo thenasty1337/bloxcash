@@ -8878,3 +8878,3852 @@
 [0] 
 [0] Node.js v22.12.0
 [0] [31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[0] [32m[nodemon] restarting due to changes...[39m
+[0] [32m[nodemon] starting `node app.js`[39m
+[0] [32m[nodemon] restarting due to changes...[39m
+[0] [32m[nodemon] restarting due to changes...[39m
+[0] [32m[nodemon] restarting due to changes...[39m
+[0] [32m[nodemon] restarting due to changes...[39m
+[0] [32m[nodemon] restarting due to changes...[39m
+[0] [32m[nodemon] restarting due to changes...[39m
+[0] [32m[nodemon] restarting due to changes...[39m
+[0] [32m[nodemon] restarting due to changes...[39m
+[0] [32m[nodemon] restarting due to changes...[39m
+[0] [32m[nodemon] starting `node app.js`[39m
+[0] Admin cases routes registered
+[0] [DEBUG] Starting cacheDrops function (top=false)
+[0] Initializing roulette cache and game loop...
+[0] (node:16325) ExperimentalWarning: CommonJS module /Users/g/Documents/GitHub/bloxcash/backend/utils/index.js is loading ES Module /Users/g/Documents/GitHub/bloxcash/backend/node_modules/p-queue/dist/index.js using require().
+[0] Support for loading ES Module in require() is an experimental feature and might change at any time
+[0] (Use `node --trace-warnings ...` to show where the warning was created)
+[0] (node:16325) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[0] cacheCryptos completed in 51ms
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] [DEBUG] cacheDrops query returned 15 results
+[0] Drops took 86ms
+[0] [DEBUG] Starting cacheDrops function (top=true)
+[0] Starting roulette interval...
+[0] Roulette interval started, round ID: none
+[0] Round undefined: NaNms remaining until roll
+[0] cacheRoulette completed in 85ms
+[0] cacheCrash completed in 90ms
+[0] Cached 2538 slot games, processed BlurHash values
+[0] cacheJackpot completed in 87ms
+[0] cacheCases completed in 93ms
+[0] cacheChannels completed in 107ms
+[0] Round no longer valid for rolling, skipping...
+[0] cacheCoinflips completed in 108ms
+[0] [DEBUG] cacheDrops query returned 15 results
+[0] Drops top took 27ms
+[0] cacheDrops completed in 113ms
+[0] cacheRains completed in 118ms
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] cacheBets completed in 120ms
+[0] cacheSurveys completed in 113ms
+[0] cacheAdmin completed in 113ms
+[0] Cached 2538 slot games, processed BlurHash values
+[0] cacheSlots completed in 114ms
+[0] cacheBattles completed in 125ms
+[0] cacheLeaderboards completed in 116ms
+[0] BNB networks: [
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] BTC networks: [
+[0]   { network: 'Bitcoin(BTC)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] TRX networks: [ { network: 'Tron(TRC20)', enabled: true, chainMatch: true } ]
+[0] ETH networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   { network: 'zkSync Lite', enabled: true, chainMatch: false },
+[0]   { network: 'Starknet(STARK)', enabled: true, chainMatch: false },
+[0]   { network: 'Linea', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false },
+[0]   { network: 'MORPH', enabled: true, chainMatch: false },
+[0]   { network: 'MINTCHAIN', enabled: false, chainMatch: false },
+[0]   { network: 'HEMI', enabled: false, chainMatch: false },
+[0]   { network: 'MINDNETWORK', enabled: false, chainMatch: false }
+[0] ]
+[0] XRP networks: [ { network: 'Ripple(XRP)', enabled: true, chainMatch: true } ]
+[0] DOGE networks: [
+[0]   { network: 'Dogecoin(DOGE)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] USDT networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Tron(TRC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'OKT', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'Toncoin(TON)', enabled: true, chainMatch: false },
+[0]   { network: 'CELO', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'Kaia (KAIA)', enabled: true, chainMatch: false }
+[0] ]
+[0] USDC networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Algorand(ALGO)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'SONIC', enabled: true, chainMatch: false },
+[0]   { network: 'Sui', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false }
+[0] ]
+[0] LTC networks: [ { network: 'Litecoin(LTC)', enabled: true, chainMatch: true } ]
+[0] [
+[0]   { symbol: 'BROCKUSDT', price: '0.01478' },
+[0]   { symbol: 'BNTUSDT', price: '0.6343' },
+[0]   { symbol: 'NTXUSDT', price: '0.01308' },
+[0]   { symbol: 'DEVVEUSDT', price: '0.5651' },
+[0]   { symbol: 'XOXNOUSDT', price: '0.0252' },
+[0]   { symbol: 'HTRUSDT', price: '0.01951' },
+[0]   { symbol: 'VOXELUSDT', price: '0.05675' },
+[0]   { symbol: 'LOKAUSDT', price: '0.05669' },
+[0]   { symbol: 'DEFIUSDT', price: '0.002617' },
+[0]   { symbol: 'TURBOUSDC', price: '0.004247' },
+[0]   { symbol: 'SSEUSDT', price: '0.007037' },
+[0]   { symbol: 'F3USDT', price: '0.00246' },
+[0]   { symbol: 'MANEKIUSDT', price: '0.0013389' },
+[0]   { symbol: 'ARUSDT', price: '6.547' },
+[0]   { symbol: 'BFICUSDT', price: '0.6706' },
+[0]   { symbol: 'SNTUSDT', price: '0.02987' },
+[0]   { symbol: 'BAKEUSDT', price: '0.1115' },
+[0]   { symbol: 'PUAIUSDT', price: '0' },
+[0]   { symbol: 'IXSUSDT', price: '0.225' },
+[0]   { symbol: 'ROAMUSDT', price: '0.2049' },
+[0]   { symbol: 'SUEDEUSDT', price: '0.0052' },
+[0]   { symbol: 'EVERUSDT', price: '0.01515' },
+[0]   { symbol: 'RINGAIUSDT', price: '0.01263' },
+[0]   { symbol: 'VELAAIUSDT', price: '0.01817' },
+[0]   { symbol: 'HANDYUSDT', price: '0.0011401' },
+[0]   { symbol: 'OZONEUSDT', price: '0.00020049' },
+[0]   { symbol: 'TUAUSDT', price: '0.0000945' },
+[0]   { symbol: 'MYTHUSDT', price: '0.1408' },
+[0]   { symbol: 'TPROUSDT', price: '0.002504' },
+[0]   { symbol: 'DONKEYUSDT', price: '0.002191' },
+[0]   { symbol: 'MAIVUSDT', price: '0.00185' },
+[0]   { symbol: 'OOKIUSDT', price: '0.00002917' },
+[0]   { symbol: 'DFUSDT', price: '0.04392' },
+[0]   { symbol: 'BOSONUSDT', price: '0.10476' },
+[0]   { symbol: 'SKAIUSDT', price: '0.00488' },
+[0]   { symbol: 'DOLZUSDT', price: '0.00643' },
+[0]   { symbol: 'MIRAIUSDT', price: '0.01424' },
+[0]   { symbol: 'UBXUSDT', price: '0.000004018' },
+[0]   { symbol: 'NFTUSDT', price: '0.0000004217' },
+[0]   { symbol: 'ALEOUSDT', price: '0.1915' },
+[0]   { symbol: 'CATSUSDT', price: '0.000009121' },
+[0]   { symbol: 'FATUSDT', price: '0.004107' },
+[0]   { symbol: 'SCCUSDT', price: '0.0000000000000000598' },
+[0]   { symbol: 'PURRUSDT', price: '0.2638' },
+[0]   { symbol: 'INSPUSDT', price: '0.00492' },
+[0]   { symbol: 'GHTUSDT', price: '0.04172' },
+[0]   { symbol: 'ATRSUSDT', price: '0.006661' },
+[0]   { symbol: 'IQUSDT', price: '0.00383' },
+[0]   { symbol: 'LYUMUSDT', price: '0.00169' },
+[0]   { symbol: 'GRIFFAINUSDT', price: '0.05833' },
+[0]   { symbol: 'NTRNUSDT', price: '0.10283' },
+[0]   { symbol: 'SEEDUSDT', price: '0.002493' },
+[0]   { symbol: 'MORRAUSDT', price: '0.001399' },
+[0]   { symbol: 'MUBARAKAHUSDT', price: '0.0021801' },
+[0]   { symbol: 'RSRUSDT', price: '0.00688' },
+[0]   { symbol: 'NSUSDT', price: '0.16828' },
+[0]   { symbol: 'IRISUSDT', price: '0.001149' },
+[0]   { symbol: 'QTUMBTC', price: '0.00001955' },
+[0]   { symbol: 'IDEAUSDT', price: '0.0001604' },
+[0]   { symbol: 'RZRUSDT', price: '0.0002591' },
+[0]   { symbol: 'BIOUSDT', price: '0.06352' },
+[0]   { symbol: 'EMRLDUSDT', price: '0.001154' },
+[0]   { symbol: 'AIDOGEUSDT', price: '0.00000000012437' },
+[0]   { symbol: 'SOLUSDT', price: '154.81' },
+[0]   { symbol: 'NAPUSDT', price: '0.6921' },
+[0]   { symbol: 'QLINDOUSDT', price: '0.0008364' },
+[0]   { symbol: 'HRTUSDT', price: '0.000466' },
+[0]   { symbol: 'KDAUSDT', price: '0.4709' },
+[0]   { symbol: 'XENUSDT', price: '0.00000004334' },
+[0]   { symbol: 'PNICUSDT', price: '0.001315' },
+[0]   { symbol: 'DOVUUSDT', price: '0.0024998' },
+[0]   { symbol: 'INJUSDT', price: '13.42' },
+[0]   { symbol: 'LABUBUUSDT', price: '0.021232' },
+[0]   { symbol: 'GELUSDT', price: '0.07912' },
+[0]   { symbol: 'ETCBTC', price: '0.0001578' },
+[0]   { symbol: 'JUSTICEUSDT', price: '0.00007309' },
+[0]   { symbol: 'FIOUSDT', price: '0.01562' },
+[0]   { symbol: 'HIFIUSDT', price: '0.07968' },
+[0]   { symbol: 'SOPHUSDT', price: '0.04985' },
+[0]   { symbol: 'DEPINUSDT', price: '0.000000951' },
+[0]   { symbol: 'RWAIUSDT', price: '0.000761' },
+[0]   { symbol: 'MELANIAUSDT', price: '0.303' },
+[0]   { symbol: 'EURUSDT', price: '1.1387' },
+[0]   { symbol: 'REFUSDT', price: '0.07975' },
+[0]   { symbol: 'DOBOUSDT', price: '0.05135' },
+[0]   { symbol: 'OBORTECHUSDT', price: '0.006' },
+[0]   { symbol: 'ONDOUSDT', price: '0.84392' },
+[0]   { symbol: 'DKAUSDT', price: '0.01665' },
+[0]   { symbol: 'BILLIONVIEWUSDT', price: '0.006821' },
+[0]   { symbol: 'LIXXUSDT', price: '0.0003555' },
+[0]   { symbol: 'KANGUSDT', price: '0.001588' },
+[0]   { symbol: 'SABAIUSDT', price: '0.012023' },
+[0]   { symbol: 'STOOSUSDT', price: '0.7469' },
+[0]   { symbol: 'GOATUSDT', price: '0.12404' },
+[0]   { symbol: 'TGT1USDT', price: '0.026475' },
+[0]   { symbol: 'BONDUSDT', price: '0.2019' },
+[0]   { symbol: 'OVERUSDT', price: '0.02804' },
+[0]   { symbol: 'OKMUSDT', price: '0.000048507' },
+[0]   { symbol: 'TRXUSDC', price: '0.283029' },
+[0]   { symbol: 'TFIUSDT', price: '0.00452' },
+[0]   ... 2361 more items
+[0] ]
+[0] cacheWithdrawalCoins completed in 1564ms
+[0] node:events:502
+[0]       throw er; // Unhandled 'error' event
+[0]       ^
+[0] 
+[0] Error: listen EADDRINUSE: address already in use :::3000
+[0]     at Server.setupListenHandle [as _listen2] (node:net:1912:16)
+[0]     at listenInCluster (node:net:1969:12)
+[0]     at Server.listen (node:net:2074:7)
+[0]     at Function.listen (/Users/g/Documents/GitHub/bloxcash/backend/node_modules/express/lib/application.js:635:24)
+[0]     at start (/Users/g/Documents/GitHub/bloxcash/backend/app.js:167:32)
+[0]     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[0] Emitted 'error' event on Server instance at:
+[0]     at emitErrorNT (node:net:1948:8)
+[0]     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+[0]   code: 'EADDRINUSE',
+[0]   errno: -48,
+[0]   syscall: 'listen',
+[0]   address: '::',
+[0]   port: 3000
+[0] }
+[0] 
+[0] Node.js v22.12.0
+[0] [31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[0] [32m[nodemon] restarting due to changes...[39m
+[0] [32m[nodemon] starting `node app.js`[39m
+[0] Admin cases routes registered
+[0] [DEBUG] Starting cacheDrops function (top=false)
+[0] Initializing roulette cache and game loop...
+[0] (node:62434) ExperimentalWarning: CommonJS module /Users/g/Documents/GitHub/bloxcash/backend/utils/index.js is loading ES Module /Users/g/Documents/GitHub/bloxcash/backend/node_modules/p-queue/dist/index.js using require().
+[0] Support for loading ES Module in require() is an experimental feature and might change at any time
+[0] (Use `node --trace-warnings ...` to show where the warning was created)
+[0] (node:62434) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[0] cacheCryptos completed in 37ms
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] cacheChannels completed in 57ms
+[0] [DEBUG] cacheDrops query returned 15 results
+[0] Drops took 74ms
+[0] [DEBUG] Starting cacheDrops function (top=true)
+[0] cacheJackpot completed in 73ms
+[0] Starting roulette interval...
+[0] Roulette interval started, round ID: none
+[0] Round undefined: NaNms remaining until roll
+[0] cacheRoulette completed in 74ms
+[0] cacheCases completed in 76ms
+[0] cacheCrash completed in 75ms
+[0] Cached 2538 slot games, processed BlurHash values
+[0] Round no longer valid for rolling, skipping...
+[0] Cached 2538 slot games, processed BlurHash values
+[0] cacheSlots completed in 76ms
+[0] cacheSurveys completed in 76ms
+[0] cacheCoinflips completed in 76ms
+[0] [DEBUG] cacheDrops query returned 15 results
+[0] Drops top took 4ms
+[0] cacheDrops completed in 78ms
+[0] cacheRains completed in 80ms
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] cacheBets completed in 83ms
+[0] cacheBattles completed in 83ms
+[0] cacheAdmin completed in 80ms
+[0] cacheLeaderboards completed in 81ms
+[0] BNB networks: [
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] BTC networks: [
+[0]   { network: 'Bitcoin(BTC)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] TRX networks: [ { network: 'Tron(TRC20)', enabled: true, chainMatch: true } ]
+[0] ETH networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   { network: 'zkSync Lite', enabled: true, chainMatch: false },
+[0]   { network: 'Starknet(STARK)', enabled: true, chainMatch: false },
+[0]   { network: 'Linea', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false },
+[0]   { network: 'MORPH', enabled: true, chainMatch: false },
+[0]   { network: 'MINTCHAIN', enabled: false, chainMatch: false },
+[0]   { network: 'HEMI', enabled: false, chainMatch: false },
+[0]   { network: 'MINDNETWORK', enabled: false, chainMatch: false }
+[0] ]
+[0] XRP networks: [ { network: 'Ripple(XRP)', enabled: true, chainMatch: true } ]
+[0] DOGE networks: [
+[0]   { network: 'Dogecoin(DOGE)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] USDT networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Tron(TRC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'OKT', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'Toncoin(TON)', enabled: true, chainMatch: false },
+[0]   { network: 'CELO', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'Kaia (KAIA)', enabled: true, chainMatch: false }
+[0] ]
+[0] USDC networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Algorand(ALGO)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'SONIC', enabled: true, chainMatch: false },
+[0]   { network: 'Sui', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false }
+[0] ]
+[0] LTC networks: [ { network: 'Litecoin(LTC)', enabled: true, chainMatch: true } ]
+[0] [
+[0]   { symbol: 'BROCKUSDT', price: '0.01502' },
+[0]   { symbol: 'BNTUSDT', price: '0.6329' },
+[0]   { symbol: 'NTXUSDT', price: '0.01301' },
+[0]   { symbol: 'DEVVEUSDT', price: '0.5605' },
+[0]   { symbol: 'XOXNOUSDT', price: '0.02503' },
+[0]   { symbol: 'HTRUSDT', price: '0.01951' },
+[0]   { symbol: 'VOXELUSDT', price: '0.05738' },
+[0]   { symbol: 'LOKAUSDT', price: '0.05697' },
+[0]   { symbol: 'DEFIUSDT', price: '0.002709' },
+[0]   { symbol: 'TURBOUSDC', price: '0.004351' },
+[0]   { symbol: 'SSEUSDT', price: '0.007062' },
+[0]   { symbol: 'F3USDT', price: '0.00256' },
+[0]   { symbol: 'MANEKIUSDT', price: '0.0013381' },
+[0]   { symbol: 'ARUSDT', price: '6.626' },
+[0]   { symbol: 'BFICUSDT', price: '0.6795' },
+[0]   { symbol: 'SNTUSDT', price: '0.03013' },
+[0]   { symbol: 'BAKEUSDT', price: '0.1111' },
+[0]   { symbol: 'PUAIUSDT', price: '0' },
+[0]   { symbol: 'IXSUSDT', price: '0.2227' },
+[0]   { symbol: 'ROAMUSDT', price: '0.208' },
+[0]   { symbol: 'SUEDEUSDT', price: '0.005306' },
+[0]   { symbol: 'EVERUSDT', price: '0.01505' },
+[0]   { symbol: 'RINGAIUSDT', price: '0.01238' },
+[0]   { symbol: 'VELAAIUSDT', price: '0.02061' },
+[0]   { symbol: 'HANDYUSDT', price: '0.0013999' },
+[0]   { symbol: 'OZONEUSDT', price: '0.00020237' },
+[0]   { symbol: 'TUAUSDT', price: '0.0001022' },
+[0]   { symbol: 'MYTHUSDT', price: '0.1433' },
+[0]   { symbol: 'TPROUSDT', price: '0.002503' },
+[0]   { symbol: 'DONKEYUSDT', price: '0.002186' },
+[0]   { symbol: 'MAIVUSDT', price: '0.0019999' },
+[0]   { symbol: 'OOKIUSDT', price: '0.00002907' },
+[0]   { symbol: 'DFUSDT', price: '0.04346' },
+[0]   { symbol: 'BOSONUSDT', price: '0.10553' },
+[0]   { symbol: 'SKAIUSDT', price: '0.0049' },
+[0]   { symbol: 'DOLZUSDT', price: '0.00641' },
+[0]   { symbol: 'MIRAIUSDT', price: '0.01433' },
+[0]   { symbol: 'UBXUSDT', price: '0.000003919' },
+[0]   { symbol: 'NFTUSDT', price: '0.0000004218' },
+[0]   { symbol: 'ALEOUSDT', price: '0.1909' },
+[0]   { symbol: 'CATSUSDT', price: '0.000009536' },
+[0]   { symbol: 'FATUSDT', price: '0.003964' },
+[0]   { symbol: 'SCCUSDT', price: '0.0000000000000000577' },
+[0]   { symbol: 'PURRUSDT', price: '0.2806' },
+[0]   { symbol: 'INSPUSDT', price: '0.00492' },
+[0]   { symbol: 'GHTUSDT', price: '0.03699' },
+[0]   { symbol: 'ATRSUSDT', price: '0.006745' },
+[0]   { symbol: 'IQUSDT', price: '0.003842' },
+[0]   { symbol: 'LYUMUSDT', price: '0.00177' },
+[0]   { symbol: 'GRIFFAINUSDT', price: '0.05827' },
+[0]   { symbol: 'NTRNUSDT', price: '0.10306' },
+[0]   { symbol: 'SEEDUSDT', price: '0.002519' },
+[0]   { symbol: 'MORRAUSDT', price: '0.001312' },
+[0]   { symbol: 'MUBARAKAHUSDT', price: '0.0021578' },
+[0]   { symbol: 'RSRUSDT', price: '0.007016' },
+[0]   { symbol: 'NSUSDT', price: '0.173' },
+[0]   { symbol: 'IRISUSDT', price: '0.001188' },
+[0]   { symbol: 'QTUMBTC', price: '0.00001955' },
+[0]   { symbol: 'IDEAUSDT', price: '0.0001609' },
+[0]   { symbol: 'RZRUSDT', price: '0.0002594' },
+[0]   { symbol: 'BIOUSDT', price: '0.06437' },
+[0]   { symbol: 'EMRLDUSDT', price: '0.001152' },
+[0]   { symbol: 'AIDOGEUSDT', price: '0.00000000012451' },
+[0]   { symbol: 'SOLUSDT', price: '155.19' },
+[0]   { symbol: 'NAPUSDT', price: '0.6926' },
+[0]   { symbol: 'QLINDOUSDT', price: '0.0009048' },
+[0]   { symbol: 'HRTUSDT', price: '0.000463' },
+[0]   { symbol: 'KDAUSDT', price: '0.4722' },
+[0]   { symbol: 'XENUSDT', price: '0.00000004312' },
+[0]   { symbol: 'PNICUSDT', price: '0.001283' },
+[0]   { symbol: 'DOVUUSDT', price: '0.0024971' },
+[0]   { symbol: 'INJUSDT', price: '13.41' },
+[0]   { symbol: 'LABUBUUSDT', price: '0.021417' },
+[0]   { symbol: 'GELUSDT', price: '0.07865' },
+[0]   { symbol: 'ETCBTC', price: '0.0001582' },
+[0]   { symbol: 'JUSTICEUSDT', price: '0.0000736' },
+[0]   { symbol: 'FIOUSDT', price: '0.0157' },
+[0]   { symbol: 'HIFIUSDT', price: '0.07965' },
+[0]   { symbol: 'SOPHUSDT', price: '0.04993' },
+[0]   { symbol: 'DEPINUSDT', price: '0.000000951' },
+[0]   { symbol: 'RWAIUSDT', price: '0.00074' },
+[0]   { symbol: 'MELANIAUSDT', price: '0.303' },
+[0]   { symbol: 'EURUSDT', price: '1.1411' },
+[0]   { symbol: 'REFUSDT', price: '0.07961' },
+[0]   { symbol: 'DOBOUSDT', price: '0.05134' },
+[0]   { symbol: 'OBORTECHUSDT', price: '0.006' },
+[0]   { symbol: 'ONDOUSDT', price: '0.84469' },
+[0]   { symbol: 'DKAUSDT', price: '0.01659' },
+[0]   { symbol: 'BILLIONVIEWUSDT', price: '0.006819' },
+[0]   { symbol: 'LIXXUSDT', price: '0.0003569' },
+[0]   { symbol: 'KANGUSDT', price: '0.001114' },
+[0]   { symbol: 'SABAIUSDT', price: '0.013174' },
+[0]   { symbol: 'STOOSUSDT', price: '0.7406' },
+[0]   { symbol: 'GOATUSDT', price: '0.12576' },
+[0]   { symbol: 'TGT1USDT', price: '0.026477' },
+[0]   { symbol: 'BONDUSDT', price: '0.1994' },
+[0]   { symbol: 'OVERUSDT', price: '0.02779' },
+[0]   { symbol: 'OKMUSDT', price: '0.000049153' },
+[0]   { symbol: 'TRXUSDC', price: '0.283601' },
+[0]   { symbol: 'TFIUSDT', price: '0.00452' },
+[0]   ... 2361 more items
+[0] ]
+[0] cacheWithdrawalCoins completed in 1219ms
+[0] node:events:502
+[0]       throw er; // Unhandled 'error' event
+[0]       ^
+[0] 
+[0] Error: listen EADDRINUSE: address already in use :::3000
+[0]     at Server.setupListenHandle [as _listen2] (node:net:1912:16)
+[0]     at listenInCluster (node:net:1969:12)
+[0]     at Server.listen (node:net:2074:7)
+[0]     at Function.listen (/Users/g/Documents/GitHub/bloxcash/backend/node_modules/express/lib/application.js:635:24)
+[0]     at start (/Users/g/Documents/GitHub/bloxcash/backend/app.js:167:32)
+[0]     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[0] Emitted 'error' event on Server instance at:
+[0]     at emitErrorNT (node:net:1948:8)
+[0]     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+[0]   code: 'EADDRINUSE',
+[0]   errno: -48,
+[0]   syscall: 'listen',
+[0]   address: '::',
+[0]   port: 3000
+[0] }
+[0] 
+[0] Node.js v22.12.0
+[0] [31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[0] [32m[nodemon] restarting due to changes...[39m
+[0] [32m[nodemon] starting `node app.js`[39m
+[0] Admin cases routes registered
+[0] [DEBUG] Starting cacheDrops function (top=false)
+[0] Initializing roulette cache and game loop...
+[0] (node:62532) ExperimentalWarning: CommonJS module /Users/g/Documents/GitHub/bloxcash/backend/utils/index.js is loading ES Module /Users/g/Documents/GitHub/bloxcash/backend/node_modules/p-queue/dist/index.js using require().
+[0] Support for loading ES Module in require() is an experimental feature and might change at any time
+[0] (Use `node --trace-warnings ...` to show where the warning was created)
+[0] (node:62532) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] cacheCryptos completed in 52ms
+[0] [DEBUG] cacheDrops query returned 15 results
+[0] Drops took 57ms
+[0] [DEBUG] Starting cacheDrops function (top=true)
+[0] cacheChannels completed in 71ms
+[0] Cached 2538 slot games, processed BlurHash values
+[0] cacheCases completed in 77ms
+[0] cacheCoinflips completed in 73ms
+[0] cacheRains completed in 79ms
+[0] cacheCrash completed in 76ms
+[0] cacheSurveys completed in 74ms
+[0] [DEBUG] cacheDrops query returned 15 results
+[0] Drops top took 21ms
+[0] cacheDrops completed in 76ms
+[0] Cached 2538 slot games, processed BlurHash values
+[0] cacheSlots completed in 75ms
+[0] Starting roulette interval...
+[0] Roulette interval started, round ID: none
+[0] Round undefined: NaNms remaining until roll
+[0] cacheRoulette completed in 75ms
+[0] cacheJackpot completed in 76ms
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] cacheBets completed in 81ms
+[0] Round no longer valid for rolling, skipping...
+[0] cacheAdmin completed in 76ms
+[0] cacheBattles completed in 81ms
+[0] cacheLeaderboards completed in 78ms
+[0] BNB networks: [
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] BTC networks: [
+[0]   { network: 'Bitcoin(BTC)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] TRX networks: [ { network: 'Tron(TRC20)', enabled: true, chainMatch: true } ]
+[0] ETH networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   { network: 'zkSync Lite', enabled: true, chainMatch: false },
+[0]   { network: 'Starknet(STARK)', enabled: true, chainMatch: false },
+[0]   { network: 'Linea', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false },
+[0]   { network: 'MORPH', enabled: true, chainMatch: false },
+[0]   { network: 'MINTCHAIN', enabled: false, chainMatch: false },
+[0]   { network: 'HEMI', enabled: false, chainMatch: false },
+[0]   { network: 'MINDNETWORK', enabled: false, chainMatch: false }
+[0] ]
+[0] XRP networks: [ { network: 'Ripple(XRP)', enabled: true, chainMatch: true } ]
+[0] DOGE networks: [
+[0]   { network: 'Dogecoin(DOGE)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] USDT networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Tron(TRC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'OKT', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'Toncoin(TON)', enabled: true, chainMatch: false },
+[0]   { network: 'CELO', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'Kaia (KAIA)', enabled: true, chainMatch: false }
+[0] ]
+[0] USDC networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Algorand(ALGO)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'SONIC', enabled: true, chainMatch: false },
+[0]   { network: 'Sui', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false }
+[0] ]
+[0] LTC networks: [ { network: 'Litecoin(LTC)', enabled: true, chainMatch: true } ]
+[0] [
+[0]   { symbol: 'BROCKUSDT', price: '0.01502' },
+[0]   { symbol: 'BNTUSDT', price: '0.6329' },
+[0]   { symbol: 'NTXUSDT', price: '0.01301' },
+[0]   { symbol: 'DEVVEUSDT', price: '0.5608' },
+[0]   { symbol: 'XOXNOUSDT', price: '0.02503' },
+[0]   { symbol: 'HTRUSDT', price: '0.01951' },
+[0]   { symbol: 'VOXELUSDT', price: '0.05738' },
+[0]   { symbol: 'LOKAUSDT', price: '0.05697' },
+[0]   { symbol: 'DEFIUSDT', price: '0.002703' },
+[0]   { symbol: 'TURBOUSDC', price: '0.004353' },
+[0]   { symbol: 'SSEUSDT', price: '0.007062' },
+[0]   { symbol: 'F3USDT', price: '0.00256' },
+[0]   { symbol: 'MANEKIUSDT', price: '0.0013381' },
+[0]   { symbol: 'ARUSDT', price: '6.621' },
+[0]   { symbol: 'BFICUSDT', price: '0.6795' },
+[0]   { symbol: 'SNTUSDT', price: '0.03012' },
+[0]   { symbol: 'BAKEUSDT', price: '0.111' },
+[0]   { symbol: 'PUAIUSDT', price: '0' },
+[0]   { symbol: 'IXSUSDT', price: '0.2227' },
+[0]   { symbol: 'ROAMUSDT', price: '0.208' },
+[0]   { symbol: 'SUEDEUSDT', price: '0.005306' },
+[0]   { symbol: 'EVERUSDT', price: '0.01505' },
+[0]   { symbol: 'RINGAIUSDT', price: '0.01238' },
+[0]   { symbol: 'VELAAIUSDT', price: '0.02084' },
+[0]   { symbol: 'HANDYUSDT', price: '0.0013999' },
+[0]   { symbol: 'OZONEUSDT', price: '0.00020369' },
+[0]   { symbol: 'TUAUSDT', price: '0.0001022' },
+[0]   { symbol: 'MYTHUSDT', price: '0.1434' },
+[0]   { symbol: 'TPROUSDT', price: '0.002503' },
+[0]   { symbol: 'DONKEYUSDT', price: '0.002192' },
+[0]   { symbol: 'MAIVUSDT', price: '0.0019999' },
+[0]   { symbol: 'OOKIUSDT', price: '0.00002907' },
+[0]   { symbol: 'DFUSDT', price: '0.04348' },
+[0]   { symbol: 'BOSONUSDT', price: '0.10553' },
+[0]   { symbol: 'SKAIUSDT', price: '0.0049' },
+[0]   { symbol: 'DOLZUSDT', price: '0.00641' },
+[0]   { symbol: 'MIRAIUSDT', price: '0.01433' },
+[0]   { symbol: 'UBXUSDT', price: '0.000003919' },
+[0]   { symbol: 'NFTUSDT', price: '0.000000422' },
+[0]   { symbol: 'ALEOUSDT', price: '0.1912' },
+[0]   { symbol: 'CATSUSDT', price: '0.000009542' },
+[0]   { symbol: 'FATUSDT', price: '0.003964' },
+[0]   { symbol: 'SCCUSDT', price: '0.0000000000000000577' },
+[0]   { symbol: 'PURRUSDT', price: '0.2804' },
+[0]   { symbol: 'INSPUSDT', price: '0.00492' },
+[0]   { symbol: 'GHTUSDT', price: '0.03699' },
+[0]   { symbol: 'ATRSUSDT', price: '0.006745' },
+[0]   { symbol: 'IQUSDT', price: '0.003842' },
+[0]   { symbol: 'LYUMUSDT', price: '0.00177' },
+[0]   { symbol: 'GRIFFAINUSDT', price: '0.05808' },
+[0]   { symbol: 'NTRNUSDT', price: '0.10306' },
+[0]   { symbol: 'SEEDUSDT', price: '0.002519' },
+[0]   { symbol: 'MORRAUSDT', price: '0.001312' },
+[0]   { symbol: 'MUBARAKAHUSDT', price: '0.0021573' },
+[0]   { symbol: 'RSRUSDT', price: '0.007014' },
+[0]   { symbol: 'NSUSDT', price: '0.173' },
+[0]   { symbol: 'IRISUSDT', price: '0.001188' },
+[0]   { symbol: 'QTUMBTC', price: '0.00001955' },
+[0]   { symbol: 'IDEAUSDT', price: '0.0001609' },
+[0]   { symbol: 'RZRUSDT', price: '0.0002594' },
+[0]   { symbol: 'BIOUSDT', price: '0.06437' },
+[0]   { symbol: 'EMRLDUSDT', price: '0.001152' },
+[0]   { symbol: 'AIDOGEUSDT', price: '0.00000000012451' },
+[0]   { symbol: 'SOLUSDT', price: '155.14' },
+[0]   { symbol: 'NAPUSDT', price: '0.6925' },
+[0]   { symbol: 'QLINDOUSDT', price: '0.0009048' },
+[0]   { symbol: 'HRTUSDT', price: '0.000463' },
+[0]   { symbol: 'KDAUSDT', price: '0.4722' },
+[0]   { symbol: 'XENUSDT', price: '0.00000004312' },
+[0]   { symbol: 'PNICUSDT', price: '0.001283' },
+[0]   { symbol: 'DOVUUSDT', price: '0.0024971' },
+[0]   { symbol: 'INJUSDT', price: '13.4' },
+[0]   { symbol: 'LABUBUUSDT', price: '0.021417' },
+[0]   { symbol: 'GELUSDT', price: '0.07865' },
+[0]   { symbol: 'ETCBTC', price: '0.0001582' },
+[0]   { symbol: 'JUSTICEUSDT', price: '0.00007357' },
+[0]   { symbol: 'FIOUSDT', price: '0.0157' },
+[0]   { symbol: 'HIFIUSDT', price: '0.07965' },
+[0]   { symbol: 'SOPHUSDT', price: '0.04986' },
+[0]   { symbol: 'DEPINUSDT', price: '0.000000951' },
+[0]   { symbol: 'RWAIUSDT', price: '0.00074' },
+[0]   { symbol: 'MELANIAUSDT', price: '0.303' },
+[0]   { symbol: 'EURUSDT', price: '1.1411' },
+[0]   { symbol: 'REFUSDT', price: '0.07961' },
+[0]   { symbol: 'DOBOUSDT', price: '0.05134' },
+[0]   { symbol: 'OBORTECHUSDT', price: '0.006' },
+[0]   { symbol: 'ONDOUSDT', price: '0.84459' },
+[0]   { symbol: 'DKAUSDT', price: '0.01659' },
+[0]   { symbol: 'BILLIONVIEWUSDT', price: '0.006819' },
+[0]   { symbol: 'LIXXUSDT', price: '0.0003569' },
+[0]   { symbol: 'KANGUSDT', price: '0.001114' },
+[0]   { symbol: 'SABAIUSDT', price: '0.013174' },
+[0]   { symbol: 'STOOSUSDT', price: '0.7406' },
+[0]   { symbol: 'GOATUSDT', price: '0.12564' },
+[0]   { symbol: 'TGT1USDT', price: '0.026483' },
+[0]   { symbol: 'BONDUSDT', price: '0.1994' },
+[0]   { symbol: 'OVERUSDT', price: '0.02779' },
+[0]   { symbol: 'OKMUSDT', price: '0.00004916' },
+[0]   { symbol: 'TRXUSDC', price: '0.283594' },
+[0]   { symbol: 'TFIUSDT', price: '0.00452' },
+[0]   ... 2361 more items
+[0] ]
+[0] cacheWithdrawalCoins completed in 923ms
+[0] node:events:502
+[0]       throw er; // Unhandled 'error' event
+[0]       ^
+[0] 
+[0] Error: listen EADDRINUSE: address already in use :::3000
+[0]     at Server.setupListenHandle [as _listen2] (node:net:1912:16)
+[0]     at listenInCluster (node:net:1969:12)
+[0]     at Server.listen (node:net:2074:7)
+[0]     at Function.listen (/Users/g/Documents/GitHub/bloxcash/backend/node_modules/express/lib/application.js:635:24)
+[0]     at start (/Users/g/Documents/GitHub/bloxcash/backend/app.js:167:32)
+[0]     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[0] Emitted 'error' event on Server instance at:
+[0]     at emitErrorNT (node:net:1948:8)
+[0]     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+[0]   code: 'EADDRINUSE',
+[0]   errno: -48,
+[0]   syscall: 'listen',
+[0]   address: '::',
+[0]   port: 3000
+[0] }
+[0] 
+[0] Node.js v22.12.0
+[0] [31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[0] [32m[nodemon] restarting due to changes...[39m
+[0] [32m[nodemon] starting `node app.js`[39m
+[0] Admin cases routes registered
+[0] [DEBUG] Starting cacheDrops function (top=false)
+[0] Initializing roulette cache and game loop...
+[0] (node:64043) ExperimentalWarning: CommonJS module /Users/g/Documents/GitHub/bloxcash/backend/utils/index.js is loading ES Module /Users/g/Documents/GitHub/bloxcash/backend/node_modules/p-queue/dist/index.js using require().
+[0] Support for loading ES Module in require() is an experimental feature and might change at any time
+[0] (Use `node --trace-warnings ...` to show where the warning was created)
+[0] (node:64043) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[0] cacheCryptos completed in 38ms
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] cacheChannels completed in 63ms
+[0] [DEBUG] cacheDrops query returned 15 results
+[0] Drops took 65ms
+[0] [DEBUG] Starting cacheDrops function (top=true)
+[0] cacheJackpot completed in 79ms
+[0] cacheCrash completed in 80ms
+[0] cacheCases completed in 82ms
+[0] Starting roulette interval...
+[0] Roulette interval started, round ID: none
+[0] Round undefined: NaNms remaining until roll
+[0] cacheRoulette completed in 81ms
+[0] cacheCoinflips completed in 82ms
+[0] [DEBUG] cacheDrops query returned 15 results
+[0] Drops top took 19ms
+[0] cacheDrops completed in 84ms
+[0] Cached 2538 slot games, processed BlurHash values
+[0] cacheSlots completed in 83ms
+[0] cacheSurveys completed in 83ms
+[0] Cached 2538 slot games, processed BlurHash values
+[0] Round no longer valid for rolling, skipping...
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] cacheBets completed in 90ms
+[0] cacheRains completed in 91ms
+[0] cacheAdmin completed in 87ms
+[0] cacheBattles completed in 92ms
+[0] cacheLeaderboards completed in 88ms
+[0] BNB networks: [
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] BTC networks: [
+[0]   { network: 'Bitcoin(BTC)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] TRX networks: [ { network: 'Tron(TRC20)', enabled: true, chainMatch: true } ]
+[0] ETH networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   { network: 'zkSync Lite', enabled: true, chainMatch: false },
+[0]   { network: 'Starknet(STARK)', enabled: true, chainMatch: false },
+[0]   { network: 'Linea', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false },
+[0]   { network: 'MORPH', enabled: true, chainMatch: false },
+[0]   { network: 'MINTCHAIN', enabled: false, chainMatch: false },
+[0]   { network: 'HEMI', enabled: false, chainMatch: false },
+[0]   { network: 'MINDNETWORK', enabled: false, chainMatch: false }
+[0] ]
+[0] XRP networks: [ { network: 'Ripple(XRP)', enabled: true, chainMatch: true } ]
+[0] DOGE networks: [
+[0]   { network: 'Dogecoin(DOGE)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] USDT networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Tron(TRC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'OKT', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'Toncoin(TON)', enabled: true, chainMatch: false },
+[0]   { network: 'CELO', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'Kaia (KAIA)', enabled: true, chainMatch: false }
+[0] ]
+[0] USDC networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Algorand(ALGO)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'SONIC', enabled: true, chainMatch: false },
+[0]   { network: 'Sui', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false }
+[0] ]
+[0] LTC networks: [ { network: 'Litecoin(LTC)', enabled: true, chainMatch: true } ]
+[0] [
+[0]   { symbol: 'BROCKUSDT', price: '0.01505' },
+[0]   { symbol: 'BNTUSDT', price: '0.6332' },
+[0]   { symbol: 'NTXUSDT', price: '0.01301' },
+[0]   { symbol: 'DEVVEUSDT', price: '0.5606' },
+[0]   { symbol: 'XOXNOUSDT', price: '0.02503' },
+[0]   { symbol: 'HTRUSDT', price: '0.01916' },
+[0]   { symbol: 'VOXELUSDT', price: '0.05736' },
+[0]   { symbol: 'LOKAUSDT', price: '0.05696' },
+[0]   { symbol: 'DEFIUSDT', price: '0.002703' },
+[0]   { symbol: 'TURBOUSDC', price: '0.004359' },
+[0]   { symbol: 'SSEUSDT', price: '0.007063' },
+[0]   { symbol: 'F3USDT', price: '0.00256' },
+[0]   { symbol: 'MANEKIUSDT', price: '0.0013372' },
+[0]   { symbol: 'ARUSDT', price: '6.634' },
+[0]   { symbol: 'BFICUSDT', price: '0.6795' },
+[0]   { symbol: 'SNTUSDT', price: '0.03007' },
+[0]   { symbol: 'BAKEUSDT', price: '0.111' },
+[0]   { symbol: 'PUAIUSDT', price: '0' },
+[0]   { symbol: 'IXSUSDT', price: '0.2227' },
+[0]   { symbol: 'ROAMUSDT', price: '0.2077' },
+[0]   { symbol: 'SUEDEUSDT', price: '0.005308' },
+[0]   { symbol: 'EVERUSDT', price: '0.01505' },
+[0]   { symbol: 'RINGAIUSDT', price: '0.01238' },
+[0]   { symbol: 'VELAAIUSDT', price: '0.02076' },
+[0]   { symbol: 'HANDYUSDT', price: '0.0013999' },
+[0]   { symbol: 'OZONEUSDT', price: '0.00020369' },
+[0]   { symbol: 'TUAUSDT', price: '0.0001022' },
+[0]   { symbol: 'MYTHUSDT', price: '0.1435' },
+[0]   { symbol: 'TPROUSDT', price: '0.002505' },
+[0]   { symbol: 'DONKEYUSDT', price: '0.002195' },
+[0]   { symbol: 'MAIVUSDT', price: '0.0019999' },
+[0]   { symbol: 'OOKIUSDT', price: '0.00002895' },
+[0]   { symbol: 'DFUSDT', price: '0.04348' },
+[0]   { symbol: 'BOSONUSDT', price: '0.10553' },
+[0]   { symbol: 'SKAIUSDT', price: '0.0049' },
+[0]   { symbol: 'DOLZUSDT', price: '0.00643' },
+[0]   { symbol: 'MIRAIUSDT', price: '0.0143' },
+[0]   { symbol: 'UBXUSDT', price: '0.000003909' },
+[0]   { symbol: 'NFTUSDT', price: '0.0000004219' },
+[0]   { symbol: 'ALEOUSDT', price: '0.1904' },
+[0]   { symbol: 'CATSUSDT', price: '0.000009504' },
+[0]   { symbol: 'FATUSDT', price: '0.003978' },
+[0]   { symbol: 'SCCUSDT', price: '0.0000000000000000577' },
+[0]   { symbol: 'PURRUSDT', price: '0.2808' },
+[0]   { symbol: 'INSPUSDT', price: '0.00492' },
+[0]   { symbol: 'GHTUSDT', price: '0.03699' },
+[0]   { symbol: 'ATRSUSDT', price: '0.006745' },
+[0]   { symbol: 'IQUSDT', price: '0.003842' },
+[0]   { symbol: 'LYUMUSDT', price: '0.00177' },
+[0]   { symbol: 'GRIFFAINUSDT', price: '0.05797' },
+[0]   { symbol: 'NTRNUSDT', price: '0.10314' },
+[0]   { symbol: 'SEEDUSDT', price: '0.002519' },
+[0]   { symbol: 'MORRAUSDT', price: '0.001312' },
+[0]   { symbol: 'MUBARAKAHUSDT', price: '0.0021576' },
+[0]   { symbol: 'RSRUSDT', price: '0.00703' },
+[0]   { symbol: 'NSUSDT', price: '0.17451' },
+[0]   { symbol: 'IRISUSDT', price: '0.001187' },
+[0]   { symbol: 'QTUMBTC', price: '0.0000195' },
+[0]   { symbol: 'IDEAUSDT', price: '0.0001609' },
+[0]   { symbol: 'RZRUSDT', price: '0.0002594' },
+[0]   { symbol: 'BIOUSDT', price: '0.06437' },
+[0]   { symbol: 'EMRLDUSDT', price: '0.001152' },
+[0]   { symbol: 'AIDOGEUSDT', price: '0.00000000012444' },
+[0]   { symbol: 'SOLUSDT', price: '155.19' },
+[0]   { symbol: 'NAPUSDT', price: '0.6911' },
+[0]   { symbol: 'QLINDOUSDT', price: '0.0009048' },
+[0]   { symbol: 'HRTUSDT', price: '0.000461' },
+[0]   { symbol: 'KDAUSDT', price: '0.4725' },
+[0]   { symbol: 'XENUSDT', price: '0.00000004314' },
+[0]   { symbol: 'PNICUSDT', price: '0.001265' },
+[0]   { symbol: 'DOVUUSDT', price: '0.0025055' },
+[0]   { symbol: 'INJUSDT', price: '13.41' },
+[0]   { symbol: 'LABUBUUSDT', price: '0.021433' },
+[0]   { symbol: 'GELUSDT', price: '0.07862' },
+[0]   { symbol: 'ETCBTC', price: '0.0001582' },
+[0]   { symbol: 'JUSTICEUSDT', price: '0.00007356' },
+[0]   { symbol: 'FIOUSDT', price: '0.01568' },
+[0]   { symbol: 'HIFIUSDT', price: '0.07974' },
+[0]   { symbol: 'SOPHUSDT', price: '0.0499' },
+[0]   { symbol: 'DEPINUSDT', price: '0.000000951' },
+[0]   { symbol: 'RWAIUSDT', price: '0.00074' },
+[0]   { symbol: 'MELANIAUSDT', price: '0.3037' },
+[0]   { symbol: 'EURUSDT', price: '1.1413' },
+[0]   { symbol: 'REFUSDT', price: '0.07948' },
+[0]   { symbol: 'DOBOUSDT', price: '0.05136' },
+[0]   { symbol: 'OBORTECHUSDT', price: '0.006' },
+[0]   { symbol: 'ONDOUSDT', price: '0.84553' },
+[0]   { symbol: 'DKAUSDT', price: '0.01658' },
+[0]   { symbol: 'BILLIONVIEWUSDT', price: '0.006821' },
+[0]   { symbol: 'LIXXUSDT', price: '0.0003567' },
+[0]   { symbol: 'KANGUSDT', price: '0.001008' },
+[0]   { symbol: 'SABAIUSDT', price: '0.0132' },
+[0]   { symbol: 'STOOSUSDT', price: '0.7414' },
+[0]   { symbol: 'GOATUSDT', price: '0.12581' },
+[0]   { symbol: 'TGT1USDT', price: '0.026507' },
+[0]   { symbol: 'BONDUSDT', price: '0.1996' },
+[0]   { symbol: 'OVERUSDT', price: '0.02782' },
+[0]   { symbol: 'OKMUSDT', price: '0.000049151' },
+[0]   { symbol: 'TRXUSDC', price: '0.28358' },
+[0]   { symbol: 'TFIUSDT', price: '0.00451' },
+[0]   ... 2361 more items
+[0] ]
+[0] cacheWithdrawalCoins completed in 1085ms
+[0] Listening on port 3000
+[0] Discord Client Ready! Logged in as Test App#7650
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] Socket connection request with cookie: _ga=GA1.1.98010222.1747397642;...
+[0] Socket connection request with cookie: _ga=GA1.1.98010222.1747397642;...
+[0] Socket has cookies: _ga=GA1.1.98010222.1747397642;...
+[0] Socket has cookies: _ga=GA1.1.98010222.1747397642;...
+[0] Socket auth middleware: User authenticated as ID 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] Socket connected. Authenticated: true
+[0] Socket auth middleware: User authenticated as ID 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] Socket connected. Authenticated: true
+[0] [AUTH] User 01JV4YB5Z6MHAZMA1B4582K6RN session timeout: 43200 minutes (2592000s), access token: 900s
+[0] [0mPOST /auth/refresh-token [32m200[0m 235.831 ms - 42[0m
+[0] {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [0mGET /auth/me [32m200[0m 3.222 ms - 362[0m
+[0] [0mGET /slots/favorites?limit=15 [32m200[0m 7.946 ms - 1885[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots/providers [32m200[0m 3.921 ms - 2252[0m
+[0] [0mGET /slots/featured?limit=15 [32m200[0m 15.158 ms - 2210[0m
+[0] [0mGET /slots?limit=15&type=video-slots&isNew=true [32m200[0m 9.856 ms - 4980[0m
+[0] [0mGET /slots?limit=15&type=live [32m200[0m 8.810 ms - 5909[0m
+[0] [0mGET /slots?limit=20&sortBy=popularity&sortOrder=DESC [32m200[0m 31.955 ms - 6902[0m
+[0] [0mGET /slots?limit=20&type=video-slots [32m200[0m 34.890 ms - 6709[0m
+[0] [0mGET /user/01JV4YB5Z6MHAZMA1B4582K6RN/profile [32m200[0m 2.662 ms - 317[0m
+[0] [0mGET /user/bets?page=1 [32m200[0m 3.401 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [32m[nodemon] restarting due to changes...[39m
+[0] [32m[nodemon] starting `node app.js`[39m
+[0] Admin cases routes registered
+[0] [DEBUG] Starting cacheDrops function (top=false)
+[0] Initializing roulette cache and game loop...
+[0] (node:64448) ExperimentalWarning: CommonJS module /Users/g/Documents/GitHub/bloxcash/backend/utils/index.js is loading ES Module /Users/g/Documents/GitHub/bloxcash/backend/node_modules/p-queue/dist/index.js using require().
+[0] Support for loading ES Module in require() is an experimental feature and might change at any time
+[0] (Use `node --trace-warnings ...` to show where the warning was created)
+[0] (node:64448) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+[0] cacheCryptos completed in 35ms
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] cacheChannels completed in 55ms
+[0] [DEBUG] cacheDrops query returned 15 results
+[0] Drops took 60ms
+[0] [DEBUG] Starting cacheDrops function (top=true)
+[0] cacheCrash completed in 69ms
+[0] cacheCases completed in 71ms
+[0] Cached 2538 slot games, processed BlurHash values
+[0] cacheJackpot completed in 70ms
+[0] [DEBUG] cacheDrops query returned 15 results
+[0] Drops top took 13ms
+[0] cacheDrops completed in 73ms
+[0] Cached 2538 slot games, processed BlurHash values
+[0] cacheSlots completed in 71ms
+[0] cacheSurveys completed in 71ms
+[0] cacheCoinflips completed in 71ms
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] cacheBets completed in 77ms
+[0] cacheRains completed in 78ms
+[0] Starting roulette interval...
+[0] Roulette interval started, round ID: none
+[0] Round undefined: NaNms remaining until roll
+[0] cacheRoulette completed in 74ms
+[0] cacheAdmin completed in 74ms
+[0] cacheLeaderboards completed in 75ms
+[0] Round no longer valid for rolling, skipping...
+[0] cacheBattles completed in 78ms
+[0] BNB networks: [
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] BTC networks: [
+[0]   { network: 'Bitcoin(BTC)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] TRX networks: [ { network: 'Tron(TRC20)', enabled: true, chainMatch: true } ]
+[0] ETH networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   { network: 'zkSync Lite', enabled: true, chainMatch: false },
+[0]   { network: 'Starknet(STARK)', enabled: true, chainMatch: false },
+[0]   { network: 'Linea', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false },
+[0]   { network: 'MORPH', enabled: true, chainMatch: false },
+[0]   { network: 'MINTCHAIN', enabled: false, chainMatch: false },
+[0]   { network: 'HEMI', enabled: false, chainMatch: false },
+[0]   { network: 'MINDNETWORK', enabled: false, chainMatch: false }
+[0] ]
+[0] XRP networks: [ { network: 'Ripple(XRP)', enabled: true, chainMatch: true } ]
+[0] DOGE networks: [
+[0]   { network: 'Dogecoin(DOGE)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] USDT networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Tron(TRC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'OKT', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'Toncoin(TON)', enabled: true, chainMatch: false },
+[0]   { network: 'CELO', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'Kaia (KAIA)', enabled: true, chainMatch: false }
+[0] ]
+[0] USDC networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Algorand(ALGO)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'SONIC', enabled: true, chainMatch: false },
+[0]   { network: 'Sui', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false }
+[0] ]
+[0] LTC networks: [ { network: 'Litecoin(LTC)', enabled: true, chainMatch: true } ]
+[0] [
+[0]   { symbol: 'BROCKUSDT', price: '0.01502' },
+[0]   { symbol: 'BNTUSDT', price: '0.6334' },
+[0]   { symbol: 'NTXUSDT', price: '0.01301' },
+[0]   { symbol: 'DEVVEUSDT', price: '0.5609' },
+[0]   { symbol: 'XOXNOUSDT', price: '0.02503' },
+[0]   { symbol: 'HTRUSDT', price: '0.01916' },
+[0]   { symbol: 'VOXELUSDT', price: '0.0574' },
+[0]   { symbol: 'LOKAUSDT', price: '0.05696' },
+[0]   { symbol: 'DEFIUSDT', price: '0.002703' },
+[0]   { symbol: 'TURBOUSDC', price: '0.004364' },
+[0]   { symbol: 'SSEUSDT', price: '0.007062' },
+[0]   { symbol: 'F3USDT', price: '0.00256' },
+[0]   { symbol: 'MANEKIUSDT', price: '0.0013358' },
+[0]   { symbol: 'ARUSDT', price: '6.633' },
+[0]   { symbol: 'BFICUSDT', price: '0.6795' },
+[0]   { symbol: 'SNTUSDT', price: '0.0301' },
+[0]   { symbol: 'BAKEUSDT', price: '0.111' },
+[0]   { symbol: 'PUAIUSDT', price: '0' },
+[0]   { symbol: 'IXSUSDT', price: '0.2227' },
+[0]   { symbol: 'ROAMUSDT', price: '0.2078' },
+[0]   { symbol: 'SUEDEUSDT', price: '0.005307' },
+[0]   { symbol: 'EVERUSDT', price: '0.01505' },
+[0]   { symbol: 'RINGAIUSDT', price: '0.01238' },
+[0]   { symbol: 'VELAAIUSDT', price: '0.02072' },
+[0]   { symbol: 'HANDYUSDT', price: '0.0013999' },
+[0]   { symbol: 'OZONEUSDT', price: '0.00020369' },
+[0]   { symbol: 'TUAUSDT', price: '0.0001017' },
+[0]   { symbol: 'MYTHUSDT', price: '0.1435' },
+[0]   { symbol: 'TPROUSDT', price: '0.002505' },
+[0]   { symbol: 'DONKEYUSDT', price: '0.002193' },
+[0]   { symbol: 'MAIVUSDT', price: '0.0019999' },
+[0]   { symbol: 'OOKIUSDT', price: '0.00002897' },
+[0]   { symbol: 'DFUSDT', price: '0.04349' },
+[0]   { symbol: 'BOSONUSDT', price: '0.10553' },
+[0]   { symbol: 'SKAIUSDT', price: '0.0049' },
+[0]   { symbol: 'DOLZUSDT', price: '0.0064' },
+[0]   { symbol: 'MIRAIUSDT', price: '0.01431' },
+[0]   { symbol: 'UBXUSDT', price: '0.000003903' },
+[0]   { symbol: 'NFTUSDT', price: '0.0000004224' },
+[0]   { symbol: 'ALEOUSDT', price: '0.1904' },
+[0]   { symbol: 'CATSUSDT', price: '0.000009504' },
+[0]   { symbol: 'FATUSDT', price: '0.003978' },
+[0]   { symbol: 'SCCUSDT', price: '0.0000000000000000577' },
+[0]   { symbol: 'PURRUSDT', price: '0.2805' },
+[0]   { symbol: 'INSPUSDT', price: '0.00492' },
+[0]   { symbol: 'GHTUSDT', price: '0.03699' },
+[0]   { symbol: 'ATRSUSDT', price: '0.006745' },
+[0]   { symbol: 'IQUSDT', price: '0.003841' },
+[0]   { symbol: 'LYUMUSDT', price: '0.00177' },
+[0]   { symbol: 'GRIFFAINUSDT', price: '0.05795' },
+[0]   { symbol: 'NTRNUSDT', price: '0.10314' },
+[0]   { symbol: 'SEEDUSDT', price: '0.002518' },
+[0]   { symbol: 'MORRAUSDT', price: '0.001312' },
+[0]   { symbol: 'MUBARAKAHUSDT', price: '0.0021576' },
+[0]   { symbol: 'RSRUSDT', price: '0.007032' },
+[0]   { symbol: 'NSUSDT', price: '0.17451' },
+[0]   { symbol: 'IRISUSDT', price: '0.001187' },
+[0]   { symbol: 'QTUMBTC', price: '0.00001951' },
+[0]   { symbol: 'IDEAUSDT', price: '0.0001609' },
+[0]   { symbol: 'RZRUSDT', price: '0.0002594' },
+[0]   { symbol: 'BIOUSDT', price: '0.06437' },
+[0]   { symbol: 'EMRLDUSDT', price: '0.001152' },
+[0]   { symbol: 'AIDOGEUSDT', price: '0.00000000012444' },
+[0]   { symbol: 'SOLUSDT', price: '155.28' },
+[0]   { symbol: 'NAPUSDT', price: '0.6902' },
+[0]   { symbol: 'QLINDOUSDT', price: '0.0009048' },
+[0]   { symbol: 'HRTUSDT', price: '0.000461' },
+[0]   { symbol: 'KDAUSDT', price: '0.4727' },
+[0]   { symbol: 'XENUSDT', price: '0.00000004313' },
+[0]   { symbol: 'PNICUSDT', price: '0.001267' },
+[0]   { symbol: 'DOVUUSDT', price: '0.0025055' },
+[0]   { symbol: 'INJUSDT', price: '13.43' },
+[0]   { symbol: 'LABUBUUSDT', price: '0.021433' },
+[0]   { symbol: 'GELUSDT', price: '0.07885' },
+[0]   { symbol: 'ETCBTC', price: '0.0001582' },
+[0]   { symbol: 'JUSTICEUSDT', price: '0.0000735' },
+[0]   { symbol: 'FIOUSDT', price: '0.01569' },
+[0]   { symbol: 'HIFIUSDT', price: '0.07976' },
+[0]   { symbol: 'SOPHUSDT', price: '0.04991' },
+[0]   { symbol: 'DEPINUSDT', price: '0.000000951' },
+[0]   { symbol: 'RWAIUSDT', price: '0.00074' },
+[0]   { symbol: 'MELANIAUSDT', price: '0.3039' },
+[0]   { symbol: 'EURUSDT', price: '1.1409' },
+[0]   { symbol: 'REFUSDT', price: '0.0795' },
+[0]   { symbol: 'DOBOUSDT', price: '0.05136' },
+[0]   { symbol: 'OBORTECHUSDT', price: '0.006' },
+[0]   { symbol: 'ONDOUSDT', price: '0.84577' },
+[0]   { symbol: 'DKAUSDT', price: '0.0165' },
+[0]   { symbol: 'BILLIONVIEWUSDT', price: '0.006819' },
+[0]   { symbol: 'LIXXUSDT', price: '0.0003568' },
+[0]   { symbol: 'KANGUSDT', price: '0.001006' },
+[0]   { symbol: 'SABAIUSDT', price: '0.013206' },
+[0]   { symbol: 'STOOSUSDT', price: '0.7411' },
+[0]   { symbol: 'GOATUSDT', price: '0.1258' },
+[0]   { symbol: 'TGT1USDT', price: '0.026501' },
+[0]   { symbol: 'BONDUSDT', price: '0.1998' },
+[0]   { symbol: 'OVERUSDT', price: '0.02781' },
+[0]   { symbol: 'OKMUSDT', price: '0.000049142' },
+[0]   { symbol: 'TRXUSDC', price: '0.283578' },
+[0]   { symbol: 'TFIUSDT', price: '0.00451' },
+[0]   ... 2361 more items
+[0] ]
+[0] cacheWithdrawalCoins completed in 1423ms
+[0] Listening on port 3000
+[0] Socket connection request with cookie: _ga=GA1.1.98010222.1747397642;...
+[0] Socket has cookies: _ga=GA1.1.98010222.1747397642;...
+[0] Socket auth middleware: User authenticated as ID 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] Socket connected. Authenticated: true
+[0] Discord Client Ready! Logged in as Test App#7650
+[0] Socket connection request with cookie: _ga=GA1.1.98010222.1747397642;...
+[0] Socket has cookies: _ga=GA1.1.98010222.1747397642;...
+[0] Socket auth middleware: User authenticated as ID 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] Socket connected. Authenticated: true
+[0] Socket VM-Xh5dQdZzblVwpAAAD authenticated as user 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] Socket connection request with cookie: _ga=GA1.1.98010222.1747397642;...
+[0] Socket connection request with cookie: _ga=GA1.1.98010222.1747397642;...
+[0] Socket has cookies: _ga=GA1.1.98010222.1747397642;...
+[0] Socket auth middleware: User authenticated as ID 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] Socket connected. Authenticated: true
+[0] Socket has cookies: _ga=GA1.1.98010222.1747397642;...
+[0] Socket auth middleware: User authenticated as ID 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] Socket connected. Authenticated: true
+[0] [AUTH] User 01JV4YB5Z6MHAZMA1B4582K6RN session timeout: 43200 minutes (2592000s), access token: 900s
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots/featured?limit=15 [32m200[0m 26.737 ms - 2210[0m
+[0] [0mGET /slots/providers [32m200[0m 11.635 ms - 2252[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots?limit=15&type=video-slots&isNew=true [32m200[0m 23.385 ms - 4980[0m
+[0] [0mGET /slots?limit=20&sortBy=popularity&sortOrder=DESC [32m200[0m 33.242 ms - 6902[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mPOST /auth/refresh-token [32m200[0m 288.017 ms - 42[0m
+[0] [0mGET /slots?limit=15&type=live [32m200[0m 20.527 ms - 5909[0m
+[0] [0mGET /slots?limit=20&type=video-slots [32m200[0m 37.496 ms - 6709[0m
+[0] {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [0mGET /auth/me [32m200[0m 5.437 ms - 362[0m
+[0] [0mGET /slots/favorites?limit=15 [32m200[0m 6.627 ms - 1885[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/01JV4YB5Z6MHAZMA1B4582K6RN/profile [32m200[0m 4.979 ms - 317[0m
+[0] [0mGET /user/bets?page=1 [32m200[0m 5.804 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 10.067 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 4.249 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 6.055 ms - 2442[0m
+[0] [0mGET /user/bets?page=1 [32m200[0m 7.959 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] Socket connection request with cookie: _ga=GA1.1.98010222.1747397642;...
+[0] Socket connection request with cookie: _ga=GA1.1.98010222.1747397642;...
+[0] Socket has cookies: _ga=GA1.1.98010222.1747397642;...
+[0] Socket auth middleware: User authenticated as ID 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] Socket connected. Authenticated: true
+[0] Socket has cookies: _ga=GA1.1.98010222.1747397642;...
+[0] Socket auth middleware: User authenticated as ID 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] Socket connected. Authenticated: true
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [AUTH] User 01JV4YB5Z6MHAZMA1B4582K6RN session timeout: 43200 minutes (2592000s), access token: 900s
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots/providers [32m200[0m 9.066 ms - 2252[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots/featured?limit=15 [32m200[0m 70.336 ms - 2210[0m
+[0] [0mGET /slots?limit=15&type=video-slots&isNew=true [32m200[0m 22.489 ms - 4980[0m
+[0] [0mGET /slots?limit=15&type=live [32m200[0m 21.441 ms - 5909[0m
+[0] [0mGET /slots?limit=20&sortBy=popularity&sortOrder=DESC [32m200[0m 51.259 ms - 6902[0m
+[0] [0mGET /slots?limit=20&type=video-slots [32m200[0m 34.498 ms - 6709[0m
+[0] [0mPOST /auth/refresh-token [32m200[0m 358.876 ms - 42[0m
+[0] {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [0mGET /auth/me [32m200[0m 6.660 ms - 362[0m
+[0] [0mGET /slots/favorites?limit=15 [32m200[0m 4.257 ms - 1885[0m
+[0] [0mGET /user/01JV4YB5Z6MHAZMA1B4582K6RN/profile [32m200[0m 6.380 ms - 317[0m
+[0] [0mGET /user/bets?page=1 [32m200[0m 4.410 ms - 2442[0m
+[0] [SINGLE SLOT] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] gameData:  nolimit
+[0] [0mGET /slots/nolimit/Loner [32m200[0m 9.228 ms - 5355[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] Slug:  nolimit/Loner
+[0] Using settings: {
+[0]   api_login: 'f53b52c9-d300-4924-b39b-9faa55210a25-929080',
+[0]   endpoint: 'https://gs.aggregtr.com/api/system/operator',
+[0]   callback_url: 'https://novacasinobullshit.com/api/spinshield'
+[0] }
+[0] Creating SpinShield player: SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123 (original username: verylongusername123123, ID: 01JV4YB5Z6MHAZMA1B4582K6RN)
+[0] Sending request to https://gs.aggregtr.com/api/system/operator for method createPlayer
+[0] [0mGET /slots?limit=20&provider=nolimit [32m200[0m 22.331 ms - 6564[0m
+[0] Got response from createPlayer: { status: 200, statusText: 'OK' }
+[0] Attempting to launch game: {
+[0]   username: 'SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123',
+[0]   gameIdHash: 'nolimit/Loner',
+[0]   currency: 'USD',
+[0]   isDemo: false,
+[0]   callbackUrl: 'https://novacasinobullshit.com/api/spinshield'
+[0] }
+[0] Sending request to https://gs.aggregtr.com/api/system/operator for method getGame
+[0] Got response from getGame: { status: 200, statusText: 'OK' }
+[0] API Response: {
+[0]   "error": 0,
+[0]   "response": "https://fungamess.games/api/v2/WildWest/start?token=99cc045ec1d1c30f91d8086fb4151727&userId=937650_64DX-nolimi&gameId=1030815&country=LU&lang=en&demo=0",
+[0]   "session_id": null
+[0] }
+[0] [0mPOST /slots/play/nolimit/Loner [32m200[0m 1019.948 ms - 205[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] SpinShield Callback: {
+[0]   username: 'SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123',
+[0]   currency: 'USD',
+[0]   action: 'balance',
+[0]   call_id: 'a0d74aa8-c3c5-4dad-bae9-313114fad487',
+[0]   timestamp: '4e888e8880229ab21d98ed9c9590631f',
+[0]   operator_id: '64',
+[0]   key: 'b4f7d5c4ed9196026b74518c8a502d06'
+[0] }
+[0] Processing callback for username: SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123
+[0] Extracted user ID: 01JV4YB5Z6MHAZMA1B4582K6RN Base username: verylongusername123123
+[0] Using game_id 37833 from most recent session for user 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /api/spinshield?username=SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123&currency=USD&action=balance&call_id=a0d74aa8-c3c5-4dad-bae9-313114fad487&timestamp=4e888e8880229ab21d98ed9c9590631f&operator_id=64&key=b4f7d5c4ed9196026b74518c8a502d06 [32m200[0m 12.571 ms - 29[0m
+[0] SpinShield Callback: {
+[0]   username: 'SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123',
+[0]   currency: 'USD',
+[0]   action: 'balance',
+[0]   call_id: '9fee7b73-bb64-4e06-a27d-fb99fa6d37fd',
+[0]   timestamp: '2e13fa6055f092d2157e0322c22c1307',
+[0]   operator_id: '64',
+[0]   key: '6b742d458a089f066e15cd64a4609976'
+[0] }
+[0] Processing callback for username: SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123
+[0] Extracted user ID: 01JV4YB5Z6MHAZMA1B4582K6RN Base username: verylongusername123123
+[0] Using game_id 37833 from most recent session for user 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /api/spinshield?username=SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123&currency=USD&action=balance&call_id=9fee7b73-bb64-4e06-a27d-fb99fa6d37fd&timestamp=2e13fa6055f092d2157e0322c22c1307&operator_id=64&key=6b742d458a089f066e15cd64a4609976 [32m200[0m 3.763 ms - 29[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/01JV4YB5Z6MHAZMA1B4582K6RN/profile [32m200[0m 14.254 ms - 317[0m
+[0] [0mGET /user/bets?page=1 [32m200[0m 13.884 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1&games=case [32m200[0m 2.595 ms - 1208[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1&games=battle [32m200[0m 4.280 ms - 1211[0m
+[0] [0mGET /user/bets?page=1&games=battle [32m200[0m 3.983 ms - 1211[0m
+[0] [0mGET /user/bets?page=1&games=coinflip [32m200[0m 3.256 ms - 596[0m
+[0] [0mGET /user/bets?page=1&games=jackpot [32m200[0m 3.649 ms - 608[0m
+[0] [0mGET /user/bets?page=1&games=roulette [32m200[0m 5.815 ms - 1156[0m
+[0] [0mGET /user/bets?page=1&games=crash [32m200[0m 2.689 ms - 40[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 5.387 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 7.862 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] Socket connection request with cookie: _ga=GA1.1.98010222.1747397642;...
+[0] Socket connection request with cookie: _ga=GA1.1.98010222.1747397642;...
+[0] Socket has cookies: _ga=GA1.1.98010222.1747397642;...
+[0] Socket has cookies: _ga=GA1.1.98010222.1747397642;...
+[0] Socket auth middleware: User authenticated as ID 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] Socket connected. Authenticated: true
+[0] Socket auth middleware: User authenticated as ID 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] Socket connected. Authenticated: true
+[0] [AUTH] User 01JV4YB5Z6MHAZMA1B4582K6RN session timeout: 43200 minutes (2592000s), access token: 900s
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots/providers [32m200[0m 6.095 ms - 2252[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots/featured?limit=15 [32m200[0m 16.306 ms - 2210[0m
+[0] [0mGET /slots?limit=15&type=video-slots&isNew=true [32m200[0m 13.618 ms - 4980[0m
+[0] [0mGET /slots?limit=20&sortBy=popularity&sortOrder=DESC [32m200[0m 21.838 ms - 6902[0m
+[0] [0mGET /slots?limit=15&type=live [32m200[0m 14.882 ms - 5909[0m
+[0] [0mGET /slots?limit=20&type=video-slots [32m200[0m 17.261 ms - 6709[0m
+[0] [0mPOST /auth/refresh-token [32m200[0m 161.772 ms - 42[0m
+[0] {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [0mGET /auth/me [32m200[0m 1.101 ms - 362[0m
+[0] [0mGET /slots/favorites?limit=15 [32m200[0m 2.402 ms - 1885[0m
+[0] {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [0mGET /auth/me [32m200[0m 1.244 ms - 362[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [0mGET /auth/me [32m200[0m 2.640 ms - 362[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [0mGET /auth/me [32m200[0m 7.482 ms - 362[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 14.257 ms - 2442[0m
+[0] {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [0mGET /auth/me [32m200[0m 2.979 ms - 362[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 3.997 ms - 2442[0m
+[0] [0mGET /user/bets?page=1 [32m200[0m 56.086 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 4.377 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 4.137 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 6.882 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 4.510 ms - 2442[0m
+[0] BNB networks: [
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] BTC networks: [
+[0]   { network: 'Bitcoin(BTC)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] TRX networks: [ { network: 'Tron(TRC20)', enabled: true, chainMatch: true } ]
+[0] ETH networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   { network: 'zkSync Lite', enabled: true, chainMatch: false },
+[0]   { network: 'Starknet(STARK)', enabled: true, chainMatch: false },
+[0]   { network: 'Linea', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false },
+[0]   { network: 'MORPH', enabled: true, chainMatch: false },
+[0]   { network: 'MINTCHAIN', enabled: false, chainMatch: false },
+[0]   { network: 'HEMI', enabled: false, chainMatch: false },
+[0]   { network: 'MINDNETWORK', enabled: false, chainMatch: false }
+[0] ]
+[0] XRP networks: [ { network: 'Ripple(XRP)', enabled: true, chainMatch: true } ]
+[0] DOGE networks: [
+[0]   { network: 'Dogecoin(DOGE)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] USDT networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Tron(TRC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'OKT', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'Toncoin(TON)', enabled: true, chainMatch: false },
+[0]   { network: 'CELO', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'Kaia (KAIA)', enabled: true, chainMatch: false }
+[0] ]
+[0] USDC networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Algorand(ALGO)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'SONIC', enabled: true, chainMatch: false },
+[0]   { network: 'Sui', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false }
+[0] ]
+[0] LTC networks: [ { network: 'Litecoin(LTC)', enabled: true, chainMatch: true } ]
+[0] [
+[0]   { symbol: 'BROCKUSDT', price: '0.01499' },
+[0]   { symbol: 'BNTUSDT', price: '0.6338' },
+[0]   { symbol: 'NTXUSDT', price: '0.01301' },
+[0]   { symbol: 'DEVVEUSDT', price: '0.5604' },
+[0]   { symbol: 'XOXNOUSDT', price: '0.02503' },
+[0]   { symbol: 'HTRUSDT', price: '0.01916' },
+[0]   { symbol: 'VOXELUSDT', price: '0.05789' },
+[0]   { symbol: 'LOKAUSDT', price: '0.05693' },
+[0]   { symbol: 'DEFIUSDT', price: '0.002677' },
+[0]   { symbol: 'TURBOUSDC', price: '0.004392' },
+[0]   { symbol: 'SSEUSDT', price: '0.007144' },
+[0]   { symbol: 'F3USDT', price: '0.00256' },
+[0]   { symbol: 'MANEKIUSDT', price: '0.0013367' },
+[0]   { symbol: 'ARUSDT', price: '6.625' },
+[0]   { symbol: 'BFICUSDT', price: '0.6795' },
+[0]   { symbol: 'SNTUSDT', price: '0.03012' },
+[0]   { symbol: 'BAKEUSDT', price: '0.1109' },
+[0]   { symbol: 'PUAIUSDT', price: '0' },
+[0]   { symbol: 'IXSUSDT', price: '0.2227' },
+[0]   { symbol: 'ROAMUSDT', price: '0.2046' },
+[0]   { symbol: 'SUEDEUSDT', price: '0.005309' },
+[0]   { symbol: 'EVERUSDT', price: '0.01505' },
+[0]   { symbol: 'RINGAIUSDT', price: '0.01238' },
+[0]   { symbol: 'VELAAIUSDT', price: '0.02084' },
+[0]   { symbol: 'HANDYUSDT', price: '0.0013999' },
+[0]   { symbol: 'OZONEUSDT', price: '0.00020369' },
+[0]   { symbol: 'TUAUSDT', price: '0.0001016' },
+[0]   { symbol: 'MYTHUSDT', price: '0.1436' },
+[0]   { symbol: 'TPROUSDT', price: '0.002504' },
+[0]   { symbol: 'DONKEYUSDT', price: '0.002201' },
+[0]   { symbol: 'MAIVUSDT', price: '0.0019999' },
+[0]   { symbol: 'OOKIUSDT', price: '0.0000291' },
+[0]   { symbol: 'DFUSDT', price: '0.04342' },
+[0]   { symbol: 'BOSONUSDT', price: '0.10588' },
+[0]   { symbol: 'SKAIUSDT', price: '0.0049' },
+[0]   { symbol: 'DOLZUSDT', price: '0.0064' },
+[0]   { symbol: 'MIRAIUSDT', price: '0.01431' },
+[0]   { symbol: 'UBXUSDT', price: '0.000003909' },
+[0]   { symbol: 'NFTUSDT', price: '0.0000004213' },
+[0]   { symbol: 'ALEOUSDT', price: '0.1913' },
+[0]   { symbol: 'CATSUSDT', price: '0.000009516' },
+[0]   { symbol: 'FATUSDT', price: '0.003992' },
+[0]   { symbol: 'SCCUSDT', price: '0.0000000000000000577' },
+[0]   { symbol: 'PURRUSDT', price: '0.2828' },
+[0]   { symbol: 'INSPUSDT', price: '0.00492' },
+[0]   { symbol: 'GHTUSDT', price: '0.03699' },
+[0]   { symbol: 'ATRSUSDT', price: '0.006745' },
+[0]   { symbol: 'IQUSDT', price: '0.003843' },
+[0]   { symbol: 'LYUMUSDT', price: '0.00177' },
+[0]   { symbol: 'GRIFFAINUSDT', price: '0.05851' },
+[0]   { symbol: 'NTRNUSDT', price: '0.10336' },
+[0]   { symbol: 'SEEDUSDT', price: '0.002517' },
+[0]   { symbol: 'MORRAUSDT', price: '0.001312' },
+[0]   { symbol: 'MUBARAKAHUSDT', price: '0.002157' },
+[0]   { symbol: 'RSRUSDT', price: '0.007034' },
+[0]   { symbol: 'NSUSDT', price: '0.17451' },
+[0]   { symbol: 'IRISUSDT', price: '0.001187' },
+[0]   { symbol: 'QTUMBTC', price: '0.00001952' },
+[0]   { symbol: 'IDEAUSDT', price: '0.0001609' },
+[0]   { symbol: 'RZRUSDT', price: '0.0002585' },
+[0]   { symbol: 'BIOUSDT', price: '0.06434' },
+[0]   { symbol: 'EMRLDUSDT', price: '0.001152' },
+[0]   { symbol: 'AIDOGEUSDT', price: '0.00000000012446' },
+[0]   { symbol: 'SOLUSDT', price: '155.18' },
+[0]   { symbol: 'NAPUSDT', price: '0.6894' },
+[0]   { symbol: 'QLINDOUSDT', price: '0.0009048' },
+[0]   { symbol: 'HRTUSDT', price: '0.000461' },
+[0]   { symbol: 'KDAUSDT', price: '0.4738' },
+[0]   { symbol: 'XENUSDT', price: '0.00000004313' },
+[0]   { symbol: 'PNICUSDT', price: '0.001271' },
+[0]   { symbol: 'DOVUUSDT', price: '0.002484' },
+[0]   { symbol: 'INJUSDT', price: '13.45' },
+[0]   { symbol: 'LABUBUUSDT', price: '0.021246' },
+[0]   { symbol: 'GELUSDT', price: '0.07893' },
+[0]   { symbol: 'ETCBTC', price: '0.0001582' },
+[0]   { symbol: 'JUSTICEUSDT', price: '0.00007338' },
+[0]   { symbol: 'FIOUSDT', price: '0.01569' },
+[0]   { symbol: 'HIFIUSDT', price: '0.07978' },
+[0]   { symbol: 'SOPHUSDT', price: '0.04982' },
+[0]   { symbol: 'DEPINUSDT', price: '0.000000951' },
+[0]   { symbol: 'RWAIUSDT', price: '0.00074' },
+[0]   { symbol: 'MELANIAUSDT', price: '0.3035' },
+[0]   { symbol: 'EURUSDT', price: '1.1415' },
+[0]   { symbol: 'REFUSDT', price: '0.0795' },
+[0]   { symbol: 'DOBOUSDT', price: '0.05132' },
+[0]   { symbol: 'OBORTECHUSDT', price: '0.006' },
+[0]   { symbol: 'ONDOUSDT', price: '0.84432' },
+[0]   { symbol: 'DKAUSDT', price: '0.01647' },
+[0]   { symbol: 'BILLIONVIEWUSDT', price: '0.006819' },
+[0]   { symbol: 'LIXXUSDT', price: '0.0003568' },
+[0]   { symbol: 'KANGUSDT', price: '0.001012' },
+[0]   { symbol: 'SABAIUSDT', price: '0.013192' },
+[0]   { symbol: 'STOOSUSDT', price: '0.7416' },
+[0]   { symbol: 'GOATUSDT', price: '0.12531' },
+[0]   { symbol: 'TGT1USDT', price: '0.026503' },
+[0]   { symbol: 'BONDUSDT', price: '0.1997' },
+[0]   { symbol: 'OVERUSDT', price: '0.028' },
+[0]   { symbol: 'OKMUSDT', price: '0.000049121' },
+[0]   { symbol: 'TRXUSDC', price: '0.283678' },
+[0]   { symbol: 'TFIUSDT', price: '0.00452' },
+[0]   ... 2361 more items
+[0] ]
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 3.648 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 10.248 ms - 2442[0m
+[0] [0mGET /user/bets?page=1 [32m200[0m 98.757 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 4.265 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 71.114 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 12.862 ms - 2442[0m
+[0] [0mGET /user/bets?page=1 [32m200[0m 9.424 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 2.339 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [0mGET /auth/me [32m200[0m 6.360 ms - 362[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 3.290 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [0mGET /auth/me [32m200[0m 3.509 ms - 362[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 2.542 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 4.790 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 5.267 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 3.363 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 5.034 ms - 2442[0m
+[0] [0mGET /user/bets?page=1 [32m200[0m 101.865 ms - 2442[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /trading/crypto/withdraw [32m200[0m 1.046 ms - 3306[0m
+[0] [0mPOST /trading/crypto/deposit/wallet [32m200[0m 12.574 ms - 206[0m
+[0] [0mGET /trading/crypto/withdraw/transactions [32m200[0m 6.382 ms - 40[0m
+[0] [0mGET /discord [32m200[0m 2.737 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 2.991 ms - 542[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] BNB networks: [
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] BTC networks: [
+[0]   { network: 'Bitcoin(BTC)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] TRX networks: [ { network: 'Tron(TRC20)', enabled: true, chainMatch: true } ]
+[0] ETH networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   { network: 'zkSync Lite', enabled: true, chainMatch: false },
+[0]   { network: 'Starknet(STARK)', enabled: true, chainMatch: false },
+[0]   { network: 'Linea', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false },
+[0]   { network: 'MORPH', enabled: true, chainMatch: false },
+[0]   { network: 'MINTCHAIN', enabled: false, chainMatch: false },
+[0]   { network: 'HEMI', enabled: false, chainMatch: false },
+[0]   { network: 'MINDNETWORK', enabled: false, chainMatch: false }
+[0] ]
+[0] XRP networks: [ { network: 'Ripple(XRP)', enabled: true, chainMatch: true } ]
+[0] DOGE networks: [
+[0]   { network: 'Dogecoin(DOGE)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] USDT networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Tron(TRC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'OKT', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'Toncoin(TON)', enabled: true, chainMatch: false },
+[0]   { network: 'CELO', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'Kaia (KAIA)', enabled: true, chainMatch: false }
+[0] ]
+[0] USDC networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Algorand(ALGO)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'SONIC', enabled: true, chainMatch: false },
+[0]   { network: 'Sui', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false }
+[0] ]
+[0] LTC networks: [ { network: 'Litecoin(LTC)', enabled: true, chainMatch: true } ]
+[0] [
+[0]   { symbol: 'BROCKUSDT', price: '0.01494' },
+[0]   { symbol: 'BNTUSDT', price: '0.6329' },
+[0]   { symbol: 'NTXUSDT', price: '0.01301' },
+[0]   { symbol: 'DEVVEUSDT', price: '0.5604' },
+[0]   { symbol: 'XOXNOUSDT', price: '0.02503' },
+[0]   { symbol: 'HTRUSDT', price: '0.01916' },
+[0]   { symbol: 'VOXELUSDT', price: '0.05766' },
+[0]   { symbol: 'LOKAUSDT', price: '0.05676' },
+[0]   { symbol: 'DEFIUSDT', price: '0.002692' },
+[0]   { symbol: 'TURBOUSDC', price: '0.004388' },
+[0]   { symbol: 'SSEUSDT', price: '0.007234' },
+[0]   { symbol: 'F3USDT', price: '0.00256' },
+[0]   { symbol: 'MANEKIUSDT', price: '0.0013347' },
+[0]   { symbol: 'ARUSDT', price: '6.619' },
+[0]   { symbol: 'BFICUSDT', price: '0.6795' },
+[0]   { symbol: 'SNTUSDT', price: '0.03009' },
+[0]   { symbol: 'BAKEUSDT', price: '0.1108' },
+[0]   { symbol: 'PUAIUSDT', price: '0' },
+[0]   { symbol: 'IXSUSDT', price: '0.2137' },
+[0]   { symbol: 'ROAMUSDT', price: '0.2041' },
+[0]   { symbol: 'SUEDEUSDT', price: '0.005298' },
+[0]   { symbol: 'EVERUSDT', price: '0.01505' },
+[0]   { symbol: 'RINGAIUSDT', price: '0.01238' },
+[0]   { symbol: 'VELAAIUSDT', price: '0.02085' },
+[0]   { symbol: 'HANDYUSDT', price: '0.0013999' },
+[0]   { symbol: 'OZONEUSDT', price: '0.00019431' },
+[0]   { symbol: 'TUAUSDT', price: '0.0001023' },
+[0]   { symbol: 'MYTHUSDT', price: '0.1432' },
+[0]   { symbol: 'TPROUSDT', price: '0.002501' },
+[0]   { symbol: 'DONKEYUSDT', price: '0.002225' },
+[0]   { symbol: 'MAIVUSDT', price: '0.0019999' },
+[0]   { symbol: 'OOKIUSDT', price: '0.00002907' },
+[0]   { symbol: 'DFUSDT', price: '0.04343' },
+[0]   { symbol: 'BOSONUSDT', price: '0.10588' },
+[0]   { symbol: 'SKAIUSDT', price: '0.0049' },
+[0]   { symbol: 'DOLZUSDT', price: '0.0064' },
+[0]   { symbol: 'MIRAIUSDT', price: '0.01425' },
+[0]   { symbol: 'UBXUSDT', price: '0.000003912' },
+[0]   { symbol: 'NFTUSDT', price: '0.0000004217' },
+[0]   { symbol: 'ALEOUSDT', price: '0.1897' },
+[0]   { symbol: 'CATSUSDT', price: '0.000009586' },
+[0]   { symbol: 'FATUSDT', price: '0.003955' },
+[0]   { symbol: 'SCCUSDT', price: '0.000000000000000055' },
+[0]   { symbol: 'PURRUSDT', price: '0.2756' },
+[0]   { symbol: 'INSPUSDT', price: '0.00487' },
+[0]   { symbol: 'GHTUSDT', price: '0.03699' },
+[0]   { symbol: 'ATRSUSDT', price: '0.006745' },
+[0]   { symbol: 'IQUSDT', price: '0.003839' },
+[0]   { symbol: 'LYUMUSDT', price: '0.001738' },
+[0]   { symbol: 'GRIFFAINUSDT', price: '0.05816' },
+[0]   { symbol: 'NTRNUSDT', price: '0.1032' },
+[0]   { symbol: 'SEEDUSDT', price: '0.002518' },
+[0]   { symbol: 'MORRAUSDT', price: '0.001312' },
+[0]   { symbol: 'MUBARAKAHUSDT', price: '0.0021794' },
+[0]   { symbol: 'RSRUSDT', price: '0.007012' },
+[0]   { symbol: 'NSUSDT', price: '0.17451' },
+[0]   { symbol: 'IRISUSDT', price: '0.001189' },
+[0]   { symbol: 'QTUMBTC', price: '0.00001949' },
+[0]   { symbol: 'IDEAUSDT', price: '0.0001609' },
+[0]   { symbol: 'RZRUSDT', price: '0.0002585' },
+[0]   { symbol: 'BIOUSDT', price: '0.06401' },
+[0]   { symbol: 'EMRLDUSDT', price: '0.001152' },
+[0]   { symbol: 'AIDOGEUSDT', price: '0.00000000012425' },
+[0]   { symbol: 'SOLUSDT', price: '154.87' },
+[0]   { symbol: 'NAPUSDT', price: '0.6888' },
+[0]   { symbol: 'QLINDOUSDT', price: '0.0009048' },
+[0]   { symbol: 'HRTUSDT', price: '0.000465' },
+[0]   { symbol: 'KDAUSDT', price: '0.4785' },
+[0]   { symbol: 'XENUSDT', price: '0.00000004312' },
+[0]   { symbol: 'PNICUSDT', price: '0.001257' },
+[0]   { symbol: 'DOVUUSDT', price: '0.0024874' },
+[0]   { symbol: 'INJUSDT', price: '13.44' },
+[0]   { symbol: 'LABUBUUSDT', price: '0.02123' },
+[0]   { symbol: 'GELUSDT', price: '0.07886' },
+[0]   { symbol: 'ETCBTC', price: '0.0001582' },
+[0]   { symbol: 'JUSTICEUSDT', price: '0.00007326' },
+[0]   { symbol: 'FIOUSDT', price: '0.01568' },
+[0]   { symbol: 'HIFIUSDT', price: '0.0796' },
+[0]   { symbol: 'SOPHUSDT', price: '0.04965' },
+[0]   { symbol: 'DEPINUSDT', price: '0.000000951' },
+[0]   { symbol: 'RWAIUSDT', price: '0.000817' },
+[0]   { symbol: 'MELANIAUSDT', price: '0.3029' },
+[0]   { symbol: 'EURUSDT', price: '1.1413' },
+[0]   { symbol: 'REFUSDT', price: '0.07959' },
+[0]   { symbol: 'DOBOUSDT', price: '0.05132' },
+[0]   { symbol: 'OBORTECHUSDT', price: '0.006' },
+[0]   { symbol: 'ONDOUSDT', price: '0.84214' },
+[0]   { symbol: 'DKAUSDT', price: '0.01655' },
+[0]   { symbol: 'BILLIONVIEWUSDT', price: '0.00682' },
+[0]   { symbol: 'LIXXUSDT', price: '0.0003569' },
+[0]   { symbol: 'KANGUSDT', price: '0.001016' },
+[0]   { symbol: 'SABAIUSDT', price: '0.013199' },
+[0]   { symbol: 'STOOSUSDT', price: '0.742' },
+[0]   { symbol: 'GOATUSDT', price: '0.12503' },
+[0]   { symbol: 'TGT1USDT', price: '0.026475' },
+[0]   { symbol: 'BONDUSDT', price: '0.2002' },
+[0]   { symbol: 'OVERUSDT', price: '0.02801' },
+[0]   { symbol: 'OKMUSDT', price: '0.000049129' },
+[0]   { symbol: 'TRXUSDC', price: '0.284085' },
+[0]   { symbol: 'TFIUSDT', price: '0.00452' },
+[0]   ... 2361 more items
+[0] ]
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/transactions?page=1 [32m200[0m 2.951 ms - 546[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/transactions?page=1 [32m200[0m 5.205 ms - 546[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/transactions?page=1 [32m200[0m 2.102 ms - 546[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/transactions?page=1 [32m200[0m 4.401 ms - 546[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 3.245 ms - 2442[0m
+[0] [0mGET /slots/favorites?limit=15 [32m200[0m 10.165 ms - 1885[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots/featured?limit=15 [32m200[0m 22.422 ms - 2210[0m
+[0] [0mGET /slots/providers [32m200[0m 9.446 ms - 2252[0m
+[0] [0mGET /slots?limit=15&type=live [32m200[0m 22.856 ms - 5909[0m
+[0] [0mGET /slots?limit=15&type=video-slots&isNew=true [32m200[0m 24.133 ms - 4980[0m
+[0] [0mGET /slots?limit=20&sortBy=popularity&sortOrder=DESC [32m200[0m 31.293 ms - 6902[0m
+[0] [0mGET /slots?limit=20&type=video-slots [32m200[0m 27.674 ms - 6709[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/01JV4YB5Z6MHAZMA1B4582K6RN/profile [32m200[0m 11.028 ms - 317[0m
+[0] [0mGET /discord [32m200[0m 9.578 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 7.558 ms - 542[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /discord [32m200[0m 27.251 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 26.097 ms - 542[0m
+[0] [0mGET /user/01JV4YB5Z6MHAZMA1B4582K6RN/profile [32m200[0m 28.162 ms - 317[0m
+[0] [0mGET /discord [32m200[0m 26.426 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 20.670 ms - 542[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /discord [32m200[0m 14.606 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 12.205 ms - 542[0m
+[0] [0mGET /user/01JV4YB5Z6MHAZMA1B4582K6RN/profile [32m200[0m 23.167 ms - 317[0m
+[0] [0mGET /discord [32m200[0m 14.090 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 18.145 ms - 542[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /discord [32m200[0m 7.159 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 5.812 ms - 542[0m
+[0] [0mGET /discord [32m200[0m 8.820 ms - 23[0m
+[0] [0mGET /user/01JV4YB5Z6MHAZMA1B4582K6RN/profile [32m200[0m 53.981 ms - 317[0m
+[0] [0mGET /user/settings [32m200[0m 50.938 ms - 542[0m
+[0] BNB networks: [
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] BTC networks: [
+[0]   { network: 'Bitcoin(BTC)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] TRX networks: [ { network: 'Tron(TRC20)', enabled: true, chainMatch: true } ]
+[0] ETH networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   { network: 'zkSync Lite', enabled: true, chainMatch: false },
+[0]   { network: 'Starknet(STARK)', enabled: true, chainMatch: false },
+[0]   { network: 'Linea', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false },
+[0]   { network: 'MORPH', enabled: true, chainMatch: false },
+[0]   { network: 'MINTCHAIN', enabled: false, chainMatch: false },
+[0]   { network: 'HEMI', enabled: false, chainMatch: false },
+[0]   { network: 'MINDNETWORK', enabled: false, chainMatch: false }
+[0] ]
+[0] XRP networks: [ { network: 'Ripple(XRP)', enabled: true, chainMatch: true } ]
+[0] DOGE networks: [
+[0]   { network: 'Dogecoin(DOGE)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] USDT networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Tron(TRC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'OKT', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'Toncoin(TON)', enabled: true, chainMatch: false },
+[0]   { network: 'CELO', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'Kaia (KAIA)', enabled: true, chainMatch: false }
+[0] ]
+[0] USDC networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Algorand(ALGO)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'SONIC', enabled: true, chainMatch: false },
+[0]   { network: 'Sui', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false }
+[0] ]
+[0] LTC networks: [ { network: 'Litecoin(LTC)', enabled: true, chainMatch: true } ]
+[0] [
+[0]   { symbol: 'BROCKUSDT', price: '0.01483' },
+[0]   { symbol: 'BNTUSDT', price: '0.6321' },
+[0]   { symbol: 'NTXUSDT', price: '0.01301' },
+[0]   { symbol: 'DEVVEUSDT', price: '0.5608' },
+[0]   { symbol: 'XOXNOUSDT', price: '0.02503' },
+[0]   { symbol: 'HTRUSDT', price: '0.01916' },
+[0]   { symbol: 'VOXELUSDT', price: '0.05756' },
+[0]   { symbol: 'LOKAUSDT', price: '0.05673' },
+[0]   { symbol: 'DEFIUSDT', price: '0.002689' },
+[0]   { symbol: 'TURBOUSDC', price: '0.004323' },
+[0]   { symbol: 'SSEUSDT', price: '0.007277' },
+[0]   { symbol: 'F3USDT', price: '0.00256' },
+[0]   { symbol: 'MANEKIUSDT', price: '0.0013347' },
+[0]   { symbol: 'ARUSDT', price: '6.622' },
+[0]   { symbol: 'BFICUSDT', price: '0.6795' },
+[0]   { symbol: 'SNTUSDT', price: '0.03006' },
+[0]   { symbol: 'BAKEUSDT', price: '0.1107' },
+[0]   { symbol: 'PUAIUSDT', price: '0' },
+[0]   { symbol: 'IXSUSDT', price: '0.2187' },
+[0]   { symbol: 'ROAMUSDT', price: '0.2065' },
+[0]   { symbol: 'SUEDEUSDT', price: '0.005307' },
+[0]   { symbol: 'EVERUSDT', price: '0.01505' },
+[0]   { symbol: 'RINGAIUSDT', price: '0.01238' },
+[0]   { symbol: 'VELAAIUSDT', price: '0.02062' },
+[0]   { symbol: 'HANDYUSDT', price: '0.0013999' },
+[0]   { symbol: 'OZONEUSDT', price: '0.00019423' },
+[0]   { symbol: 'TUAUSDT', price: '0.0001016' },
+[0]   { symbol: 'MYTHUSDT', price: '0.1432' },
+[0]   { symbol: 'TPROUSDT', price: '0.0025' },
+[0]   { symbol: 'DONKEYUSDT', price: '0.002221' },
+[0]   { symbol: 'MAIVUSDT', price: '0.0018791' },
+[0]   { symbol: 'OOKIUSDT', price: '0.00002899' },
+[0]   { symbol: 'DFUSDT', price: '0.04345' },
+[0]   { symbol: 'BOSONUSDT', price: '0.10581' },
+[0]   { symbol: 'SKAIUSDT', price: '0.0049' },
+[0]   { symbol: 'DOLZUSDT', price: '0.00641' },
+[0]   { symbol: 'MIRAIUSDT', price: '0.01427' },
+[0]   { symbol: 'UBXUSDT', price: '0.000003928' },
+[0]   { symbol: 'NFTUSDT', price: '0.0000004214' },
+[0]   { symbol: 'ALEOUSDT', price: '0.1898' },
+[0]   { symbol: 'CATSUSDT', price: '0.000009536' },
+[0]   { symbol: 'FATUSDT', price: '0.003994' },
+[0]   { symbol: 'SCCUSDT', price: '0.000000000000000055' },
+[0]   { symbol: 'PURRUSDT', price: '0.2773' },
+[0]   { symbol: 'INSPUSDT', price: '0.00486' },
+[0]   { symbol: 'GHTUSDT', price: '0.03699' },
+[0]   { symbol: 'ATRSUSDT', price: '0.006745' },
+[0]   { symbol: 'IQUSDT', price: '0.003839' },
+[0]   { symbol: 'LYUMUSDT', price: '0.001738' },
+[0]   { symbol: 'GRIFFAINUSDT', price: '0.05807' },
+[0]   { symbol: 'NTRNUSDT', price: '0.10314' },
+[0]   { symbol: 'SEEDUSDT', price: '0.002518' },
+[0]   { symbol: 'MORRAUSDT', price: '0.001312' },
+[0]   { symbol: 'MUBARAKAHUSDT', price: '0.0021825' },
+[0]   { symbol: 'RSRUSDT', price: '0.00699' },
+[0]   { symbol: 'NSUSDT', price: '0.17451' },
+[0]   { symbol: 'IRISUSDT', price: '0.001188' },
+[0]   { symbol: 'QTUMBTC', price: '0.00001947' },
+[0]   { symbol: 'IDEAUSDT', price: '0.0001609' },
+[0]   { symbol: 'RZRUSDT', price: '0.0002602' },
+[0]   { symbol: 'BIOUSDT', price: '0.06414' },
+[0]   { symbol: 'EMRLDUSDT', price: '0.001152' },
+[0]   { symbol: 'AIDOGEUSDT', price: '0.00000000012395' },
+[0]   { symbol: 'SOLUSDT', price: '155.21' },
+[0]   { symbol: 'NAPUSDT', price: '0.6879' },
+[0]   { symbol: 'QLINDOUSDT', price: '0.0009048' },
+[0]   { symbol: 'HRTUSDT', price: '0.00047' },
+[0]   { symbol: 'KDAUSDT', price: '0.4761' },
+[0]   { symbol: 'XENUSDT', price: '0.00000004313' },
+[0]   { symbol: 'PNICUSDT', price: '0.001267' },
+[0]   { symbol: 'DOVUUSDT', price: '0.0025029' },
+[0]   { symbol: 'INJUSDT', price: '13.45' },
+[0]   { symbol: 'LABUBUUSDT', price: '0.021221' },
+[0]   { symbol: 'GELUSDT', price: '0.0788' },
+[0]   { symbol: 'ETCBTC', price: '0.0001579' },
+[0]   { symbol: 'JUSTICEUSDT', price: '0.00007347' },
+[0]   { symbol: 'FIOUSDT', price: '0.01568' },
+[0]   { symbol: 'HIFIUSDT', price: '0.07967' },
+[0]   { symbol: 'SOPHUSDT', price: '0.04952' },
+[0]   { symbol: 'DEPINUSDT', price: '0.000000951' },
+[0]   { symbol: 'RWAIUSDT', price: '0.000849' },
+[0]   { symbol: 'MELANIAUSDT', price: '0.3022' },
+[0]   { symbol: 'EURUSDT', price: '1.1413' },
+[0]   { symbol: 'REFUSDT', price: '0.07957' },
+[0]   { symbol: 'DOBOUSDT', price: '0.05135' },
+[0]   { symbol: 'OBORTECHUSDT', price: '0.006' },
+[0]   { symbol: 'ONDOUSDT', price: '0.8422' },
+[0]   { symbol: 'DKAUSDT', price: '0.01641' },
+[0]   { symbol: 'BILLIONVIEWUSDT', price: '0.00682' },
+[0]   { symbol: 'LIXXUSDT', price: '0.0003567' },
+[0]   { symbol: 'KANGUSDT', price: '0.001013' },
+[0]   { symbol: 'SABAIUSDT', price: '0.013192' },
+[0]   { symbol: 'STOOSUSDT', price: '0.7415' },
+[0]   { symbol: 'GOATUSDT', price: '0.12465' },
+[0]   { symbol: 'TGT1USDT', price: '0.02647' },
+[0]   { symbol: 'BONDUSDT', price: '0.2008' },
+[0]   { symbol: 'OVERUSDT', price: '0.02801' },
+[0]   { symbol: 'OKMUSDT', price: '0.00004914' },
+[0]   { symbol: 'TRXUSDC', price: '0.283867' },
+[0]   { symbol: 'TFIUSDT', price: '0.00451' },
+[0]   ... 2361 more items
+[0] ]
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /discord [32m200[0m 12.217 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 13.256 ms - 542[0m
+[0] [0mGET /discord [32m200[0m 10.580 ms - 23[0m
+[0] [0mGET /user/01JV4YB5Z6MHAZMA1B4582K6RN/profile [32m200[0m 17.656 ms - 317[0m
+[0] [0mGET /user/settings [32m200[0m 7.604 ms - 542[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /discord [32m200[0m 8.180 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 7.448 ms - 542[0m
+[0] [0mGET /user/01JV4YB5Z6MHAZMA1B4582K6RN/profile [32m200[0m 9.214 ms - 317[0m
+[0] [0mGET /discord [32m200[0m 6.048 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 6.636 ms - 542[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /discord [32m200[0m 3.900 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 2.192 ms - 542[0m
+[0] [0mGET /user/01JV4YB5Z6MHAZMA1B4582K6RN/profile [32m200[0m 7.951 ms - 317[0m
+[0] [0mGET /discord [32m200[0m 5.548 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 6.932 ms - 542[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /discord [32m200[0m 9.965 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 7.976 ms - 542[0m
+[0] [0mGET /discord [32m200[0m 4.682 ms - 23[0m
+[0] [0mGET /user/01JV4YB5Z6MHAZMA1B4582K6RN/profile [32m200[0m 8.283 ms - 317[0m
+[0] [0mGET /user/settings [32m200[0m 5.407 ms - 542[0m
+[0] [0mGET /discord [32m200[0m 7.940 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 3.343 ms - 542[0m
+[0] [0mGET /user/01JV4YB5Z6MHAZMA1B4582K6RN/profile [32m200[0m 4.235 ms - 317[0m
+[0] [0mGET /discord [32m200[0m 2.748 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 5.167 ms - 542[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /slots/favorites?limit=15 [32m200[0m 8.701 ms - 1885[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots/providers [32m200[0m 9.041 ms - 2252[0m
+[0] [0mGET /slots/featured?limit=15 [32m200[0m 23.601 ms - 2210[0m
+[0] [0mGET /slots?limit=15&type=video-slots&isNew=true [32m200[0m 24.124 ms - 4980[0m
+[0] [0mGET /slots?limit=15&type=live [32m200[0m 19.500 ms - 5909[0m
+[0] [0mGET /slots?limit=20&sortBy=popularity&sortOrder=DESC [32m200[0m 32.957 ms - 6902[0m
+[0] [0mGET /slots?limit=20&type=video-slots [32m200[0m 26.817 ms - 6709[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mPOST /slots/favorites/onlyplay/PiggyBonanzaValentine [32m200[0m 9.807 ms - 69[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mPOST /slots/favorites/hacksaw/ShaolinMaster [32m200[0m 3.379 ms - 69[0m
+[0] Socket connection request with cookie: _ga=GA1.1.98010222.1747397642;...
+[0] Socket connection request with cookie: _ga=GA1.1.98010222.1747397642;...
+[0] Socket has cookies: _ga=GA1.1.98010222.1747397642;...
+[0] Socket has cookies: _ga=GA1.1.98010222.1747397642;...
+[0] Socket auth middleware: User authenticated as ID 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] Socket connected. Authenticated: true
+[0] Socket auth middleware: User authenticated as ID 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] Socket connected. Authenticated: true
+[0] [AUTH] User 01JV4YB5Z6MHAZMA1B4582K6RN session timeout: 43200 minutes (2592000s), access token: 900s
+[0] [0mPOST /auth/refresh-token [32m200[0m 250.644 ms - 42[0m
+[0] {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [0mGET /auth/me [32m200[0m 1.436 ms - 362[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots/favorites?limit=15 [32m200[0m 28.936 ms - 2657[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots/providers [32m200[0m 11.816 ms - 2252[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots/featured?limit=15 [32m200[0m 26.296 ms - 2210[0m
+[0] [0mGET /slots?limit=15&type=video-slots&isNew=true [32m200[0m 20.516 ms - 4978[0m
+[0] [0mGET /slots?limit=20&sortBy=popularity&sortOrder=DESC [32m200[0m 27.149 ms - 6902[0m
+[0] [0mGET /slots?limit=15&type=live [32m200[0m 13.922 ms - 5909[0m
+[0] [0mGET /slots?limit=20&type=video-slots [32m200[0m 15.599 ms - 6708[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 2 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /trading/crypto/withdraw [32m200[0m 0.416 ms - 3309[0m
+[0] [0mPOST /trading/crypto/deposit/wallet [32m200[0m 6.141 ms - 206[0m
+[0] [0mGET /trading/crypto/withdraw/transactions [32m200[0m 3.840 ms - 40[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/notifications [32m200[0m 6.093 ms - 2[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [0mGET /auth/me [32m200[0m 5.086 ms - 362[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /trading/crypto/withdraw [32m200[0m 0.589 ms - 3309[0m
+[0] [0mPOST /trading/crypto/deposit/wallet [32m200[0m 9.308 ms - 206[0m
+[0] [0mPOST /trading/crypto/deposit/wallet [32m200[0m 7.137 ms - 187[0m
+[0] [0mGET /trading/crypto/withdraw/transactions [32m200[0m 5.414 ms - 40[0m
+[0] [0mPOST /trading/crypto/deposit/wallet [32m200[0m 3.576 ms - 206[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /trading/crypto/withdraw [32m200[0m 0.276 ms - 3309[0m
+[0] [0mPOST /trading/crypto/deposit/wallet [32m200[0m 5.290 ms - 206[0m
+[0] [0mGET /trading/crypto/withdraw/transactions [32m200[0m 3.215 ms - 40[0m
+[0] [0mGET /trading/crypto/withdraw/transactions [32m200[0m 2.656 ms - 40[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/notifications [32m200[0m 4.878 ms - 2[0m
+[0] [0mGET /user/01JV4YB5Z6MHAZMA1B4582K6RN/profile [32m200[0m 9.617 ms - 317[0m
+[0] [0mGET /user/transactions?page=1 [32m200[0m 6.971 ms - 546[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/bets?page=1 [32m200[0m 6.751 ms - 2442[0m
+[0] [0mGET /discord [32m200[0m 4.358 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 4.509 ms - 542[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /slots/providers [32m200[0m 2.851 ms - 2252[0m
+[0] [0mGET /slots/featured?limit=15 [32m200[0m 9.374 ms - 2210[0m
+[0] [0mGET /slots/featured?limit=48 [32m200[0m 13.121 ms - 2210[0m
+[0] [0mGET /slots/categories [32m200[0m 2.970 ms - 319[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots/providers [32m200[0m 3.853 ms - 2252[0m
+[0] [0mGET /slots/featured?limit=15 [32m200[0m 12.967 ms - 2210[0m
+[0] [0mGET /slots?sortOrder=DESC&sortBy=popularity&limit=48 [32m200[0m 18.716 ms - 16731[0m
+[0] [0mGET /slots/categories [32m200[0m 3.354 ms - 319[0m
+[0] BNB networks: [
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] BTC networks: [
+[0]   { network: 'Bitcoin(BTC)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] TRX networks: [ { network: 'Tron(TRC20)', enabled: true, chainMatch: true } ]
+[0] ETH networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   { network: 'zkSync Lite', enabled: true, chainMatch: false },
+[0]   { network: 'Starknet(STARK)', enabled: true, chainMatch: false },
+[0]   { network: 'Linea', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false },
+[0]   { network: 'MORPH', enabled: true, chainMatch: false },
+[0]   { network: 'MINTCHAIN', enabled: false, chainMatch: false },
+[0]   { network: 'HEMI', enabled: false, chainMatch: false },
+[0]   { network: 'MINDNETWORK', enabled: false, chainMatch: false }
+[0] ]
+[0] XRP networks: [ { network: 'Ripple(XRP)', enabled: true, chainMatch: true } ]
+[0] DOGE networks: [
+[0]   { network: 'Dogecoin(DOGE)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] USDT networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Tron(TRC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'OKT', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'Toncoin(TON)', enabled: true, chainMatch: false },
+[0]   { network: 'CELO', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'Kaia (KAIA)', enabled: true, chainMatch: false }
+[0] ]
+[0] USDC networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Algorand(ALGO)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'SONIC', enabled: true, chainMatch: false },
+[0]   { network: 'Sui', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false }
+[0] ]
+[0] LTC networks: [ { network: 'Litecoin(LTC)', enabled: true, chainMatch: true } ]
+[0] [
+[0]   { symbol: 'BROCKUSDT', price: '0.01482' },
+[0]   { symbol: 'BNTUSDT', price: '0.6332' },
+[0]   { symbol: 'NTXUSDT', price: '0.013' },
+[0]   { symbol: 'DEVVEUSDT', price: '0.5604' },
+[0]   { symbol: 'XOXNOUSDT', price: '0.02503' },
+[0]   { symbol: 'HTRUSDT', price: '0.01916' },
+[0]   { symbol: 'VOXELUSDT', price: '0.05757' },
+[0]   { symbol: 'LOKAUSDT', price: '0.05685' },
+[0]   { symbol: 'DEFIUSDT', price: '0.002699' },
+[0]   { symbol: 'TURBOUSDC', price: '0.004325' },
+[0]   { symbol: 'SSEUSDT', price: '0.007424' },
+[0]   { symbol: 'F3USDT', price: '0.00256' },
+[0]   { symbol: 'MANEKIUSDT', price: '0.0013347' },
+[0]   { symbol: 'ARUSDT', price: '6.626' },
+[0]   { symbol: 'BFICUSDT', price: '0.6795' },
+[0]   { symbol: 'SNTUSDT', price: '0.0301' },
+[0]   { symbol: 'BAKEUSDT', price: '0.1109' },
+[0]   { symbol: 'PUAIUSDT', price: '0' },
+[0]   { symbol: 'IXSUSDT', price: '0.219' },
+[0]   { symbol: 'ROAMUSDT', price: '0.2114' },
+[0]   { symbol: 'SUEDEUSDT', price: '0.0053' },
+[0]   { symbol: 'EVERUSDT', price: '0.01517' },
+[0]   { symbol: 'RINGAIUSDT', price: '0.01238' },
+[0]   { symbol: 'VELAAIUSDT', price: '0.02074' },
+[0]   { symbol: 'HANDYUSDT', price: '0.0013999' },
+[0]   { symbol: 'OZONEUSDT', price: '0.00019424' },
+[0]   { symbol: 'TUAUSDT', price: '0.0001022' },
+[0]   { symbol: 'MYTHUSDT', price: '0.1427' },
+[0]   { symbol: 'TPROUSDT', price: '0.002504' },
+[0]   { symbol: 'DONKEYUSDT', price: '0.002223' },
+[0]   { symbol: 'MAIVUSDT', price: '0.0018791' },
+[0]   { symbol: 'OOKIUSDT', price: '0.00002897' },
+[0]   { symbol: 'DFUSDT', price: '0.0435' },
+[0]   { symbol: 'BOSONUSDT', price: '0.10581' },
+[0]   { symbol: 'SKAIUSDT', price: '0.00488' },
+[0]   { symbol: 'DOLZUSDT', price: '0.0064' },
+[0]   { symbol: 'MIRAIUSDT', price: '0.01423' },
+[0]   { symbol: 'UBXUSDT', price: '0.000003939' },
+[0]   { symbol: 'NFTUSDT', price: '0.0000004215' },
+[0]   { symbol: 'ALEOUSDT', price: '0.1904' },
+[0]   { symbol: 'CATSUSDT', price: '0.000009584' },
+[0]   { symbol: 'FATUSDT', price: '0.003913' },
+[0]   { symbol: 'SCCUSDT', price: '0.000000000000000054' },
+[0]   { symbol: 'PURRUSDT', price: '0.2772' },
+[0]   { symbol: 'INSPUSDT', price: '0.00486' },
+[0]   { symbol: 'GHTUSDT', price: '0.03699' },
+[0]   { symbol: 'ATRSUSDT', price: '0.006745' },
+[0]   { symbol: 'IQUSDT', price: '0.003841' },
+[0]   { symbol: 'LYUMUSDT', price: '0.001738' },
+[0]   { symbol: 'GRIFFAINUSDT', price: '0.05823' },
+[0]   { symbol: 'NTRNUSDT', price: '0.10339' },
+[0]   { symbol: 'SEEDUSDT', price: '0.002519' },
+[0]   { symbol: 'MORRAUSDT', price: '0.001312' },
+[0]   { symbol: 'MUBARAKAHUSDT', price: '0.0021831' },
+[0]   { symbol: 'RSRUSDT', price: '0.007029' },
+[0]   { symbol: 'NSUSDT', price: '0.17451' },
+[0]   { symbol: 'IRISUSDT', price: '0.001187' },
+[0]   { symbol: 'QTUMBTC', price: '0.00001948' },
+[0]   { symbol: 'IDEAUSDT', price: '0.0001609' },
+[0]   { symbol: 'RZRUSDT', price: '0.0002602' },
+[0]   { symbol: 'BIOUSDT', price: '0.06433' },
+[0]   { symbol: 'EMRLDUSDT', price: '0.001152' },
+[0]   { symbol: 'AIDOGEUSDT', price: '0.0000000001245' },
+[0]   { symbol: 'SOLUSDT', price: '155.35' },
+[0]   { symbol: 'NAPUSDT', price: '0.6898' },
+[0]   { symbol: 'QLINDOUSDT', price: '0.0009048' },
+[0]   { symbol: 'HRTUSDT', price: '0.000475' },
+[0]   { symbol: 'KDAUSDT', price: '0.4775' },
+[0]   { symbol: 'XENUSDT', price: '0.00000004313' },
+[0]   { symbol: 'PNICUSDT', price: '0.001266' },
+[0]   { symbol: 'DOVUUSDT', price: '0.0025072' },
+[0]   { symbol: 'INJUSDT', price: '13.48' },
+[0]   { symbol: 'LABUBUUSDT', price: '0.021019' },
+[0]   { symbol: 'GELUSDT', price: '0.07889' },
+[0]   { symbol: 'ETCBTC', price: '0.0001583' },
+[0]   { symbol: 'JUSTICEUSDT', price: '0.00007351' },
+[0]   { symbol: 'FIOUSDT', price: '0.01569' },
+[0]   { symbol: 'HIFIUSDT', price: '0.07978' },
+[0]   { symbol: 'SOPHUSDT', price: '0.04954' },
+[0]   { symbol: 'DEPINUSDT', price: '0.000000951' },
+[0]   { symbol: 'RWAIUSDT', price: '0.000849' },
+[0]   { symbol: 'MELANIAUSDT', price: '0.3026' },
+[0]   { symbol: 'EURUSDT', price: '1.1415' },
+[0]   { symbol: 'REFUSDT', price: '0.07977' },
+[0]   { symbol: 'DOBOUSDT', price: '0.05134' },
+[0]   { symbol: 'OBORTECHUSDT', price: '0.006' },
+[0]   { symbol: 'ONDOUSDT', price: '0.84393' },
+[0]   { symbol: 'DKAUSDT', price: '0.01662' },
+[0]   { symbol: 'BILLIONVIEWUSDT', price: '0.006819' },
+[0]   { symbol: 'LIXXUSDT', price: '0.0003569' },
+[0]   { symbol: 'KANGUSDT', price: '0.001015' },
+[0]   { symbol: 'SABAIUSDT', price: '0.013218' },
+[0]   { symbol: 'STOOSUSDT', price: '0.7416' },
+[0]   { symbol: 'GOATUSDT', price: '0.12441' },
+[0]   { symbol: 'TGT1USDT', price: '0.026464' },
+[0]   { symbol: 'BONDUSDT', price: '0.2007' },
+[0]   { symbol: 'OVERUSDT', price: '0.02824' },
+[0]   { symbol: 'OKMUSDT', price: '0.000049144' },
+[0]   { symbol: 'TRXUSDC', price: '0.283788' },
+[0]   { symbol: 'TFIUSDT', price: '0.00451' },
+[0]   ... 2362 more items
+[0] ]
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots?sortOrder=DESC&sortBy=popularity&limit=48&isNew=true [32m200[0m 13.318 ms - 16647[0m
+[0] [0mGET /slots/favorites?limit=15 [32m200[0m 13.635 ms - 2657[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots/providers [32m200[0m 8.611 ms - 2252[0m
+[0] [0mGET /slots/featured?limit=15 [32m200[0m 28.007 ms - 2210[0m
+[0] [0mGET /slots?limit=15&type=video-slots&isNew=true [32m200[0m 24.632 ms - 4978[0m
+[0] [0mGET /slots?limit=15&type=live [32m200[0m 17.681 ms - 5909[0m
+[0] [0mGET /slots?limit=20&sortBy=popularity&sortOrder=DESC [32m200[0m 30.869 ms - 6902[0m
+[0] [0mGET /slots?limit=20&type=video-slots [32m200[0m 23.504 ms - 6708[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [SINGLE SLOT] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] gameData:  nolimit
+[0] [0mGET /slots/nolimit/Loner [32m200[0m 11.909 ms - 5409[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10175.75,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] Slug:  nolimit/Loner
+[0] Using settings: {
+[0]   api_login: 'f53b52c9-d300-4924-b39b-9faa55210a25-929080',
+[0]   endpoint: 'https://gs.aggregtr.com/api/system/operator',
+[0]   callback_url: 'https://novacasinobullshit.com/api/spinshield'
+[0] }
+[0] Creating SpinShield player: SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123 (original username: verylongusername123123, ID: 01JV4YB5Z6MHAZMA1B4582K6RN)
+[0] Sending request to https://gs.aggregtr.com/api/system/operator for method createPlayer
+[0] [0mGET /slots?limit=20&provider=nolimit [32m200[0m 25.560 ms - 6564[0m
+[0] Got response from createPlayer: { status: 200, statusText: 'OK' }
+[0] Attempting to launch game: {
+[0]   username: 'SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123',
+[0]   gameIdHash: 'nolimit/Loner',
+[0]   currency: 'USD',
+[0]   isDemo: false,
+[0]   callbackUrl: 'https://novacasinobullshit.com/api/spinshield'
+[0] }
+[0] Sending request to https://gs.aggregtr.com/api/system/operator for method getGame
+[0] Got response from getGame: { status: 200, statusText: 'OK' }
+[0] API Response: {
+[0]   "error": 0,
+[0]   "response": "https://fungamess.games/api/v2/WildWest/start?token=4647397f239480ac24c8072a80b518b7&userId=937650_64DX-nolimi&gameId=1030815&country=LU&lang=en&demo=0",
+[0]   "session_id": null
+[0] }
+[0] [0mPOST /slots/play/nolimit/Loner [32m200[0m 966.842 ms - 205[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] SpinShield Callback: {
+[0]   username: 'SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123',
+[0]   currency: 'USD',
+[0]   action: 'balance',
+[0]   call_id: '5379fdde-3061-4c29-9557-8b4a4b2580d4',
+[0]   timestamp: '996dc0cb4c8d062b657951a9f5107950',
+[0]   operator_id: '64',
+[0]   key: '1d27eab72bb16ff69ce6047e32dbd8ae'
+[0] }
+[0] Processing callback for username: SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123
+[0] Extracted user ID: 01JV4YB5Z6MHAZMA1B4582K6RN Base username: verylongusername123123
+[0] Using game_id 37833 from most recent session for user 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /api/spinshield?username=SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123&currency=USD&action=balance&call_id=5379fdde-3061-4c29-9557-8b4a4b2580d4&timestamp=996dc0cb4c8d062b657951a9f5107950&operator_id=64&key=1d27eab72bb16ff69ce6047e32dbd8ae [32m200[0m 5.700 ms - 29[0m
+[0] SpinShield Callback: {
+[0]   username: 'SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123',
+[0]   currency: 'USD',
+[0]   action: 'balance',
+[0]   call_id: '11549ff4-659b-4127-9f8d-6fea9d1564e6',
+[0]   timestamp: '20d7a6cfb9d9e2364d364a0566f081cd',
+[0]   operator_id: '64',
+[0]   key: 'ccf575446ddaec0f7d2038afe13adedf'
+[0] }
+[0] Processing callback for username: SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123
+[0] Extracted user ID: 01JV4YB5Z6MHAZMA1B4582K6RN Base username: verylongusername123123
+[0] Using game_id 37833 from most recent session for user 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /api/spinshield?username=SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123&currency=USD&action=balance&call_id=11549ff4-659b-4127-9f8d-6fea9d1564e6&timestamp=20d7a6cfb9d9e2364d364a0566f081cd&operator_id=64&key=ccf575446ddaec0f7d2038afe13adedf [32m200[0m 4.824 ms - 29[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] SpinShield Callback: {
+[0]   amount: '160',
+[0]   currency: 'USD',
+[0]   type: 'spin',
+[0]   action: 'debit',
+[0]   gameplay_final: '0',
+[0]   round_id: '8909953887',
+[0]   game_id: 'nolimit/Loner',
+[0]   username: 'SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123',
+[0]   session_id: '8283227b5b4b5d09bb2b8d30c4dcaab9',
+[0]   call_id: '45adf231-b594-4717-b8ec-91628c68481c',
+[0]   operator_id: '64',
+[0]   timestamp: '1749484266',
+[0]   key: '13aa8f43bc17ba351c24a09e4ae32651'
+[0] }
+[0] Processing callback for username: SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123
+[0] Extracted user ID: 01JV4YB5Z6MHAZMA1B4582K6RN Base username: verylongusername123123
+[0] [0mGET /api/spinshield?amount=160&currency=USD&type=spin&action=debit&gameplay_final=0&round_id=8909953887&game_id=nolimit%2FLoner&username=SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123&session_id=8283227b5b4b5d09bb2b8d30c4dcaab9&call_id=45adf231-b594-4717-b8ec-91628c68481c&operator_id=64&timestamp=1749484266&key=13aa8f43bc17ba351c24a09e4ae32651 [32m200[0m 7.290 ms - 29[0m
+[0] SpinShield Callback: {
+[0]   amount: '64',
+[0]   currency: 'USD',
+[0]   type: 'spin',
+[0]   action: 'credit',
+[0]   gameplay_final: '1',
+[0]   round_id: '8909953887',
+[0]   game_id: 'nolimit/Loner',
+[0]   username: 'SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123',
+[0]   session_id: '8283227b5b4b5d09bb2b8d30c4dcaab9',
+[0]   call_id: 'd950fa32-7626-4bbe-a923-db88e4edcc44',
+[0]   operator_id: '64',
+[0]   timestamp: '1749484267',
+[0]   key: 'eba66de7d61d1cb3a39c6d7d1618b595'
+[0] }
+[0] Processing callback for username: SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123
+[0] Extracted user ID: 01JV4YB5Z6MHAZMA1B4582K6RN Base username: verylongusername123123
+[0] ✅ Created bet entry for SpinShield round: 8909953887 { betAmount: 1.6, winAmount: 0.64, edge: 0.08 }
+[0] [0mGET /api/spinshield?amount=64&currency=USD&type=spin&action=credit&gameplay_final=1&round_id=8909953887&game_id=nolimit%2FLoner&username=SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123&session_id=8283227b5b4b5d09bb2b8d30c4dcaab9&call_id=d950fa32-7626-4bbe-a923-db88e4edcc44&operator_id=64&timestamp=1749484267&key=eba66de7d61d1cb3a39c6d7d1618b595 [32m200[0m 7.428 ms - 29[0m
+[0] 🎰 newBets called with: [
+[0]   {
+[0]     game: 'slot',
+[0]     amount: 1.6,
+[0]     payout: 0.64,
+[0]     user: 'verylongusername123123',
+[0]     hasGameDetails: true,
+[0]     gameName: 'Loner'
+[0]   }
+[0] ]
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [SINGLE SLOT] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] gameData:  nolimit
+[0] [0mGET /slots/nolimit/FireintheHole2 [32m200[0m 8.923 ms - 5359[0m
+[0] Slug:  nolimit/FireintheHole2
+[0] Using settings: {
+[0]   api_login: 'f53b52c9-d300-4924-b39b-9faa55210a25-929080',
+[0]   endpoint: 'https://gs.aggregtr.com/api/system/operator',
+[0]   callback_url: 'https://novacasinobullshit.com/api/spinshield'
+[0] }
+[0] Creating SpinShield player: SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123 (original username: verylongusername123123, ID: 01JV4YB5Z6MHAZMA1B4582K6RN)
+[0] Sending request to https://gs.aggregtr.com/api/system/operator for method createPlayer
+[0] Got response from createPlayer: { status: 200, statusText: 'OK' }
+[0] Attempting to launch game: {
+[0]   username: 'SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123',
+[0]   gameIdHash: 'nolimit/FireintheHole2',
+[0]   currency: 'USD',
+[0]   isDemo: false,
+[0]   callbackUrl: 'https://novacasinobullshit.com/api/spinshield'
+[0] }
+[0] Sending request to https://gs.aggregtr.com/api/system/operator for method getGame
+[0] Got response from getGame: { status: 200, statusText: 'OK' }
+[0] API Response: {
+[0]   "error": 0,
+[0]   "response": "https://fungamess.games/api/v2/WildWest/start?token=8b872c83d938d3156506967b8848fdf7&userId=937650_64DX-nolimi&gameId=1029165&country=LU&lang=en&demo=0",
+[0]   "session_id": null
+[0] }
+[0] [0mPOST /slots/play/nolimit/FireintheHole2 [32m200[0m 1134.829 ms - 205[0m
+[0] SpinShield Callback: {
+[0]   username: 'SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123',
+[0]   currency: 'USD',
+[0]   action: 'balance',
+[0]   call_id: '0acfe1c8-ac9b-4b72-a8cc-11bd2affb71e',
+[0]   timestamp: '581e98963f0d448c585ae9bd87264871',
+[0]   operator_id: '64',
+[0]   key: '23f0004c9a0e8877fa9dc4942a6ec55b'
+[0] }
+[0] Processing callback for username: SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123
+[0] Extracted user ID: 01JV4YB5Z6MHAZMA1B4582K6RN Base username: verylongusername123123
+[0] Using game_id 37819 from most recent session for user 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /api/spinshield?username=SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123&currency=USD&action=balance&call_id=0acfe1c8-ac9b-4b72-a8cc-11bd2affb71e&timestamp=581e98963f0d448c585ae9bd87264871&operator_id=64&key=23f0004c9a0e8877fa9dc4942a6ec55b [32m200[0m 6.268 ms - 29[0m
+[0] 📊 Cached bets by game type: { slot: 9, mines: 1 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] SpinShield Callback: {
+[0]   username: 'SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123',
+[0]   currency: 'USD',
+[0]   action: 'balance',
+[0]   call_id: 'ee3ddfcc-8d03-41af-8aa3-76d0ef4a9c01',
+[0]   timestamp: '751bc24c677d562075aedfc2698d3a74',
+[0]   operator_id: '64',
+[0]   key: 'f6d1612c434879bee6b8fdb596e27964'
+[0] }
+[0] Processing callback for username: SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123
+[0] Extracted user ID: 01JV4YB5Z6MHAZMA1B4582K6RN Base username: verylongusername123123
+[0] Using game_id 37819 from most recent session for user 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /api/spinshield?username=SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123&currency=USD&action=balance&call_id=ee3ddfcc-8d03-41af-8aa3-76d0ef4a9c01&timestamp=751bc24c677d562075aedfc2698d3a74&operator_id=64&key=f6d1612c434879bee6b8fdb596e27964 [32m200[0m 10.385 ms - 29[0m
+[0] SpinShield Callback: {
+[0]   amount: '100',
+[0]   currency: 'USD',
+[0]   type: 'spin',
+[0]   action: 'debit',
+[0]   gameplay_final: '0',
+[0]   round_id: '8909955909',
+[0]   game_id: 'nolimit/FireintheHole2',
+[0]   username: 'SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123',
+[0]   session_id: '2e488a4f7277abb1b539e7e84db17649',
+[0]   call_id: '76285f20-0551-41a6-988b-3797979d3690',
+[0]   operator_id: '64',
+[0]   timestamp: '1749484291',
+[0]   key: '6eb2f1d75488cd9310d04a5ac6708ef6'
+[0] }
+[0] Processing callback for username: SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123
+[0] Extracted user ID: 01JV4YB5Z6MHAZMA1B4582K6RN Base username: verylongusername123123
+[0] [0mGET /api/spinshield?amount=100&currency=USD&type=spin&action=debit&gameplay_final=0&round_id=8909955909&game_id=nolimit%2FFireintheHole2&username=SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123&session_id=2e488a4f7277abb1b539e7e84db17649&call_id=76285f20-0551-41a6-988b-3797979d3690&operator_id=64&timestamp=1749484291&key=6eb2f1d75488cd9310d04a5ac6708ef6 [32m200[0m 5.374 ms - 29[0m
+[0] SpinShield Callback: {
+[0]   amount: '0',
+[0]   currency: 'USD',
+[0]   type: 'spin',
+[0]   action: 'credit',
+[0]   gameplay_final: '1',
+[0]   round_id: '8909955909',
+[0]   game_id: 'nolimit/FireintheHole2',
+[0]   username: 'SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123',
+[0]   session_id: '2e488a4f7277abb1b539e7e84db17649',
+[0]   call_id: '07f7f0d7-6439-4f05-b615-9b8ea7325172',
+[0]   operator_id: '64',
+[0]   timestamp: '1749484292',
+[0]   key: '7b437654543389cb6c51358c59cf5f6b'
+[0] }
+[0] Processing callback for username: SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123
+[0] Extracted user ID: 01JV4YB5Z6MHAZMA1B4582K6RN Base username: verylongusername123123
+[0] ✅ Created bet entry for SpinShield round: 8909955909 { betAmount: 1, winAmount: 0, edge: 0.05 }
+[0] [0mGET /api/spinshield?amount=0&currency=USD&type=spin&action=credit&gameplay_final=1&round_id=8909955909&game_id=nolimit%2FFireintheHole2&username=SS_01JV4YB5Z6MHAZMA1B4582K6RN_verylongusername123123&session_id=2e488a4f7277abb1b539e7e84db17649&call_id=07f7f0d7-6439-4f05-b615-9b8ea7325172&operator_id=64&timestamp=1749484292&key=7b437654543389cb6c51358c59cf5f6b [32m200[0m 6.891 ms - 29[0m
+[0] 🎰 newBets called with: [
+[0]   {
+[0]     game: 'slot',
+[0]     amount: 1,
+[0]     payout: 0,
+[0]     user: 'verylongusername123123',
+[0]     hasGameDetails: true,
+[0]     gameName: 'Fire in the Hole 2'
+[0]   }
+[0] ]
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /slots/favorites?limit=15 [32m200[0m 16.218 ms - 2657[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10173.79,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots/providers [32m200[0m 10.637 ms - 2252[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10173.79,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10173.79,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots/featured?limit=15 [32m200[0m 23.400 ms - 2210[0m
+[0] [SLOTS] User from req.user: {
+[0]   id: '01JV4YB5Z6MHAZMA1B4582K6RN',
+[0]   email: '123@protonmail.com',
+[0]   username: 'verylongusername123123',
+[0]   avatar: 'https://img.freepik.com/free-vector/cute-astronaut-playing-vr-game-with-controller-cartoon-vector-icon-illustration-science-technology_138676-13977.jpg?semt=ais_hybrid&w=740',
+[0]   perms: 4,
+[0]   banned: 0,
+[0]   balance: 10173.79,
+[0]   xp: 2273166,
+[0]   role: 'OWNER'
+[0] }
+[0] [SLOTS] User ID: 01JV4YB5Z6MHAZMA1B4582K6RN
+[0] [0mGET /slots?limit=20&sortBy=popularity&sortOrder=DESC [32m200[0m 24.639 ms - 6902[0m
+[0] [0mGET /slots?limit=15&type=video-slots&isNew=true [32m200[0m 15.880 ms - 4978[0m
+[0] [0mGET /slots?limit=15&type=live [32m200[0m 12.654 ms - 5909[0m
+[0] [0mGET /slots?limit=20&type=video-slots [32m200[0m 26.521 ms - 6708[0m
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 1 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] [0mGET /user/01JV4YB5Z6MHAZMA1B4582K6RN/profile [32m200[0m 3.848 ms - 317[0m
+[0] [0mGET /user/bets?page=1 [32m200[0m 4.673 ms - 2573[0m
+[0] [0mGET /discord [32m200[0m 3.831 ms - 23[0m
+[0] [0mGET /user/settings [32m200[0m 3.373 ms - 542[0m
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients

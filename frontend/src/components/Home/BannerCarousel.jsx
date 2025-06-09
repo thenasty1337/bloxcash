@@ -69,7 +69,7 @@ const BannerCarousel = (props) => {
         if (isAutoPlaying()) {
             autoPlayInterval = setInterval(() => {
                 nextSlide();
-            }, 600000000); // Change slide every 6 seconds
+            }, 6000); // Change slide every 6 seconds
         } else {
             clearInterval(autoPlayInterval);
         }

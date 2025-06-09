@@ -23,7 +23,7 @@ router.post('/2fa', apiLimiter, async (req, res) => {
     if (!user['2fa']) {
     
         const secret = speakeasy.generateSecret({
-            name: `BloxClash (${user.username})`
+            name: `Nova Casino (${user.username})`
         });
 
         await sql.query('UPDATE users SET 2fa = ? WHERE id = ?', [secret.base32, req.user.id]);

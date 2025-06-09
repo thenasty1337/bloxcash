@@ -25,7 +25,7 @@ module.exports = {
                 if (!user || !user.elegible) {
                     return interaction.reply({ content: 'You are not elegible.', ephemeral: true });
                 } else if (!user.id) {
-                    return interaction.reply({ content: 'You have not linked your discord account to BloxClash.com yet. You can do so in https://bloxclash.com/profile/settings', ephemeral: true });
+                    return interaction.reply({ content: 'You have not linked your discord account to Nova Casino.com yet. You can do so in https://bloxclash.com/profile/settings', ephemeral: true });
                 }
 
                 const min = 10;

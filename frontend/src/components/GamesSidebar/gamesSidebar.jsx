@@ -457,16 +457,7 @@ function GamesSidebar(props) {
                     </A>
                   )}
 
-                  {props.user && (
-                    <A href="/surveys" class={`game-item ${isActive('/surveys') ? 'active' : ''}`} activeClass="" inactiveClass="" title="Surveys">
-                      <div class="item-left">
-                        <div class="game-icon">
-                          <TbFileDescription size={18} />
-                        </div>
-                        <span class="game-text">Surveys</span>
-                      </div>
-                    </A>
-                  )}
+                  
                 </div>
               </div>
 

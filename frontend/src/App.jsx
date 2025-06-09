@@ -786,7 +786,7 @@ function App() {
         }
 
         .center.chat-open {
-          margin-right: 300px; /* Account for chat sidebar */
+          margin-right: 290px; /* Account for chat sidebar */
         }
 
         .center::-webkit-scrollbar {

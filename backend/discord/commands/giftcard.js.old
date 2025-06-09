@@ -4,7 +4,7 @@ const { sql } = require('../../database');
 
 const data = new SlashCommandBuilder()
 	.setName('giftcard')
-	.setDescription('Create a new BloxClash gift card.')
+	.setDescription('Create a new Nova Casino gift card.')
 	.addIntegerOption(option =>
 		option.setName('amount')
 			.setDescription('The amount of robux the giftcard will be worth.')
@@ -26,7 +26,7 @@ module.exports = {
         await interaction.reply({ content: `<:robux:1056759250367565844> **${amount}**: \`${code}\``, ephemeral: true });
 
         // interaction.client.logs.giftCards.send(`<@${interaction.user.id}> created a <:robux:1056759250367565844> ${amount} gift card: \`${code}\``);
-        interaction.client.logs.giftCards.send(`BloxClash admin <@${interaction.user.id}> (\`${user.id}\`) created a <:robux:1056759250367565844> ${amount} gift card: \`${code}\``)
+        interaction.client.logs.giftCards.send(`Nova Casino admin <@${interaction.user.id}> (\`${user.id}\`) created a <:robux:1056759250367565844> ${amount} gift card: \`${code}\``)
 
     }
 };

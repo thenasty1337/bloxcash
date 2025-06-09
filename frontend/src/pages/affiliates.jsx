@@ -70,12 +70,12 @@ function Affiliates(props) {
     }
 
     function copyAffLink() {
-        navigator.clipboard.writeText(`https://bloxclash.com/?a=${code()}`);
+        navigator.clipboard.writeText(`https://novacasino.net/?a=${code()}`);
     }
 
     return (
         <>
-            <Title>BloxClash | Affiliates</Title>
+            <Title>Nova Casino | Affiliates</Title>
 
             <div class='affiliate-container fadein'>
                 <div class='affiliate-banner'>
@@ -89,7 +89,7 @@ function Affiliates(props) {
 
                     <h1 class='title'>AFFILIATES</h1>
                     <p class='desc'>
-                        INVITE PEOPLE TO BLOXCLASH TO <span class='greengradient'>EARN 10%</span> ON ALL REFERRAL WAGERS!
+                        INVITE PEOPLE TO Nova Casino TO <span class='greengradient'>EARN 10%</span> ON ALL REFERRAL WAGERS!
                         THE MORE THE USER YOU REFER WAGERS, THE MORE <span class='greengradient'>YOU EARN!</span>
                     </p>
                 </div>
@@ -156,7 +156,7 @@ function Affiliates(props) {
                         <div class='settings'>
                             <div class='setting'>
                                 <p class='tag'>YOUR REFERRAL LINK</p>
-                                <p ref={linkRef}>{code() ? `https://bloxclash.com/?a=${code()}` : `You haven't set a referral code yet!`}</p>
+                                <p ref={linkRef}>{code() ? `https://novacasino.net/?a=${code()}` : `You haven't set a referral code yet!`}</p>
 
                                 <button class='copy' onClick={() => copyAffLink()}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16">

@@ -41,7 +41,7 @@ function Profile(props) {
 
     return (
         <>
-            <Title>BloxClash | Profile</Title>
+            <Title>Nova Casino | Profile</Title>
 
             <ModalProvider>
                 <ProfileContent 
@@ -74,37 +74,53 @@ function ProfileContent(props) {
                     {/* Main Profile Section */}
                     <div class="profile-main">
                         <div class="profile-header">
-                            <div class="avatar-section">
-                                <Avatar id={props.user()?.id} xp={props.user()?.xp} height='64' avatar={props.user()?.avatar}/>
-                            </div>
-                            <div class="user-info">
-                                <h1 class="username-profile">{props.user()?.username}</h1>
-                                <div class="user-meta">
-                                    <span class="user-id">#{props.user()?.id}</span>
-                                    <Level xp={props.user()?.xp}/>
+                            <div class="profile-info">
+                                <div class="avatar-section">
+                                    <Avatar id={props.user()?.id} xp={props.user()?.xp} height='80' avatar={props.user()?.avatar}/>
+                                    <div class="level-overlay">
+                                        <Level xp={props.user()?.xp}/>
+                                    </div>
+                                </div>
+                                <div class="user-details">
+                                    <h1 class="username-profile">{props.user()?.username}</h1>
+                                    <div class="user-meta">
+                                        <span class="user-id">#{props.user()?.id}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="xp-section">
-                            <div class="xp-header">
-                                <div class="level-info">
-                                    <Level xp={xpForLevel(props.user()?.xp || 0)}/>
+                            <div class="xp-info">
+                                <div class="xp-text">
+                                    <span class="xp-label">Experience Progress</span>
+                                    <div class="xp-numbers">
+                                        <span class="xp-current">{props.getCurrentXP()?.toLocaleString()}</span>
+                                        <span class="xp-separator">/</span>
+                                        <span class="xp-total">{props.getTotalXPForNext()?.toLocaleString()}</span>
+                                        <span class="xp-unit">XP</span>
+                                    </div>
                                 </div>
-                                <div class="xp-numbers">
-                                    <span class="xp-current">{props.getCurrentXP()?.toLocaleString()}</span>
-                                    <span>/</span>
-                                    <span class="xp-total">{props.getTotalXPForNext()?.toLocaleString()}</span>
-                                </div>
-                                <div class="level-info">
-                                    <Level xp={getUserNextLevel(props.user()?.xp || 0)}/>
+                                <div class="level-progression">
+                                    <div class="level-badge current">
+                                        <Level xp={xpForLevel(props.user()?.xp || 0)}/>
+                                    </div>
+                                    <div class="level-arrow">→</div>
+                                    <div class="level-badge next">
+                                        <Level xp={getUserNextLevel(props.user()?.xp || 0)}/>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="progress-bar">
-                                <div 
-                                    class="progress-fill" 
-                                    style={{width: `${100 - progressToNextLevel(props.user()?.xp || 0)}%`}}
-                                ></div>
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div 
+                                        class="progress-fill" 
+                                        style={{width: `${100 - progressToNextLevel(props.user()?.xp || 0)}%`}}
+                                    ></div>
+                                </div>
+                                <div class="progress-percentage">
+                                    {Math.round(100 - progressToNextLevel(props.user()?.xp || 0))}%
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -248,88 +264,130 @@ function ProfileContent(props) {
 
                 /* Main Profile Section */
                 .profile-main {
-                    background: rgba(26, 35, 50, 0.7);
-                    border: 1px solid rgba(78, 205, 196, 0.15);
-                    border-radius: 16px;
-                    padding: 1.5rem;
-                    backdrop-filter: blur(10px);
+                    background: linear-gradient(135deg, rgba(24, 20, 52, 0.95), rgba(14, 11, 39, 0.9));
+                    border: 1px solid rgba(139, 120, 221, 0.3);
+                    border-radius: 20px;
+                    padding: 2rem;
+                    backdrop-filter: blur(12px);
                     display: flex;
                     flex-direction: column;
-                    gap: 1rem;
+                    gap: 1.5rem;
+                    box-shadow: 0 8px 32px rgba(139, 120, 221, 0.1);
+                    position: relative;
+                    overflow: hidden;
+                }
+
+                .profile-main::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 1px;
+                    background: linear-gradient(90deg, transparent, rgba(139, 120, 221, 0.5), transparent);
+                    z-index: 1;
                 }
 
                 .profile-header {
+                    position: relative;
+                    z-index: 2;
+                }
+
+                .profile-info {
                     display: flex;
                     align-items: center;
-                    gap: 1rem;
+                    gap: 1.5rem;
                 }
 
                 .avatar-section {
                     position: relative;
                     flex-shrink: 0;
+                    filter: drop-shadow(0 4px 12px rgba(139, 120, 221, 0.3));
                 }
 
-                .user-info {
+                .level-overlay {
+                    position: absolute;
+                    bottom: -4px;
+                    right: -4px;
+                    background: rgba(24, 20, 52, 0.95);
+                    border: 2px solid rgba(139, 120, 221, 0.4);
+                    border-radius: 12px;
+                    padding: 0.25rem 0.375rem;
+                    backdrop-filter: blur(8px);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                    transform: scale(0.85);
+                    z-index: 10;
+                }
+
+                .user-details {
                     flex: 1;
                     min-width: 0;
                 }
 
                 .username-profile {
-                    font-size: 1.75rem;
-                    font-weight: 700;
+                    font-size: 2rem;
+                    font-weight: 800;
                     color: #ffffff;
-                    margin: 0 0 0.5rem 0;
+                    margin: 0 0 0.75rem 0;
                     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                    line-height: 1.2;
+                    line-height: 1.1;
+                    background: linear-gradient(135deg, #ffffff, #e1deff);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    background-clip: text;
                 }
 
                 .user-meta {
                     display: flex;
                     align-items: center;
-                    gap: 0.75rem;
+                    gap: 1rem;
                     flex-wrap: wrap;
                 }
 
                 .user-id {
-                    background: rgba(78, 205, 196, 0.1);
-                    color: #4ecdc4;
-                    padding: 0.25rem 0.5rem;
-                    border-radius: 6px;
+                    background: rgba(139, 120, 221, 0.15);
+                    color: #c4b8ff;
+                    padding: 0.375rem 0.75rem;
+                    border-radius: 8px;
                     font-family: 'SF Mono', Monaco, monospace;
-                    font-size: 0.8rem;
-                    font-weight: 500;
-                    border: 1px solid rgba(78, 205, 196, 0.2);
+                    font-size: 0.85rem;
+                    font-weight: 600;
+                    border: 1px solid rgba(139, 120, 221, 0.3);
+                    backdrop-filter: blur(4px);
                 }
+
+
 
                 /* XP Section */
                 .xp-section {
-                    background: rgba(0, 0, 0, 0.15);
-                    border: 1px solid rgba(78, 205, 196, 0.1);
-                    border-radius: 12px;
-                    padding: 1rem;
+                    background: rgba(139, 120, 221, 0.08);
+                    border: 1px solid rgba(139, 120, 221, 0.2);
+                    border-radius: 16px;
+                    padding: 1.5rem;
                     display: flex;
                     flex-direction: column;
-                    gap: 0.75rem;
+                    gap: 1rem;
+                    backdrop-filter: blur(4px);
+                    position: relative;
                 }
 
-                .xp-header {
+                .xp-info {
                     display: flex;
-                    align-items: center;
                     justify-content: space-between;
+                    align-items: flex-start;
+                    gap: 1rem;
                 }
 
-                .level-info {
+                .xp-text {
                     display: flex;
                     flex-direction: column;
-                    align-items: center;
-                    gap: 0.25rem;
-                    transform: scale(0.85);
+                    gap: 0.5rem;
                 }
 
-                .level-text {
-                    font-size: 0.7rem;
-                    color: #8aa3b8;
-                    font-weight: 500;
+                .xp-label {
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                    color: #c4b8ff;
                     text-transform: uppercase;
                     letter-spacing: 0.5px;
                 }
@@ -337,36 +395,120 @@ function ProfileContent(props) {
                 .xp-numbers {
                     display: flex;
                     align-items: baseline;
-                    gap: 0.25rem;
+                    gap: 0.375rem;
                     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                    color: #8aa3b8;
                 }
 
                 .xp-current {
-                    font-size: 1.1rem;
-                    font-weight: 600;
+                    font-size: 1.5rem;
+                    font-weight: 700;
                     color: #ffffff;
                 }
 
+                .xp-separator {
+                    font-size: 1.25rem;
+                    color: #8aa3b8;
+                    font-weight: 400;
+                }
+
                 .xp-total {
+                    font-size: 1.25rem;
+                    font-weight: 600;
+                    color: #8b78dd;
+                }
+
+                .xp-unit {
                     font-size: 0.9rem;
                     font-weight: 500;
-                    color: #4ecdc4;
+                    color: #8aa3b8;
+                    margin-left: 0.25rem;
+                }
+
+                .level-progression {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.75rem;
+                }
+
+                .level-badge {
+                    background: rgba(139, 120, 221, 0.1);
+                    border: 1px solid rgba(139, 120, 221, 0.2);
+                    border-radius: 12px;
+                    padding: 0.5rem;
+                    backdrop-filter: blur(4px);
+                    transform: scale(0.9);
+                }
+
+                .level-badge.current {
+                    background: rgba(139, 120, 221, 0.2);
+                    border-color: rgba(139, 120, 221, 0.4);
+                }
+
+                .level-badge.next {
+                    background: rgba(139, 120, 221, 0.05);
+                    border-color: rgba(139, 120, 221, 0.15);
+                    opacity: 0.8;
+                }
+
+                .level-arrow {
+                    font-size: 1.25rem;
+                    color: #8b78dd;
+                    font-weight: 600;
+                }
+
+                .progress-container {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
                 }
 
                 .progress-bar {
-                    height: 6px;
-                    background: rgba(0, 0, 0, 0.3);
-                    border-radius: 3px;
+                    flex: 1;
+                    height: 8px;
+                    background: rgba(0, 0, 0, 0.4);
+                    border-radius: 6px;
                     overflow: hidden;
-                    border: 1px solid rgba(78, 205, 196, 0.1);
+                    border: 1px solid rgba(139, 120, 221, 0.15);
+                    position: relative;
                 }
 
                 .progress-fill {
                     height: 100%;
-                    background: linear-gradient(90deg, #4ecdc4, #44a08d);
-                    border-radius: 3px;
-                    transition: width 0.8s ease;
+                    background: linear-gradient(90deg, #8b78dd, #c4b8ff, #8b78dd);
+                    background-size: 200% 100%;
+                    border-radius: 6px;
+                    transition: width 1s ease;
+                    animation: shimmer 2s ease-in-out infinite;
+                    position: relative;
+                }
+
+                .progress-fill::after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                    animation: progress-shine 2s ease-in-out infinite;
+                }
+
+                .progress-percentage {
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                    color: #8b78dd;
+                    min-width: 2.5rem;
+                    text-align: right;
+                }
+
+                @keyframes shimmer {
+                    0%, 100% { background-position: 200% 0; }
+                    50% { background-position: -200% 0; }
+                }
+
+                @keyframes progress-shine {
+                    0% { transform: translateX(-100%); }
+                    100% { transform: translateX(100%); }
                 }
 
                 /* Content Grid */
@@ -378,8 +520,8 @@ function ProfileContent(props) {
 
                 /* Stats Container */
                 .stats-container {
-                    background: rgba(26, 35, 50, 0.7);
-                    border: 1px solid rgba(78, 205, 196, 0.15);
+                    background: rgba(24, 20, 52, 0.8);
+                    border: 1px solid rgba(139, 120, 221, 0.2);
                     border-radius: 16px;
                     padding: 1.25rem;
                     backdrop-filter: blur(10px);
@@ -421,16 +563,16 @@ function ProfileContent(props) {
                 }
 
                 .stat-card {
-                    background: rgba(78, 205, 196, 0.04);
-                    border: 1px solid rgba(78, 205, 196, 0.1);
+                    background: rgba(139, 120, 221, 0.04);
+                    border: 1px solid rgba(139, 120, 221, 0.1);
                     border-radius: 10px;
                     padding: 1rem;
                     transition: all 0.2s ease;
                 }
 
                 .stat-card:hover {
-                    background: rgba(78, 205, 196, 0.08);
-                    border-color: rgba(78, 205, 196, 0.2);
+                    background: rgba(139, 120, 221, 0.08);
+                    border-color: rgba(139, 120, 221, 0.2);
                     transform: translateX(2px);
                 }
 
@@ -444,13 +586,13 @@ function ProfileContent(props) {
                 .stat-icon-wrapper {
                     width: 32px;
                     height: 32px;
-                    background: rgba(78, 205, 196, 0.1);
-                    border: 1px solid rgba(78, 205, 196, 0.2);
+                    background: rgba(139, 120, 221, 0.1);
+                    border: 1px solid rgba(139, 120, 221, 0.2);
                     border-radius: 8px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    color: #4ecdc4;
+                    color: #8b78dd;
                     flex-shrink: 0;
                 }
 
@@ -485,7 +627,7 @@ function ProfileContent(props) {
                 }
 
                 .profit-positive {
-                    color: #4ecdc4;
+                    color: #8b78dd;
                 }
 
                 .profit-negative {
@@ -494,8 +636,8 @@ function ProfileContent(props) {
 
                 /* Navigation */
                 .nav-container {
-                    background: rgba(26, 35, 50, 0.7);
-                    border: 1px solid rgba(78, 205, 196, 0.15);
+                    background: rgba(24, 20, 52, 0.8);
+                    border: 1px solid rgba(139, 120, 221, 0.2);
                     border-radius: 16px;
                     padding: 1.25rem;
                     backdrop-filter: blur(10px);
@@ -531,21 +673,21 @@ function ProfileContent(props) {
                 }
 
                 .nav-item:hover {
-                    background: rgba(78, 205, 196, 0.08);
+                    background: rgba(139, 120, 221, 0.08);
                     color: #ffffff;
                     transform: translateX(2px);
                 }
 
                 .nav-item.active {
-                    background: rgba(78, 205, 196, 0.15);
-                    color: #4ecdc4;
-                    border: 1px solid rgba(78, 205, 196, 0.3);
+                    background: rgba(139, 120, 221, 0.15);
+                    color: #8b78dd;
+                    border: 1px solid rgba(139, 120, 221, 0.3);
                 }
 
                 /* Content Section */
                 .content-section {
-                    background: rgba(26, 35, 50, 0.7);
-                    border: 1px solid rgba(78, 205, 196, 0.15);
+                    background: rgba(24, 20, 52, 0.8);
+                    border: 1px solid rgba(139, 120, 221, 0.2);
                     border-radius: 16px;
                     backdrop-filter: blur(10px);
                     min-height: 400px;
@@ -581,27 +723,48 @@ function ProfileContent(props) {
                     }
 
                     .profile-main {
-                        padding: 1.25rem;
+                        padding: 1.5rem;
                     }
 
-                    .profile-header {
+                    .profile-info {
                         flex-direction: column;
                         text-align: center;
-                        gap: 0.75rem;
+                        gap: 1rem;
                     }
 
                     .username-profile {
-                        font-size: 1.5rem;
+                        font-size: 1.75rem;
                     }
 
                     .user-meta {
                         justify-content: center;
-                    }
-
-                    .xp-header {
                         flex-direction: column;
                         gap: 0.75rem;
+                    }
+
+                    .xp-info {
+                        flex-direction: column;
+                        gap: 1rem;
                         text-align: center;
+                    }
+
+                    .level-progression {
+                        justify-content: center;
+                    }
+
+                    .xp-numbers {
+                        justify-content: center;
+                    }
+
+                    .progress-container {
+                        flex-direction: column;
+                        gap: 0.75rem;
+                        align-items: stretch;
+                    }
+
+                    .progress-percentage {
+                        text-align: center;
+                        min-width: auto;
                     }
 
                     .stats-container,
@@ -625,24 +788,48 @@ function ProfileContent(props) {
                     }
 
                     .profile-main {
-                        padding: 1rem;
+                        padding: 1.25rem;
+                        gap: 1.25rem;
                     }
 
                     .username-profile {
-                        font-size: 1.375rem;
+                        font-size: 1.5rem;
+                    }
+
+                    .user-id {
+                        font-size: 0.8rem;
+                        padding: 0.3rem 0.6rem;
+                    }
+
+                    .xp-section {
+                        padding: 1.25rem;
                     }
 
                     .xp-current {
-                        font-size: 1rem;
+                        font-size: 1.25rem;
+                    }
+
+                    .xp-separator, .xp-total {
+                        font-size: 1.1rem;
+                    }
+
+                    .level-progression {
+                        gap: 0.5rem;
+                    }
+
+                    .level-badge {
+                        padding: 0.375rem;
+                        transform: scale(0.8);
+                    }
+
+                    .level-overlay {
+                        transform: scale(0.75);
+                        bottom: -2px;
+                        right: -2px;
                     }
 
                     .stat-value {
                         font-size: 1rem;
-                    }
-
-                    .user-meta {
-                        flex-direction: column;
-                        gap: 0.5rem;
                     }
 
                     .content-grid {

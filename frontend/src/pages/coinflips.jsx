@@ -121,9 +121,9 @@ function Coinflips(props) {
 
     return (
         <>
-            <Title>BloxClash | Coinflips</Title>
+            <Title>Nova Casino | Coinflips</Title>
             <Meta name='title' content='Coinflip'></Meta>
-            <Meta name='description' content='Flip Limiteds And Robux For Free On BloxClash, Make Free Robux And Win Conflips!'></Meta>
+            <Meta name='description' content='Flip Limiteds And Robux For Free On Nova Casino, Make Free Robux And Win Conflips!'></Meta>
 
             {create() && (
                 <CreateCoinflip close={() => setCreate(false)} setViewing={setViewing}/>

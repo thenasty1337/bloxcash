@@ -5,9 +5,9 @@ import {Meta, Title} from "@solidjs/meta";
 function Cases(props) {
     return (
         <>
-            <Title>BloxClash | Cases</Title>
+            <Title>Nova Casino | Cases</Title>
             <Meta name='title' content='Cases'></Meta>
-            <Meta name='description' content='Win Roblox Limiteds And Robux on BloxClash With The Loot Cases In Roblox!'></Meta>
+            <Meta name='description' content='Win Roblox Limiteds And Robux on Nova Casino With The Loot Cases In Roblox!'></Meta>
 
             <div class='cases-base-container'>
                 <Livedrops/>

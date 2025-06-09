@@ -7,7 +7,7 @@ import FavoriteButton from "../components/UI/FavoriteButton";
 import {A, useSearchParams, useLocation, useNavigate} from "@solidjs/router";
 import Bets from "../components/Home/bets";
 import {useUser} from "../contexts/usercontextprovider";
-import FancySlotBanner from "../components/Slots/fancyslotbanner";
+import SlotsList from "../components/Home/slotslist";
 import ProvidersSection from "../components/Slots/ProvidersSection";
 import {Meta, Title} from "@solidjs/meta";
 import { FiFilter, FiChevronDown } from "solid-icons/fi";
@@ -52,7 +52,6 @@ function Slots(props) {
     isFavoritesPage: isFavoritesPage(),
     isFeaturedPage: isFeaturedPage()
   }), fetchSlots)
-  const [top] = createResource(fetchTopPicks)
   const [providerSearch, setProviderSearch] = createSignal("");
   const [categorySearch, setCategorySearch] = createSignal("");
   const [showProviderDropdown, setShowProviderDropdown] = createSignal(false);
@@ -253,24 +252,7 @@ function Slots(props) {
     }
   }
 
-  async function fetchTopPicks() {
-    try {
-      let res = await api(`/slots/featured`, 'GET', null, false)
-      
-      // Handle network errors gracefully
-      if (res && res.error) {
-        console.warn('Failed to fetch top picks:', res.message || res.error);
-        return []; // Return empty array instead of crashing
-      }
-      
-      if (!Array.isArray(res)) return []
 
-      return res
-    } catch (e) {
-      console.error('Unexpected error in fetchTopPicks:', e)
-      return []
-    }
-  }
 
   async function fetchCategories() {
     try {
@@ -409,9 +391,9 @@ function Slots(props) {
 
   return (
     <>
-      <Title>{isFavoritesPage() ? 'BloxClash | My Favorites' : 'BloxClash | Slots'}</Title>
+      <Title>{isFavoritesPage() ? 'Nova Casino | My Favorites' : 'Nova Casino | Slots'}</Title>
       <Meta name='title' content={isFavoritesPage() ? 'My Favorites' : 'Slots'}></Meta>
-      <Meta name='description' content={isFavoritesPage() ? 'Your favorite slots collection on BloxClash - Play your most loved games to win Robux!' : 'Play And Spin The Best Slots On BloxClash To Win Robux On Roblox Gaming!'}></Meta>
+      <Meta name='description' content={isFavoritesPage() ? 'Your favorite slots collection on Nova Casino - Play your most loved games to win Robux!' : 'Play And Spin The Best Slots On Nova Casino To Win Robux On Roblox Gaming!'}></Meta>
 
       <div class='slots-base-container' onClick={() => {
         setShowProviderDropdown(false);
@@ -420,24 +402,16 @@ function Slots(props) {
       }}>
        
 
-        <Show when={!isFavoritesPage()}>
-          <div class='our-picks'>
-            <div style={{ flex: 1, background: 'linear-gradient(270deg, #3b4376 0%, rgba(252, 163, 30, 0.00) 98.59%)', 'min-height': '1px' }}/>
-
-            <p>
-              <img src='/assets/icons/fire.svg' height='20' width='15'/>
-              OUR HOT PICKS
-            </p>
-
-            <div style={{ flex: 1, background: 'linear-gradient(90deg, #3b4376 0%, rgba(252, 163, 30, 0.00) 98.59%)', 'min-height': '1px' }}/>
-          </div>
-
-          <div className='top-five'>
-            <Show when={!top.loading}>
-              <For each={top()}>{(slot) =>
-                <FancySlotBanner {...slot}/>
-              }</For>
-            </Show>
+        <Show when={!isFavoritesPage()} >
+          <div class="hot-picks-section">
+            <SlotsList 
+              title="OUR HOT PICKS"
+              showFeaturedOnly={true}
+              limit={15}
+              viewAllLink="/slots/featured"
+              icon="/assets/icons/fire.svg"
+              user={user()}
+            />
           </div>
         </Show>
 
@@ -694,42 +668,11 @@ function Slots(props) {
           margin: 0 auto;
         }
         
-        .our-picks {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-        }
-        
-        .our-picks p {
-          height: 40px;
-          padding: 0 16px;
-          
-          line-height: 40px;
-          
-          border-radius: 8px;
-          border: 1px solid #3b43764d;
-          
-          backdrop-filter: blur(8px);
-
-          font-family: Geogrotesque Wide, sans-serif;
-          font-size: 18px;
-          font-weight: 700;
-          color: #8aa3b8;
-          
-          filter: drop-shadow(0 0 15px rgba(78, 205, 196, 0.3));
-          
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-        
-        .top-five {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
-          grid-gap: 10px;
+        .hot-picks-section {
           margin: 35px 0;
-          padding: 4px;
         }
+        
+
 
         .sort {
           width: 100%;
@@ -1376,11 +1319,6 @@ function Slots(props) {
         }
 
         @media only screen and (min-width: 768px) {
-          .top-five {
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            grid-gap: 12px;
-          }
-          
           .slots {
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             grid-gap: 12px;
@@ -1388,10 +1326,6 @@ function Slots(props) {
         }
         
         @media only screen and (min-width: 1200px) {
-          .top-five {
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-          }
-          
           .slots {
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
           }

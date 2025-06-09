@@ -69,27 +69,34 @@ function SidebarRain(props) {
             <Captcha active={showCaptcha()} close={() => setShowCaptcha(false)}/>
 
             <div className='rain-container fadein'>
-                {userRain() ? (
-                    <Avatar id={userRain()?.host?.id} xp={userRain()?.host?.xp} height='30' avatar={userRain()?.host?.avatar}/>
-                ) : (
-                    <img src='/assets/icons/logoswords.png' height='41' alt=''/>
-                )}
-                <p>{userRain()?.host?.username || 'BLOXCLASH'} <span className='gold'>HOSTED A RAIN</span></p>
-                <div className='amount-backing'>
-                    <img className='coin' src='/assets/icons/fancycoin.png' alt='' height='60'/>
-
-                    <div class='timer'>
-                        <img src='/assets/icons/timer.svg' height='20'/>
-                        <p>{formatTimeLeft(userRain() ? userTimer() : time())}</p>
-                    </div>
-
-                    <div className='amount-container'>
-                        <img src='/assets/icons/fancycoin.png' alt='' height='20'/>
-                        <p><Countup end={userRain()?.amount || rain()?.amount || 0} gray={true}/></p>
+                <div class='rain-header'>
+                    {userRain() ? (
+                        <Avatar id={userRain()?.host?.id} xp={userRain()?.host?.xp} height='24' avatar={userRain()?.host?.avatar}/>
+                    ) : (
+                        <div class='rain-icon'>
+                            <img src='/assets/game-icons/home.svg' height='24' alt=''/>
+                        </div>
+                    )}
+                    <div class='rain-info'>
+                        <span class='host-name'>{userRain()?.host?.username || 'NOVA CASINO'}</span>
+                        <span class='rain-label'>RAIN ACTIVE</span>
                     </div>
                 </div>
-                <button className='bevel-gold claim' onClick={() => handleRainJoin()} disabled={userRain()?.joined || rain()?.joined}>
-                    {(userRain()?.joined || rain()?.joined) ? 'YOU ARE IN THE RAIN' : 'CLAIM RAIN'}
+
+                <div class='rain-details'>
+                    <div class='amount-display'>
+                        <img src='/assets/cryptos/branded/USDT.svg' alt='' height='14' width='14'/>
+                        <span class='amount'><Countup end={userRain()?.amount || rain()?.amount || 0} gray={false}/></span>
+                    </div>
+                    
+                    <div class='timer-display'>
+                        <img src='/assets/icons/timer.svg' height='14' width='14'/>
+                        <span class='time'>{formatTimeLeft(userRain() ? userTimer() : time())}</span>
+                    </div>
+                </div>
+
+                <button className='claim-button' onClick={() => handleRainJoin()} disabled={userRain()?.joined || rain()?.joined}>
+                    {(userRain()?.joined || rain()?.joined) ? 'JOINED' : 'JOIN RAIN'}
                 </button>
             </div>
 
@@ -106,119 +113,144 @@ function SidebarRain(props) {
                 flex-direction: column;
                 z-index: 1;
                 
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-                
-                padding: 12px 20px;
-
-
-                color: #FFF;
-                font-family: Geogrotesque Wide, sans-serif;
-                font-size: 12px;
-                font-weight: 700;
-              }
-              
-              .amount-backing {
-                width: 100%;
-                height: 45px;
-
-                background: linear-gradient(270deg, rgba(90, 84, 153, 0) 0%, rgba(249, 172, 57, 0.31) 98.73%, rgba(90, 84, 153, 0) 100%);
-                border-radius: 0 0 8px 8px;
-
-                display: flex;
-                align-items: center;
-                justify-content: flex-end;
-                gap: 16px;
-
-                padding: 0 5px;
-              }
-
-              .amount-container {
-                width: 100%;
-                max-width: 130px;
-                height: 30px;
-
-                background: conic-gradient(from 180deg at 50% 50%, #FFDC18 -0.3deg, #B17818 72.1deg, rgba(156, 99, 15, 0.611382) 139.9deg, rgba(126, 80, 12, 0.492874) 180.52deg, rgba(102, 65, 10, 0.61) 215.31deg, #B17818 288.37deg, #FFDC18 359.62deg, #FFDC18 359.7deg, #B17818 432.1deg);
-                border-radius: 5px;
-
-                position: relative;
-
-                display: flex;
-                align-items: center;
                 justify-content: center;
                 gap: 8px;
+                
+                padding: 12px;
+                background: rgba(14, 11, 39, 0.95);
+              
+                backdrop-filter: blur(12px);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 
-                font-family: 'Geogrotesque Wide';
-                font-weight: 700;
-                color: white;
-                font-size: 13px;
-              }
-
-              .amount-container > * {
-                position: relative;
-                z-index: 1;
-              }
-
-              .amount-container:before {
-                width: calc(100% - 2px);
-                height: calc(100% - 2px);
-
-                top: 1px;
-                left: 1px;
-                position: absolute;
-                z-index: 1;
-                content: '';
-
-                background: #534141;
-                border-radius: 5px;
-              }
-
-              .coin {
-                position: absolute !important;
-                left: -15px;
-                z-index: 1;
+                color: #e8e5f3;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                font-size: 12px;
+                font-weight: 500;
               }
               
-              .rain-container > * {
-                position: relative;
-                z-index: 1;
-              }
-              
-              .timer {
+              .rain-header {
                 display: flex;
                 align-items: center;
-                gap: 4px;
-                
+                gap: 10px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid rgba(139, 120, 221, 0.2);
+              }
+              
+              .rain-icon {
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: rgba(139, 120, 221, 0.15);
+                border-radius: 6px;
+              }
+              
+              .rain-info {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+                flex: 1;
+              }
+              
+              .host-name {
+                color: #ffffff;
+                font-size: 14px;
+                font-weight: 600;
+              }
+              
+              .rain-label {
+                color: #8b78dd;
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+              }
+              
+              .rain-details {
+                display: flex;
+                gap: 6px;
+                padding: 4px 0;
+              }
+              
+              .amount-display,
+              .timer-display {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 6px 10px;
+                background: rgba(27, 23, 56, 0.6);
+                border: 1px solid rgba(139, 120, 221, 0.2);
+                border-radius: 6px;
+                backdrop-filter: blur(8px);
+                flex: 1;
+              }
+              
+              .amount {
+                color: #ffffff;
+                font-weight: 600;
+                font-size: 13px;
                 font-variant-numeric: tabular-nums;
               }
               
-              .claim {
-                width: 100%;
-                height: 25px;
-
-                font-family: Geogrotesque Wide, sans-serif;
-                font-size: 11px;
-                font-weight: 700;
+              .time {
+                color: #8b78dd;
+                font-weight: 600;
+                font-size: 12px;
+                font-variant-numeric: tabular-nums;
               }
               
-              .claim:disabled {
-                box-shadow: unset;
-                background: linear-gradient(0deg, rgba(255, 190, 24, 0.25) 0%, rgba(255, 190, 24, 0.25) 100%), linear-gradient(230deg, #1A0E33 0%, #423C7A 100%);
-                border: 1px solid #FCA31E;
-                color: #FCA31E;
+              .claim-button {
+                width: 100%;
+                height: 32px;
+                
+                background: linear-gradient(135deg, #8b78dd, #7c6bbf);
+                border: none;
+                border-radius: 6px;
+                
+                color: #ffffff;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                
+                cursor: pointer;
+                transition: all 0.2s ease;
+                box-shadow: 0 2px 8px rgba(139, 120, 221, 0.25);
+              }
+              
+              .claim-button:hover:not(:disabled) {
+                background: linear-gradient(135deg, #9d8de6, #8b78dd);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(139, 120, 221, 0.4);
+              }
+              
+              .claim-button:active:not(:disabled) {
+                transform: translateY(0);
+                box-shadow: 0 1px 4px rgba(139, 120, 221, 0.3);
+              }
+              
+              .claim-button:disabled {
+                background: rgba(139, 120, 221, 0.3) !important;
+                color: #a8a3c7 !important;
+                cursor: not-allowed;
+                transform: none !important;
+                box-shadow: none !important;
               }
               
               .fadein {
-                animation: fadein 1s forwards ease;
+                animation: fadein 0.4s forwards ease-out;
               }
               
               @keyframes fadein {
                 from {
-                  opacity: 0%;
+                  opacity: 0;
+                  transform: translateY(10px) scale(0.98);
                 }
                 to {
-                  opacity: 100%;
+                  opacity: 1;
+                  transform: translateY(0) scale(1);
                 }
               }
             `}</style>

@@ -95,8 +95,8 @@ function generateSMSCode() {
  */
 async function generate2FASecret(username) {
     const secret = speakeasy.generateSecret({
-        name: `BloxClash (${username})`,
-        issuer: 'BloxClash',
+        name: `Nova Casino (${username})`,
+        issuer: 'Nova Casino',
         length: 32
     });
     

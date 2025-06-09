@@ -5,7 +5,7 @@ function TOS(props) {
                 <div className='header-section'>
                     <h1 className='main-title'>Terms of Service</h1>
                     <p className='subtitle'>
-                        Please read these Terms of Service carefully before using the BloxClash platform. 
+                        Please read these Terms of Service carefully before using the Nova Casino platform. 
                         By accessing or using our services, you agree to be bound by these terms.
                     </p>
                     <div className='effective-date-header'>
@@ -17,7 +17,7 @@ function TOS(props) {
                 <div className='sections'>
                     <div className='intro-section'>
                         <p className='intro-text'>
-                            Welcome to BloxClash, a premier online gaming platform that provides exciting and 
+                            Welcome to Nova Casino, a premier online gaming platform that provides exciting and 
                             entertaining casino-style games for users of the Roblox ecosystem. These Terms of 
                             Service ("Terms") govern your access to and use of our website, services, games, 
                             content, and virtual currency system. By creating an account, accessing our website, 
@@ -34,7 +34,7 @@ function TOS(props) {
                         <div className='subsection'>
                             <h3 className='subsection-title'>1.1 Agreement to Terms</h3>
                             <p>
-                                By accessing or using BloxClash, you enter into a legally binding agreement with us. 
+                                By accessing or using Nova Casino, you enter into a legally binding agreement with us. 
                                 If you do not agree to these Terms, you must not access or use our services.
                             </p>
                         </div>
@@ -94,9 +94,9 @@ function TOS(props) {
                         <div className='subsection'>
                             <h3 className='subsection-title'>3.1 Virtual Currency System</h3>
                             <p>
-                                BloxClash operates with virtual currency (Robux) that has no real-world monetary value. 
+                                Nova Casino operates with virtual currency (Robux) that has no real-world monetary value. 
                                 Virtual currency cannot be exchanged for legal tender, credit, or other tangible assets 
-                                from BloxClash or any third party.
+                                from Nova Casino or any third party.
                             </p>
                         </div>
                         <div className='subsection'>
@@ -187,7 +187,7 @@ function TOS(props) {
                         <div className='subsection'>
                             <h3 className='subsection-title'>6.1 Final Sales Policy</h3>
                             <p>
-                                All purchases and transactions on BloxClash are final. We do not offer refunds 
+                                All purchases and transactions on Nova Casino are final. We do not offer refunds 
                                 for virtual currency, digital products, or services under any circumstances.
                             </p>
                         </div>
@@ -217,8 +217,8 @@ function TOS(props) {
                         <div className='subsection'>
                             <h3 className='subsection-title'>7.1 Platform Content</h3>
                             <p>
-                                All content on BloxClash, including graphics, logos, designs, text, software, 
-                                and games, is owned by BloxClash or its licensors and protected by intellectual 
+                                All content on Nova Casino, including graphics, logos, designs, text, software, 
+                                and games, is owned by Nova Casino or its licensors and protected by intellectual 
                                 property laws.
                             </p>
                         </div>
@@ -298,7 +298,7 @@ function TOS(props) {
                         <div className='subsection'>
                             <h3 className='subsection-title'>10.2 Limitation of Liability</h3>
                             <p>
-                                To the maximum extent permitted by law, BloxClash shall not be liable for any 
+                                To the maximum extent permitted by law, Nova Casino shall not be liable for any 
                                 indirect, incidental, special, consequential, or punitive damages, including 
                                 but not limited to loss of virtual currency, data, or profits.
                             </p>
@@ -318,7 +318,7 @@ function TOS(props) {
                             Indemnification
                         </h2>
                         <p>
-                            You agree to indemnify, defend, and hold harmless BloxClash, its officers, directors, 
+                            You agree to indemnify, defend, and hold harmless Nova Casino, its officers, directors, 
                             employees, agents, and affiliates from and against any claims, damages, losses, costs, 
                             and expenses (including reasonable attorneys' fees) arising from your use of our services, 
                             violation of these Terms, or infringement of any third-party rights.
@@ -383,7 +383,7 @@ function TOS(props) {
                             <h3 className='subsection-title'>14.1 Entire Agreement</h3>
                             <p>
                                 These Terms, together with our Privacy Policy and any additional policies, 
-                                constitute the entire agreement between you and BloxClash regarding your use 
+                                constitute the entire agreement between you and Nova Casino regarding your use 
                                 of our services.
                             </p>
                         </div>
@@ -418,15 +418,15 @@ function TOS(props) {
                                 our services, please contact us:
                             </p>
                             <div className='contact-details'>
-                                <p><strong>Email:</strong> legal@bloxclash.com</p>
-                                <p><strong>Support:</strong> support@bloxclash.com</p>
-                                <p><strong>Website:</strong> www.bloxclash.com</p>
+                                <p><strong>Email:</strong> legal@novacasino.net</p>
+                                <p><strong>Support:</strong> support@novacasino.net</p>
+                                <p><strong>Website:</strong> www.novacasino.net</p>
                             </div>
                         </div>
                         
                         <div className='acknowledgment'>
                             <p className='acknowledgment-text'>
-                                <strong>ACKNOWLEDGMENT:</strong> By using BloxClash, you acknowledge that you have 
+                                <strong>ACKNOWLEDGMENT:</strong> By using Nova Casino, you acknowledge that you have 
                                 read, understood, and agree to be bound by these Terms of Service and our Privacy Policy.
                             </p>
                         </div>

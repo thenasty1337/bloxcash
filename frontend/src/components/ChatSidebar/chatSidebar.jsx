@@ -79,6 +79,7 @@ function ChatSidebar(props) {
             <SidebarRain/>
           </div>
         )}
+       
 
         <div class='chat-options'>
           <Chats online={online()} ws={ws()} room={room()}/>
@@ -120,11 +121,13 @@ function ChatSidebar(props) {
 
         .chat-options {
           padding: 15px 15px;
-          border-bottom: 1px solid rgba(78, 205, 196, 0.1);
+          border-bottom: 1px solid rgba(139, 120, 221, 0.1);
 
           display: flex;
-          flex-direction: column;
-          gap: 10px;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
         }
 
         .chat-top-container {

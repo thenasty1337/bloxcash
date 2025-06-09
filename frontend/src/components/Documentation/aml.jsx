@@ -5,7 +5,7 @@ function AML(props) {
                 <div className='header-section'>
                     <h1 className='main-title'>Anti-Money Laundering (AML) Policy</h1>
                     <p className='subtitle'>
-                        Ensuring the integrity and security of the BloxClash platform through comprehensive 
+                        Ensuring the integrity and security of the Nova Casino platform through comprehensive 
                         anti-money laundering measures and regulatory compliance.
                     </p>
                 </div>
@@ -13,7 +13,7 @@ function AML(props) {
                 <div className='sections'>
                     <div className='intro-section'>
                         <p className='intro-text'>
-                            BloxClash is committed to maintaining the highest standards of integrity and compliance 
+                            Nova Casino is committed to maintaining the highest standards of integrity and compliance 
                             with all applicable laws and regulations. We recognize our responsibility to prevent money 
                             laundering, terrorist financing, and other illicit financial activities on our platform. 
                             This Anti-Money Laundering (AML) Policy establishes our framework for detecting, preventing, 
@@ -243,7 +243,7 @@ function AML(props) {
                                 please contact our AML Compliance Department:
                             </p>
                             <div className='contact-details'>
-                                <p><strong>Email:</strong> aml-compliance@bloxclash.com</p>
+                                <p><strong>Email:</strong> aml-compliance@novacasino.net</p>
                                 <p><strong>Phone:</strong> Available 24/7 through support channels</p>
                                 <p><strong>Secure Portal:</strong> Available through your account dashboard</p>
                             </div>

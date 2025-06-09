@@ -144,8 +144,8 @@ function UserDropdown(props) {
                 right: 16px;
                 width: 12px;
                 height: 12px;
-                background: rgba(26, 35, 50, 0.98);
-                border: 1px solid rgba(78, 205, 196, 0.2);
+                background: rgba(14, 11, 39, 0.98);
+                border: 1px solid rgba(139, 120, 221, 0.2);
                 border-bottom: none;
                 border-right: none;
                 transform: rotate(45deg);
@@ -157,8 +157,8 @@ function UserDropdown(props) {
               }
 
               .dropdown-content {
-                background: rgba(26, 35, 50, 0.98);
-                border: 1px solid rgba(78, 205, 196, 0.2);
+                background: rgba(14, 11, 39, 0.98);
+                border: 1px solid rgba(139, 120, 221, 0.2);
                 border-radius: 12px;
                 backdrop-filter: blur(20px);
                 box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
@@ -168,8 +168,8 @@ function UserDropdown(props) {
 
               .dropdown-header {
                 padding: 20px;
-                border-bottom: 1px solid rgba(78, 205, 196, 0.1);
-                background: linear-gradient(135deg, rgba(78, 205, 196, 0.05) 0%, rgba(78, 205, 196, 0.02) 100%);
+                border-bottom: 1px solid rgba(139, 120, 221, 0.15);
+                background: linear-gradient(135deg, rgba(139, 120, 221, 0.08) 0%, rgba(139, 120, 221, 0.03) 100%);
               }
 
               .user-info {
@@ -198,7 +198,7 @@ function UserDropdown(props) {
 
               .user-email {
                 margin: 0;
-                color: rgba(138, 163, 184, 0.8);
+                color: rgba(168, 163, 199, 0.8);
                 font-size: 13px;
                 font-weight: 500;
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -232,8 +232,8 @@ function UserDropdown(props) {
               }
 
               .menu-item:hover {
-                background: rgba(78, 205, 196, 0.1);
-                color: #4ecdc4;
+                background: rgba(139, 120, 221, 0.15);
+                color: #8b78dd;
                 transform: translateX(4px);
               }
 
@@ -245,13 +245,13 @@ function UserDropdown(props) {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                color: rgba(138, 163, 184, 0.8);
+                color: rgba(168, 163, 199, 0.8);
                 transition: all 0.2s ease;
                 flex-shrink: 0;
               }
 
               .menu-item:hover .item-icon {
-                color: #4ecdc4;
+                color: #8b78dd;
                 transform: scale(1.1);
               }
 
@@ -278,9 +278,9 @@ function UserDropdown(props) {
                 font-weight: 700;
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
-                background: rgba(78, 205, 196, 0.2);
-                color: #4ecdc4;
-                border: 1px solid rgba(78, 205, 196, 0.3);
+                background: rgba(139, 120, 221, 0.2);
+                color: #8b78dd;
+                border: 1px solid rgba(139, 120, 221, 0.3);
               }
 
               .item-badge.admin {
@@ -322,7 +322,7 @@ function UserDropdown(props) {
 
               .menu-separator {
                 height: 1px;
-                background: linear-gradient(90deg, transparent 0%, rgba(78, 205, 196, 0.2) 50%, transparent 100%);
+                background: linear-gradient(90deg, transparent 0%, rgba(139, 120, 221, 0.3) 50%, transparent 100%);
                 margin: 8px 16px;
               }
 

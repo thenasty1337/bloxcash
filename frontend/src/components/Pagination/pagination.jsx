@@ -52,8 +52,8 @@ function Pagination(props) {
                     align-items: center;
                     justify-content: space-between;
                     padding: 1rem 1.25rem;
-                    background: linear-gradient(135deg, rgba(78, 205, 196, 0.04), rgba(68, 160, 141, 0.02));
-                    border-top: 1px solid rgba(78, 205, 196, 0.08);
+                    background: linear-gradient(135deg, rgba(139, 120, 221, 0.04), rgba(124, 107, 191, 0.02));
+                    border-top: 1px solid rgba(139, 120, 221, 0.12);
                     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
                 }
 
@@ -62,8 +62,8 @@ function Pagination(props) {
                     align-items: center;
                     gap: 0.375rem;
                     padding: 0.5rem 0.875rem;
-                    background: rgba(78, 205, 196, 0.06);
-                    border: 1px solid rgba(78, 205, 196, 0.15);
+                    background: rgba(139, 120, 221, 0.08);
+                    border: 1px solid rgba(139, 120, 221, 0.2);
                     border-radius: 8px;
                     color: #ffffff;
                     font-size: 0.8rem;
@@ -75,14 +75,15 @@ function Pagination(props) {
                 }
 
                 .pagination-btn:not(.disabled):hover {
-                    background: rgba(78, 205, 196, 0.12);
-                    border-color: rgba(78, 205, 196, 0.25);
-                    color: #4ecdc4;
-                    transform: translateX(2px);
+                    background: rgba(139, 120, 221, 0.15);
+                    border-color: rgba(139, 120, 221, 0.3);
+                    color: #8b78dd;
+                    transform: translateY(-1px);
+                    box-shadow: 0 2px 8px rgba(139, 120, 221, 0.2);
                 }
 
                 .pagination-btn:not(.disabled):active {
-                    transform: translateX(1px);
+                    transform: translateY(0px);
                 }
 
                 .pagination-btn.disabled {
@@ -107,7 +108,7 @@ function Pagination(props) {
                 .page-current {
                     font-size: 0.9rem;
                     font-weight: 600;
-                    color: #4ecdc4;
+                    color: #8b78dd;
                 }
 
                 .page-divider {

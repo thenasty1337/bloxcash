@@ -141,7 +141,7 @@ function Deposits(props) {
 
   return (
     <>
-      <Title>BloxClash | Deposit</Title>
+      <Title>Nova Casino | Deposit</Title>
 
       {(challengeId()) && (
         <LimitedsMFA close={() => setChallengeId(null)} disclaimer={true} complete={async (code) => {

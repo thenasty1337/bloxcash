@@ -60,7 +60,7 @@ function Surveys(props) {
                 <SurveyIssues close={() => setIssues(false)}/>
             )}
 
-            <Title>BloxClash | Surveys</Title>
+            <Title>Nova Casino | Surveys</Title>
             <Meta name='title' content='Surveys'></Meta>
             <Meta name='description' content='Don’t Have Robux? Don’t Worry, We Got you. Make Free Robux With Our Survey Providers.'></Meta>
 

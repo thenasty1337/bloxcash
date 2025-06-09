@@ -195,7 +195,7 @@ async function getStripeUrl(token, orderId, amount) {
         const b = [
             "entity:purchase",
             {
-                "story": `BloxClash${orderId}`,
+                "story": `Nova Casino${orderId}`,
                 "value": amount,
                 "token": token
             }

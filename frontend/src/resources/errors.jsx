@@ -113,7 +113,7 @@ export const errors = {
     LISTING_REMOVED: "This listing has been removed.",
     ALREADY_USED_CODE: "You've already used this code.",
     ROBLOX_ACCOUNT_AGE_AFFILIATE: "Your Roblox account needs to be at least 90 days old to use an affiliate code.",
-    ACCOUNT_AGE_AFFILIATE: "Your BloxClash account has to be less than 30 days old to use an affiliate code.",
+    ACCOUNT_AGE_AFFILIATE: "Your Nova Casino account has to be less than 30 days old to use an affiliate code.",
     INSUFFICIENT_DEPOSIT_PROMO: "You need to deposit at least R$50 redeem promo codes.",
     MIN_WITHDRAW_ROBUX: "The minimum amount you can withdraw is R$50.",
     CANT_REDEEM_OWN_CODE: "You can't redeem your own code.",

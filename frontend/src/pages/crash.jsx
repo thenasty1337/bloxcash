@@ -174,7 +174,7 @@ function Crash(props) {
 
   return (
     <>
-      <Title>BloxClash | Crash</Title>
+      <Title>Nova Casino | Crash</Title>
 
       <div class='crash-container fadein'>
         <div class='crash-header'>

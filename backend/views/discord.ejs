@@ -1,11 +1,17 @@
 <% if (locals.error) { %>
-    <p>This Discord account is already linked to another BloxClash account.</p>
+<p>This Discord account is already linked to another Nova Casino account.</p>
 <% } else { %>
-    <p>You successfully linked your Discord account <%= discordUser.username %> to BloxClash.</p>
+<p>
+  You successfully linked your Discord account <%= discordUser.username %> to
+  Nova Casino.
+</p>
 
-    <script>
-        window.opener.postMessage({
-            type: "discord"
-        }, "*");
-    </script>
+<script>
+  window.opener.postMessage(
+    {
+      type: "discord",
+    },
+    "*"
+  );
+</script>
 <% } %>

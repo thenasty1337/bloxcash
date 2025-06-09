@@ -220,9 +220,9 @@ function Roulette(props) {
 
     return (
         <>
-            <Title>BloxClash | Roulette</Title>
+            <Title>Nova Casino | Roulette</Title>
             <Meta name='title' content='Roulette'></Meta>
-            <Meta name='description' content='Bet On Roulette And Win Free Robux on BloxClash! Play On Red, Green And Gold To Win 14x Multiplier'></Meta>
+            <Meta name='description' content='Bet On Roulette And Win Free Robux on Nova Casino! Play On Red, Green And Gold To Win 14x Multiplier'></Meta>
 
             <div class='roulette-container fadein'>
                 {/* Debug panel visible to all users for testing */}

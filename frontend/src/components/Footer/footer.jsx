@@ -11,12 +11,16 @@ function Footer(props) {
                     {/* Logo and description section */}
                     <div class='footer-brand'>
                         <div class='logo-container'>
-                            <img src='/assets/icons/logoswords.svg' height='90' width='120' alt='BloxClash Logo'/>
-                            <img src='/assets/logo/blox-clash-words.png' width='150' height='23' alt='BloxClash'/>
+                        <img 
+                                    src="/assets/logo/nova-logo.png" 
+                                    alt="Nova Casino Logo" 
+                                    class='logo-image'
+                                    style="max-width: 120px; height: auto; filter: drop-shadow(0 0 15px rgba(138, 43, 226, 0.8));"
+                                />
                         </div>
                         <p class='brand-description'>
-                            The ultimate Roblox gaming platform. Experience creative game modes, 
-                            multiple deposit methods, and provably fair gaming.
+                            The ultimate crypto gaming platform. Experience premium slots and house games 
+                            with multiple deposit methods and 100% trustable, provably fair gaming.
                         </p>
                         <div class='rating-badge'>
                             <span class='rating-stars'>★★★★★</span>
@@ -111,14 +115,14 @@ function Footer(props) {
                                     <span>Live Chat</span>
                                     <div class='live-indicator'></div>
                                 </button>
-                                <a class='footer-link' href='mailto:support@bloxclash.com' target='_blank'>
+                                <a class='footer-link' href='mailto:support@novacasino.net' target='_blank'>
                                     <div class='email-icon'>
                                         <svg width="18" height="14" viewBox="0 0 18 14" fill="none">
                                             <path d="M1 3L9 8L17 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                             <rect x="1" y="1" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
                                         </svg>
                                     </div>
-                                    <span>support@bloxclash.com</span>
+                                    <span>support@novacasino.net</span>
                                 </a>
                             </nav>
                         </div>
@@ -130,13 +134,13 @@ function Footer(props) {
                     <div class='footer-bottom-content'>
                         <div class='legal-notice'>
                             <p class='main-disclaimer'>
-                                Roblox and its individual marks and logos are trademarks of Roblox Corporation. 
-                                <strong> BloxClash</strong> is NOT endorsed, sponsored or affiliated with Roblox Corporation in any way.
+                                Steam and its individual marks and logos are trademarks of Valve Corporation. 
+                                <strong> Nova Casino</strong> is NOT endorsed, sponsored or affiliated with Valve Corporation in any way.
                             </p>
                             <div class='legal-links'>
                                 <span class='age-requirement'>18+ Only</span>
                                 <span class='separator'>•</span>
-                                <span class='copyright'>© 2024 BloxClash</span>
+                                <span class='copyright'>© 2025 Nova Casino</span>
                                 <span class='separator'>•</span>
                                 <span class='responsible-gaming'>Play Responsibly</span>
                             </div>

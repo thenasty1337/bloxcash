@@ -234,7 +234,7 @@ function Slot(props) {
 
   return (
     <>
-      <Title>BloxClash | {slot()?.name || 'Slots'}</Title>
+      <Title>Nova Casino | {slot()?.name || 'Slots'}</Title>
 
       <div class={`slot-base-container ${isFullWidth() ? 'full-width' : ''}`} ref={containerRef}>
         {user() ? (
@@ -296,12 +296,7 @@ function Slot(props) {
                 </Show>
               </div>
               
-              <div class='tags-container'>
-                <Show when={!slot.loading}>
-                  {slot()?.isNew && <span className="new-tag">NEW</span>}
-                  {slot()?.hasJackpot && <span className="jackpot-tag">JACKPOT</span>}
-                </Show>
-              </div>
+        
             </div>
           </div>
 
@@ -449,8 +444,8 @@ function Slot(props) {
           outline: unset;
           border: unset;
           border-radius: 15px;
-          border: 1px solid rgba(78, 205, 196, 0.2);
-          background-color: rgba(26, 35, 50, 0.4);
+          border: 1px solid rgba(139, 120, 221, 0.2);
+          background-color: rgba(27, 23, 56, 0.4);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -498,17 +493,17 @@ function Slot(props) {
         }
         
         .demo-btn {
-          background: rgba(45, 75, 105, 0.25);
-          border: 1px solid rgba(78, 205, 196, 0.2);
-          color: #8aa3b8;
+          background: rgba(139, 120, 221, 0.08);
+          border: 1px solid rgba(139, 120, 221, 0.2);
+          color: #a8a3c7;
         }
         
         .demo-btn:hover {
-          background: rgba(78, 205, 196, 0.15);
-          border-color: #4ecdc4;
-          color: #4ecdc4;
+          background: rgba(139, 120, 221, 0.15);
+          border-color: #8b78dd;
+          color: #8b78dd;
           transform: translateY(-2px);
-          box-shadow: 0 4px 10px rgba(78, 205, 196, 0.2);
+          box-shadow: 0 4px 10px rgba(139, 120, 221, 0.2);
         }
         
         .demo-btn:active {
@@ -523,7 +518,7 @@ function Slot(props) {
         }
 
         .game-selection-compact {
-          background: rgba(26, 35, 50, 0.6);
+          background: rgba(27, 23, 56, 0.6);
           backdrop-filter: blur(12px);
           padding: 28px;
           border-radius: 16px;
@@ -531,12 +526,12 @@ function Slot(props) {
           width: 90%;
           box-shadow: 
             0 10px 25px rgba(0, 0, 0, 0.4),
-            0 0 0 1px rgba(78, 205, 196, 0.2) inset,
-            0 0 30px rgba(78, 205, 196, 0.1) inset;
+            0 0 0 1px rgba(139, 120, 221, 0.2) inset,
+            0 0 30px rgba(139, 120, 221, 0.1) inset;
           position: relative;
           z-index: 3;
           text-align: center;
-          border: 1px solid rgba(78, 205, 196, 0.1);
+          border: 1px solid rgba(139, 120, 221, 0.1);
         }
         
         .game-selection-compact h2 {
@@ -601,33 +596,33 @@ function Slot(props) {
         }
         
         .demo-btn-fancy {
-          background: rgba(45, 75, 105, 0.25);
-          border: 1px solid rgba(78, 205, 196, 0.2);
-          color: #8aa3b8;
+          background: rgba(139, 120, 221, 0.08);
+          border: 1px solid rgba(139, 120, 221, 0.2);
+          color: #a8a3c7;
           box-shadow: 
             0 8px 15px rgba(0, 0, 0, 0.3),
-            0 0 0 1px rgba(78, 205, 196, 0.3) inset,
+            0 0 0 1px rgba(139, 120, 221, 0.3) inset,
             0 -3px 0 rgba(0, 0, 0, 0.2) inset;
           letter-spacing: 0.5px;
           backdrop-filter: blur(8px);
         }
         
         .demo-btn-fancy:hover {
-          background: rgba(78, 205, 196, 0.15);
-          border-color: #4ecdc4;
+          background: rgba(139, 120, 221, 0.15);
+          border-color: #8b78dd;
           transform: translateY(-3px);
           box-shadow: 
-            0 12px 20px rgba(78, 205, 196, 0.2),
-            0 0 0 1px rgba(78, 205, 196, 0.5) inset,
+            0 12px 20px rgba(139, 120, 221, 0.2),
+            0 0 0 1px rgba(139, 120, 221, 0.5) inset,
             0 -3px 0 rgba(0, 0, 0, 0.2) inset;
-          color: #4ecdc4;
+          color: #8b78dd;
         }
         
         .demo-btn-fancy:active {
           transform: translateY(0);
           box-shadow: 
-            0 4px 10px rgba(78, 205, 196, 0.1),
-            0 0 0 1px rgba(78, 205, 196, 0.3) inset,
+            0 4px 10px rgba(139, 120, 221, 0.1),
+            0 0 0 1px rgba(139, 120, 221, 0.3) inset,
             0 2px 0 rgba(0, 0, 0, 0.1) inset;
         }
         
@@ -667,8 +662,8 @@ function Slot(props) {
         .fallback-background {
           width: 100%;
           height: 100%;
-          background-color: rgba(26, 35, 50, 1);
-          background-image: linear-gradient(135deg, rgba(45, 75, 105, 0.5) 25%, rgba(78, 205, 196, 0.1) 25%, rgba(78, 205, 196, 0.1) 50%, rgba(45, 75, 105, 0.5) 50%, rgba(45, 75, 105, 0.5) 75%, rgba(78, 205, 196, 0.1) 75%, rgba(78, 205, 196, 0.1) 100%);
+          background-color: rgba(27, 23, 56, 1);
+          background-image: linear-gradient(135deg, rgba(139, 120, 221, 0.1) 25%, rgba(139, 120, 221, 0.05) 25%, rgba(139, 120, 221, 0.05) 50%, rgba(139, 120, 221, 0.1) 50%, rgba(139, 120, 221, 0.1) 75%, rgba(139, 120, 221, 0.05) 75%, rgba(139, 120, 221, 0.05) 100%);
           background-size: 20px 20px;
         }
         
@@ -704,9 +699,9 @@ function Slot(props) {
         }
         
         .demo-play-icon {
-          background: rgba(45, 75, 105, 0.25);
-          border: 1px solid rgba(78, 205, 196, 0.2);
-          color: #8aa3b8;
+          background: rgba(139, 120, 221, 0.08);
+          border: 1px solid rgba(139, 120, 221, 0.2);
+          color: #a8a3c7;
         }
         
         .option-details {
@@ -723,7 +718,7 @@ function Slot(props) {
         }
         
         .option-details p {
-          color: #8aa3b8;
+          color: #a8a3c7;
           font-size: 14px;
           margin: 0;
         }
@@ -758,9 +753,9 @@ function Slot(props) {
         }
         
         .info-toast {
-          background: rgba(26, 35, 50, 0.9);
-          border: 1px solid #4ecdc4;
-          color: #4ecdc4;
+          background: rgba(27, 23, 56, 0.9);
+          border: 1px solid #8b78dd;
+          color: #8b78dd;
           backdrop-filter: blur(8px);
         }
         
@@ -800,8 +795,8 @@ function Slot(props) {
           width: 100%;
           padding: 5px 10px;
           border-radius: 12px;
-          border: 1px solid rgba(78, 205, 196, 0.2);
-          background: rgba(26, 35, 50, 0.6);
+          border: 1px solid rgba(139, 120, 221, 0.2);
+          background: rgba(27, 23, 56, 0.6);
           margin: 20px 0;
           display: flex;
           align-items: center;
@@ -813,7 +808,7 @@ function Slot(props) {
         }
         
         .slot-info:hover {
-          border-color: rgba(78, 205, 196, 0.3);
+          border-color: rgba(139, 120, 221, 0.3);
           box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
         }
         
@@ -833,8 +828,8 @@ function Slot(props) {
           height: 50px;
           border-radius: 8px;
           overflow: hidden;
-          border: 1px solid rgba(78, 205, 196, 0.2);
-          background: rgba(45, 75, 105, 0.3);
+          border: 1px solid rgba(139, 120, 221, 0.2);
+          background: rgba(139, 120, 221, 0.08);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -847,7 +842,7 @@ function Slot(props) {
         }
         
         .image-placeholder {
-          color: #8aa3b8;
+          color: #a8a3c7;
           opacity: 0.6;
         }
         
@@ -879,7 +874,7 @@ function Slot(props) {
         }
         
         .provider {
-          color: #8aa3b8;
+          color: #a8a3c7;
           font-family: Geogrotesque Wide, sans-serif;
           font-size: 13px;
           font-weight: 600;
@@ -893,10 +888,10 @@ function Slot(props) {
           align-items: center;
           gap: 4px;
           padding: 4px 8px;
-          background: rgba(78, 205, 196, 0.15);
-          border: 1px solid rgba(78, 205, 196, 0.3);
+          background: rgba(139, 120, 221, 0.15);
+          border: 1px solid rgba(139, 120, 221, 0.3);
           border-radius: 6px;
-          color: #4ecdc4;
+          color: #8b78dd;
           font-family: Geogrotesque Wide, sans-serif;
           font-size: 11px;
           font-weight: 600;
@@ -945,7 +940,7 @@ function Slot(props) {
           letter-spacing: 1px;
           color: white;
           text-transform: uppercase;
-          background: linear-gradient(90deg, #8aa3b8 0%, #4ecdc4 100%);
+          background: linear-gradient(90deg, #a8a3c7 0%, #8b78dd 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           user-select: none;
@@ -974,8 +969,8 @@ function Slot(props) {
         
         .switch-container {
           display: flex;
-          background: rgba(45, 75, 105, 0.3);
-          border: 1px solid rgba(78, 205, 196, 0.2);
+          background: rgba(139, 120, 221, 0.08);
+          border: 1px solid rgba(139, 120, 221, 0.2);
           border-radius: 6px;
           padding: 2px;
           backdrop-filter: blur(8px);
@@ -996,28 +991,28 @@ function Slot(props) {
           cursor: pointer;
           transition: all 0.2s ease;
           background: transparent;
-          color: #8aa3b8;
+          color: #a8a3c7;
           white-space: nowrap;
           height: 26px;
           box-sizing: border-box;
         }
         
         .mode-btn.active {
-          background: rgba(78, 205, 196, 0.2);
-          color: #4ecdc4;
-          box-shadow: 0 2px 8px rgba(78, 205, 196, 0.2);
+          background: rgba(139, 120, 221, 0.2);
+          color: #8b78dd;
+         
         }
         
         .mode-btn:hover:not(.active) {
-          background: rgba(78, 205, 196, 0.1);
-          color: #4ecdc4;
+          background: rgba(139, 120, 221, 0.1);
+          color: #8b78dd;
         }
         
         .demo-indicator {
           display: flex;
           align-items: center;
           gap: 3px;
-          color: #8aa3b8;
+          color: #a8a3c7;
           font-size: 9px;
           font-weight: 600;
           opacity: 0.8;
@@ -1036,21 +1031,21 @@ function Slot(props) {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(45, 75, 105, 0.3);
-          border: 1px solid rgba(78, 205, 196, 0.3);
+          background: rgba(139, 120, 221, 0.08);
+          border: 1px solid rgba(139, 120, 221, 0.3);
           border-radius: 6px;
-          color: #8aa3b8;
+          color: #a8a3c7;
           cursor: pointer;
           transition: all 0.2s ease;
           backdrop-filter: blur(8px);
         }
         
         .control-btn:hover {
-          background: rgba(78, 205, 196, 0.15);
-          border-color: #4ecdc4;
+          background: rgba(139, 120, 221, 0.15);
+          border-color: #8b78dd;
           transform: translateY(-2px);
-          color: #4ecdc4;
-          box-shadow: 0 4px 12px rgba(78, 205, 196, 0.2);
+          color: #8b78dd;
+          box-shadow: 0 4px 12px rgba(139, 120, 221, 0.2);
         }
         
         .control-btn:active {
@@ -1058,9 +1053,9 @@ function Slot(props) {
         }
         
         .control-btn.active {
-          background: rgba(78, 205, 196, 0.2);
-          color: #4ecdc4;
-          border-color: rgba(78, 205, 196, 0.5);
+          background: rgba(139, 120, 221, 0.2);
+          color: #8b78dd;
+          border-color: rgba(139, 120, 221, 0.5);
         }
         
         .control-btn.liked {

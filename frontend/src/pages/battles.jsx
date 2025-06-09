@@ -120,9 +120,9 @@ function Battles(props) {
 
     return (
         <>
-            <Title>BloxClash | Battles</Title>
+            <Title>Nova Casino | Battles</Title>
             <Meta name='title' content='Battles'></Meta>
-            <Meta name='description' content='Wager Robux On BloxClash Battles And Win Big Versus Other Roblox Players, Win Limiteds!'></Meta>
+            <Meta name='description' content='Wager Robux On Nova Casino Battles And Win Big Versus Other Roblox Players, Win Limiteds!'></Meta>
 
             <div class='battles-container fadein'>
                 <div class='battles-header'>

@@ -88,6 +88,7 @@ function SideBar(props) {
           ) : (
             <SidebarRain/>
           )}
+       
         </div>
 
         <div class='options'>

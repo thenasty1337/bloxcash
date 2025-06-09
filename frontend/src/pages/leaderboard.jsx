@@ -48,9 +48,9 @@ function Leaderboard(props) {
 
     return (
         <>
-            <Title>BloxClash | Leaderboard</Title>
+            <Title>Nova Casino | Leaderboard</Title>
             <Meta name='title' content='Leaderboard'></Meta>
-            <Meta name='description' content='Bet Robux On BloxClash The Best Roblox Gaming Platform To Win Free Robux And Prizes!'></Meta>
+            <Meta name='description' content='Bet Robux On Nova Casino The Best Roblox Gaming Platform To Win Free Robux And Prizes!'></Meta>
 
             <div class='leaderboard-container fadein'>
                 <div class='leaderboard-banner'>

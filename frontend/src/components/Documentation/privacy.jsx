@@ -6,7 +6,7 @@ function Privacy(props) {
                     <h1 className='main-title'>Privacy Policy</h1>
                     <p className='subtitle'>
                         Your privacy is important to us. This Privacy Policy explains how we collect, use, 
-                        protect, and share your personal information when you use BloxClash services.
+                        protect, and share your personal information when you use Nova Casino services.
                     </p>
                     <div className='effective-date-header'>
                         <p><strong>Effective Date:</strong> January 1, 2024</p>
@@ -17,10 +17,10 @@ function Privacy(props) {
                 <div className='sections'>
                     <div className='intro-section'>
                         <p className='intro-text'>
-                            At BloxClash, we are committed to protecting your privacy and ensuring the security 
+                            At Nova Casino, we are committed to protecting your privacy and ensuring the security 
                             of your personal information. This Privacy Policy describes how we collect, use, 
                             process, and safeguard your information when you visit our website, create an account, 
-                            or use our services. By using BloxClash, you consent to the data practices described 
+                            or use our services. By using Nova Casino, you consent to the data practices described 
                             in this policy. We encourage you to read this policy carefully and contact us if you 
                             have any questions or concerns.
                         </p>
@@ -352,9 +352,9 @@ function Privacy(props) {
                                 or have concerns about how we handle your information, please contact us:
                             </p>
                             <div className='contact-details'>
-                                <p><strong>Privacy Officer:</strong> privacy@bloxclash.com</p>
-                                <p><strong>General Support:</strong> support@bloxclash.com</p>
-                                <p><strong>Data Protection Officer:</strong> dpo@bloxclash.com</p>
+                                <p><strong>Privacy Officer:</strong> privacy@novacasino.net</p>
+                                <p><strong>General Support:</strong> support@novacasino.net</p>
+                                <p><strong>Data Protection Officer:</strong> dpo@novacasino.net</p>
                                 <p><strong>Mailing Address:</strong> Available upon request</p>
                             </div>
                         </div>

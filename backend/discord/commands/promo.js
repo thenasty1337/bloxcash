@@ -4,7 +4,7 @@ const { sendLog } = require('../../utils');
 
 const data = new SlashCommandBuilder()
 	.setName('promo')
-	.setDescription('Staff only. Create a promo code for BloxClash.')
+	.setDescription('Staff only. Create a promo code for Nova Casino.')
     .addStringOption(option =>
 		option.setName('promocode')
 			.setDescription('The promocode to create.')

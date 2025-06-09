@@ -64,7 +64,7 @@ function FAQ(props) {
                 <div className='header-section'>
                     <h1 className='main-title'>Frequently Asked Questions</h1>
                     <p className='subtitle'>
-                        Find answers to common questions about BloxClash. If you can't find what you're 
+                        Find answers to common questions about Nova Casino. If you can't find what you're 
                         looking for, don't hesitate to contact our support team.
                     </p>
                 </div>
@@ -147,7 +147,7 @@ function FAQ(props) {
                                     <TbUser size={20}/>
                                 </span>
                                 <div className='question-text'>
-                                    <h3>How do I create an account on BloxClash?</h3>
+                                    <h3>How do I create an account on Nova Casino?</h3>
                                     <p>Learn about our simple registration process</p>
                                 </div>
                             </div>
@@ -159,7 +159,7 @@ function FAQ(props) {
                         <div className='dropdown-faq'>
                             <div className='dropdown-faq-content'>
                                 <p>
-                                    Creating an account on BloxClash is quick and easy! Simply click the "Sign Up" button 
+                                    Creating an account on Nova Casino is quick and easy! Simply click the "Sign Up" button 
                                     and choose from our supported authentication methods including Google, Discord, or email 
                                     registration. You can also use our OAuth integration for seamless account creation. 
                                     Once registered, you'll need to verify your email address to start playing.
@@ -191,7 +191,7 @@ function FAQ(props) {
                         <div className='dropdown-faq'>
                             <div className='dropdown-faq-content'>
                                 <p>
-                                    BloxClash supports multiple deposit methods for your convenience:
+                                    Nova Casino supports multiple deposit methods for your convenience:
                                 </p>
                                 <ul className='info-list'>
                                     <li><strong>Cryptocurrency:</strong> Bitcoin, Ethereum, Litecoin, and other popular coins</li>
@@ -259,7 +259,7 @@ function FAQ(props) {
                         <div className='dropdown-faq'>
                             <div className='dropdown-faq-content'>
                                 <p>
-                                    Absolutely! BloxClash uses a state-of-the-art provably fair system to ensure 
+                                    Absolutely! Nova Casino uses a state-of-the-art provably fair system to ensure 
                                     all game outcomes are completely transparent and cannot be manipulated by us or anyone else.
                                 </p>
                                 <ul className='info-list'>
@@ -331,7 +331,7 @@ function FAQ(props) {
 
                         <div className='dropdown-faq'>
                             <div className='dropdown-faq-content'>
-                                <p>BloxClash has several ways to share your winnings with the community:</p>
+                                <p>Nova Casino has several ways to share your winnings with the community:</p>
                                 <ul className='info-list'>
                                     <li><strong>Tipping:</strong> Click on a user's profile in chat and select "Tip" to send them funds</li>
                                     <li><strong>Rain Events:</strong> Use the command "/rain [amount]" in chat to create a rain for others to join</li>
@@ -364,7 +364,7 @@ function FAQ(props) {
                         <div className='dropdown-faq'>
                             <div className='dropdown-faq-content'>
                                 <p>
-                                    Our affiliate program offers generous rewards for bringing new users to BloxClash:
+                                    Our affiliate program offers generous rewards for bringing new users to Nova Casino:
                                 </p>
                                 <ul className='info-list'>
                                     <li><strong>Commission Rate:</strong> Earn 0.5% of your referrals' wagering volume</li>
@@ -471,7 +471,7 @@ function FAQ(props) {
                                     We take security seriously and appreciate responsible disclosure. If you've found a vulnerability:
                                 </p>
                                 <ol className='info-list'>
-                                    <li>Email our security team at security@bloxclash.com immediately</li>
+                                    <li>Email our security team at security@novacasino.net immediately</li>
                                     <li>Include detailed information about the vulnerability</li>
                                     <li>Do not publicly disclose the issue until we've addressed it</li>
                                     <li>Allow us reasonable time to investigate and fix the issue</li>
@@ -505,7 +505,7 @@ function FAQ(props) {
                                 <p>We offer multiple ways to get support when you need help:</p>
                                 <ul className='info-list'>
                                     <li><strong>Live Chat:</strong> Available 24/7 on our website for immediate assistance</li>
-                                    <li><strong>Email:</strong> support@bloxclash.com for detailed inquiries</li>
+                                    <li><strong>Email:</strong> support@novacasino.net for detailed inquiries</li>
                                     <li><strong>Discord:</strong> Join our community at discord.gg/bloxclash</li>
                                     <li><strong>Help Center:</strong> Browse our comprehensive knowledge base</li>
                                 </ul>

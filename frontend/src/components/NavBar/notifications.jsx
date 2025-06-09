@@ -49,21 +49,23 @@ function Notifications(props) {
 
   return (
     <>
-      <button 
-        class={`control-button notifications-button ${active() ? 'active' : ''}`}
-        onClick={(e) => {
-          setActive(!active())
-          e.stopPropagation()
-        }}
-        title="Notifications"
-      >
-        <AiOutlineBell size={16} />
-        
-        {user() && typeof user().notifications === 'number' && user().notifications > 0 && (
-          <div class='notification-badge'>
-            {user().notifications > 9 ? '9+' : user().notifications}
-          </div>
-        )}
+      <div class="notifications-container">
+        <button 
+          class={`control-button notifications-button ${active() ? 'active' : ''}`}
+          onClick={(e) => {
+            setActive(!active())
+            e.stopPropagation()
+          }}
+          title="Notifications"
+        >
+          <AiOutlineBell size={16} />
+          
+          {user() && typeof user().notifications === 'number' && user().notifications > 0 && (
+            <div class='notification-badge'>
+              {user().notifications > 9 ? '9+' : user().notifications}
+            </div>
+          )}
+        </button>
 
         <div class={`notifications-dropdown ${active() ? 'active' : ''}`} onClick={(e) => e.stopPropagation()}>
           <div class='dropdown-content'>
@@ -85,9 +87,14 @@ function Notifications(props) {
             </div>
           </div>
         </div>
-      </button>
+      </div>
 
       <style jsx>{`
+        .notifications-container {
+          position: relative;
+          display: inline-flex;
+        }
+
         .notifications-button {
           position: relative;
           outline: none !important;
@@ -115,7 +122,7 @@ function Notifications(props) {
           position: absolute;
           top: -4px;
           right: -4px;
-          background: #ff4757;
+          background: linear-gradient(135deg, #ff6b6b, #ee5a52);
           color: white;
           border-radius: 10px;
           min-width: 16px;
@@ -127,7 +134,17 @@ function Notifications(props) {
           font-weight: 700;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
           border: 2px solid #1b1738;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+          animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+          0%, 100% { 
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+          }
+          50% { 
+            box-shadow: 0 4px 16px rgba(255, 107, 107, 0.6);
+          }
         }
 
         .notifications-dropdown {
@@ -137,40 +154,52 @@ function Notifications(props) {
           width: 320px;
           max-height: 0;
           overflow: hidden;
-         
+          background: rgba(14, 11, 39, 0.95);
+          border-radius: 12px;
+          backdrop-filter: blur(12px);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           z-index: 1000;
         }
 
         .notifications-dropdown.active {
           max-height: 400px;
+          border-color: rgba(139, 120, 221, 0.3);
         }
-
 
         .dropdown-content {
           padding: 0;
           max-height: 400px;
           display: flex;
           flex-direction: column;
+          border-radius: 12px;
+          overflow: hidden;
         }
 
         .dropdown-header {
           padding: 16px 20px 12px;
           border-bottom: 1px solid rgba(139, 120, 221, 0.2);
+          background: rgba(27, 23, 56, 0.6);
+          backdrop-filter: blur(8px);
         }
 
         .dropdown-header h3 {
           margin: 0;
-          color: #ffffff;
-          font-size: 16px;
+          color: #e8e5f3;
+          font-size: 14px;
           font-weight: 600;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
 
         .notifications-list {
           max-height: 300px;
           overflow-y: auto;
-          padding: 8px 0;
+          padding: 12px 8px;
+          background: rgba(24, 20, 52, 0.4);
+          scrollbar-width: thin;
+          scrollbar-color: rgba(139, 120, 221, 0.4) transparent;
         }
 
         .notifications-list::-webkit-scrollbar {
@@ -178,29 +207,33 @@ function Notifications(props) {
         }
 
         .notifications-list::-webkit-scrollbar-track {
-          background: rgba(139, 120, 221, 0.1);
-          border-radius: 2px;
+          background: transparent;
         }
 
         .notifications-list::-webkit-scrollbar-thumb {
-          background: rgba(139, 120, 221, 0.3);
+          background: rgba(139, 120, 221, 0.4);
           border-radius: 2px;
         }
 
         .notifications-list::-webkit-scrollbar-thumb:hover {
-          background: rgba(139, 120, 221, 0.5);
+          background: rgba(139, 120, 221, 0.6);
         }
 
         .no-notifications {
           padding: 40px 20px;
           text-align: center;
-          color: rgba(138, 163, 184, 0.7);
+          color: #a8a3c7;
           font-size: 14px;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          background: rgba(139, 120, 221, 0.05);
+          border-radius: 8px;
+          margin: 8px;
+          border: 1px solid rgba(139, 120, 221, 0.1);
         }
 
         .no-notifications p {
           margin: 0;
+          font-weight: 500;
         }
 
         @media only screen and (max-width: 768px) {

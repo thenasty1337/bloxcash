@@ -232,7 +232,7 @@ function Home(props) {
                 height: fit-content;
 
                 box-sizing: border-box;
-                padding: 0 0 0 10px;
+                padding: 30px 0 0 10px;
                 margin: 0 auto;
               }
 

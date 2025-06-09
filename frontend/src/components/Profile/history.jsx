@@ -1,4 +1,4 @@
-import {A, useSearchParams} from "@solidjs/router";
+import {A, useSearchParams, useNavigate} from "@solidjs/router";
 import {createResource, createSignal, For, Show} from "solid-js";
 import {authedAPI} from "../../util/api";
 import Loader from "../Loader/loader";
@@ -6,11 +6,23 @@ import NumberPrefix from "../Transactions/prefix";
 import Pagination from "../Pagination/pagination";
 import { TbHistory, TbDice, TbShield, TbCalendar, TbCoins, TbTrendingUp, TbCheck } from 'solid-icons/tb';
 
+const gameToImage = {
+  'case': '/assets/game-icons/packs.svg',
+  'battle': '/assets/game-icons/battles.svg',
+  'roulette': '/assets/game-icons/roulette.svg',
+  'crash': '/assets/game-icons/dices.svg',
+  'coinflip': '/assets/game-icons/coin-flip.svg',
+  'jackpot': '/assets/game-icons/jackpot.svg',
+  'slot': '/assets/game-icons/slots.svg',
+  'mines': '/assets/game-icons/mines.svg'
+}
+
 function History(props) {
 
   let loadedPages = new Set()
   const [total, setTotal] = createSignal(1)
   const [page, setPage] = createSignal(1)
+  const navigate = useNavigate()
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [bets, setBets] = createSignal([], {equals: false})
@@ -81,23 +93,52 @@ function History(props) {
   }
 
   function getGameIcon(game) {
-    switch(game?.toLowerCase()) {
-      case 'case':
-      case 'cases':
-        return '📦';
+    return gameToImage[game?.toLowerCase()] || gameToImage['slot'];
+  }
+
+  function getGameName(bet) {
+    if (bet?.gameDetails?.name) {
+      return bet.gameDetails.name;
+    }
+    
+    switch(bet?.game?.toLowerCase()) {
       case 'battle':
-      case 'battles':
-        return '⚔️';
+        return 'Battle Packs';
+      case 'case':
+        return 'Packs';
       case 'coinflip':
-        return '🪙';
+        return 'Coinflip';
       case 'jackpot':
-        return '🎯';
+        return 'Jackpot';
       case 'roulette':
-        return '🎰';
+        return 'Roulette';
       case 'crash':
-        return '🚀';
+        return 'Crash';
+      case 'mines':
+        return 'Mines';
+      case 'slot':
+        return 'Slots';
       default:
-        return '🎮';
+        return bet?.game?.charAt(0).toUpperCase() + bet?.game?.slice(1) || 'Unknown';
+    }
+  }
+
+  function handleBetClick(bet) {
+    // Handle slot bets with gameDetails
+    if (bet.game === 'slot' && bet.gameDetails?.gameId) {
+      navigate(`/slots/${bet.gameDetails.gameId}`)
+    }
+    // Handle house games
+    else if (['coinflip', 'mines', 'roulette', 'crash', 'jackpot'].includes(bet.game)) {
+      navigate(`/${bet.game}`)
+    }
+    // Handle battles
+    else if (bet.game === 'battle') {
+      navigate('/battles')
+    }
+    // Handle cases
+    else if (bet.game === 'case') {
+      navigate('/cases')
     }
   }
 
@@ -256,13 +297,17 @@ function History(props) {
                   <TbCalendar size={16}/>
                   <span>Date</span>
                 </div>
-                <div class="header-cell wager">
+                <div class="header-cell amount">
                   <TbCoins size={16}/>
-                  <span>Wager</span>
+                  <span>Amount</span>
                 </div>
-                <div class="header-cell profit">
+                <div class="header-cell multiplier">
                   <TbTrendingUp size={16}/>
-                  <span>Profit</span>
+                  <span>Multiplier</span>
+                </div>
+                <div class="header-cell payout">
+                  <TbCoins size={16}/>
+                  <span>Payout</span>
                 </div>
               </div>
 
@@ -272,9 +317,18 @@ function History(props) {
                   <div class="bet-card">
                     {/* Mobile Game Header */}
                     <div class="bet-header mobile-only">
-                      <div class="game-info">
-                        <span class="game-emoji">{getGameIcon(bet?.game)}</span>
-                        <span class="game-name">{bet?.game}</span>
+                      <div 
+                        class={'game-info' + (
+                          (bet.game === 'slot' && bet.gameDetails?.gameId) || 
+                          ['coinflip', 'mines', 'roulette', 'crash', 'jackpot', 'battle', 'case'].includes(bet.game) 
+                          ? ' clickable-game' : ''
+                        )}
+                        onClick={() => handleBetClick(bet)}
+                      >
+                        <div class="game-icon-wrapper">
+                          <img src={bet?.gameDetails?.image || getGameIcon(bet?.game)} alt="" class="game-icon" />
+                        </div>
+                        <span class="game-name">{getGameName(bet)}</span>
                       </div>
                       <div class="bet-date">
                         {new Date(bet?.createdAt || 0)?.toLocaleString([], {
@@ -289,9 +343,18 @@ function History(props) {
                     {/* Desktop Row */}
                     <div class="bet-row desktop-only">
                       <div class="bet-cell game">
-                        <div class="game-info">
-                          <span class="game-emoji">{getGameIcon(bet?.game)}</span>
-                          <span class="game-name">{bet?.game}</span>
+                        <div 
+                          class={'game-info' + (
+                            (bet.game === 'slot' && bet.gameDetails?.gameId) || 
+                            ['coinflip', 'mines', 'roulette', 'crash', 'jackpot', 'battle', 'case'].includes(bet.game) 
+                            ? ' clickable-game' : ''
+                          )}
+                          onClick={() => handleBetClick(bet)}
+                        >
+                          <div class="game-icon-wrapper">
+                            <img src={bet?.gameDetails?.image || getGameIcon(bet?.game)} alt="" class="game-icon" />
+                          </div>
+                          <span class="game-name">{getGameName(bet)}</span>
                         </div>
                       </div>
 
@@ -319,11 +382,11 @@ function History(props) {
                         </span>
                       </div>
 
-                      <div class="bet-cell wager">
-                        <div class="amount-display">
-                          <img src='/assets/icons/coin.svg' height='16' width='16'/>
+                      <div class="bet-cell amount">
+                        <div class={`amount-display ${bet?.winnings > bet?.amount ? 'winning' : ''}`}>
+                          <img src='/assets/cryptos/branded/USDT.svg' height='24' width='24'/>
                           <span class="amount-value">
-                            {bet?.amount?.toLocaleString(undefined, {
+                            ${bet?.amount?.toLocaleString(undefined, {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2
                             })}
@@ -331,12 +394,19 @@ function History(props) {
                         </div>
                       </div>
 
-                      <div class="bet-cell profit">
-                        <div class={`profit-display ${(bet?.winnings - bet?.amount || 0) >= 0 ? 'positive' : 'negative'}`}>
-                          <NumberPrefix amount={(bet?.winnings - bet?.amount || 0)}/>
-                          <img src='/assets/icons/coin.svg' height='16' width='16'/>
-                          <span class="profit-value">
-                            {Math.abs(bet?.winnings - bet?.amount || 0)?.toLocaleString(undefined, {
+                      <div class="bet-cell multiplier">
+                        <div class={`multiplier-display ${bet?.winnings > bet?.amount ? 'winning' : ''}`}>
+                          <span class="multiplier-value">
+                            {bet?.amount > 0 ? `${(bet?.winnings / bet?.amount)?.toFixed(2)}x` : '0.00x'}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div class="bet-cell payout">
+                        <div class={`payout-display ${bet?.winnings > bet?.amount ? 'winning' : ''}`}>
+                          <img src='/assets/cryptos/branded/USDT.svg' height='24' width='24'/>
+                          <span class="payout-value">
+                            ${bet?.winnings?.toLocaleString(undefined, {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2
                             })}
@@ -348,11 +418,11 @@ function History(props) {
                     {/* Mobile Details */}
                     <div class="bet-details mobile-only">
                       <div class="detail-row">
-                        <span class="detail-label">Wager:</span>
-                        <div class="amount-display">
-                          <img src='/assets/icons/coin.svg' height='14' width='14'/>
+                        <span class="detail-label">Amount:</span>
+                        <div class={`amount-display ${bet?.winnings > bet?.amount ? 'winning' : ''}`}>
+                          <img src='/assets/cryptos/branded/USDT.svg' height='24' width='24'/>
                           <span class="amount-value">
-                            {bet?.amount?.toLocaleString(undefined, {
+                            ${bet?.amount?.toLocaleString(undefined, {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2
                             })}
@@ -360,12 +430,19 @@ function History(props) {
                         </div>
                       </div>
                       <div class="detail-row">
-                        <span class="detail-label">Profit:</span>
-                        <div class={`profit-display ${(bet?.winnings - bet?.amount || 0) >= 0 ? 'positive' : 'negative'}`}>
-                          <NumberPrefix amount={(bet?.winnings - bet?.amount || 0)}/>
-                          <img src='/assets/icons/coin.svg' height='14' width='14'/>
-                          <span class="profit-value">
-                            {Math.abs(bet?.winnings - bet?.amount || 0)?.toLocaleString(undefined, {
+                        <span class="detail-label">Multiplier:</span>
+                        <div class={`multiplier-display ${bet?.winnings > bet?.amount ? 'winning' : ''}`}>
+                          <span class="multiplier-value">
+                            {bet?.amount > 0 ? `${(bet?.winnings / bet?.amount)?.toFixed(2)}x` : '0.00x'}
+                          </span>
+                        </div>
+                      </div>
+                      <div class="detail-row">
+                        <span class="detail-label">Payout:</span>
+                        <div class={`payout-display ${bet?.winnings > bet?.amount ? 'winning' : ''}`}>
+                          <img src='/assets/cryptos/branded/USDT.svg' height='24' width='24'/>
+                          <span class="payout-value">
+                            ${bet?.winnings?.toLocaleString(undefined, {
                               minimumFractionDigits: 2,
                               maximumFractionDigits: 2
                             })}
@@ -414,8 +491,8 @@ function History(props) {
           gap: 0.75rem;
           margin-bottom: 1.5rem;
           padding: 1rem 1.25rem;
-          background: rgba(78, 205, 196, 0.04);
-          border: 1px solid rgba(78, 205, 196, 0.15);
+          background: rgba(139, 120, 221, 0.04);
+          border: 1px solid rgba(139, 120, 221, 0.15);
           border-radius: 12px;
           backdrop-filter: blur(10px);
         }
@@ -423,13 +500,13 @@ function History(props) {
         .header-icon {
           width: 32px;
           height: 32px;
-          background: linear-gradient(135deg, rgba(78, 205, 196, 0.15), rgba(68, 160, 141, 0.1));
-          border: 1px solid rgba(78, 205, 196, 0.25);
+          background: linear-gradient(135deg, rgba(139, 120, 221, 0.15), rgba(124, 107, 191, 0.1));
+          border: 1px solid rgba(139, 120, 221, 0.25);
           border-radius: 8px;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #4ecdc4;
+          color: #8b78dd;
           flex-shrink: 0;
         }
 
@@ -460,8 +537,8 @@ function History(props) {
           gap: 0.5rem;
           margin-bottom: 1.5rem;
           padding: 1rem;
-          background: rgba(26, 35, 50, 0.6);
-          border: 1px solid rgba(78, 205, 196, 0.12);
+          background: rgba(24, 20, 52, 0.6);
+          border: 1px solid rgba(139, 120, 221, 0.12);
           border-radius: 12px;
           backdrop-filter: blur(15px);
         }
@@ -481,23 +558,23 @@ function History(props) {
         }
 
         .filter-tab:hover {
-          background: rgba(78, 205, 196, 0.1);
-          border-color: rgba(78, 205, 196, 0.2);
+          background: rgba(139, 120, 221, 0.1);
+          border-color: rgba(139, 120, 221, 0.2);
           color: #ffffff;
         }
 
         .filter-tab.active {
-          background: linear-gradient(135deg, #4ecdc4, #44a08d);
-          border-color: #4ecdc4;
+          background: linear-gradient(135deg, #8b78dd, #7c6bbf);
+          border-color: #8b78dd;
           color: #ffffff;
           font-weight: 600;
-          box-shadow: 0 2px 8px rgba(78, 205, 196, 0.25);
+          box-shadow: 0 2px 8px rgba(139, 120, 221, 0.25);
         }
 
         /* Content */
         .history-content {
-          background: rgba(26, 35, 50, 0.6);
-          border: 1px solid rgba(78, 205, 196, 0.12);
+          background: rgba(24, 20, 52, 0.6);
+          border: 1px solid rgba(139, 120, 221, 0.12);
           border-radius: 14px;
           overflow: hidden;
           backdrop-filter: blur(15px);
@@ -512,14 +589,14 @@ function History(props) {
           display: flex;
           align-items: center;
           padding: 1rem 1.25rem;
-          background: linear-gradient(135deg, rgba(78, 205, 196, 0.06), rgba(68, 160, 141, 0.03));
-          border-bottom: 1px solid rgba(78, 205, 196, 0.1);
+          background: linear-gradient(135deg, rgba(139, 120, 221, 0.06), rgba(124, 107, 191, 0.03));
+          border-bottom: 1px solid rgba(139, 120, 221, 0.1);
           gap: 1rem;
         }
 
         .skeleton-header-cell {
           height: 12px;
-          background: rgba(78, 205, 196, 0.1);
+          background: rgba(139, 120, 221, 0.1);
           border-radius: 6px;
           animation: skeleton-pulse 1.5s ease-in-out infinite;
         }
@@ -535,7 +612,7 @@ function History(props) {
         }
 
         .skeleton-card {
-          border-bottom: 1px solid rgba(78, 205, 196, 0.08);
+          border-bottom: 1px solid rgba(139, 120, 221, 0.08);
           animation: skeleton-fade-in 0.6s ease-out forwards;
           opacity: 0;
         }
@@ -576,7 +653,7 @@ function History(props) {
         .skeleton-emoji {
           width: 20px;
           height: 20px;
-          background: rgba(78, 205, 196, 0.1);
+          background: rgba(139, 120, 221, 0.1);
           border-radius: 4px;
           animation: skeleton-pulse 1.5s ease-in-out infinite;
         }
@@ -584,7 +661,7 @@ function History(props) {
         .skeleton-game-name {
           width: 80px;
           height: 14px;
-          background: rgba(78, 205, 196, 0.1);
+          background: rgba(139, 120, 221, 0.1);
           border-radius: 7px;
           animation: skeleton-pulse 1.5s ease-in-out infinite;
         }
@@ -592,7 +669,7 @@ function History(props) {
         .skeleton-verify-btn {
           width: 70px;
           height: 28px;
-          background: rgba(78, 205, 196, 0.1);
+          background: rgba(139, 120, 221, 0.1);
           border-radius: 6px;
           animation: skeleton-pulse 1.5s ease-in-out infinite;
         }
@@ -600,7 +677,7 @@ function History(props) {
         .skeleton-date-text {
           width: 120px;
           height: 14px;
-          background: rgba(78, 205, 196, 0.1);
+          background: rgba(139, 120, 221, 0.1);
           border-radius: 7px;
           animation: skeleton-pulse 1.5s ease-in-out infinite;
         }
@@ -608,7 +685,7 @@ function History(props) {
         .skeleton-amount {
           width: 90px;
           height: 14px;
-          background: rgba(78, 205, 196, 0.1);
+          background: rgba(139, 120, 221, 0.1);
           border-radius: 7px;
           animation: skeleton-pulse 1.5s ease-in-out infinite;
         }
@@ -630,7 +707,7 @@ function History(props) {
         .skeleton-date {
           width: 80px;
           height: 12px;
-          background: rgba(78, 205, 196, 0.1);
+          background: rgba(139, 120, 221, 0.1);
           border-radius: 6px;
           animation: skeleton-pulse 1.5s ease-in-out infinite;
         }
@@ -655,7 +732,7 @@ function History(props) {
         .skeleton-label {
           width: 60px;
           height: 12px;
-          background: rgba(78, 205, 196, 0.1);
+          background: rgba(139, 120, 221, 0.1);
           border-radius: 6px;
           animation: skeleton-pulse 1.5s ease-in-out infinite;
         }
@@ -663,7 +740,7 @@ function History(props) {
         .skeleton-amount-small {
           width: 80px;
           height: 12px;
-          background: rgba(78, 205, 196, 0.1);
+          background: rgba(139, 120, 221, 0.1);
           border-radius: 6px;
           animation: skeleton-pulse 1.5s ease-in-out infinite;
         }
@@ -671,7 +748,7 @@ function History(props) {
         .skeleton-verify-btn-mobile {
           width: 90px;
           height: 32px;
-          background: rgba(78, 205, 196, 0.1);
+          background: rgba(139, 120, 221, 0.1);
           border-radius: 8px;
           animation: skeleton-pulse 1.5s ease-in-out infinite;
         }
@@ -682,14 +759,14 @@ function History(props) {
           align-items: center;
           justify-content: space-between;
           padding: 1rem 1.25rem;
-          background: linear-gradient(135deg, rgba(78, 205, 196, 0.04), rgba(68, 160, 141, 0.02));
-          border-top: 1px solid rgba(78, 205, 196, 0.08);
+          background: linear-gradient(135deg, rgba(139, 120, 221, 0.04), rgba(124, 107, 191, 0.02));
+          border-top: 1px solid rgba(139, 120, 221, 0.08);
         }
 
         .skeleton-btn {
           width: 80px;
           height: 36px;
-          background: rgba(78, 205, 196, 0.1);
+          background: rgba(139, 120, 221, 0.1);
           border-radius: 8px;
           animation: skeleton-pulse 1.5s ease-in-out infinite;
         }
@@ -697,7 +774,7 @@ function History(props) {
         .skeleton-page-info {
           width: 60px;
           height: 16px;
-          background: rgba(78, 205, 196, 0.1);
+          background: rgba(139, 120, 221, 0.1);
           border-radius: 8px;
           animation: skeleton-pulse 1.5s ease-in-out infinite;
         }
@@ -735,13 +812,13 @@ function History(props) {
         .empty-icon {
           width: 80px;
           height: 80px;
-          background: rgba(78, 205, 196, 0.1);
-          border: 1px solid rgba(78, 205, 196, 0.2);
+          background: rgba(139, 120, 221, 0.1);
+          border: 1px solid rgba(139, 120, 221, 0.2);
           border-radius: 20px;
           display: flex;
           align-items: center;
           justify-content: center;
-          color: #4ecdc4;
+          color: #8b78dd;
           margin-bottom: 1rem;
         }
 
@@ -765,8 +842,8 @@ function History(props) {
           display: flex;
           align-items: center;
           padding: 1rem 1.25rem;
-          background: linear-gradient(135deg, rgba(78, 205, 196, 0.06), rgba(68, 160, 141, 0.03));
-          border-bottom: 1px solid rgba(78, 205, 196, 0.1);
+          background: linear-gradient(135deg, rgba(139, 120, 221, 0.06), rgba(124, 107, 191, 0.03));
+          border-bottom: 1px solid rgba(139, 120, 221, 0.1);
           font-size: 0.8rem;
           font-weight: 600;
           color: #8aa3b8;
@@ -783,8 +860,9 @@ function History(props) {
         .header-cell.game { flex: 2; }
         .header-cell.verify { flex: 1.5; }
         .header-cell.date { flex: 2; }
-        .header-cell.wager { flex: 1.5; justify-content: flex-end; }
-        .header-cell.profit { flex: 1.5; justify-content: flex-end; }
+        .header-cell.amount { flex: 1.25; }
+        .header-cell.multiplier { flex: 1.25; }
+        .header-cell.payout { flex: 1.5; }
 
         /* Bet Cards */
         .bets-list {
@@ -792,7 +870,7 @@ function History(props) {
         }
 
         .bet-card {
-          border-bottom: 1px solid rgba(78, 205, 196, 0.08);
+          border-bottom: 1px solid rgba(139, 120, 221, 0.08);
           transition: all 0.2s ease;
           position: relative;
         }
@@ -802,7 +880,7 @@ function History(props) {
         }
 
         .bet-card:hover {
-          background: rgba(78, 205, 196, 0.04);
+          background: rgba(139, 120, 221, 0.04);
         }
 
         .bet-card:hover::before {
@@ -812,7 +890,7 @@ function History(props) {
           top: 0;
           bottom: 0;
           width: 3px;
-          background: linear-gradient(180deg, #4ecdc4, #44a08d);
+          background: linear-gradient(180deg, #8b78dd, #7c6bbf);
           opacity: 1;
         }
 
@@ -823,7 +901,7 @@ function History(props) {
           top: 0;
           bottom: 0;
           width: 3px;
-          background: linear-gradient(180deg, #4ecdc4, #44a08d);
+          background: linear-gradient(180deg, #8b78dd, #7c6bbf);
           opacity: 0;
           transition: opacity 0.3s ease;
         }
@@ -844,8 +922,9 @@ function History(props) {
         .bet-cell.game { flex: 2; }
         .bet-cell.verify { flex: 1.5; }
         .bet-cell.date { flex: 2; }
-        .bet-cell.wager { flex: 1.5; justify-content: flex-end; }
-        .bet-cell.profit { flex: 1.5; justify-content: flex-end; }
+        .bet-cell.amount { flex: 1.25; }
+        .bet-cell.multiplier { flex: 1.25; }
+        .bet-cell.payout { flex: 1.5; }
 
         /* Game Info */
         .game-info {
@@ -854,14 +933,30 @@ function History(props) {
           gap: 0.5rem;
         }
 
-        .game-emoji {
-          font-size: 1.1rem;
+        .game-icon-wrapper {
+          width: 28px;
+          height: 28px;
+          border-radius: 6px;
+          background: linear-gradient(135deg, rgba(139, 120, 221, 0.08), rgba(124, 107, 191, 0.08));
+          border: 1px solid rgba(139, 120, 221, 0.12);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        .game-icon {
+          width: 16px;
+          height: 16px;
+          opacity: 0.9;
+          object-fit: cover;
+          border-radius: 2px;
         }
 
         .game-name {
           font-size: 0.9rem;
           font-weight: 600;
-          color: #ffffff;
+          color: #8b78dd;
           text-transform: capitalize;
         }
 
@@ -871,7 +966,7 @@ function History(props) {
           align-items: center;
           gap: 0.375rem;
           padding: 0.4rem 0.75rem;
-          background: linear-gradient(135deg, #4ecdc4, #44a08d);
+          background: linear-gradient(135deg, #8b78dd, #7c6bbf);
           border: none;
           border-radius: 6px;
           color: #ffffff;
@@ -885,9 +980,9 @@ function History(props) {
         }
 
         .verify-button:hover {
-          background: linear-gradient(135deg, #44a08d, #3d9980);
+          background: linear-gradient(135deg, #7c6bbf, #6b5ba6);
           transform: translateY(-1px);
-          box-shadow: 0 3px 8px rgba(78, 205, 196, 0.3);
+          box-shadow: 0 3px 8px rgba(139, 120, 221, 0.3);
         }
 
         .verify-button.mobile {
@@ -918,43 +1013,75 @@ function History(props) {
         }
 
         /* Amount Displays */
-        .amount-display, .profit-display {
+        .amount-display, .multiplier-display, .payout-display {
           display: flex;
           align-items: center;
           gap: 0.375rem;
         }
 
-        .amount-value, .profit-value {
+        .amount-value, .multiplier-value, .payout-value {
           font-size: 0.85rem;
           font-weight: 600;
           color: #ffffff;
           font-variant-numeric: tabular-nums;
         }
 
-        .profit-display.positive .profit-value {
-          color: #4ecdc4;
+        .multiplier-value {
+          color: #8b78dd;
+          font-weight: 700;
+          min-width: 45px;
         }
 
-        .profit-display.negative .profit-value {
-          color: #ff6b6b;
+        .payout-value {
+          color: #ffffff;
+        }
+
+        /* Winning State */
+        .amount-display.winning .amount-value,
+        .multiplier-display.winning .multiplier-value,
+        .payout-display.winning .payout-value {
+          color: #4ade80;
+        }
+
+        /* Clickable Games */
+        .clickable-game {
+          cursor: pointer;
+          transition: all 0.2s ease;
+          border-radius: 8px;
+          padding: 0.25rem;
+          margin: -0.25rem;
+        }
+
+        .clickable-game:hover {
+          background: rgba(139, 120, 221, 0.08);
+          border-color: rgba(139, 120, 221, 0.2);
+          transform: translateY(-1px);
+        }
+
+        .clickable-game:hover .game-name {
+          color: #8b78dd;
+        }
+
+        .clickable-game:hover .game-icon {
+          filter: brightness(1.1);
         }
 
         /* Mobile Layout */
         .mobile-only {
-          display: none;
+          display: none !important;
         }
 
         .desktop-only {
-          display: flex;
+          display: flex !important;
         }
 
         @media (max-width: 768px) {
           .mobile-only {
-            display: block;
+            display: block !important;
           }
 
           .desktop-only {
-            display: none;
+            display: none !important;
           }
 
           .history-container {
@@ -1024,13 +1151,20 @@ function History(props) {
           }
 
           .detail-row .amount-display,
-          .detail-row .profit-display {
+          .detail-row .multiplier-display,
+          .detail-row .payout-display {
             gap: 0.25rem;
           }
 
           .detail-row .amount-value,
-          .detail-row .profit-value {
+          .detail-row .multiplier-value,
+          .detail-row .payout-value {
             font-size: 0.8rem;
+          }
+
+          .detail-row .multiplier-value {
+            font-weight: 700;
+            color: #8b78dd;
           }
         }
 

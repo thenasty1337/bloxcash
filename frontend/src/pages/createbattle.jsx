@@ -121,7 +121,7 @@ function CreateBattle(props) {
 
     return (
         <>
-            <Title>BloxClash | Create a Battle</Title>
+            <Title>Nova Casino | Create a Battle</Title>
 
             <Show when={!cases.loading} fallback={<></>}>
                 {addCases() && (
