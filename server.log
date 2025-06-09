@@ -12727,3 +12727,1021 @@
 [0]   - bets:all room has 0 clients
 [0]   - bets:high room has 0 clients
 [0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] BNB networks: [
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] BTC networks: [
+[0]   { network: 'Bitcoin(BTC)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] TRX networks: [ { network: 'Tron(TRC20)', enabled: true, chainMatch: true } ]
+[0] ETH networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   { network: 'zkSync Lite', enabled: true, chainMatch: false },
+[0]   { network: 'Starknet(STARK)', enabled: true, chainMatch: false },
+[0]   { network: 'Linea', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false },
+[0]   { network: 'MORPH', enabled: true, chainMatch: false },
+[0]   { network: 'MINTCHAIN', enabled: false, chainMatch: false },
+[0]   { network: 'HEMI', enabled: false, chainMatch: false },
+[0]   { network: 'MINDNETWORK', enabled: false, chainMatch: false }
+[0] ]
+[0] XRP networks: [ { network: 'Ripple(XRP)', enabled: true, chainMatch: true } ]
+[0] DOGE networks: [
+[0]   { network: 'Dogecoin(DOGE)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   }
+[0] ]
+[0] USDT networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Tron(TRC20)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'OKT', enabled: false, chainMatch: false },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'Toncoin(TON)', enabled: true, chainMatch: false },
+[0]   { network: 'CELO', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'Kaia (KAIA)', enabled: true, chainMatch: false }
+[0] ]
+[0] USDC networks: [
+[0]   { network: 'Ethereum(ERC20)', enabled: true, chainMatch: true },
+[0]   { network: 'Solana(SOL)', enabled: true, chainMatch: false },
+[0]   { network: 'Algorand(ALGO)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'BNB Smart Chain(BEP20)',
+[0]     enabled: true,
+[0]     chainMatch: true
+[0]   },
+[0]   { network: 'Arbitrum One(ARB)', enabled: true, chainMatch: true },
+[0]   { network: 'Polygon(MATIC)', enabled: true, chainMatch: true },
+[0]   { network: 'Optimism(OP)', enabled: true, chainMatch: true },
+[0]   {
+[0]     network: 'Avalanche C Chain(AVAX CCHAIN)',
+[0]     enabled: true,
+[0]     chainMatch: false
+[0]   },
+[0]   { network: 'NEAR Protocol(NEAR)', enabled: true, chainMatch: false },
+[0]   { network: 'APTOS(APT)', enabled: true, chainMatch: false },
+[0]   { network: 'SONIC', enabled: true, chainMatch: false },
+[0]   { network: 'Sui', enabled: true, chainMatch: false },
+[0]   { network: 'BASE', enabled: true, chainMatch: false }
+[0] ]
+[0] LTC networks: [ { network: 'Litecoin(LTC)', enabled: true, chainMatch: true } ]
+[0] [
+[0]   { symbol: 'BROCKUSDT', price: '0.01483' },
+[0]   { symbol: 'BNTUSDT', price: '0.6337' },
+[0]   { symbol: 'NTXUSDT', price: '0.013' },
+[0]   { symbol: 'DEVVEUSDT', price: '0.5608' },
+[0]   { symbol: 'XOXNOUSDT', price: '0.02503' },
+[0]   { symbol: 'HTRUSDT', price: '0.01916' },
+[0]   { symbol: 'VOXELUSDT', price: '0.05754' },
+[0]   { symbol: 'LOKAUSDT', price: '0.05688' },
+[0]   { symbol: 'DEFIUSDT', price: '0.002704' },
+[0]   { symbol: 'TURBOUSDC', price: '0.004301' },
+[0]   { symbol: 'SSEUSDT', price: '0.007385' },
+[0]   { symbol: 'F3USDT', price: '0.00256' },
+[0]   { symbol: 'MANEKIUSDT', price: '0.0013346' },
+[0]   { symbol: 'ARUSDT', price: '6.616' },
+[0]   { symbol: 'BFICUSDT', price: '0.6795' },
+[0]   { symbol: 'SNTUSDT', price: '0.03009' },
+[0]   { symbol: 'BAKEUSDT', price: '0.1108' },
+[0]   { symbol: 'PUAIUSDT', price: '0' },
+[0]   { symbol: 'IXSUSDT', price: '0.2197' },
+[0]   { symbol: 'ROAMUSDT', price: '0.2109' },
+[0]   { symbol: 'SUEDEUSDT', price: '0.005291' },
+[0]   { symbol: 'EVERUSDT', price: '0.01502' },
+[0]   { symbol: 'RINGAIUSDT', price: '0.01199' },
+[0]   { symbol: 'VELAAIUSDT', price: '0.0205' },
+[0]   { symbol: 'HANDYUSDT', price: '0.0013999' },
+[0]   { symbol: 'OZONEUSDT', price: '0.00019165' },
+[0]   { symbol: 'TUAUSDT', price: '0.0001003' },
+[0]   { symbol: 'MYTHUSDT', price: '0.1422' },
+[0]   { symbol: 'TPROUSDT', price: '0.002502' },
+[0]   { symbol: 'DONKEYUSDT', price: '0.00221' },
+[0]   { symbol: 'MAIVUSDT', price: '0.0018791' },
+[0]   { symbol: 'OOKIUSDT', price: '0.00002895' },
+[0]   { symbol: 'DFUSDT', price: '0.04348' },
+[0]   { symbol: 'BOSONUSDT', price: '0.10581' },
+[0]   { symbol: 'SKAIUSDT', price: '0.00489' },
+[0]   { symbol: 'DOLZUSDT', price: '0.0064' },
+[0]   { symbol: 'MIRAIUSDT', price: '0.01403' },
+[0]   { symbol: 'UBXUSDT', price: '0.000003935' },
+[0]   { symbol: 'NFTUSDT', price: '0.0000004213' },
+[0]   { symbol: 'ALEOUSDT', price: '0.1901' },
+[0]   { symbol: 'CATSUSDT', price: '0.000009518' },
+[0]   { symbol: 'FATUSDT', price: '0.003917' },
+[0]   { symbol: 'SCCUSDT', price: '0.0000000000000000523' },
+[0]   { symbol: 'PURRUSDT', price: '0.2768' },
+[0]   { symbol: 'INSPUSDT', price: '0.00486' },
+[0]   { symbol: 'GHTUSDT', price: '0.03699' },
+[0]   { symbol: 'ATRSUSDT', price: '0.006745' },
+[0]   { symbol: 'IQUSDT', price: '0.00384' },
+[0]   { symbol: 'LYUMUSDT', price: '0.001738' },
+[0]   { symbol: 'GRIFFAINUSDT', price: '0.0583' },
+[0]   { symbol: 'NTRNUSDT', price: '0.1032' },
+[0]   { symbol: 'SEEDUSDT', price: '0.002518' },
+[0]   { symbol: 'MORRAUSDT', price: '0.001312' },
+[0]   { symbol: 'MUBARAKAHUSDT', price: '0.002182' },
+[0]   { symbol: 'RSRUSDT', price: '0.007012' },
+[0]   { symbol: 'NSUSDT', price: '0.17474' },
+[0]   { symbol: 'IRISUSDT', price: '0.001189' },
+[0]   { symbol: 'QTUMBTC', price: '0.0000195' },
+[0]   { symbol: 'IDEAUSDT', price: '0.0001609' },
+[0]   { symbol: 'RZRUSDT', price: '0.0002602' },
+[0]   { symbol: 'BIOUSDT', price: '0.06421' },
+[0]   { symbol: 'EMRLDUSDT', price: '0.001152' },
+[0]   { symbol: 'AIDOGEUSDT', price: '0.00000000012437' },
+[0]   { symbol: 'SOLUSDT', price: '155.44' },
+[0]   { symbol: 'NAPUSDT', price: '0.6884' },
+[0]   { symbol: 'QLINDOUSDT', price: '0.0009048' },
+[0]   { symbol: 'HRTUSDT', price: '0.000478' },
+[0]   { symbol: 'KDAUSDT', price: '0.4781' },
+[0]   { symbol: 'XENUSDT', price: '0.00000004312' },
+[0]   { symbol: 'PNICUSDT', price: '0.001258' },
+[0]   { symbol: 'DOVUUSDT', price: '0.0025089' },
+[0]   { symbol: 'INJUSDT', price: '13.47' },
+[0]   { symbol: 'LABUBUUSDT', price: '0.021019' },
+[0]   { symbol: 'GELUSDT', price: '0.079' },
+[0]   { symbol: 'ETCBTC', price: '0.0001581' },
+[0]   { symbol: 'JUSTICEUSDT', price: '0.00007374' },
+[0]   { symbol: 'FIOUSDT', price: '0.01566' },
+[0]   { symbol: 'HIFIUSDT', price: '0.07973' },
+[0]   { symbol: 'SOPHUSDT', price: '0.04969' },
+[0]   { symbol: 'DEPINUSDT', price: '0.000000951' },
+[0]   { symbol: 'RWAIUSDT', price: '0.000849' },
+[0]   { symbol: 'MELANIAUSDT', price: '0.3027' },
+[0]   { symbol: 'EURUSDT', price: '1.1414' },
+[0]   { symbol: 'REFUSDT', price: '0.07997' },
+[0]   { symbol: 'DOBOUSDT', price: '0.05133' },
+[0]   { symbol: 'OBORTECHUSDT', price: '0.006' },
+[0]   { symbol: 'ONDOUSDT', price: '0.84308' },
+[0]   { symbol: 'DKAUSDT', price: '0.01642' },
+[0]   { symbol: 'BILLIONVIEWUSDT', price: '0.00682' },
+[0]   { symbol: 'LIXXUSDT', price: '0.0003569' },
+[0]   { symbol: 'KANGUSDT', price: '0.001012' },
+[0]   { symbol: 'SABAIUSDT', price: '0.013203' },
+[0]   { symbol: 'STOOSUSDT', price: '0.7414' },
+[0]   { symbol: 'GOATUSDT', price: '0.12455' },
+[0]   { symbol: 'TGT1USDT', price: '0.026469' },
+[0]   { symbol: 'BONDUSDT', price: '0.2016' },
+[0]   { symbol: 'OVERUSDT', price: '0.02825' },
+[0]   { symbol: 'OKMUSDT', price: '0.000049141' },
+[0]   { symbol: 'TRXUSDC', price: '0.28369' },
+[0]   { symbol: 'TFIUSDT', price: '0.00451' },
+[0]   ... 2362 more items
+[0] ]
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 📊 Cached bets by game type: { slot: 10 }
+[0] 📡 Emitting cached bets to socket rooms
+[0]   - bets:all room has 0 clients
+[0]   - bets:high room has 0 clients
+[0]   - bets:lucky room has 0 clients
+[0] 
+[0] node:internal/process/promises:394
+[0]     triggerUncaughtException(err, true /* fromPromise */);
+[0]     ^
+[0] AxiosError: getaddrinfo ENOTFOUND api.mexc.com
+[0]     at AxiosError.from (/Users/g/Documents/GitHub/bloxcash/backend/node_modules/axios/dist/node/axios.cjs:863:14)
+[0]     at RedirectableRequest.handleRequestError (/Users/g/Documents/GitHub/bloxcash/backend/node_modules/axios/dist/node/axios.cjs:3187:25)
+[0]     at RedirectableRequest.emit (node:events:524:28)
+[0]     at eventHandlers.<computed> (/Users/g/Documents/GitHub/bloxcash/backend/node_modules/follow-redirects/index.js:49:24)
+[0]     at ClientRequest.emit (node:events:524:28)
+[0]     at emitErrorEvent (node:_http_client:104:11)
+[0]     at TLSSocket.socketErrorListener (node:_http_client:512:5)
+[0]     at TLSSocket.emit (node:events:524:28)
+[0]     at emitErrorNT (node:internal/streams/destroy:170:8)
+[0]     at emitErrorCloseNT (node:internal/streams/destroy:129:3)
+[0]     at Axios.request (/Users/g/Documents/GitHub/bloxcash/backend/node_modules/axios/dist/node/axios.cjs:4276:41)
+[0]     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[0]     at async Promise.all (index 1)
+[0]     at async Timeout.cacheWithdrawalCoins [as _onTimeout] (/Users/g/Documents/GitHub/bloxcash/backend/routes/trading/crypto/withdraw/functions.js:102:9) {
+[0]   hostname: 'api.mexc.com',
+[0]   syscall: 'getaddrinfo',
+[0]   code: 'ENOTFOUND',
+[0]   errno: -3008,
+[0]   config: {
+[0]     transitional: {
+[0]       silentJSONParsing: true,
+[0]       forcedJSONParsing: true,
+[0]       clarifyTimeoutError: false
+[0]     },
+[0]     adapter: [ 'xhr', 'http', 'fetch' ],
+[0]     transformRequest: [ [Function: transformRequest] ],
+[0]     transformResponse: [ [Function: transformResponse] ],
+[0]     timeout: 0,
+[0]     xsrfCookieName: 'XSRF-TOKEN',
+[0]     xsrfHeaderName: 'X-XSRF-TOKEN',
+[0]     maxContentLength: -1,
+[0]     maxBodyLength: -1,
+[0]     env: {
+[0]       FormData: [Function: FormData] [FormData] {
+[0]         LINE_BREAK: '\r\n',
+[0]         DEFAULT_CONTENT_TYPE: 'application/octet-stream'
+[0]       },
+[0]       Blob: [class Blob]
+[0]     },
+[0]     validateStatus: [Function: validateStatus],
+[0]     headers: Object [AxiosHeaders] {
+[0]       Accept: 'application/json',
+[0]       'Content-Type': 'application/json',
+[0]       'X-MEXC-APIKEY': 'mx0vgliZNn7S22FZ7f',
+[0]       'User-Agent': 'axios/1.9.0',
+[0]       'Accept-Encoding': 'gzip, compress, deflate, br'
+[0]     },
+[0]     baseURL: 'https://api.mexc.com',
+[0]     url: '/api/v3/ticker/price',
+[0]     allowAbsoluteUrls: true,
+[0]     method: 'get',
+[0]     data: undefined
+[0]   },
+[0]   request: <ref *1> Writable {
+[0]     _events: {
+[0]       close: undefined,
+[0]       error: [Function: handleRequestError],
+[0]       prefinish: undefined,
+[0]       finish: undefined,
+[0]       drain: undefined,
+[0]       response: [Function: handleResponse],
+[0]       socket: [Function: handleRequestSocket]
+[0]     },
+[0]     _writableState: WritableState {
+[0]       highWaterMark: 65536,
+[0]       length: 0,
+[0]       corked: 0,
+[0]       onwrite: [Function: bound onwrite],
+[0]       writelen: 0,
+[0]       bufferedIndex: 0,
+[0]       pendingcb: 0,
+[0]       [Symbol(kState)]: 17580812,
+[0]       [Symbol(kBufferedValue)]: null
+[0]     },
+[0]     _maxListeners: undefined,
+[0]     _options: {
+[0]       maxRedirects: 21,
+[0]       maxBodyLength: Infinity,
+[0]       protocol: 'https:',
+[0]       path: '/api/v3/ticker/price',
+[0]       method: 'GET',
+[0]       headers: [Object: null prototype] {
+[0]         Accept: 'application/json',
+[0]         'Content-Type': 'application/json',
+[0]         'X-MEXC-APIKEY': 'mx0vgliZNn7S22FZ7f',
+[0]         'User-Agent': 'axios/1.9.0',
+[0]         'Accept-Encoding': 'gzip, compress, deflate, br'
+[0]       },
+[0]       agents: { http: undefined, https: undefined },
+[0]       auth: undefined,
+[0]       family: undefined,
+[0]       beforeRedirect: [Function: dispatchBeforeRedirect],
+[0]       beforeRedirects: { proxy: [Function: beforeRedirect] },
+[0]       hostname: 'api.mexc.com',
+[0]       port: '',
+[0]       agent: undefined,
+[0]       nativeProtocols: {
+[0]         'http:': {
+[0]           _connectionListener: [Function: connectionListener],
+[0]           METHODS: [
+[0]             'ACL',        'BIND',        'CHECKOUT',
+[0]             'CONNECT',    'COPY',        'DELETE',
+[0]             'GET',        'HEAD',        'LINK',
+[0]             'LOCK',       'M-SEARCH',    'MERGE',
+[0]             'MKACTIVITY', 'MKCALENDAR',  'MKCOL',
+[0]             'MOVE',       'NOTIFY',      'OPTIONS',
+[0]             'PATCH',      'POST',        'PROPFIND',
+[0]             'PROPPATCH',  'PURGE',       'PUT',
+[0]             'QUERY',      'REBIND',      'REPORT',
+[0]             'SEARCH',     'SOURCE',      'SUBSCRIBE',
+[0]             'TRACE',      'UNBIND',      'UNLINK',
+[0]             'UNLOCK',     'UNSUBSCRIBE'
+[0]           ],
+[0]           STATUS_CODES: {
+[0]             '100': 'Continue',
+[0]             '101': 'Switching Protocols',
+[0]             '102': 'Processing',
+[0]             '103': 'Early Hints',
+[0]             '200': 'OK',
+[0]             '201': 'Created',
+[0]             '202': 'Accepted',
+[0]             '203': 'Non-Authoritative Information',
+[0]             '204': 'No Content',
+[0]             '205': 'Reset Content',
+[0]             '206': 'Partial Content',
+[0]             '207': 'Multi-Status',
+[0]             '208': 'Already Reported',
+[0]             '226': 'IM Used',
+[0]             '300': 'Multiple Choices',
+[0]             '301': 'Moved Permanently',
+[0]             '302': 'Found',
+[0]             '303': 'See Other',
+[0]             '304': 'Not Modified',
+[0]             '305': 'Use Proxy',
+[0]             '307': 'Temporary Redirect',
+[0]             '308': 'Permanent Redirect',
+[0]             '400': 'Bad Request',
+[0]             '401': 'Unauthorized',
+[0]             '402': 'Payment Required',
+[0]             '403': 'Forbidden',
+[0]             '404': 'Not Found',
+[0]             '405': 'Method Not Allowed',
+[0]             '406': 'Not Acceptable',
+[0]             '407': 'Proxy Authentication Required',
+[0]             '408': 'Request Timeout',
+[0]             '409': 'Conflict',
+[0]             '410': 'Gone',
+[0]             '411': 'Length Required',
+[0]             '412': 'Precondition Failed',
+[0]             '413': 'Payload Too Large',
+[0]             '414': 'URI Too Long',
+[0]             '415': 'Unsupported Media Type',
+[0]             '416': 'Range Not Satisfiable',
+[0]             '417': 'Expectation Failed',
+[0]             '418': "I'm a Teapot",
+[0]             '421': 'Misdirected Request',
+[0]             '422': 'Unprocessable Entity',
+[0]             '423': 'Locked',
+[0]             '424': 'Failed Dependency',
+[0]             '425': 'Too Early',
+[0]             '426': 'Upgrade Required',
+[0]             '428': 'Precondition Required',
+[0]             '429': 'Too Many Requests',
+[0]             '431': 'Request Header Fields Too Large',
+[0]             '451': 'Unavailable For Legal Reasons',
+[0]             '500': 'Internal Server Error',
+[0]             '501': 'Not Implemented',
+[0]             '502': 'Bad Gateway',
+[0]             '503': 'Service Unavailable',
+[0]             '504': 'Gateway Timeout',
+[0]             '505': 'HTTP Version Not Supported',
+[0]             '506': 'Variant Also Negotiates',
+[0]             '507': 'Insufficient Storage',
+[0]             '508': 'Loop Detected',
+[0]             '509': 'Bandwidth Limit Exceeded',
+[0]             '510': 'Not Extended',
+[0]             '511': 'Network Authentication Required'
+[0]           },
+[0]           Agent: [Function: Agent] { defaultMaxSockets: Infinity },
+[0]           ClientRequest: [Function: ClientRequest],
+[0]           IncomingMessage: [Function: IncomingMessage],
+[0]           OutgoingMessage: [Function: OutgoingMessage],
+[0]           Server: [Function: Server],
+[0]           ServerResponse: [Function: ServerResponse],
+[0]           createServer: [Function: createServer],
+[0]           validateHeaderName: [Function: wrappedFn] {
+[0]             withoutStackTrace: [Function (anonymous)]
+[0]           },
+[0]           validateHeaderValue: [Function: wrappedFn] {
+[0]             withoutStackTrace: [Function (anonymous)]
+[0]           },
+[0]           get: [Function: get],
+[0]           request: [Function: request],
+[0]           setMaxIdleHTTPParsers: [Function: setMaxIdleHTTPParsers],
+[0]           maxHeaderSize: [Getter],
+[0]           globalAgent: [Getter/Setter],
+[0]           WebSocket: [Getter],
+[0]           CloseEvent: [Getter],
+[0]           MessageEvent: [Getter]
+[0]         },
+[0]         'https:': {
+[0]           Agent: [Function: Agent],
+[0]           globalAgent: Agent {
+[0]             _events: [Object: null prototype],
+[0]             _eventsCount: 2,
+[0]             _maxListeners: undefined,
+[0]             defaultPort: 443,
+[0]             protocol: 'https:',
+[0]             options: [Object: null prototype],
+[0]             requests: [Object: null prototype] {},
+[0]             sockets: [Object: null prototype],
+[0]             freeSockets: [Object: null prototype] {},
+[0]             keepAliveMsecs: 1000,
+[0]             keepAlive: true,
+[0]             maxSockets: Infinity,
+[0]             maxFreeSockets: 256,
+[0]             scheduling: 'lifo',
+[0]             maxTotalSockets: Infinity,
+[0]             totalSocketCount: 4,
+[0]             maxCachedSessions: 100,
+[0]             _sessionCache: [Object],
+[0]             [Symbol(shapeMode)]: false,
+[0]             [Symbol(kCapture)]: false
+[0]           },
+[0]           Server: [Function: Server],
+[0]           createServer: [Function: createServer],
+[0]           get: [Function: get],
+[0]           request: [Function: request]
+[0]         }
+[0]       },
+[0]       pathname: '/api/v3/ticker/price'
+[0]     },
+[0]     _ended: true,
+[0]     _ending: true,
+[0]     _redirectCount: 0,
+[0]     _redirects: [],
+[0]     _requestBodyLength: 0,
+[0]     _requestBodyBuffers: [],
+[0]     _eventsCount: 3,
+[0]     _onNativeResponse: [Function (anonymous)],
+[0]     _currentRequest: <ref *2> ClientRequest {
+[0]       _events: [Object: null prototype] {
+[0]         response: [Function: bound onceWrapper] {
+[0]           listener: [Function (anonymous)]
+[0]         },
+[0]         abort: [Function (anonymous)],
+[0]         aborted: [Function (anonymous)],
+[0]         connect: [Function (anonymous)],
+[0]         error: [Function (anonymous)],
+[0]         socket: [Function (anonymous)],
+[0]         timeout: [Function (anonymous)]
+[0]       },
+[0]       _eventsCount: 7,
+[0]       _maxListeners: undefined,
+[0]       outputData: [],
+[0]       outputSize: 0,
+[0]       writable: true,
+[0]       destroyed: false,
+[0]       _last: true,
+[0]       chunkedEncoding: false,
+[0]       shouldKeepAlive: true,
+[0]       maxRequestsOnConnectionReached: false,
+[0]       _defaultKeepAlive: true,
+[0]       useChunkedEncodingByDefault: false,
+[0]       sendDate: false,
+[0]       _removedConnection: false,
+[0]       _removedContLen: false,
+[0]       _removedTE: false,
+[0]       strictContentLength: false,
+[0]       _contentLength: 0,
+[0]       _hasBody: true,
+[0]       _trailer: '',
+[0]       finished: true,
+[0]       _headerSent: true,
+[0]       _closed: false,
+[0]       _header: 'GET /api/v3/ticker/price HTTP/1.1\r\n' +
+[0]         'Accept: application/json\r\n' +
+[0]         'Content-Type: application/json\r\n' +
+[0]         'X-MEXC-APIKEY: mx0vgliZNn7S22FZ7f\r\n' +
+[0]         'User-Agent: axios/1.9.0\r\n' +
+[0]         'Accept-Encoding: gzip, compress, deflate, br\r\n' +
+[0]         'Host: api.mexc.com\r\n' +
+[0]         'Connection: keep-alive\r\n' +
+[0]         '\r\n',
+[0]       _keepAliveTimeout: 0,
+[0]       _onPendingData: [Function: nop],
+[0]       agent: Agent {
+[0]         _events: [Object: null prototype] {
+[0]           free: [Function (anonymous)],
+[0]           newListener: [Function: maybeEnableKeylog]
+[0]         },
+[0]         _eventsCount: 2,
+[0]         _maxListeners: undefined,
+[0]         defaultPort: 443,
+[0]         protocol: 'https:',
+[0]         options: [Object: null prototype] {
+[0]           keepAlive: true,
+[0]           scheduling: 'lifo',
+[0]           timeout: 5000,
+[0]           noDelay: true,
+[0]           path: null
+[0]         },
+[0]         requests: [Object: null prototype] {},
+[0]         sockets: [Object: null prototype] {
+[0]           'api.mexc.com:443:::::::::::::::::::::': [ [TLSSocket], [TLSSocket] ],
+[0]           'api.coingecko.com:443:::::::::::::::::::::': [ [TLSSocket] ],
+[0]           'hooks.test.com:443:::::::::::::::::::::': [ [TLSSocket] ]
+[0]         },
+[0]         freeSockets: [Object: null prototype] {},
+[0]         keepAliveMsecs: 1000,
+[0]         keepAlive: true,
+[0]         maxSockets: Infinity,
+[0]         maxFreeSockets: 256,
+[0]         scheduling: 'lifo',
+[0]         maxTotalSockets: Infinity,
+[0]         totalSocketCount: 4,
+[0]         maxCachedSessions: 100,
+[0]         _sessionCache: {
+[0]           map: {
+[0]             'api.mexc.com:443:::::::::::::::::::::': [Buffer [Uint8Array]],
+[0]             'api.coingecko.com:443:::::::::::::::::::::': [Buffer [Uint8Array]],
+[0]             'www.coinpayments.net:443:::::::::::::::::::::': [Buffer [Uint8Array]],
+[0]             'gs.aggregtr.com:443:::::::::::::::::::::': [Buffer [Uint8Array]]
+[0]           },
+[0]           list: [
+[0]             'api.mexc.com:443:::::::::::::::::::::',
+[0]             'api.coingecko.com:443:::::::::::::::::::::',
+[0]             'www.coinpayments.net:443:::::::::::::::::::::',
+[0]             'gs.aggregtr.com:443:::::::::::::::::::::'
+[0]           ]
+[0]         },
+[0]         [Symbol(shapeMode)]: false,
+[0]         [Symbol(kCapture)]: false
+[0]       },
+[0]       socketPath: undefined,
+[0]       method: 'GET',
+[0]       maxHeaderSize: undefined,
+[0]       insecureHTTPParser: undefined,
+[0]       joinDuplicateHeaders: undefined,
+[0]       path: '/api/v3/ticker/price',
+[0]       _ended: false,
+[0]       res: null,
+[0]       aborted: false,
+[0]       timeoutCb: [Function: emitRequestTimeout],
+[0]       upgradeOrConnect: false,
+[0]       parser: null,
+[0]       maxHeadersCount: null,
+[0]       reusedSocket: false,
+[0]       host: 'api.mexc.com',
+[0]       protocol: 'https:',
+[0]       _redirectable: [Circular *1],
+[0]       [Symbol(shapeMode)]: false,
+[0]       [Symbol(kCapture)]: false,
+[0]       [Symbol(kBytesWritten)]: 0,
+[0]       [Symbol(kNeedDrain)]: false,
+[0]       [Symbol(corked)]: 0,
+[0]       [Symbol(kChunkedBuffer)]: [],
+[0]       [Symbol(kChunkedLength)]: 0,
+[0]       [Symbol(kSocket)]: <ref *3> TLSSocket {
+[0]         _tlsOptions: {
+[0]           allowHalfOpen: undefined,
+[0]           pipe: false,
+[0]           secureContext: SecureContext { context: SecureContext {} },
+[0]           isServer: false,
+[0]           requestCert: true,
+[0]           rejectUnauthorized: true,
+[0]           session: Buffer(2078) [Uint8Array] [
+[0]              48, 130,   8,  26,   2,   1,   1,   2,   2,   3,   4,   4,
+[0]               2,  19,   2,   4,  32,  81,  10,  69,  80, 185,  93,  44,
+[0]              21, 238, 116,  61, 137,  51,  64, 152,  89,  90,  22,  28,
+[0]              85, 108, 129, 174,  34,  57,  68, 243, 143,  49, 248,  15,
+[0]              98,   4,  48, 140,   4, 205, 192,  49, 130, 185, 225, 101,
+[0]             152, 165,  67, 126, 103, 162, 246, 246, 159,  24, 189, 140,
+[0]              71,  15,  13,  41, 200,  24, 113, 200, 205, 118, 184, 121,
+[0]             133, 119,  72, 197,  70, 186, 102,  53, 249,  70, 147,  82,
+[0]             165, 147, 135, 161,
+[0]             ... 1978 more items
+[0]           ],
+[0]           ALPNProtocols: undefined,
+[0]           requestOCSP: undefined,
+[0]           enableTrace: undefined,
+[0]           pskCallback: undefined,
+[0]           highWaterMark: undefined,
+[0]           onread: undefined,
+[0]           signal: undefined
+[0]         },
+[0]         _secureEstablished: false,
+[0]         _securePending: false,
+[0]         _newSessionPending: false,
+[0]         _controlReleased: true,
+[0]         secureConnecting: true,
+[0]         _SNICallback: null,
+[0]         servername: null,
+[0]         alpnProtocol: null,
+[0]         authorized: false,
+[0]         authorizationError: null,
+[0]         encrypted: true,
+[0]         _events: [Object: null prototype] {
+[0]           close: [
+[0]             [Function: onSocketCloseDestroySSL],
+[0]             [Function],
+[0]             [Function: onClose],
+[0]             [Function: socketCloseListener],
+[0]             [Function]
+[0]           ],
+[0]           end: [ [Function: onConnectEnd], [Function: onReadableStreamEnd] ],
+[0]           error: [Function: socketErrorListener],
+[0]           newListener: [Function: keylogNewListener],
+[0]           connect: [ [Function], [Function], [Function] ],
+[0]           secure: [Function: onConnectSecure],
+[0]           session: [Function (anonymous)],
+[0]           free: [Function: onFree],
+[0]           timeout: [ [Function: onTimeout], [Function] ],
+[0]           agentRemove: [Function: onRemove],
+[0]           data: undefined,
+[0]           drain: [Function: ondrain]
+[0]         },
+[0]         _eventsCount: 11,
+[0]         connecting: false,
+[0]         _hadError: true,
+[0]         _parent: null,
+[0]         _host: 'api.mexc.com',
+[0]         _closeAfterHandlingError: false,
+[0]         _readableState: ReadableState {
+[0]           highWaterMark: 65536,
+[0]           buffer: [],
+[0]           bufferIndex: 0,
+[0]           length: 0,
+[0]           pipes: [],
+[0]           awaitDrainWriters: null,
+[0]           [Symbol(kState)]: 59779574,
+[0]           [Symbol(kErroredValue)]: Error: getaddrinfo ENOTFOUND api.mexc.com
+[0]               at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26) {
+[0]             errno: -3008,
+[0]             code: 'ENOTFOUND',
+[0]             syscall: 'getaddrinfo',
+[0]             hostname: 'api.mexc.com'
+[0]           }
+[0]         },
+[0]         _writableState: WritableState {
+[0]           highWaterMark: 65536,
+[0]           length: 245,
+[0]           corked: 0,
+[0]           onwrite: [Function: bound onwrite],
+          writelen: 245,
+[0]           bufferedIndex: 0,
+[0]           pendingcb: 1,
+[0]           [Symbol(kState)]: 118260214,
+[0]           [Symbol(kBufferedValue)]: null,
+[0]           [Symbol(kWriteCbValue)]: [Function: bound onFinish],
+[0]           [Symbol(kErroredValue)]: Error: getaddrinfo ENOTFOUND api.mexc.com
+[0]               at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26) {
+[0]             errno: -3008,
+[0]             code: 'ENOTFOUND',
+[0]             syscall: 'getaddrinfo',
+[0]             hostname: 'api.mexc.com'
+[0]           }
+[0]         },
+[0]         allowHalfOpen: false,
+[0]         _maxListeners: undefined,
+[0]         _sockname: null,
+[0]         _pendingData: 'GET /api/v3/ticker/price HTTP/1.1\r\n' +
+[0]           'Accept: application/json\r\n' +
+[0]           'Content-Type: application/json\r\n' +
+[0]           'X-MEXC-APIKEY: mx0vgliZNn7S22FZ7f\r\n' +
+[0]           'User-Agent: axios/1.9.0\r\n' +
+[0]           'Accept-Encoding: gzip, compress, deflate, br\r\n' +
+[0]           'Host: api.mexc.com\r\n' +
+[0]           'Connection: keep-alive\r\n' +
+[0]           '\r\n',
+[0]         _pendingEncoding: 'latin1',
+[0]         server: undefined,
+[0]         _server: null,
+[0]         ssl: null,
+[0]         _requestCert: true,
+[0]         _rejectUnauthorized: true,
+[0]         timeout: 5000,
+[0]         parser: null,
+[0]         _httpMessage: [Circular *2],
+[0]         [Symbol(alpncallback)]: null,
+[0]         [Symbol(res)]: TLSWrap {
+[0]           _parent: TCP {
+[0]             reading: [Getter/Setter],
+[0]             onconnection: null,
+[0]             [Symbol(owner_symbol)]: [Circular *3],
+[0]             [Symbol(handle_onclose)]: [Function: done]
+[0]           },
+[0]           _parentWrap: null,
+[0]           _secureContext: SecureContext { context: SecureContext {} },
+[0]           reading: false,
+[0]           onkeylog: [Function: onkeylog],
+[0]           onhandshakestart: [Function: noop],
+[0]           onhandshakedone: [Function (anonymous)],
+[0]           onocspresponse: [Function: onocspresponse],
+[0]           onnewsession: [Function: onnewsessionclient],
+[0]           onerror: [Function: onerror],
+[0]           [Symbol(owner_symbol)]: [Circular *3]
+[0]         },
+[0]         [Symbol(verified)]: false,
+[0]         [Symbol(pendingSession)]: null,
+[0]         [Symbol(async_id_symbol)]: 24295,
+[0]         [Symbol(kHandle)]: null,
+[0]         [Symbol(lastWriteQueueSize)]: 0,
+[0]         [Symbol(timeout)]: Timeout {
+[0]           _idleTimeout: -1,
+[0]           _idlePrev: null,
+[0]           _idleNext: null,
+[0]           _idleStart: 2596186,
+[0]           _onTimeout: null,
+[0]           _timerArgs: undefined,
+[0]           _repeat: null,
+[0]           _destroyed: true,
+[0]           [Symbol(refed)]: false,
+[0]           [Symbol(kHasPrimitive)]: false,
+[0]           [Symbol(asyncId)]: 24297,
+[0]           [Symbol(triggerId)]: 0,
+[0]           [Symbol(kAsyncContextFrame)]: undefined
+[0]         },
+[0]         [Symbol(kBuffer)]: null,
+[0]         [Symbol(kBufferCb)]: null,
+[0]         [Symbol(kBufferGen)]: null,
+[0]         [Symbol(shapeMode)]: true,
+[0]         [Symbol(kCapture)]: false,
+[0]         [Symbol(kSetNoDelay)]: false,
+[0]         [Symbol(kSetKeepAlive)]: true,
+[0]         [Symbol(kSetKeepAliveInitialDelay)]: 60,
+[0]         [Symbol(kBytesRead)]: 0,
+[0]         [Symbol(kBytesWritten)]: 0,
+[0]         [Symbol(connect-options)]: {
+[0]           rejectUnauthorized: true,
+[0]           ciphers: 'TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384:DHE-RSA-AES256-SHA384:ECDHE-RSA-AES256-SHA256:DHE-RSA-AES256-SHA256:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!SRP:!CAMELLIA',
+[0]           checkServerIdentity: [Function: checkServerIdentity],
+[0]           minDHSize: 1024,
+[0]           session: Buffer(2078) [Uint8Array] [
+[0]              48, 130,   8,  26,   2,   1,   1,   2,   2,   3,   4,   4,
+[0]               2,  19,   2,   4,  32,  81,  10,  69,  80, 185,  93,  44,
+[0]              21, 238, 116,  61, 137,  51,  64, 152,  89,  90,  22,  28,
+[0]              85, 108, 129, 174,  34,  57,  68, 243, 143,  49, 248,  15,
+[0]              98,   4,  48, 140,   4, 205, 192,  49, 130, 185, 225, 101,
+[0]             152, 165,  67, 126, 103, 162, 246, 246, 159,  24, 189, 140,
+[0]              71,  15,  13,  41, 200,  24, 113, 200, 205, 118, 184, 121,
+[0]             133, 119,  72, 197,  70, 186, 102,  53, 249,  70, 147,  82,
+[0]             165, 147, 135, 161,
+[0]             ... 1978 more items
+[0]           ],
+[0]           maxRedirects: 21,
+[0]           maxBodyLength: Infinity,
+[0]           protocol: 'https:',
+[0]           path: null,
+[0]           method: 'GET',
+[0]           headers: [Object: null prototype] {
+[0]             Accept: 'application/json',
+[0]             'Content-Type': 'application/json',
+[0]             'X-MEXC-APIKEY': 'mx0vgliZNn7S22FZ7f',
+[0]             'User-Agent': 'axios/1.9.0',
+[0]             'Accept-Encoding': 'gzip, compress, deflate, br'
+[0]           },
+[0]           agents: { http: undefined, https: undefined },
+[0]           auth: undefined,
+[0]           family: undefined,
+[0]           beforeRedirect: [Function: dispatchBeforeRedirect],
+[0]           beforeRedirects: { proxy: [Function: beforeRedirect] },
+[0]           hostname: 'api.mexc.com',
+[0]           port: 443,
+[0]           agent: undefined,
+[0]           nativeProtocols: { 'http:': [Object], 'https:': [Object] },
+[0]           pathname: '/api/v3/ticker/price',
+[0]           _defaultAgent: Agent {
+[0]             _events: [Object: null prototype],
+[0]             _eventsCount: 2,
+[0]             _maxListeners: undefined,
+[0]             defaultPort: 443,
+[0]             protocol: 'https:',
+[0]             options: [Object: null prototype],
+[0]             requests: [Object: null prototype] {},
+[0]             sockets: [Object: null prototype],
+[0]             freeSockets: [Object: null prototype] {},
+[0]             keepAliveMsecs: 1000,
+[0]             keepAlive: true,
+[0]             maxSockets: Infinity,
+[0]             maxFreeSockets: 256,
+[0]             scheduling: 'lifo',
+[0]             maxTotalSockets: Infinity,
+[0]             totalSocketCount: 4,
+[0]             maxCachedSessions: 100,
+[0]             _sessionCache: [Object],
+[0]             [Symbol(shapeMode)]: false,
+[0]             [Symbol(kCapture)]: false
+[0]           },
+[0]           host: 'api.mexc.com',
+[0]           keepAlive: true,
+[0]           scheduling: 'lifo',
+[0]           timeout: 5000,
+[0]           noDelay: true,
+[0]           servername: 'api.mexc.com',
+[0]           _agentKey: 'api.mexc.com:443:::::::::::::::::::::',
+[0]           encoding: null,
+[0]           keepAliveInitialDelay: 1000
+[0]         }
+[0]       },
+[0]       [Symbol(kOutHeaders)]: [Object: null prototype] {
+[0]         accept: [ 'Accept', 'application/json' ],
+[0]         'content-type': [ 'Content-Type', 'application/json' ],
+[0]         'x-mexc-apikey': [ 'X-MEXC-APIKEY', 'mx0vgliZNn7S22FZ7f' ],
+[0]         'user-agent': [ 'User-Agent', 'axios/1.9.0' ],
+[0]         'accept-encoding': [ 'Accept-Encoding', 'gzip, compress, deflate, br' ],
+[0]         host: [ 'Host', 'api.mexc.com' ]
+[0]       },
+[0]       [Symbol(errored)]: null,
+[0]       [Symbol(kHighWaterMark)]: 65536,
+[0]       [Symbol(kRejectNonStandardBodyWrites)]: false,
+[0]       [Symbol(kUniqueHeaders)]: null
+[0]     },
+[0]     _currentUrl: 'https://api.mexc.com/api/v3/ticker/price',
+[0]     [Symbol(shapeMode)]: true,
+[0]     [Symbol(kCapture)]: false
+[0]   },
+[0]   cause: Error: getaddrinfo ENOTFOUND api.mexc.com
+[0]       at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26) {
+[0]     errno: -3008,
+[0]     code: 'ENOTFOUND',
+[0]     syscall: 'getaddrinfo',
+[0]     hostname: 'api.mexc.com'
+[0]   }
+[0] }
+[0] 
+[0] Node.js v22.12.0
+[0] [31m[nodemon] app crashed - waiting for file changes before starting...[39m
