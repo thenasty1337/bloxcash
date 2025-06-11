@@ -50,49 +50,49 @@ function Games() {
                     <div class='decoration-arrow'/>
                     <div class='dropdown-container'>
                         <div className='gamemode'
-                             style={{'background-image': 'url("/assets/gamemodes/battles.png")'}}>
+                             style={{'background-image': 'url("/assets/gamemodes/battles.webp")'}}>
                             <A href='/battles' class='gamemode-link' onClick={() => setActive(false)}>
                                 <p className='name'>CASE BATTLES</p>
                             </A>
                         </div>
 
                         <div className='gamemode'
-                             style={{'background-image': 'url("/assets/gamemodes/slots.png")'}}>
+                             style={{'background-image': 'url("/assets/gamemodes/slots.webp")'}}>
                             <A href='/slots' class='gamemode-link' onClick={() => setActive(false)}>
                                 <p className='name'>SLOTS</p>
                             </A>
                         </div>
 
                         <div className='gamemode'
-                             style={{'background-image': 'url("/assets/gamemodes/mines.png")'}}>
+                             style={{'background-image': 'url("/assets/gamemodes/mines.webp")'}}>
                             <A href='/mines' class='gamemode-link' onClick={() => setActive(false)}>
                                 <p className='name'>MINES</p>
                             </A>
                         </div>
 
                         <div className='gamemode'
-                             style={{'background-image': 'url("/assets/gamemodes/coinflip.png")'}}>
+                             style={{'background-image': 'url("/assets/gamemodes/coinflip.webp")'}}>
                             <A href='/coinflip' class='gamemode-link' onClick={() => setActive(false)}>
                                 <p className='name'>COINFLIP</p>
                             </A>
                         </div>
 
                         <div className='gamemode'
-                             style={{'background-image': 'url("/assets/gamemodes/roulette.png")'}}>
+                             style={{'background-image': 'url("/assets/gamemodes/roulette.webp")'}}>
                             <A href='/roulette' class='gamemode-link' onClick={() => setActive(false)}>
                                 <p className='name'>ROULETTE</p>
                             </A>
                         </div>
 
                         <div class='gamemode'
-                             style={{'background-image': 'url("/assets/gamemodes/jackpot.png")'}}>
+                             style={{'background-image': 'url("/assets/gamemodes/jackpot.webp")'}}>
                             <A href='/jackpot' class='gamemode-link' onClick={() => setActive(false)}>
                                 <p class='name'>JACKPOT</p>
                             </A>
                         </div>
 
                         <div class='gamemode'
-                             style={{'background-image': 'url("/assets/gamemodes/cases.png")'}}>
+                             style={{'background-image': 'url("/assets/gamemodes/cases.webp")'}}>
                             <A href='/cases' class='gamemode-link' onClick={() => setActive(false)}>
                                 <p class='name'>CASES</p>
                             </A>

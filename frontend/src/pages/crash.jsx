@@ -8,6 +8,7 @@ import {authedAPI} from "../util/api";
 import CrashBet from "../components/Crash/crashbet";
 import {subscribeToGame, unsubscribeFromGames} from "../util/socket";
 import {Title} from "@solidjs/meta";
+import SmartImage from "../components/SmartImage";
 
 function Crash(props) {
 
@@ -178,7 +179,7 @@ function Crash(props) {
 
       <div class='crash-container fadein'>
         <div class='crash-header'>
-          <img src='/assets/icons/crash.svg' height='14' width='14' alt=''/>
+          <SmartImage src='/assets/icons/crash.svg' height='14' width='14' alt=''/>
           <p>CRASH</p>
         </div>
 
@@ -200,7 +201,7 @@ function Crash(props) {
                 </div>
 
                 <div class='input-container'>
-                  <img src='/assets/icons/coin.svg' height='14' width='14' alt=''/>
+                  <SmartImage src='/assets/icons/coin.svg' height='14' width='14' alt=''/>
                   <input type='number' value={bet()} onInput={(e) => setBet(e.target.valueAsNumber)}
                          placeholder='0'/>
                 </div>
@@ -312,7 +313,7 @@ function Crash(props) {
                   <p>{bets()?.length} PLAYERS</p>
 
                   <p class='total gold'>
-                    <img src='/assets/icons/coin.svg' height='15' alt=''/>
+                    <SmartImage src='/assets/icons/coin.svg' height='15' alt=''/>
                     {(bets()?.reduce((pv, bet) => pv + bet.amount, 0))?.toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2

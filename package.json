@@ -3,20 +3,29 @@
   "version": "0.0.0",
   "description": "BloxCash - Gaming Platform",
   "scripts": {
-    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
-    "dev:backend": "cd backend && npm run dev",
-    "dev:frontend": "cd frontend && npm run dev",
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "start:backend": "cd backend && npm start",
-    "start:frontend": "cd frontend && npm start",
-    "start:both": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
-    "build:frontend": "cd frontend && npm run build"
+    "install-all": "bun install && cd backend && bun install && cd ../frontend && bun install",
+    "dev:backend": "cd backend && bun run dev",
+    "dev:frontend": "cd frontend && bun run dev",
+    "dev": "concurrently \"bun run dev:backend\" \"bun run dev:frontend\"",
+    "start:backend": "cd backend && bun run start",
+    "start:frontend": "cd frontend && bun run start",
+    "start:both": "concurrently \"bun run start:backend\" \"bun run start:frontend\"",
+    "build:frontend": "cd frontend && bun run build",
+    "perf:frontend": "node scripts/performance-test.js",
+    "images:convert": "node scripts/convert-images.js"
   },
   "license": "MIT",
   "devDependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0",
+    "lighthouse": "^10.4.0",
+    "chrome-launcher": "^0.15.0",
+    "fast-glob": "^3.3.2"
   },
   "dependencies": {
     "date-fns": "^4.1.0"
-  }
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
 }

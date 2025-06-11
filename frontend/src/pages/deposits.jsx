@@ -11,6 +11,7 @@ import LimitedsMFA from "../components/MFA/limitedsmfa";
 import CreditCardDeposit from "../components/Deposits/creditcard";
 import {openSupport} from "../util/support";
 import {Title} from "@solidjs/meta";
+import SmartImage from "../components/SmartImage";
 
 const METHODS = [
   {name: 'CREDIT CARD', img: '/assets/icons/cards.png', tab: 'fiat'},
@@ -21,7 +22,6 @@ const METHODS = [
   {name: 'USDC', img: '/assets/icons/usdc.png', tab: 'crypto'},
   {name: 'USDT', img: '/assets/icons/usdt.png', tab: 'crypto'},
   {name: 'DOGECOIN', img: '/assets/icons/dogecoin.png', tab: 'crypto'}
-  // { name: 'BUSD', img: '/assets/icons/busd.png', tab: 'crypto' },
 ]
 
 function Deposits(props) {

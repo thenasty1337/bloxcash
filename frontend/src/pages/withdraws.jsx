@@ -10,6 +10,7 @@ import {openSupport} from "../util/support";
 import CryptoWithdraw from "../components/Withdraws/crypto";
 import KYCModal from "../components/KYC/kyc";
 import {Title} from "@solidjs/meta";
+import SmartImage from "../components/SmartImage";
 
 const METHODS = [
   {name: 'ROBUX', img: '/assets/icons/coin.svg', tab: 'roblox',},
@@ -166,7 +167,7 @@ function Withdraws(props) {
                 <div class='bar' style={{margin: 'auto 0 16px 0'}}/>
                 <p class='gold center'>Withdraw amount:</p>
                 <div class='depo-amount center'>
-                  <img src='/assets/icons/coin.svg' height='15' width='15' alt=''/>
+                  <SmartImage src='/assets/icons/coin.svg' height='15' width='15' alt=''/>
                   <p>{selectedItem()?.price?.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                     maximumFractionDigits: 2

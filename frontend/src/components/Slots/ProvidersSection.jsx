@@ -1,7 +1,19 @@
-import { createResource, createSignal, For, Show } from "solid-js";
+import { createResource, createSignal, For, Show, createMemo } from "solid-js";
 import { useSearchParams, useNavigate, useLocation } from "@solidjs/router";
 import { api } from "../../util/api";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'solid-icons/ai';
+
+// Memoize available images list to prevent recreation
+const AVAILABLE_IMAGES = Object.freeze([
+  "3-oaks-gaming", "avatarux", "b-gaming", "backseatgaming", "belatra", 
+  "bigtimegaming", "blueprint", "bullsharkgames", "elk-studios", "endorphina", 
+  "evolution-gaming", "fantasma-games", "fat-panda", "game-art", "games-global", 
+  "gamomat", "hacksaw", "jade-rabbit", "just-slots", "live88", "massive-studios", 
+  "netent", "nolimit", "novomatic", "octoplay", "onetouch", "petersons", "pgsoft", 
+  "playn-go", "pragmatic-play", "print-studios", "push-gaming", "quickspin", 
+  "red-rake-gaming", "red-tiger", "relax-gaming", "shady-lady", "slotmill", 
+  "spinomenal", "titan-gaming", "truelab", "twist-gaming", "voltent"
+]);
 
 function ProvidersSection() {
   let providersRef;
@@ -28,42 +40,33 @@ function ProvidersSection() {
     }
   }
 
-  function repeatProviders() {
-    if (!providers() || !Array.isArray(providers()) || providers().length === 0) return []
+  // Memoize filtered providers to prevent expensive filtering on every render
+  const availableProviders = createMemo(() => {
+    if (!providers() || !Array.isArray(providers()) || providers().length === 0) return [];
     
-    // List of available provider images (those we have in the directory)
-    const availableImages = [
-      "3-oaks-gaming", "avatarux", "b-gaming", "backseatgaming", "belatra", 
-      "bigtimegaming", "blueprint", "bullsharkgames", "elk-studios", "endorphina", 
-      "evolution-gaming", "fantasma-games", "fat-panda", "game-art", "games-global", 
-      "gamomat", "hacksaw", "jade-rabbit", "just-slots", "live88", "massive-studios", 
-      "netent", "nolimit", "novomatic", "octoplay", "onetouch", "petersons", "pgsoft", 
-      "playn-go", "pragmatic-play", "print-studios", "push-gaming", "quickspin", 
-      "red-rake-gaming", "red-tiger", "relax-gaming", "shady-lady", "slotmill", 
-      "spinomenal", "titan-gaming", "truelab", "twist-gaming", "voltent"
-    ];
-    
-    // Filter to only show providers with available images
-    const availableProviders = providers().filter(provider => 
-      provider && provider.slug && availableImages.includes(provider.slug.toLowerCase())
+    return providers().filter(provider => 
+      provider && provider.slug && AVAILABLE_IMAGES.includes(provider.slug.toLowerCase())
     );
+  });
+
+  // Memoize repeated providers to prevent expensive array operations
+  const repeatProviders = createMemo(() => {
+    const available = availableProviders();
+    if (available.length === 0) return [];
     
-    // If no available providers, return empty array
-    if (availableProviders.length === 0) return []
+    // Don't repeat if we already have enough providers
+    if (available.length >= 12) return available.slice(0, 12);
     
-    // Ensure we don't try to create an array with invalid length
-    const repeatCount = Math.max(1, Math.ceil(6 / availableProviders.length));
-    
-    // Additional safety check to prevent creating arrays that are too large
-    if (repeatCount > 100) return availableProviders; // Fallback to just the providers
+    // Simple repeat logic - just show providers once or twice max
+    const repeatCount = available.length < 6 ? 2 : 1;
     
     try {
-      return Array(repeatCount).fill(availableProviders).flat()
+      return Array(repeatCount).fill(available).flat().slice(0, 12);
     } catch (e) {
       console.warn('Error in repeatProviders:', e);
-      return availableProviders; // Fallback to just the providers
+      return available;
     }
-  }
+  });
 
   function scrollProviders(direction) {
     providersRef.scrollBy({
@@ -129,6 +132,8 @@ function ProvidersSection() {
           <For each={repeatProviders()}>{(provider, index) =>
             <div class='provider' onClick={() => handleProviderClick(provider)}>
               <img src={`${import.meta.env.VITE_BASE_URL}${provider.img}`} height='50' 
+                   loading="lazy"
+                   decoding="async"
                    onError={(e) => {
                      // Fallback if image fails to load
                      e.target.style.display = 'none';

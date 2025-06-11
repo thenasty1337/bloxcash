@@ -12,6 +12,7 @@ import Level from "../components/Level/level";
 import {getCents} from "../util/balance";
 import {subscribeToGame, unsubscribeFromGames} from "../util/socket";
 import {Meta, Title} from "@solidjs/meta";
+import SmartImage from "../components/SmartImage";
 
 function Jackpot(props) {
 
@@ -61,7 +62,7 @@ function Jackpot(props) {
         winners: () => '',
         rolling: () => '',
         counting: () => <>
-            <img src='/assets/icons/timer.svg' height='18' width='15'/>
+            <SmartImage src='/assets/icons/timer.svg' height='18' width='15'/>
             {Math.floor(timer() / 1000) + ' s'}
         </>,
         waiting: () => 'WAITING FOR PLAYERS...'
@@ -76,7 +77,7 @@ function Jackpot(props) {
                     <span class='white bold'>{winner()?.user?.username || 'Anonymous'}</span>
                     <Level xp={winner()?.user?.xp}/>
                     WON
-                    <img src='/assets/icons/coin.svg' height='17' width='17'/>
+                    <SmartImage src='/assets/icons/coin.svg' height='17' width='17'/>
                     <span class='bold white'>
                                         {total()?.toLocaleString(undefined, { maximumFractionDigits: 0 })}<span class='gray'>.{getCents(total())}</span>
                                     </span>
@@ -91,7 +92,7 @@ function Jackpot(props) {
             </div>
         </div>,
         rolling: () => <>
-            <img class='arrow' src='/assets/icons/selector.png' height='16' alt=''/>
+            <SmartImage class='arrow' src='/assets/icons/selector.png' height='16' alt=''/>
             <div class='spinner' ref={spinnerRef}>
                 <For each={users()}>{(bet, index) => <JackpotUser color={bet?.color} id={bet?.user?.id}
                                                                   percent={bet?.amount / total()} state={state()}
@@ -307,7 +308,7 @@ function Jackpot(props) {
                 <div class='jackpot-header'>
                     <div class='header-section'>
                         <p class='title'>
-                            <img src='/assets/icons/coin2.svg' height='18' alt=''/>
+                            <SmartImage src='/assets/icons/coin2.svg' height='18' alt=''/>
                             JACKPOT -
                         </p>
                     </div>
@@ -332,7 +333,7 @@ function Jackpot(props) {
 
                     <div class='stat'>
                         <p class='white align'>
-                            <img class='stat-coin' src='/assets/icons/coin.svg' height='21' width='21' alt=''/>
+                            <SmartImage class='stat-coin' src='/assets/icons/coin.svg' height='21' width='21' alt=''/>
                             <Countup end={total()} gray={true}/>
                         </p>
 
@@ -341,7 +342,7 @@ function Jackpot(props) {
 
                     <div class='stat gold'>
                         <p class='white align'>
-                            <img class='stat-coin' src='/assets/icons/coin.svg' height='21' width='21' alt=''/>
+                            <SmartImage class='stat-coin' src='/assets/icons/coin.svg' height='21' width='21' alt=''/>
                             <Countup end={usersBet()?.amount || 0} gray={true}/>
                         </p>
 

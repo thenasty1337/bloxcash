@@ -8,6 +8,7 @@ import {useSearchParams} from "@solidjs/router";
 import {Meta, Title} from "@solidjs/meta";
 import SurveysWarning from "../components/Surveys/warning";
 import SurveyIssues from "../components/Surveys/issues";
+import SmartImage from "../components/SmartImage";
 
 function Surveys(props) {
 
@@ -69,7 +70,7 @@ function Surveys(props) {
                 <SurveysBanner below={true}/>
 
                 <div class='banner'>
-                    <img src='/assets/icons/providers.svg' height='19' width='19' alt=''/>
+                    <SmartImage src='/assets/icons/providers.svg' height='19' width='19' alt=''/>
 
                     <p class='title'>
                         <span class='white bold'>PROVIDERS</span>
@@ -98,7 +99,7 @@ function Surveys(props) {
                         <For each={walls()}>{(wall) =>
                             <div class={'provider ' + (params.wall === wall.id ? 'active' : '')}
                                  onClick={() => setWall(wall.id)}>
-                                <img src={`${import.meta.env.VITE_SERVER_URL}/public/walls/${wall?.id}.png`}
+                                <SmartImage src={`${import.meta.env.VITE_SERVER_URL}/public/walls/${wall?.id}.png`}
                                      height='40'/>
                             </div>
                         }</For>

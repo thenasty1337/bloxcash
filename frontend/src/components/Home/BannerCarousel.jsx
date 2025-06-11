@@ -287,9 +287,13 @@ const BannerCarousel = (props) => {
                     font-size: clamp(24px, 5vw, 48px);
                     font-weight: 900;
                     text-shadow: 
-                        0 0 30px currentColor,
+                        0 0 20px currentColor,
                         0 4px 8px rgba(0, 0, 0, 0.4);
-                    animation: textGlow 3s ease-in-out infinite alternate;
+                }
+
+                /* Reduced glow animation - only on hover for better performance */
+                .title-highlight:hover {
+                    animation: textGlow 2s ease-in-out;
                 }
 
                 .subtitle {
@@ -388,7 +392,8 @@ const BannerCarousel = (props) => {
                     height: 100%;
                     object-fit: cover;
                     object-position: center;
-                    animation: subtleFloat 8s ease-in-out infinite;
+                    /* Remove expensive infinite float animation */
+                    transform: translateZ(0); /* GPU acceleration without animation */
                 }
 
                 .color-overlay {
@@ -399,7 +404,7 @@ const BannerCarousel = (props) => {
                     bottom: 0;
                     mix-blend-mode: multiply;
                     z-index: 2;
-                    transition: opacity 0.6s ease;
+                    transition: opacity 0.3s ease; /* Simplified transition */
                 }
 
                 .main-image {
@@ -419,13 +424,33 @@ const BannerCarousel = (props) => {
                     height: 100%;
                     object-fit: contain;
                     object-position: center;
-                    transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+                    transition: transform 0.4s ease; /* Simplified transition */
                     opacity: 0.9;
+                    will-change: transform; /* Only when it will transform */
                 }
 
+                /* Simplified hover effects to reduce GPU load */
                 .banner-image:hover .main-image img {
                     transform: scale(1.02);
                     opacity: 1;
+                }
+
+                .banner-image:hover .color-overlay {
+                    opacity: 0.3; /* Reduced opacity change */
+                }
+
+                /* Remove expensive float animation, keep simpler version for hover only */
+                @keyframes textGlow {
+                    0% {
+                        text-shadow: 
+                            0 0 20px currentColor,
+                            0 4px 8px rgba(0, 0, 0, 0.4);
+                    }
+                    100% {
+                        text-shadow: 
+                            0 0 30px currentColor,
+                            0 4px 8px rgba(0, 0, 0, 0.4);
+                    }
                 }
 
                 .banner-image:hover .background-decoration {
@@ -435,19 +460,6 @@ const BannerCarousel = (props) => {
 
                 .banner-image:hover .bg-pattern {
                     transform: scale(1.1);
-                }
-
-                .banner-image:hover .color-overlay {
-                    opacity: 0.5;
-                }
-
-                @keyframes subtleFloat {
-                    0%, 100% {
-                        transform: translateY(0px) scale(1);
-                    }
-                    50% {
-                        transform: translateY(-5px) scale(1.02);
-                    }
                 }
 
                 .progress-container {
@@ -548,22 +560,6 @@ const BannerCarousel = (props) => {
                         transform: translateX(0);
                     }
                 }
-
-                @keyframes textGlow {
-                    0%, 100% {
-                        text-shadow: 
-                            0 0 20px currentColor,
-                            0 4px 8px rgba(0, 0, 0, 0.4);
-                    }
-                    50% {
-                        text-shadow: 
-                            0 0 40px currentColor,
-                            0 0 60px currentColor,
-                            0 4px 8px rgba(0, 0, 0, 0.4);
-                    }
-                }
-
-
 
                 @keyframes shimmer {
                     0% { transform: translateX(-20px); opacity: 0; }

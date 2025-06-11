@@ -6,6 +6,7 @@ import {getCents} from "../util/balance";
 import {api} from "../util/api";
 import Loader from "../components/Loader/loader";
 import {Meta, Title} from "@solidjs/meta";
+import SmartImage from "../components/SmartImage";
 
 function Leaderboard(props) {
 
@@ -54,13 +55,13 @@ function Leaderboard(props) {
 
             <div class='leaderboard-container fadein'>
                 <div class='leaderboard-banner'>
-                    <img class='art' src='/assets/art/goldswiggle.png' width='380' height='86'/>
-                    <img class='art right' src='/assets/art/goldswiggle.png' width='380' height='86'/>
+                    <SmartImage class='art' src='/assets/art/goldswiggle.png' width='380' height='86'/>
+                    <SmartImage class='art right' src='/assets/art/goldswiggle.png' width='380' height='86'/>
 
-                    <img class='coin' src='/assets/icons/coin.svg' width='100' height='88'/>
-                    <img class='coin two' src='/assets/icons/coinreverse.png' width='53' height='57'/>
-                    <img class='coin three' src='/assets/icons/coin.svg' width='96' height='86'/>
-                    <img class='coin four' src='/assets/icons/coinreverse.png' width='63' height='68'/>
+                    <SmartImage class='coin' src='/assets/icons/coin.svg' width='100' height='88'/>
+                    <SmartImage class='coin two' src='/assets/icons/coinreverse.png' width='53' height='57'/>
+                    <SmartImage class='coin three' src='/assets/icons/coin.svg' width='96' height='86'/>
+                    <SmartImage class='coin four' src='/assets/icons/coinreverse.png' width='63' height='68'/>
 
                     <h1 class='title'>THE CLASH</h1>
                     <p class='desc'>
@@ -77,7 +78,7 @@ function Leaderboard(props) {
                 <Show when={!leaderboard.loading} fallback={<Loader/>}>
                     <>
                         <div className='time'>
-                            <img src='/assets/icons/timer.svg' width='19' height='22' alt=''/>
+                            <SmartImage src='/assets/icons/timer.svg' width='19' height='22' alt=''/>
                             <p>{formatTimeLeft()}</p>
                         </div>
 
@@ -89,18 +90,18 @@ function Leaderboard(props) {
                                         xp='gold' avatar={placements()[0]?.avatar}/>
                                 <p>{placements()[0] ? placements()[0]?.username || 'Anonymous' : 'No User'}</p>
                                 <div className='cost'>
-                                    <img src='/assets/icons/coin.svg' height='14' width='15' alt=''/>
+                                    <SmartImage src='/assets/icons/coin.svg' height='14' width='15' alt=''/>
                                     <p>{(placements()[0]?.wagered || 0)?.toLocaleString(undefined, {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2
                                     })}</p>
                                 </div>
                                 <div className='bar'/>
-                                <img className='item'
+                                <SmartImage className='item'
                                      src={placements()[0]?.item} alt=''
                                      height='56'/>
                                 <div className='cost'>
-                                    <img src='/assets/icons/coin.svg' height='14' width='15' alt=''/>
+                                    <SmartImage src='/assets/icons/coin.svg' height='14' width='15' alt=''/>
                                     <p>{(placements()[0]?.reward || 0)?.toLocaleString(undefined, {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2
@@ -115,16 +116,16 @@ function Leaderboard(props) {
                                         xp='silver' avatar={placements()[1]?.avatar}/>
                                 <p>{placements()[1] ? placements()[1]?.username || 'Anonymous' : 'No User'}</p>
                                 <div className='cost'>
-                                    <img src='/assets/icons/coin.svg' height='14' width='15' alt=''/>
+                                    <SmartImage src='/assets/icons/coin.svg' height='14' width='15' alt=''/>
                                     <p>{(placements()[1]?.wagered || 0)?.toLocaleString(undefined, {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2
                                     })}</p>
                                 </div>
                                 <div className='bar'/>
-                                <img className='item' src={placements()[1]?.item} alt='' height='56'/>
+                                <SmartImage className='item' src={placements()[1]?.item} alt='' height='56'/>
                                 <div className='cost'>
-                                    <img src='/assets/icons/coin.svg' height='14' width='15' alt=''/>
+                                    <SmartImage src='/assets/icons/coin.svg' height='14' width='15' alt=''/>
                                     <p>{(placements()[1]?.reward || 0)?.toLocaleString(undefined, {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2
@@ -139,18 +140,18 @@ function Leaderboard(props) {
                                         xp='bronze' avatar={placements()[2]?.avatar}/>
                                 <p>{placements()[2] ? placements()[2]?.username || 'Anonymous' : 'No User'}</p>
                                 <div className='cost'>
-                                    <img src='/assets/icons/coin.svg' height='14' width='15' alt=''/>
+                                    <SmartImage src='/assets/icons/coin.svg' height='14' width='15' alt=''/>
                                     <p>{(placements()[2]?.wagered || 0)?.toLocaleString(undefined, {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2
                                     })}</p>
                                 </div>
                                 <div className='bar'/>
-                                <img className='item'
+                                <SmartImage className='item'
                                      src={placements()[2]?.item} alt=''
                                      height='56'/>
                                 <div className='cost'>
-                                    <img src='/assets/icons/coin.svg' height='14' width='15' alt=''/>
+                                    <SmartImage src='/assets/icons/coin.svg' height='14' width='15' alt=''/>
                                     <p>{(placements()[2]?.reward || 0)?.toLocaleString(undefined, {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2
@@ -191,7 +192,7 @@ function Leaderboard(props) {
                                 </div>
 
                                 <div className='table-column'>
-                                    <img src='/assets/icons/coin.svg' height='15' width='16' alt=''/>
+                                    <SmartImage src='/assets/icons/coin.svg' height='15' width='16' alt=''/>
                                     <p>{(placement?.wagered || 0)?.toLocaleString(undefined, {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2
@@ -199,7 +200,7 @@ function Leaderboard(props) {
                                 </div>
 
                                 <div className='table-column gold'>
-                                    <img src='/assets/icons/coin.svg' height='15' width='16' alt=''/>
+                                    <SmartImage src='/assets/icons/coin.svg' height='15' width='16' alt=''/>
                                     <p>{(placement?.reward || 0).toLocaleString(undefined, {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2

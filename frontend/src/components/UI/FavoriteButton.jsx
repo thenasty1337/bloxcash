@@ -1,6 +1,11 @@
-import { createSignal, createEffect } from 'solid-js';
+import { createSignal, createEffect, createMemo } from 'solid-js';
 import { favorites } from '../../util/api';
 import { AiOutlineHeart, AiFillHeart } from 'solid-icons/ai';
+
+// Pre-define static styles to avoid inline recalculation
+const buttonBaseClasses = 'favorite-btn';
+const buttonFavoritedClasses = 'favorite-btn favorited';
+const buttonLoadingClasses = 'favorite-btn loading';
 
 function FavoriteButton(props) {
   const [isFavorited, setIsFavorited] = createSignal(false);
@@ -11,6 +16,13 @@ function FavoriteButton(props) {
     if (props.isFavorited !== undefined) {
       setIsFavorited(props.isFavorited);
     }
+  });
+
+  // Memoize button classes to prevent recalculation
+  const buttonClasses = createMemo(() => {
+    if (isLoading()) return buttonLoadingClasses;
+    if (isFavorited()) return buttonFavoritedClasses;
+    return buttonBaseClasses;
   });
 
   // Toggle favorite status
@@ -46,7 +58,7 @@ function FavoriteButton(props) {
 
   return (
     <button 
-      class={`favorite-btn ${isFavorited() ? 'favorited' : ''} ${isLoading() ? 'loading' : ''}`}
+      class={buttonClasses()}
       onClick={toggleFavorite}
       disabled={isLoading()}
       title={isFavorited() ? 'Remove from favorites' : 'Add to favorites'}

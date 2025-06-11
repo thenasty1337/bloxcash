@@ -60,27 +60,40 @@ function Chat(props) {
     createEffect(() => {
         if (!chatRef) return
 
+        // Throttle scroll handler to improve performance
+        let scrollTimeout;
         chatRef.onscroll = (e) => {
-            let maxScroll = e.target.scrollHeight - e.target.clientHeight
-            let currentScrollTop = e.target.scrollTop
+            if (scrollTimeout) return; // Skip if already processing
             
-            // Add a small tolerance for bottom detection (2px) to handle precision issues
-            if (currentScrollTop >= maxScroll - 2) {
-                setScroll(true)
-                setTop(currentScrollTop)
-                return
-            }
+            scrollTimeout = setTimeout(() => {
+                let maxScroll = e.target.scrollHeight - e.target.clientHeight
+                let currentScrollTop = e.target.scrollTop
+                
+                // Add a small tolerance for bottom detection (2px) to handle precision issues
+                if (currentScrollTop >= maxScroll - 2) {
+                    setScroll(true)
+                    setTop(currentScrollTop)
+                    scrollTimeout = null;
+                    return
+                }
 
-            if (!top()) return setTop(currentScrollTop)
+                if (!top()) {
+                    setTop(currentScrollTop)
+                    scrollTimeout = null;
+                    return
+                }
 
-            if (currentScrollTop < top() - 100) {
-                setScroll(false)
+                if (currentScrollTop < top() - 100) {
+                    setScroll(false)
+                    setTop(currentScrollTop)
+                    scrollTimeout = null;
+                    return
+                }
+                
+                // Update top position for any other scroll movement
                 setTop(currentScrollTop)
-                return
-            }
-            
-            // Update top position for any other scroll movement
-            setTop(currentScrollTop)
+                scrollTimeout = null;
+            }, 16); // ~60fps throttling
         }
     })
 

@@ -1,0 +1,266 @@
+.housegames-container {
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.housegames-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.housegames-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.housegames-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.housegames-header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.housegames-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.housegames-count {
+  font-size: 0.75rem;
+  color: #8aa3b8;
+  font-weight: 500;
+}
+
+.housegames-header-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.housegames-header-icon img {
+  width: 32px;
+  height: 32px;
+}
+
+.housegames-header-divider {
+  height: 1px;
+  background: linear-gradient(90deg, rgb(31 36 68) 0%, rgba(78, 205, 196, 0.1) 30%, transparent 100%);
+}
+
+.housegames-nav-controls {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.housegames-nav-btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: #0F0B27;
+  border: 1px solid rgb(56 50 93);
+  border-radius: 6px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.housegames-nav-btn:hover {
+  border-color: rgb(31 36 68);
+  background: rgb(20 16 43);
+  transform: translateY(-1px);
+}
+
+.housegames-nav-btn svg {
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.housegames-nav-btn:hover svg {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.housegames-nav-btn:active {
+  transform: translateY(0);
+}
+
+.housegames-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  padding-top: 10px;
+}
+
+.housegames-carousel {
+  display: flex;
+  gap: 1rem;
+  padding: 10px 0 0 0;
+  border-radius: 12px;
+  min-height: 200px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.housegames-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.housegames-card {
+  aspect-ratio: 3/4;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.housegames-carousel .housegames-card {
+  min-width: 150px;
+  width: 150px;
+  height: 200px;
+}
+
+.housegames-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.housegames-carousel .housegames-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 107, 107, 0.2),
+    0 0 20px rgba(255, 107, 107, 0.1);
+}
+
+/* Optimized GameIcon styles */
+.housegames-icon-picture {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.housegames-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.housegames-icon-optimized {
+  /* Ensure crisp rendering at all sizes */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Preload hint for critical images */
+.housegames-icon:not([src]) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.housegames-icon:not([src])::after {
+  content: "🎮";
+  font-size: 2rem;
+  opacity: 0.3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .housegames-container {
+    margin-top: 1.25rem;
+  }
+
+  .housegames-header-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .housegames-header-right {
+    justify-content: center;
+  }
+
+  .housegames-title {
+    font-size: 1rem;
+  }
+
+  .housegames-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .housegames-carousel {
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+  }
+
+  .housegames-carousel .housegames-card {
+    min-width: 130px;
+    width: 130px;
+    height: 170px;
+  }
+
+  .housegames-card {
+    border-radius: 8px;
+  }
+
+  .housegames-icon {
+    border-radius: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .housegames-header-content {
+    gap: 0.75rem;
+  }
+
+  .housegames-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .housegames-carousel {
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+  }
+
+  .housegames-carousel .housegames-card {
+    min-width: 120px;
+    width: 120px;
+    height: 150px;
+  }
+}
+
+/* Performance optimization for image loading */
+@media (prefers-reduced-motion: reduce) {
+  .housegames-card,
+  .housegames-icon,
+  .housegames-nav-btn {
+    transition: none;
+  }
+} 

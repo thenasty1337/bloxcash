@@ -10,10 +10,12 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "solid-devtools": "^0.27.3",
+    "solid-devtools": "^0.27.9",
+    "speed-measure-webpack-plugin": "^1.5.0",
     "vite": "^4.3.9",
     "vite-plugin-solid": "^2.7.0",
-    "vite-plugin-solid-styled": "^0.8.1"
+    "vite-plugin-solid-styled": "^0.8.1",
+    "webpack-bundle-analyzer": "^4.10.2"
   },
   "dependencies": {
     "@solidjs/meta": "^0.28.6",
@@ -36,6 +38,7 @@
     "solid-qr-code": "^0.1.11",
     "solid-styled": "^0.8.1",
     "solid-toast": "^0.5.0",
+    "web-vitals": "^3.3.1",
     "zustand": "^5.0.4"
   }
 }

@@ -1,6 +1,6 @@
 import GamesList from "../components/Home/gameslist";
 import RainBanner from "../components/Home/rainbanner";
-import {createSignal, For} from "solid-js";
+import {createSignal, For, onMount, onCleanup, Show} from "solid-js";
 import Bets from "../components/Home/bets";
 import {useNavigate} from "@solidjs/router";
 import RewardsBanner from "../components/Home/rewardsbanner";
@@ -9,9 +9,12 @@ import SlotsList from "../components/Home/slotslist";
 import SurveysBanner from "../components/Surveys/surveysbanner";
 import BannerCarousel from "../components/Home/BannerCarousel";
 import ProvidersSection from "../components/Slots/ProvidersSection";
+import SmartImage from "../components/SmartImage";
 
 
-const METHODS = {
+
+// Memoize METHODS to prevent recreation on every render
+const METHODS = Object.freeze({
     'bitcoin': {
         src: '/assets/cryptos/branded/BTC.svg',
         name: 'Bitcoin',
@@ -66,12 +69,58 @@ const METHODS = {
         symbol: 'BNB',
         url: 'bnb'
     }
-}
+});
+
+// Pre-compute crypto keys to avoid recreation
+const CRYPTO_KEYS = Object.keys(METHODS);
+const TRIPLE_CRYPTO_KEYS = [...CRYPTO_KEYS, ...CRYPTO_KEYS, ...CRYPTO_KEYS];
 
 function Home(props) {
 
     const [method, setMethod] = createSignal('')
     const navigate = useNavigate()
+    const [loadPhase, setLoadPhase] = createSignal(0); // Control phased loading
+    
+    // Pause crypto animation when not visible to save performance
+    const [isVisible, setIsVisible] = createSignal(true)
+    const [isScrolling, setIsScrolling] = createSignal(false)
+
+    onMount(() => {
+        // Pause crypto animation when not visible to save performance
+        const observer = new IntersectionObserver(
+            ([entry]) => setIsVisible(entry.isIntersecting),
+            { threshold: 0.1 }
+        )
+        
+        const cryptoContainer = document.querySelector('.crypto-carousel-container')
+        if (cryptoContainer) {
+            observer.observe(cryptoContainer)
+        }
+        
+        // Pause animation during page scroll for better performance
+        let scrollTimeout;
+        const handleScroll = () => {
+            setIsScrolling(true)
+            clearTimeout(scrollTimeout)
+            scrollTimeout = setTimeout(() => setIsScrolling(false), 150)
+        }
+        
+        window.addEventListener('scroll', handleScroll, { passive: true })
+        
+        onCleanup(() => {
+            observer.disconnect()
+            window.removeEventListener('scroll', handleScroll)
+            clearTimeout(scrollTimeout)
+        })
+
+        // Load core components first
+        setLoadPhase(1);
+        
+        // Then load slots sections with delays to prevent API rush
+        setTimeout(() => setLoadPhase(2), 100);
+        setTimeout(() => setLoadPhase(3), 300);
+        setTimeout(() => setLoadPhase(4), 600);
+    })
 
 
 
@@ -79,6 +128,7 @@ function Home(props) {
         <>
             <div class='home-container fadein'>
 
+                {/* DISABLED PROFILING: */}
                 <BannerCarousel user={props?.user} />
                 
                 {/* <div class='banners'>
@@ -88,71 +138,76 @@ function Home(props) {
                                  
   {/* User Favorites - only show if user is logged in */}
   {props.user && (
-                  <SlotsList 
-                    title="Your Favorites"
-                    showFavoritesOnly={true}
-                    limit={15}
-                    viewAllLink="/favorites"
-                    icon="/assets/GameIcons/favourites.svg"
-                    user={props.user}
-                  />
+                      <SlotsList 
+                        title="Your Favorites"
+                        showFavoritesOnly={true}
+                        limit={10}
+                        viewAllLink="/favorites"
+                        icon="/assets/GameIcons/favourites.svg"
+                        user={props.user}
+                      />
                 )}
 
                 <GamesList/>
                 
-              
-                
-                {/* Featured Slots */}
-                <SlotsList 
-                  title="Featured Slots"
-                  showFeaturedOnly={true}
-                  limit={15}
-                  viewAllLink="/slots?featured=true"
-                  icon="/assets/GameIcons/favourites.svg"
-                  user={props.user}
-                />
+                {/* Phase 1: Load featured slots first (most important) */}
+                <Show when={loadPhase() >= 1}>
+                        <SlotsList 
+                          title="Featured Slots"
+                          showFeaturedOnly={true}
+                          limit={8}
+                          viewAllLink="/slots?featured=true"
+                          icon="/assets/GameIcons/favourites.svg"
+                          user={props.user}
+                        />
+                </Show>
 
-                   {/* Popular Slots */}
-                <SlotsList 
-                  title="Popular Slots"
-                  showPopular={true}
-                  limit={20}
-                  viewAllLink="/slots?popular=true"
-                  icon="/assets/GameIcons/popular.svg"
-                  user={props.user}
-                />
+                {/* Phase 2: Load popular and new releases */}
+                <Show when={loadPhase() >= 2}>
+                        <SlotsList 
+                          title="Popular Slots"
+                          showPopular={true}
+                          limit={8}
+                          viewAllLink="/slots?popular=true"
+                          icon="/assets/GameIcons/popular.svg"
+                          user={props.user}
+                        />
 
-                   {/* New Releases */}
-                   <SlotsList 
-                  title="New Releases"
-                  showNewOnly={true}
-                  limit={15}
-                  viewAllLink="/slots?new=true"
-                  icon="/assets/GameIcons/new.svg"
-                  user={props.user}
-                />
+                        <SlotsList 
+                          title="New Releases"
+                          showNewOnly={true}
+                          limit={6}
+                          viewAllLink="/slots?new=true"
+                          icon="/assets/GameIcons/new.svg"
+                          user={props.user}
+                        />
+                </Show>
 
-                <ProvidersSection />
+                {/* Phase 3: Load providers section */}
+                <Show when={loadPhase() >= 3}>
+                        <ProvidersSection />
+                </Show>
                 
-                {/* Video Slots */}
-                <SlotsList 
-                  title="Video Slots"
-                  type="video-slots"
-                  limit={20}
-                  viewAllLink="/slots?type=video-slots"
-                  icon="/assets/GameIcons/slot.svg"
-                  user={props.user}
-                />
-                
-                {/* Game Shows / Live */}
-                <SlotsList 
-                  title="Game Shows"
-                  type="live"
-                  limit={15}
-                  viewAllLink="/slots?type=live"
-                  icon="/assets/GameIcons/game-shows.svg"
-                  user={props.user}
-                />
+                {/* Phase 4: Load remaining slot categories */}
+                <Show when={loadPhase() >= 4}>
+                        <SlotsList 
+                          title="Video Slots"
+                          type="video-slots"
+                          limit={8}
+                          viewAllLink="/slots?type=video-slots"
+                          icon="/assets/GameIcons/slot.svg"
+                          user={props.user}
+                        />
+                    
+                        <SlotsList 
+                          title="Game Shows"
+                          type="live"
+                          limit={6}
+                          viewAllLink="/slots?type=live"
+                          icon="/assets/GameIcons/game-shows.svg"
+                          user={props.user}
+                        />
+                </Show>
                 
              
                 
@@ -160,34 +215,41 @@ function Home(props) {
 
                 {/* <SurveysBanner/> */}
 
-                <div class='crypto-carousel-container'>
-                    <div class='crypto-carousel'>
-                        <div class='crypto-track'>
-                            <For each={[...Object.keys(METHODS), ...Object.keys(METHODS), ...Object.keys(METHODS)]}>{(key, index) => (
-                                <div class={'crypto-method ' + (method() === key ? ' selected' : '') + (method() !== '' && method() !== key ? ' unactive' : '')}
-                                     onClick={() => method() === key ? setMethod('') : setMethod(key)}>
-                                    <img src={METHODS[key].src} alt={METHODS[key].name} draggable={false}/>
-                                    <div class='crypto-info'>
-                                        <span class='crypto-name'>{METHODS[key].name}</span>
-                                        <span class='crypto-symbol'>{METHODS[key].symbol}</span>
+                    <div class='crypto-carousel-container'>
+                        <div class='crypto-carousel'>
+                            <div class={`crypto-track ${!isVisible() || isScrolling() ? 'paused' : ''}`} 
+                                 style={{ 
+                                   'transform': 'translateZ(0)',
+                                   'will-change': isScrolling() ? 'auto' : 'transform'
+                                 }}>
+                                <For each={TRIPLE_CRYPTO_KEYS}>{(key, index) => (
+                                    <div class={'crypto-method ' + (method() === key ? ' selected' : '') + (method() !== '' && method() !== key ? ' unactive' : '')}
+                                         onClick={() => {
+                                           const newMethod = method() === key ? '' : key;
+                                           setMethod(newMethod);
+                                         }}>
+                                        <SmartImage src={METHODS[key].src} alt={METHODS[key].name} draggable={false}/>
+                                        <div class='crypto-info'>
+                                            <span class='crypto-name'>{METHODS[key].name}</span>
+                                            <span class='crypto-symbol'>{METHODS[key].symbol}</span>
+                                        </div>
                                     </div>
+                                )}</For>
+                            </div>
+                        </div>
+                        
+                        <div class='selected-crypto-info'>
+                            {METHODS[method()] ? (
+                                <div class='selected-display'>
+                                    <span class='selected-text'>Selected: <span class='gold'>{METHODS[method()].name} ({METHODS[method()].symbol})</span></span>
                                 </div>
-                            )}</For>
+                            ) : (
+                                <div class='selected-display'>
+                                    <span class='selected-text'>Click any cryptocurrency to select</span>
+                                </div>
+                            )}
                         </div>
                     </div>
-                    
-                    <div class='selected-crypto-info'>
-                        {METHODS[method()] ? (
-                            <div class='selected-display'>
-                                <span class='selected-text'>Selected: <span class='gold'>{METHODS[method()].name} ({METHODS[method()].symbol})</span></span>
-                            </div>
-                        ) : (
-                            <div class='selected-display'>
-                                <span class='selected-text'>Click any cryptocurrency to select</span>
-                            </div>
-                        )}
-                    </div>
-                </div>
 
                 <div class='deposit-container'>
                     <button class='deposit-button-home' disabled={!METHODS[method()]} onClick={() => {
@@ -220,7 +282,7 @@ function Home(props) {
                     </button>
                 </div>
 
-                <Bets user={props.user}/>
+                    <Bets user={props.user}/>
             </div>
 
 
@@ -234,6 +296,16 @@ function Home(props) {
                 box-sizing: border-box;
                 padding: 30px 0 0 10px;
                 margin: 0 auto;
+                
+                /* Optimize scroll performance */
+                backface-visibility: hidden;
+                perspective: 1000px;
+                transform: translateZ(0);
+                will-change: scroll-position;
+                
+                /* Mobile scroll optimization */
+                -webkit-overflow-scrolling: touch;
+                overflow-x: hidden;
               }
 
               .banners {
@@ -286,22 +358,52 @@ function Home(props) {
               .crypto-track {
                 display: flex;
                 gap: 16px;
-                animation: scroll 80s linear infinite;
+                animation: scroll 120s linear infinite;
                 width: max-content;
                 padding: 0 60px;
+                will-change: transform;
+                transform: translateZ(0) translateX(0);
+                contain: layout style paint;
+                pointer-events: none;
+              }
+
+              .crypto-track.paused {
+                animation-play-state: paused;
+              }
+
+              /* Pause animation during page scroll to improve performance */
+              @media (prefers-reduced-motion: reduce) {
+                .crypto-track {
+                  animation: none;
+                }
+              }
+
+              /* Reduce animation frequency on lower-end devices */
+              @media (max-resolution: 1dppx) {
+                .crypto-track {
+                  animation-duration: 200s; /* Even slower on low-DPI screens */
+                }
               }
 
               @keyframes scroll {
                 0% {
-                  transform: translateX(0);
+                  transform: translateZ(0) translateX(0);
                 }
                 100% {
-                  transform: translateX(-33.33%);
+                  transform: translateZ(0) translateX(-33.33%);
                 }
               }
 
-              .crypto-carousel:hover .crypto-track {
+              .crypto-carousel:hover .crypto-track,
+              .crypto-carousel:focus-within .crypto-track {
                 animation-play-state: paused;
+              }
+
+              /* Pause animation when page is not visible to save resources */
+              @media (prefers-reduced-motion: reduce) {
+                .crypto-track {
+                  animation: none;
+                }
               }
 
               .selected-crypto-info {
@@ -327,6 +429,7 @@ function Home(props) {
               }
 
               .crypto-method {
+                pointer-events: auto;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -334,14 +437,16 @@ function Home(props) {
                 padding: 14px 12px;
                 border-radius: 8px;
                 cursor: pointer;
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                transition: transform 0.15s ease;
                 background: rgba(45, 75, 105, 0.25);
                 border: 1px solid rgba(78, 205, 196, 0.15);
-                backdrop-filter: blur(8px);
                 min-width: 88px;
                 flex-shrink: 0;
                 position: relative;
                 color: #8aa3b8;
+                contain: layout style;
+                transform: translateZ(0);
+                will-change: transform;
               }
 
               .crypto-method::before {
@@ -352,7 +457,7 @@ function Home(props) {
                 height: 100%;
                 width: 0;
                 background: linear-gradient(90deg, rgba(78, 205, 196, 0.2), transparent);
-                transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                transition: width 0.3s ease; /* Simplified transition */
                 border-radius: 8px 0 0 8px;
               }
 
@@ -361,18 +466,17 @@ function Home(props) {
               }
 
               .crypto-method:hover {
-           
                 color: #ffffff;
-                transform: translateY(-2px);
+                transform: translateZ(0) translateY(-2px);
+                border-color: rgba(78, 205, 196, 0.3);
               }
 
               .crypto-method.selected {
-              
                 color: #ffffff;
-                transform: translateY(-1px);
+                transform: translateZ(0) translateY(-1px);
+                border-color: rgba(78, 205, 196, 0.4);
               }
 
-            
               .crypto-method.unactive {
                 filter: grayscale(100%);
                 opacity: 0.4;
@@ -615,6 +719,40 @@ function Home(props) {
                   width: 14px;
                   height: 14px;
                 }
+              }
+
+              /* More aggressive performance mode - disable ALL animations when FPS < 30 */
+              body.performance-mode .crypto-track,
+              body.performance-mode .title-highlight,
+              body.performance-mode .bg-pattern,
+              body.performance-mode .main-image img,
+              body.performance-mode [class*="shimmer"],
+              body.performance-mode [class*="glow"],
+              body.performance-mode [class*="float"],
+              body.performance-mode [class*="spin"],
+              body.performance-mode [class*="pulse"],
+              body.performance-mode .loader {
+                animation: none !important;
+                transition: none !important;
+              }
+
+              body.performance-mode .crypto-method:hover,
+              body.performance-mode .banner-image:hover .main-image img {
+                transform: none !important;
+              }
+
+              /* Remove expensive visual effects in performance mode */
+              body.performance-mode * {
+                backdrop-filter: none !important;
+                text-shadow: none !important;
+                box-shadow: none !important;
+                filter: none !important;
+              }
+
+              /* Simple fallback styles for performance mode */
+              body.performance-mode .crypto-method.selected {
+                background: rgba(78, 205, 196, 0.2) !important;
+                border-color: rgba(78, 205, 196, 0.8) !important;
               }
             `}</style>
         </>

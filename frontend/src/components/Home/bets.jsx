@@ -38,13 +38,6 @@ function Bets(props) {
             ws().off('bets')
             
             ws().on('bets', (type, receivedBets) => {
-                console.log('🎰 Received bets:', { 
-                    type, 
-                    count: Array.isArray(receivedBets) ? receivedBets.length : 0, 
-                    currentOption: option(),
-                    betsPreview: Array.isArray(receivedBets) ? receivedBets.slice(0, 2).map(b => ({ game: b.game, amount: b.amount })) : 'Invalid data'
-                });
-                
                 // Only process if this matches our current subscription
                 if (type === option()) {
                     setBets((b) => [...receivedBets, ...b].slice(0, 10))

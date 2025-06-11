@@ -9,6 +9,7 @@ import Pagination from "../components/Pagination/pagination";
 import {useSearchParams} from "@solidjs/router";
 import {addPage} from "../util/pagination";
 import {Title} from "@solidjs/meta";
+import SmartImage from "../components/SmartImage";
 
 function Affiliates(props) {
 
@@ -79,13 +80,13 @@ function Affiliates(props) {
 
             <div class='affiliate-container fadein'>
                 <div class='affiliate-banner'>
-                    <img class='art' src='/assets/art/greenswiggle.png' width='380' height='86'/>
-                    <img class='art right' src='/assets/art/greenswiggle.png' width='380' height='86'/>
+                    <SmartImage class='art' src='/assets/art/greenswiggle.png' width='380' height='86'/>
+                    <SmartImage class='art right' src='/assets/art/greenswiggle.png' width='380' height='86'/>
 
-                    <img class='coin' src='/assets/icons/coin.svg' width='100' height='88'/>
-                    <img class='coin two' src='/assets/icons/coinreverse.png' width='53' height='57'/>
-                    <img class='coin three' src='/assets/icons/coin.svg' width='96' height='86'/>
-                    <img class='coin four' src='/assets/icons/coinreverse.png' width='63' height='68'/>
+                    <SmartImage class='coin' src='/assets/icons/coin.svg' width='100' height='88'/>
+                    <SmartImage class='coin two' src='/assets/icons/coinreverse.png' width='53' height='57'/>
+                    <SmartImage class='coin three' src='/assets/icons/coin.svg' width='96' height='86'/>
+                    <SmartImage class='coin four' src='/assets/icons/coinreverse.png' width='63' height='68'/>
 
                     <h1 class='title'>AFFILIATES</h1>
                     <p class='desc'>
@@ -106,7 +107,7 @@ function Affiliates(props) {
 
                             <div class='stat'>
                                 <p class='white align'>
-                                    <img src='/assets/icons/coin.svg' height='21' width='21' alt=''/>
+                                    <SmartImage src='/assets/icons/coin.svg' height='21' width='21' alt=''/>
                                     {(affiliates()?.totalWagered || 0)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </p>
 
@@ -115,7 +116,7 @@ function Affiliates(props) {
 
                             <div class='stat'>
                                 <p class='white align'>
-                                    <img src='/assets/icons/coin.svg' height='21' width='21' alt=''/>
+                                    <SmartImage src='/assets/icons/coin.svg' height='21' width='21' alt=''/>
                                     {(affiliates()?.totalEarnings || 0)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </p>
 
@@ -125,7 +126,7 @@ function Affiliates(props) {
                             <div class='stat green horz'>
                                 <div>
                                     <p class='white align'>
-                                        <img src='/assets/icons/coin.svg' height='21' width='21' alt=''/>
+                                        <SmartImage src='/assets/icons/coin.svg' height='21' width='21' alt=''/>
                                         {(affiliates()?.unclaimedEarnings || 0)?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                     </p>
 
@@ -214,7 +215,7 @@ function Affiliates(props) {
                                 </div>
 
                                 <div class='table-column'>
-                                    <img src='/assets/icons/coin.svg' height='15' width='16' alt=''/>
+                                    <SmartImage src='/assets/icons/coin.svg' height='15' width='16' alt=''/>
                                     <p class='white'>{(aff?.totalWagered || 0)?.toLocaleString(undefined, {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2
@@ -223,7 +224,7 @@ function Affiliates(props) {
 
                                 <div class='table-column'>
                                     <p class='plus'>+</p>
-                                    <img src='/assets/icons/coin.svg' height='15' width='16' alt=''/>
+                                    <SmartImage src='/assets/icons/coin.svg' height='15' width='16' alt=''/>
                                     <p class='white'>{(aff?.totalEarnings || 0).toLocaleString(undefined, {
                                         minimumFractionDigits: 2,
                                         maximumFractionDigits: 2
