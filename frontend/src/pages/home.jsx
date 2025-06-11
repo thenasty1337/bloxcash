@@ -141,7 +141,7 @@ function Home(props) {
                       <SlotsList 
                         title="Your Favorites"
                         showFavoritesOnly={true}
-                        limit={10}
+                        limit={15}
                         viewAllLink="/favorites"
                         icon="/assets/GameIcons/favourites.svg"
                         user={props.user}
@@ -155,7 +155,7 @@ function Home(props) {
                         <SlotsList 
                           title="Featured Slots"
                           showFeaturedOnly={true}
-                          limit={8}
+                          limit={15}
                           viewAllLink="/slots?featured=true"
                           icon="/assets/GameIcons/favourites.svg"
                           user={props.user}
@@ -167,7 +167,7 @@ function Home(props) {
                         <SlotsList 
                           title="Popular Slots"
                           showPopular={true}
-                          limit={8}
+                          limit={15}
                           viewAllLink="/slots?popular=true"
                           icon="/assets/GameIcons/popular.svg"
                           user={props.user}
@@ -176,7 +176,7 @@ function Home(props) {
                         <SlotsList 
                           title="New Releases"
                           showNewOnly={true}
-                          limit={6}
+                          limit={15}
                           viewAllLink="/slots?new=true"
                           icon="/assets/GameIcons/new.svg"
                           user={props.user}
@@ -193,7 +193,7 @@ function Home(props) {
                         <SlotsList 
                           title="Video Slots"
                           type="video-slots"
-                          limit={8}
+                          limit={15}
                           viewAllLink="/slots?type=video-slots"
                           icon="/assets/GameIcons/slot.svg"
                           user={props.user}
@@ -202,7 +202,7 @@ function Home(props) {
                         <SlotsList 
                           title="Game Shows"
                           type="live"
-                          limit={6}
+                          limit={15}
                           viewAllLink="/slots?type=live"
                           icon="/assets/GameIcons/game-shows.svg"
                           user={props.user}
