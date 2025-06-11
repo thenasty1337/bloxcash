@@ -201,11 +201,11 @@ const GamesTab = (props) => {
                         alt={game.game_name} 
                         class="game-image" 
                         onError={(e) => {
-                          e.target.style.display = 'none';
-                          e.target.nextElementSibling.style.display = 'flex';
+                          e.target.classList.add('hidden');
+                          e.target.nextElementSibling.classList.remove('hidden');
                         }}
                       />
-                      <div class="game-icon" style="display: none;">
+                      <div class="game-icon hidden">
                         <span>{game.game_name.charAt(0)}</span>
                       </div>
                     </Show>
@@ -283,6 +283,12 @@ const GamesTab = (props) => {
           </div>
         </Show>
       </div>
+      
+      <style jsx>{`
+        .hidden {
+          display: none !important;
+        }
+      `}</style>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import GamesList from "../components/Home/gameslist";
 import RainBanner from "../components/Home/rainbanner";
-import {createSignal, For, onMount, onCleanup, Show} from "solid-js";
+import {createSignal, For, onMount, onCleanup, Show, createEffect} from "solid-js";
 import Bets from "../components/Home/bets";
 import {useNavigate} from "@solidjs/router";
 import RewardsBanner from "../components/Home/rewardsbanner";
@@ -76,25 +76,24 @@ const CRYPTO_KEYS = Object.keys(METHODS);
 const TRIPLE_CRYPTO_KEYS = [...CRYPTO_KEYS, ...CRYPTO_KEYS, ...CRYPTO_KEYS];
 
 function Home(props) {
-
+    const [cryptoVisible, setCryptoVisible] = createSignal(false)
     const [method, setMethod] = createSignal('')
-    const navigate = useNavigate()
-    const [loadPhase, setLoadPhase] = createSignal(0); // Control phased loading
-    
-    // Pause crypto animation when not visible to save performance
     const [isVisible, setIsVisible] = createSignal(true)
     const [isScrolling, setIsScrolling] = createSignal(false)
+    const [loadPhase, setLoadPhase] = createSignal(0)
+    
+    let cryptoContainerRef;
 
-    onMount(() => {
-        // Pause crypto animation when not visible to save performance
+    createEffect(() => {
+        // Intersection observer for visibility
         const observer = new IntersectionObserver(
             ([entry]) => setIsVisible(entry.isIntersecting),
             { threshold: 0.1 }
         )
         
-        const cryptoContainer = document.querySelector('.crypto-carousel-container')
-        if (cryptoContainer) {
-            observer.observe(cryptoContainer)
+        // Use ref instead of document.querySelector for better performance
+        if (cryptoContainerRef) {
+            observer.observe(cryptoContainerRef)
         }
         
         // Pause animation during page scroll for better performance
@@ -122,7 +121,7 @@ function Home(props) {
         setTimeout(() => setLoadPhase(4), 600);
     })
 
-
+    const navigate = useNavigate()
 
     return (
         <>
@@ -215,7 +214,7 @@ function Home(props) {
 
                 {/* <SurveysBanner/> */}
 
-                    <div class='crypto-carousel-container'>
+                    <div class='crypto-carousel-container' ref={cryptoContainerRef}>
                         <div class='crypto-carousel'>
                             <div class={`crypto-track ${!isVisible() || isScrolling() ? 'paused' : ''}`} 
                                  style={{ 

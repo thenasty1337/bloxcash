@@ -1,66 +1,64 @@
 import { TbUser, TbCoin, TbBuildingBank, TbTarget, TbLock, TbGift, TbTrophy, TbWifi, TbClock, TbShield, TbHeadset } from 'solid-icons/tb';
+import { createSignal, onMount, onCleanup } from 'solid-js';
 
 function FAQ(props) {
+    const [activeCategory, setActiveCategory] = createSignal('all');
+    const [searchTerm, setSearchTerm] = createSignal('');
+    
+    let faqContainerRef;
 
     function toggleDropdown(e) {
         e.target.closest('.dropdown-faq-wrapper-faq').classList.toggle('active')
     }
 
     function handleCategoryFilter(e, category) {
-        // Remove active class from all category tags
-        document.querySelectorAll('.category-tag').forEach(tag => {
-            tag.classList.remove('active')
-        })
+        setActiveCategory(category);
         
-        // Add active class to clicked tag
-        e.target.classList.add('active')
+        // Get all FAQ items using the container ref instead of document queries
+        const faqItems = faqContainerRef?.querySelectorAll('.dropdown-faq-wrapper-faq') || [];
         
-        // Get all FAQ items
-        const faqItems = document.querySelectorAll('.dropdown-faq-wrapper-faq')
-        
-        // Show/hide items based on category
+        // Show/hide items based on category using CSS classes
         faqItems.forEach(item => {
-            const itemCategory = item.getAttribute('data-category')
+            const itemCategory = item.getAttribute('data-category');
             if (category === 'all' || itemCategory === category) {
-                item.style.display = 'block'
+                item.classList.remove('faq-hidden');
             } else {
-                item.style.display = 'none'
+                item.classList.add('faq-hidden');
             }
-        })
+        });
     }
 
     function handleSearch(e) {
-        const searchTerm = e.target.value.toLowerCase()
-        const faqItems = document.querySelectorAll('.dropdown-faq-wrapper-faq')
+        const searchValue = e.target.value.toLowerCase();
+        setSearchTerm(searchValue);
+        
+        const faqItems = faqContainerRef?.querySelectorAll('.dropdown-faq-wrapper-faq') || [];
         
         faqItems.forEach(item => {
-            const questionText = item.querySelector('.question-text h3').textContent.toLowerCase()
-            const descriptionText = item.querySelector('.question-text p').textContent.toLowerCase()
-            const contentText = item.querySelector('.dropdown-faq-content').textContent.toLowerCase()
+            const questionText = item.querySelector('.question-text h3')?.textContent?.toLowerCase() || '';
+            const descriptionText = item.querySelector('.question-text p')?.textContent?.toLowerCase() || '';
+            const contentText = item.querySelector('.dropdown-faq-content')?.textContent?.toLowerCase() || '';
             
-            const matchesSearch = questionText.includes(searchTerm) || 
-                                descriptionText.includes(searchTerm) || 
-                                contentText.includes(searchTerm)
+            const matchesSearch = questionText.includes(searchValue) || 
+                                descriptionText.includes(searchValue) || 
+                                contentText.includes(searchValue);
             
-            if (matchesSearch || searchTerm === '') {
-                item.style.display = 'block'
+            if (matchesSearch || searchValue === '') {
+                item.classList.remove('faq-hidden');
             } else {
-                item.style.display = 'none'
+                item.classList.add('faq-hidden');
             }
-        })
+        });
         
         // If search is active, reset category filter to show all matching results
-        if (searchTerm !== '') {
-            document.querySelectorAll('.category-tag').forEach(tag => {
-                tag.classList.remove('active')
-            })
-            document.querySelector('.category-tag[data-category="all"]').classList.add('active')
+        if (searchValue !== '') {
+            setActiveCategory('all');
         }
     }
 
     return (
         <>
-            <div className='faq-container'>
+            <div className='faq-container' ref={faqContainerRef}>
                 <div className='header-section'>
                     <h1 className='main-title'>Frequently Asked Questions</h1>
                     <p className='subtitle'>
@@ -88,49 +86,49 @@ function FAQ(props) {
                     <h2 className='categories-title'>Popular Topics</h2>
                     <div className='category-tags'>
                         <span 
-                            className='category-tag active' 
+                            className={`category-tag ${activeCategory() === 'all' ? 'active' : ''}`}
                             data-category="all"
                             onClick={(e) => handleCategoryFilter(e, 'all')}
                         >
                             All
                         </span>
                         <span 
-                            className='category-tag'
+                            className={`category-tag ${activeCategory() === 'account' ? 'active' : ''}`}
                             data-category="account"
                             onClick={(e) => handleCategoryFilter(e, 'account')}
                         >
                             Account
                         </span>
                         <span 
-                            className='category-tag'
+                            className={`category-tag ${activeCategory() === 'deposits' ? 'active' : ''}`}
                             data-category="deposits"
                             onClick={(e) => handleCategoryFilter(e, 'deposits')}
                         >
                             Deposits
                         </span>
                         <span 
-                            className='category-tag'
+                            className={`category-tag ${activeCategory() === 'withdrawals' ? 'active' : ''}`}
                             data-category="withdrawals"
                             onClick={(e) => handleCategoryFilter(e, 'withdrawals')}
                         >
                             Withdrawals
                         </span>
                         <span 
-                            className='category-tag'
+                            className={`category-tag ${activeCategory() === 'gaming' ? 'active' : ''}`}
                             data-category="gaming"
                             onClick={(e) => handleCategoryFilter(e, 'gaming')}
                         >
                             Gaming
                         </span>
                         <span 
-                            className='category-tag'
+                            className={`category-tag ${activeCategory() === 'security' ? 'active' : ''}`}
                             data-category="security"
                             onClick={(e) => handleCategoryFilter(e, 'security')}
                         >
                             Security
                         </span>
                         <span 
-                            className='category-tag'
+                            className={`category-tag ${activeCategory() === 'support' ? 'active' : ''}`}
                             data-category="support"
                             onClick={(e) => handleCategoryFilter(e, 'support')}
                         >
@@ -864,6 +862,11 @@ function FAQ(props) {
                 .info-list li {
                   padding-left: 1.25rem;
                 }
+              }
+
+              /* Add CSS class for hiding FAQ items instead of direct style manipulation */
+              .faq-hidden {
+                display: none !important;
               }
             `}</style>
         </>

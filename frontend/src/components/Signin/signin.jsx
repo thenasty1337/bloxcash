@@ -1,4 +1,4 @@
-import {createSignal, onCleanup, Show} from "solid-js";
+import {createSignal, onCleanup, Show, createEffect} from "solid-js";
 import {A, useSearchParams} from "@solidjs/router";
 import {api, authedAPI, createNotification, fetchUser} from "../../util/api";
 import {useUser} from "../../contexts/usercontextprovider";
@@ -57,18 +57,20 @@ function SignIn(props) {
         setSearchParams({ modal: null })
     }
 
-    // Close modal on Escape key
-    function handleKeyDown(e) {
-        if (e.key === 'Escape') {
-            close()
+    // Close modal on Escape key with proper effect and cleanup
+    createEffect(() => {
+        function handleKeyDown(e) {
+            if (e.key === 'Escape') {
+                close()
+            }
         }
-    }
 
-    onCleanup(() => {
-        document.removeEventListener('keydown', handleKeyDown)
+        document.addEventListener('keydown', handleKeyDown)
+        
+        onCleanup(() => {
+            document.removeEventListener('keydown', handleKeyDown)
+        })
     })
-
-    document.addEventListener('keydown', handleKeyDown)
 
     return (
         <div class='modal' onClick={() => close()}>

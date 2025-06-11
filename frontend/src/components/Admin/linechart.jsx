@@ -2,6 +2,7 @@ import { createEffect, createSignal, onCleanup } from "solid-js";
 
 function LineChart(props) {
     let canvas;
+    let currentMouseMoveHandler = null;
     const [hoveredPoint, setHoveredPoint] = createSignal(null);
 
     function calculateMaxPlayers() {
@@ -107,10 +108,13 @@ function LineChart(props) {
             ctx.fill();
         }
 
-        // Add event listener for hover
-        canvas.addEventListener("mousemove", handleMouseMove);
+        // PERFORMANCE FIX: Remove previous listener before adding new one
+        if (currentMouseMoveHandler) {
+            canvas.removeEventListener("mousemove", currentMouseMoveHandler);
+        }
 
-        function handleMouseMove(event) {
+        // Create new mouse move handler
+        currentMouseMoveHandler = function handleMouseMove(event) {
             const rect = canvas.getBoundingClientRect();
             const mouseX = event.clientX - rect.left;
             const mouseY = event.clientY - rect.top;
@@ -132,7 +136,10 @@ function LineChart(props) {
             }
 
             setHoveredPoint(closestPoint);
-        }
+        };
+
+        // Add event listener for hover
+        canvas.addEventListener("mousemove", currentMouseMoveHandler);
     };
 
 
@@ -161,6 +168,10 @@ function LineChart(props) {
 
     onCleanup(() => {
         window.removeEventListener("resize", handleResize);
+        // PERFORMANCE FIX: Remove canvas event listener to prevent memory leaks
+        if (canvas && currentMouseMoveHandler) {
+            canvas.removeEventListener("mousemove", currentMouseMoveHandler);
+        }
     });
 
     return (

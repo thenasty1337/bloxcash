@@ -34,12 +34,30 @@ function SidebarRain(props) {
 
     function attemptToLinkDiscord(url) {
         let popupWindow = window.open(url, 'popUpWindow', 'height=700,width=500,left=100,top=100,resizable=yes,scrollbar=yes')
-        window.addEventListener("message", function (event) {
+        
+        // Use a proper cleanup function for the event listener
+        const handleMessage = function (event) {
             if (event.data === "Authorized") {
                 popupWindow.close();
-                joinRain()
+                joinRain();
+                // Remove the event listener after use
+                window.removeEventListener("message", handleMessage, false);
             }
-        }, false)
+        };
+        
+        window.addEventListener("message", handleMessage, false);
+        
+        // Also cleanup if popup is closed manually using requestAnimationFrame for better performance
+        let checkClosed;
+        const pollWindowClosed = () => {
+            if (popupWindow.closed) {
+                window.removeEventListener("message", handleMessage, false);
+                if (checkClosed) cancelAnimationFrame(checkClosed);
+            } else {
+                checkClosed = requestAnimationFrame(pollWindowClosed);
+            }
+        };
+        checkClosed = requestAnimationFrame(pollWindowClosed);
     }
 
     function handleRainJoin() {

@@ -441,7 +441,7 @@ function WalletModal(props) {
                       <p>Currency: </p>
                       <Show when={depositCurrencySymbol()} fallback={<p class='white bold'>Select</p>}>
                           <img src={depositCurrencyImg()} 
-                              height='18' alt={depositCurrencySymbol()} onError={(e) => e.currentTarget.style.display = 'none'}/>
+                              height='18' alt={depositCurrencySymbol()} onError={(e) => e.currentTarget.classList.add('image-error')}/>
                           <p class='white bold'>{depositCurrencySymbol()}</p>
                           <Show when={getDisplayNetworkFromApiId(selectedDepositCurrencyApiId())}>
                               <span>({getDisplayNetworkFromApiId(selectedDepositCurrencyApiId())})</span>
@@ -453,7 +453,7 @@ function WalletModal(props) {
                               <div class='option' onClick={() => handleDepositCurrencySelect(method)}>
                                   <div class='option-left'>
                                       <img src={method.img} 
-                                          height='20' alt={method.id} onError={(e) => e.currentTarget.style.display = 'none'}/> 
+                                          height='20' alt={method.id} onError={(e) => e.currentTarget.classList.add('image-error')}/> 
                                       <div class='option-text'>
                                           <span class='currency-name'>{method.id}</span>
                                           <span class='currency-full-name'>{method.name}</span>
@@ -794,6 +794,10 @@ function WalletModal(props) {
           z-index: 1000;
           opacity: 1;
           backdrop-filter: blur(4px);
+        }
+
+        .image-error {
+          display: none !important;
         }
 
         .modal.fadein {

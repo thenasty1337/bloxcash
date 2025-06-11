@@ -135,9 +135,15 @@ function ProvidersSection() {
                    loading="lazy"
                    decoding="async"
                    onError={(e) => {
-                     // Fallback if image fails to load
-                     e.target.style.display = 'none';
-                     e.target.parentElement.innerHTML = `<span style="color: #8aa3b8; font-size: 14px;">${provider.name || 'Provider'}</span>`;
+                     // Use CSS class instead of innerHTML and direct style manipulation
+                     e.target.classList.add('image-error');
+                     const parent = e.target.parentElement;
+                     if (parent && !parent.querySelector('.fallback-text')) {
+                       const fallbackSpan = document.createElement('span');
+                       fallbackSpan.className = 'fallback-text';
+                       fallbackSpan.textContent = provider.name || 'Provider';
+                       parent.appendChild(fallbackSpan);
+                     }
                    }}/>
             </div>
           }</For>
@@ -311,6 +317,23 @@ function ProvidersSection() {
           font-size: 14px;
           text-align: center;
           padding: 20px;
+        }
+
+        .provider img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+        }
+        
+        .image-error {
+          display: none !important;
+        }
+        
+        .fallback-text {
+          color: #8aa3b8;
+          font-size: 14px;
+          font-family: Geogrotesque Wide, sans-serif;
+          text-align: center;
         }
 
         @media (max-width: 768px) {

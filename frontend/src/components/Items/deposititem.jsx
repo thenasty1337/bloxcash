@@ -5,16 +5,11 @@ function DepositItem(props) {
     let slider
 
     function getRarity(price) {
-        if (price < 1000) {
-            return 'gray'
-        } else if (price < 10000) {
-            return 'blue'
-        } else if (price < 50000) {
-            return 'pink'
-        } else if (price < 250000) {
-            return 'red'
-        }
-        return 'gold'
+        if (price >= 1000) return 'gold'
+        if (price >= 100) return 'red'
+        if (price >= 10) return 'pink'
+        if (price >= 1) return 'blue'
+        return 'gray'
     }
 
     createEffect(() => {
@@ -25,7 +20,7 @@ function DepositItem(props) {
 
     function createTrail() {
         let value = (slider.value / 21) * 100 // 21 because it bugged w 20 when it hit 0 so min is now 1
-        slider.style.background = 'linear-gradient(to right, #DB4C3E 0%, #DB4C3E ' + value + '%, #1D1D31 ' + value + '%, #1D1D31 100%)'
+        slider.style.setProperty('--slider-value', `${value}%`);
     }
 
     return (
@@ -202,7 +197,7 @@ function DepositItem(props) {
                 appearance: none;
 
                 border-radius: 0 0 10px 10px;
-                background: #DB4C3E;
+                background: linear-gradient(to right, #DB4C3E 0%, #DB4C3E var(--slider-value, 0%), #1D1D31 var(--slider-value, 0%), #1D1D31 100%);
                 width: 100%;
                 height: 5px;
 

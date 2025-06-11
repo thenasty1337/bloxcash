@@ -181,7 +181,7 @@ function Settings(props) {
     function createTrail() {
         if (!slider) return;
         let value = (slider.value - 0) / 100 * 100
-        slider.style.background = `linear-gradient(90deg, #8b78dd 0%, #7c6bbf ${value}%, rgba(255, 255, 255, 0.1) ${value}%, rgba(255, 255, 255, 0.1) 100%)`
+        slider.style.setProperty('--slider-value', `${value}%`);
     }
 
     // Custom Switch Component
@@ -954,12 +954,30 @@ function Settings(props) {
                                                 let res = await authedAPI('/discord/link', 'POST', null, true)
                                                 if (res.url) {
                                                     let popupWindow = window.open(res.url, 'popUpWindow', 'height=700,width=500,left=100,top=100,resizable=yes,scrollbar=yes')
-                                                    window.addEventListener("message", function (event) {
+                                                    
+                                                    // Use a proper cleanup function for the event listener
+                                                    const handleMessage = function (event) {
                                                         if (event.data.type === "discord") {
                                                             popupWindow.close();
-                                                            setLinked(true)
+                                                            setLinked(true);
+                                                            // Remove the event listener after use
+                                                            window.removeEventListener("message", handleMessage, false);
                                                         }
-                                                    }, false)
+                                                    };
+                                                    
+                                                    window.addEventListener("message", handleMessage, false);
+                                                    
+                                                    // Also cleanup if popup is closed manually using requestAnimationFrame for better performance
+                                                    let checkClosed;
+                                                    const pollWindowClosed = () => {
+                                                        if (popupWindow.closed) {
+                                                            window.removeEventListener("message", handleMessage, false);
+                                                            if (checkClosed) cancelAnimationFrame(checkClosed);
+                                                        } else {
+                                                            checkClosed = requestAnimationFrame(pollWindowClosed);
+                                                        }
+                                                    };
+                                                    checkClosed = requestAnimationFrame(pollWindowClosed);
                                                 }
                                             }}
                                         >
@@ -1470,7 +1488,18 @@ function Settings(props) {
                     padding: 0.625rem 0.875rem;
                 }
 
+                .range {
+                  outline: unset;
+                  -webkit-appearance: none;
+                  appearance: none;
 
+                  border-radius: 25px;
+                  background: linear-gradient(90deg, #8b78dd 0%, #7c6bbf var(--slider-value, 0%), rgba(255, 255, 255, 0.1) var(--slider-value, 0%), rgba(255, 255, 255, 0.1) 100%);
+                  max-width: 190px;
+                  height: 5px;
+
+                  width: 100%;
+                }
 
                 /* Responsive Design */
                 @media (max-width: 1200px) {

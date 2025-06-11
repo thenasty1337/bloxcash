@@ -40,7 +40,7 @@ function CreateBattle(props) {
 
     function createTrail() {
         let value = (slider.value - 0) / 100 * 100
-        slider.style.background = 'linear-gradient(to right, #5F5CA6 0%, #5F5CA6 ' + value + '%, #2B284E ' + value + '%, #2B284E 100%)'
+        slider.style.setProperty('--slider-value', `${value}%`);
     }
 
     function addCase(caseToAdd, num) {
@@ -626,15 +626,16 @@ function CreateBattle(props) {
               }
 
               .range {
+                outline: unset;
                 -webkit-appearance: none;
                 appearance: none;
 
                 border-radius: 25px;
-                background: #2B284E;
+                background: linear-gradient(to right, #5F5CA6 0%, #5F5CA6 var(--slider-value, 0%), #2B284E var(--slider-value, 0%), #2B284E 100%);
                 max-width: 190px;
-                height: 9px;
-                
-                //margin-right: auto;
+                height: 5px;
+
+                width: 100%;
               }
 
               .range::-webkit-slider-thumb {

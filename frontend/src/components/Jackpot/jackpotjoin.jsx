@@ -18,14 +18,14 @@ function JackpotJoin(props) {
   function createTrail() {
     let max = user() ? Math.min(MAX_BET, user()?.balance) : MIN_BET
     let value = (slider.value - MIN_BET) / (max - MIN_BET) * 100
-    slider.style.background = 'linear-gradient(to right, #FCA31E 0%, #FCA31E ' + value + '%, rgba(252, 163, 30, 0.26) ' + value + '%, rgba(252, 163, 30, 0.26) 100%)'
+    slider.style.setProperty('--slider-value', `${value}%`);
     resizeInput()
   }
 
   function resizeInput() {
     let length = (robuxInput.value + '').length
     let width = Math.max(12, Math.min(70, length * 10))
-    robuxInput.style.width = width + 'px'
+    robuxInput.style.setProperty('--input-width', `${width}px`);
   }
 
   return (
@@ -198,7 +198,7 @@ function JackpotJoin(props) {
           background: unset;
           border: unset;
           outline: unset;
-          width: 30px;
+          width: var(--input-width, 30px);
 
           font-family: "Geogrotesque Wide", sans-serif;
           color: #FFF;
@@ -379,14 +379,13 @@ function JackpotJoin(props) {
         .range {
           -webkit-appearance: none;
           appearance: none;
-          outline: unset;
-
-          border-radius: 25px;
-          background: rgba(252, 163, 30, 0.26);
-          max-width: 190px;
-          height: 5px;
 
           width: 100%;
+          height: 10px;
+
+          background: linear-gradient(to right, #FCA31E 0%, #FCA31E var(--slider-value, 0%), rgba(252, 163, 30, 0.26) var(--slider-value, 0%), rgba(252, 163, 30, 0.26) 100%);
+          border-radius: 8px;
+          outline: none;
         }
 
         .range::-webkit-slider-thumb {

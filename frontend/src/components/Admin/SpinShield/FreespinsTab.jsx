@@ -361,9 +361,7 @@ const FreespinsTab = (props) => {
                         {(user) => (
                           <div
                             onClick={() => selectUser(user)}
-                            style="padding: 8px 10px; cursor: pointer; border-bottom: 1px solid #4A4581; color: #ADA3EF;"
-                            onMouseOver={(e) => e.currentTarget.style.background = "#312A5E"}
-                            onMouseOut={(e) => e.currentTarget.style.background = "transparent"}
+                            class="dropdown-item"
                           >
                             {user.username} (ID: {user.id})
                           </div>
@@ -390,9 +388,7 @@ const FreespinsTab = (props) => {
                         {(game) => (
                           <div
                             onClick={() => selectGame(game)}
-                            style="padding: 8px 10px; cursor: pointer; border-bottom: 1px solid #4A4581; color: #ADA3EF;"
-                            onMouseOver={(e) => e.currentTarget.style.background = "#312A5E"}
-                            onMouseOut={(e) => e.currentTarget.style.background = "transparent"}
+                            class="dropdown-item"
                           >
                             {game.game_name} ({game.provider})
                           </div>
@@ -620,6 +616,21 @@ const FreespinsTab = (props) => {
           </div>
         </Show>
       </Show>
+      
+      <style jsx>{`
+        .dropdown-item {
+          padding: 8px 10px;
+          cursor: pointer;
+          border-bottom: 1px solid #4A4581;
+          color: #ADA3EF;
+          background: transparent;
+          transition: background-color 0.2s ease;
+        }
+        
+        .dropdown-item:hover {
+          background: #312A5E;
+        }
+      `}</style>
     </div>
   );
 };

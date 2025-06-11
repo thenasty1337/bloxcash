@@ -166,17 +166,17 @@ const BannerCarousel = (props) => {
                                     <div class="background-decoration">
                                         {currentSlide() === 0 && (
                                             <img src="/assets/backgrounds/deposit-pattern.webp" alt="" class="bg-pattern" onError={(e) => {
-                                                e.target.style.display = 'none';
+                                                e.target.classList.add('image-error');
                                             }} />
                                         )}
                                         {currentSlide() === 1 && (
                                             <img src="/assets/backgrounds/rain-pattern.webp" alt="" class="bg-pattern" onError={(e) => {
-                                                e.target.style.display = 'none';
+                                                e.target.classList.add('image-error');
                                             }} />
                                         )}
                                         {currentSlide() === 2 && (
                                             <img src="/assets/backgrounds/vip-pattern.webp" alt="" class="bg-pattern" onError={(e) => {
-                                                e.target.style.display = 'none';
+                                                e.target.classList.add('image-error');
                                             }} />
                                         )}
                                     </div>
@@ -185,17 +185,17 @@ const BannerCarousel = (props) => {
                                     <div class="main-image">
                                         {currentSlide() === 0 && (
                                             <img src="/assets/banners/deposit-bonus.webp" alt="Deposit Bonus" onError={(e) => {
-                                                e.target.style.display = 'none';
+                                                e.target.classList.add('image-error');
                                             }} />
                                         )}
                                         {currentSlide() === 1 && (
                                             <img src="/assets/banners/rain-event.webp" alt="Rain Event" onError={(e) => {
-                                                e.target.style.display = 'none';
+                                                e.target.classList.add('image-error');
                                             }} />
                                         )}
                                         {currentSlide() === 2 && (
                                             <img src="/assets/banners/vip-rewards.webp" alt="VIP Rewards" onError={(e) => {
-                                                e.target.style.display = 'none';
+                                                e.target.classList.add('image-error');
                                             }} />
                                         )}
                                     </div>
@@ -394,6 +394,10 @@ const BannerCarousel = (props) => {
                     border-radius: 0 clamp(12px, 2vw, 24px) clamp(12px, 2vw, 24px) 0;
                 }
 
+                .image-error {
+                    display: none !important;
+                }
+
                 .background-decoration {
                     position: absolute;
                     top: 0;
@@ -476,10 +480,7 @@ const BannerCarousel = (props) => {
                     -webkit-mask: linear-gradient(90deg, transparent 0%, rgb(0 0 0 / 27%) 20%, rgb(0 0 0 / 72%) 100%);
                 }
 
-                .banner-image:hover .bg-pattern {
-                    transform: scale(1.1);
-                }
-
+             
                 .progress-container {
                     position: absolute;
                     bottom: 0;

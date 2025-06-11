@@ -16,17 +16,18 @@ function CreateCoinflip(props) {
   const [robux, setRobux] = createSignal(MIN_BET, {equals: false})
   const [user] = useUser()
 
+  // PERFORMANCE FIX: Use CSS custom properties instead of direct style modifications
   function createTrail() {
     let max = user() ? Math.min(MAX_BET, user()?.balance) : MIN_BET
     let value = (slider.value - MIN_BET) / (max - MIN_BET) * 100
-    slider.style.background = 'linear-gradient(to right, #FCA31E 0%, #FCA31E ' + value + '%, rgba(252, 163, 30, 0.26) ' + value + '%, rgba(252, 163, 30, 0.26) 100%)'
+    slider.style.setProperty('--slider-progress', `${value}%`)
     resizeInput()
   }
 
   function resizeInput() {
     let length = (robuxInput.value + '').length
     let width = Math.max(12, Math.min(70, length * 10))
-    robuxInput.style.width = width + 'px'
+    robuxInput.style.setProperty('--input-width', `${width}px`)
   }
 
   return (
@@ -404,7 +405,7 @@ function CreateCoinflip(props) {
           outline: unset;
 
           border-radius: 25px;
-          background: rgba(252, 163, 30, 0.26);
+          background: linear-gradient(to right, #FCA31E 0%, #FCA31E var(--slider-progress, 0%), rgba(252, 163, 30, 0.26) var(--slider-progress, 0%), rgba(252, 163, 30, 0.26) 100%);
           max-width: 190px;
           height: 5px;
 
