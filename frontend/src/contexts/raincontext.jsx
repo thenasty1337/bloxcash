@@ -74,14 +74,28 @@ export function RainProvider(props) {
         })
     })
 
-    let timer = setInterval(() => {
-        if (userRain()) {
-            setUserTimer(Math.max(0, userRain().endsAt - Date.now()))
+    // PERFORMANCE FIX: Use requestAnimationFrame for time updates
+    let animationId;
+    let lastUpdate = Date.now();
+    
+    const updateTimers = () => {
+        const now = Date.now();
+        if (now - lastUpdate >= 1000) { // Update every second
+            if (userRain()) {
+                setUserTimer(Math.max(0, userRain().endsAt - now));
+            }
+            setTime(Math.max(0, rain().endsAt - now));
+            lastUpdate = now;
         }
-
-        setTime(Math.max(0, rain().endsAt - Date.now()))
-    }, 1000)
-    onCleanup(() => clearInterval(timer))
+        animationId = requestAnimationFrame(updateTimers);
+    };
+    
+    animationId = requestAnimationFrame(updateTimers);
+    onCleanup(() => {
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+        }
+    })
 
     function joinedRain() {
         if (userRain()) {

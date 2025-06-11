@@ -97,6 +97,12 @@ class PerformanceDetector {
           const lineNumber = content.substring(0, match.index).split('\n').length;
           const line = lines[lineNumber - 1];
           
+          // Skip comment lines to avoid false positives
+          const trimmedLine = line.trim();
+          if (trimmedLine.startsWith('//') || trimmedLine.startsWith('/*') || trimmedLine.startsWith('*')) {
+            continue;
+          }
+          
           this.issues.push({
             file: filePath,
             line: lineNumber,

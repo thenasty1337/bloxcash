@@ -47,8 +47,25 @@ function Rakeback(props) {
     setSearchParams({modal: null})
   }
 
-  let timer = setInterval(() => setTime(Date.now()), 1000)
-  onCleanup(() => clearInterval(timer))
+  // PERFORMANCE FIX: Use requestAnimationFrame for time updates
+  let animationId;
+  let lastUpdate = Date.now();
+  
+  const updateTime = () => {
+    const now = Date.now();
+    if (now - lastUpdate >= 1000) { // Update every second
+      setTime(now);
+      lastUpdate = now;
+    }
+    animationId = requestAnimationFrame(updateTime);
+  };
+  
+  animationId = requestAnimationFrame(updateTime);
+  onCleanup(() => {
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+    }
+  })
 
   return (
     <>

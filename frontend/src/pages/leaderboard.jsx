@@ -31,11 +31,27 @@ function Leaderboard(props) {
         }
     }
 
-    const timer = setInterval(() => {
-        if (!leaderboard() || !leaderboard().endsAt) return
-        setTime(leaderboard().endsAt - Date.now())
-    }, 1000)
-    onCleanup(() => clearInterval(timer))
+    // PERFORMANCE FIX: Use requestAnimationFrame for time updates
+    let animationId;
+    let lastUpdate = Date.now();
+    
+    const updateTime = () => {
+        const now = Date.now();
+        if (now - lastUpdate >= 1000) { // Update every second
+            if (leaderboard() && leaderboard().endsAt) {
+                setTime(leaderboard().endsAt - now);
+            }
+            lastUpdate = now;
+        }
+        animationId = requestAnimationFrame(updateTime);
+    };
+    
+    animationId = requestAnimationFrame(updateTime);
+    onCleanup(() => {
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+        }
+    })
 
     function formatTimeLeft() {
         const totalSeconds = Math.floor(time() / 1000)

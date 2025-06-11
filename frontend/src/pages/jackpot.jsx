@@ -143,10 +143,16 @@ function Jackpot(props) {
 
                         setTimer(timeLeft)
                         setState('counting')
-                        let int = setInterval(() => {
-                            setTimer(Math.max(0, ends - Date.now()))
-                            if (Date.now() > ends) return clearInterval(int)
-                        }, duration)
+                        // PERFORMANCE FIX: Use requestAnimationFrame for smooth updates
+                        let animationId;
+                        const updateTimer = () => {
+                            const remaining = Math.max(0, ends - Date.now());
+                            setTimer(remaining);
+                            if (Date.now() <= ends) {
+                                animationId = requestAnimationFrame(updateTimer);
+                            }
+                        };
+                        animationId = requestAnimationFrame(updateTimer);
                     }
                 }
             })
@@ -188,10 +194,20 @@ function Jackpot(props) {
                 setState('counting')
                 setTimer(30000)
 
-                let int = setInterval(() => {
-                    setTimer(Math.max(0, ends - Date.now()))
-                    if (Date.now() > ends) return clearInterval(int)
-                }, 1000)
+                // PERFORMANCE FIX: Use requestAnimationFrame for smooth timer updates
+                let animationId;
+                let lastUpdate = Date.now();
+                const updateTimer = () => {
+                    const now = Date.now();
+                    if (now - lastUpdate >= 1000) { // Update every second
+                        setTimer(Math.max(0, ends - now));
+                        lastUpdate = now;
+                    }
+                    if (now <= ends) {
+                        animationId = requestAnimationFrame(updateTimer);
+                    }
+                };
+                animationId = requestAnimationFrame(updateTimer);
             })
 
             ws().on('jackpot:roll', (roundId, unhashedServerSeed, clientSeed, winnerBetId, ticket) => {

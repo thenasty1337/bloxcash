@@ -38,11 +38,21 @@ function Countup(props) {
             if (currentStep >= steps) {
                 setNumber(end);
                 setPrev(end);
-                clearInterval(intervalId);
+                if (timeoutId) clearTimeout(timeoutId);
             }
         };
 
-        const intervalId = setInterval(updateNumber, interval);
+        // PERFORMANCE FIX: Use setTimeout chain to reduce timing overhead
+        let timeoutId;
+        const scheduleUpdate = () => {
+            timeoutId = setTimeout(() => {
+                updateNumber();
+                if (currentStep < steps) {
+                    scheduleUpdate();
+                }
+            }, interval);
+        };
+        scheduleUpdate();
     });
 
     function properlyRoundNumber() {

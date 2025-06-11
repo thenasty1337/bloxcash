@@ -64,19 +64,37 @@ const BannerCarousel = (props) => {
         }
     ];
 
-    // Auto-play functionality
+    // PERFORMANCE FIX: Auto-play functionality using requestAnimationFrame
     createEffect(() => {
         if (isAutoPlaying()) {
-            autoPlayInterval = setInterval(() => {
-                nextSlide();
-            }, 6000); // Change slide every 6 seconds
+            let startTime = Date.now();
+            let animationId;
+            
+            const autoPlay = () => {
+                const elapsed = Date.now() - startTime;
+                if (elapsed >= 6000) { // 6 seconds
+                    nextSlide();
+                    startTime = Date.now(); // Reset timer
+                }
+                
+                if (isAutoPlaying()) {
+                    animationId = requestAnimationFrame(autoPlay);
+                }
+            };
+            
+            animationId = requestAnimationFrame(autoPlay);
+            autoPlayInterval = animationId; // Store for cleanup
         } else {
-            clearInterval(autoPlayInterval);
+            if (autoPlayInterval) {
+                cancelAnimationFrame(autoPlayInterval);
+            }
         }
     });
 
     onCleanup(() => {
-        clearInterval(autoPlayInterval);
+        if (autoPlayInterval) {
+            cancelAnimationFrame(autoPlayInterval);
+        }
     });
 
     const nextSlide = () => {

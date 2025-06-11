@@ -15,12 +15,19 @@ function CoinflipModal(props) {
       setIsSpinning(true)
 
       setTimer(5)
-      let int = setInterval(() => {
-        setTimer((t) => t - 1)
-        if (timer() <= 0) {
-          clearInterval(int)
+      // PERFORMANCE FIX: Use requestAnimationFrame for smooth timing
+      let startTime = Date.now()
+      let animationId
+      const updateTimer = () => {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000)
+        const remaining = Math.max(0, 5 - elapsed)
+        setTimer(remaining)
+        
+        if (remaining > 0) {
+          animationId = requestAnimationFrame(updateTimer)
         }
-      }, 1000)
+      }
+      animationId = requestAnimationFrame(updateTimer)
     }
   })
 
