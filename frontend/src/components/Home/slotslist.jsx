@@ -1,10 +1,6 @@
 import {createResource, createSignal, createMemo, For, Show, onMount, onCleanup} from "solid-js";
 import {A} from "@solidjs/router";
 import {api, authedAPI} from "../../util/api";
-import Loader from "../Loader/loader";
-import BlurImage from "../UI/BlurImage";
-import FavoriteButton from "../UI/FavoriteButton";
-import { BsDiamond } from 'solid-icons/bs';
 import { AiOutlineEye, AiOutlineArrowLeft, AiOutlineArrowRight } from 'solid-icons/ai';
 import './slotslist.css';
 
@@ -195,11 +191,6 @@ function SlotsList(props) {
         // Cache the response
         setCacheResponse(cacheKey, res);
         
-        const fetchTime = performance.now() - fetchStart;
-        if (fetchTime > 16) {
-          console.warn(`🐌 Slow SlotsList fetch for ${title}: ${fetchTime.toFixed(2)}ms`);
-        }
-        
         setSlots(res.data);
         return res;
       } finally {
@@ -255,14 +246,6 @@ function SlotsList(props) {
           src={slot.img}
           alt={slot.name || 'Slot game'}
         />
-        <div class='slot-overlay'>
-          <FavoriteButton 
-            slug={slot.slug}
-            isAuthenticated={!!user}
-            isFavorited={slot.isFavorited}
-            size={14}
-          />
-        </div>
         <A href={`/slots/${slot.slug}`} class='gamemode-link'/>
       </div>
     );

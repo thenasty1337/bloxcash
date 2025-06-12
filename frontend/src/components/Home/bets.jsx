@@ -24,6 +24,7 @@ function Bets(props) {
     const [ws] = useWebsocket()
     const [option, setOption] = createSignal('all')
     const [bets, setBets] = createSignal([])
+    const [isLoading, setIsLoading] = createSignal(true)
     const navigate = useNavigate()
 
 
@@ -41,6 +42,7 @@ function Bets(props) {
                 // Only process if this matches our current subscription
                 if (type === option()) {
                     setBets((b) => [...receivedBets, ...b].slice(0, 10))
+                    setIsLoading(false) // Stop loading when we receive data
                 } else {
                     console.log('🚫 Ignoring bets for type:', type, 'current option:', option());
                 }
@@ -59,6 +61,7 @@ function Bets(props) {
         if (option() !== channel) {
             ws().emit('bets:unsubscribe', option())
             setBets([]) // Clear current bets
+            setIsLoading(true) // Show loading when switching channels
         }
         
         // Update option and subscribe to new channel
@@ -127,7 +130,52 @@ function Bets(props) {
                         </div>
 
                         <div class='feed-rows'>
-                            <For each={bets()}>{(bet, index) => (
+                            {/* Show skeleton loading */}
+                            {isLoading() && (
+                                <For each={Array(8).fill(0)}>{() => (
+                                    <div class='feed-row skeleton-row'>
+                                        <div class='row-col gamemode-col'>
+                                            <div class='gamemode-info'>
+                                                <div class='game-icon-wrapper skeleton-shimmer'></div>
+                                                <div class='skeleton-text skeleton-game-name'></div>
+                                            </div>
+                                        </div>
+
+                                        <div class='row-col player-col'>
+                                            <div class='player-info'>
+                                                <div class='avatar-wrapper skeleton-shimmer'></div>
+                                                <div class='skeleton-text skeleton-player-name'></div>
+                                            </div>
+                                        </div>
+
+                                        <div class='row-col time-col'>
+                                            <div class='skeleton-text skeleton-time'></div>
+                                        </div>
+
+                                        <div class='row-col amount-col'>
+                                            <div class='amount-info'>
+                                                <div class='skeleton-coin'></div>
+                                                <div class='skeleton-text skeleton-amount'></div>
+                                            </div>
+                                        </div>
+
+                                        <div class='row-col multiplier-col large'>
+                                            <div class='skeleton-badge'></div>
+                                        </div>
+
+                                        <div class='row-col payout-col large'>
+                                            <div class='payout-info'>
+                                                <div class='skeleton-coin'></div>
+                                                <div class='skeleton-text skeleton-payout'></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}</For>
+                            )}
+
+                            {/* Show actual bets when loaded */}
+                            {!isLoading() && (
+                                <For each={bets()}>{(bet, index) => (
                                 <div class={'feed-row ' + ((bet?.payout / bet?.amount) > 1 ? 'win-row' : 'loss-row')}>
                                     <div class='row-col gamemode-col'>
                                         <div 
@@ -193,9 +241,11 @@ function Bets(props) {
                                         </div>
                                     </div>
                                 </div>
-                            )}</For>
+                                )}</For>
+                            )}
 
-                            {bets().length === 0 && (
+                            {/* Show empty state when loaded but no bets */}
+                            {!isLoading() && bets().length === 0 && (
                                 <div class='empty-state'>
                                     <div class='empty-icon'>📊</div>
                                     <h3>No recent bets</h3>
@@ -576,6 +626,93 @@ function Bets(props) {
                     font-size: 13px;
                     margin: 0;
                     opacity: 0.6;
+                }
+
+                /* Skeleton Loading Styles */
+                .skeleton-row {
+                    opacity: 0.7;
+                }
+
+                .skeleton-shimmer {
+                    background: linear-gradient(
+                        90deg,
+                        rgba(45, 75, 105, 0.3) 25%,
+                        rgba(78, 205, 196, 0.1) 50%,
+                        rgba(45, 75, 105, 0.3) 75%
+                    );
+                    background-size: 200% 100%;
+                    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+                    border-radius: 6px;
+                }
+
+                .skeleton-text {
+                    background: linear-gradient(
+                        90deg,
+                        rgba(45, 75, 105, 0.3) 25%,
+                        rgba(78, 205, 196, 0.1) 50%,
+                        rgba(45, 75, 105, 0.3) 75%
+                    );
+                    background-size: 200% 100%;
+                    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+                    border-radius: 4px;
+                    height: 12px;
+                }
+
+                .skeleton-game-name {
+                    width: 80px;
+                }
+
+                .skeleton-player-name {
+                    width: 90px;
+                }
+
+                .skeleton-time {
+                    width: 60px;
+                }
+
+                .skeleton-amount {
+                    width: 70px;
+                }
+
+                .skeleton-payout {
+                    width: 70px;
+                }
+
+                .skeleton-coin {
+                    width: 22px;
+                    height: 22px;
+                    border-radius: 50%;
+                    background: linear-gradient(
+                        90deg,
+                        rgba(45, 75, 105, 0.3) 25%,
+                        rgba(78, 205, 196, 0.1) 50%,
+                        rgba(45, 75, 105, 0.3) 75%
+                    );
+                    background-size: 200% 100%;
+                    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+                }
+
+                .skeleton-badge {
+                    width: 50px;
+                    height: 20px;
+                    border-radius: 4px;
+                    background: linear-gradient(
+                        90deg,
+                        rgba(45, 75, 105, 0.3) 25%,
+                        rgba(78, 205, 196, 0.1) 50%,
+                        rgba(45, 75, 105, 0.3) 75%
+                    );
+                    background-size: 200% 100%;
+                    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+                }
+
+                @keyframes skeleton-shimmer {
+                    0% {
+                        background-position: -200% 0;
+                    }
+                    100% {
+                        background-position: 200% 0;
+                    }
                 }
 
                 @media only screen and (max-width: 1200px) {

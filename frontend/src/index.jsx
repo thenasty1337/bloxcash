@@ -1,5 +1,4 @@
 import {render} from 'solid-js/web';
-import {reportWebVitals} from './utils/reportWebVitals';
 
 import './fonts.css'
 import './index.css';
@@ -37,4 +36,4 @@ render(() => <>
     </UserProvider>
 </>, root);
 
-reportWebVitals();
+

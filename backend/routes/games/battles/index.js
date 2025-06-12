@@ -148,6 +148,7 @@ router.post('/create', isAuthed, apiLimiter, async (req, res) => {
                 players: [{
                     id: user.id,
                     username: user.username,
+                    avatar: user.avatar,
                     xp: user.xp,
                     role: user.role,
                     slot: 1,
@@ -200,7 +201,7 @@ async function joinBattle(req, res, bot = false) {
                 if (slot < 1 || slot > totalPlayers) return res.status(400).json({ error: 'INVALID_SLOT' });
 
                 const [players] = await connection.query(`
-                    SELECT users.id, users.username, users.xp, users.anon, battlePlayers.slot, battlePlayers.team FROM battlePlayers
+                    SELECT users.id, users.username, users.avatar, users.xp, users.anon, battlePlayers.slot, battlePlayers.team FROM battlePlayers
                     INNER JOIN users ON users.id = battlePlayers.userId
                     WHERE battleId = ? ORDER BY slot ASC FOR UPDATE
                 `, [battleId]);

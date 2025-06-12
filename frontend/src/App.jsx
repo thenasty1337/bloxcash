@@ -9,6 +9,7 @@ import Navbar from "./components/NavBar/navbar";
 import {Toaster} from "solid-toast";
 import Loader from "./components/Loader/loader";
 import LoadingScreen from "./components/Loader/loadingscreen";
+import SlotsSkeleton from "./components/Loader/slotsSkeleton";
 import {Redirect} from "./util/redirect";
 import {useWebsocket} from "./contexts/socketprovider";
 import {ADMIN_ROLES} from "./resources/users";
@@ -19,6 +20,7 @@ import AML from "./components/Documentation/aml";
 import UserModal from "./components/UserPopup/userpopup";
 import AuthInitializer from "./components/AuthInitializer";
 import { AuthStoreSync } from "./components/AuthStoreSync";
+import Home from './pages/home';
 
 const Admin = lazy(() => import('./pages/admin'))
 const AdminDashboard = lazy(() => import('./components/Admin/dashboard'))
@@ -48,8 +50,6 @@ const Provably = lazy(() => import('./components/Documentation/provably'))
 const FAQ = lazy(() => import('./components/Documentation/faq'))
 
 const SignIn = lazy(() => import('./components/Signin/signin'))
-
-const Home = lazy(() => import('./pages/home'))
 
 const Profile = lazy(() => import('./pages/profile'))
 const Transactions = lazy(() => import('./components/Profile/transactions'))
@@ -118,10 +118,13 @@ function App() {
     setStoredPreference('gamesSidebarOpen', value);
   };
 
-  createEffect(() => {
-    if (location.pathname && pageContent) {
-      pageContent.scrollTo({top: 0})
+  // Optimized scroll to top - only trigger when pathname actually changes
+  createEffect((prev) => {
+    const currentPath = location.pathname;
+    if (currentPath !== prev && pageContent) {
+      pageContent.scrollTo({top: 0, behavior: 'instant'})
     }
+    return currentPath;
   })
 
   createEffect(() => {
@@ -494,11 +497,7 @@ function App() {
               <div class={`center ${sidebarCollapsed() ? 'collapsed' : ''} ${chat() ? 'chat-open' : ''}`} ref={pageContent}>
                 <div class='content'>
                   <Routes>
-                    <Route path='/' element={
-                      <Suspense fallback={<Loader/>}>
-                        <Home user={user()}/>
-                      </Suspense>
-                    }/>
+                    <Route path='/' element={<Home user={user()}/>}/>
 
                     <Route path='/surveys' element={
                       <Suspense fallback={<Loader/>}>
@@ -572,19 +571,19 @@ function App() {
                     }/>
 
                     <Route path='/slots' element={
-                      <Suspense fallback={<Loader/>}>
+                      <Suspense fallback={<SlotsSkeleton/>}>
                         <Slots/>
                       </Suspense>
                     }/>
 
                     <Route path='/slots/featured' element={
-                      <Suspense fallback={<Loader/>}>
+                      <Suspense fallback={<SlotsSkeleton/>}>
                         <Slots/>
                       </Suspense>
                     }/>
 
                     <Route path='/favorites' element={
-                      <Suspense fallback={<Loader/>}>
+                      <Suspense fallback={<SlotsSkeleton/>}>
                         <Favorites/>
                       </Suspense>
                     }/>

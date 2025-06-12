@@ -22,6 +22,7 @@
     "fast-glob": "^3.3.2"
   },
   "dependencies": {
+    "@corvu/tooltip": "^0.2.2",
     "date-fns": "^4.1.0"
   },
   "workspaces": [

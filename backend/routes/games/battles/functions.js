@@ -47,7 +47,7 @@ async function getBattle(battleId, privKey) {
     });
 
     const [players] = await sql.query(`
-        SELECT users.id, users.username, users.xp, users.role, users.anon, battlePlayers.slot, battlePlayers.team
+        SELECT users.id, users.username, users.xp, users.role, users.anon, users.avatar, battlePlayers.slot, battlePlayers.team
         FROM battlePlayers INNER JOIN users ON battlePlayers.userId = users.id
         WHERE battlePlayers.battleId = ?
     `, [battle.id]);
@@ -212,7 +212,8 @@ function mapBattle(battle, cases, rounds, players, openings = []) {
                 xp: e.xp,
                 role: e.role,
                 slot: e.slot,
-                team: e.team
+                team: e.team,
+                avatar: e.avatar
             }
         }),
         rounds: rounds.map(e => {

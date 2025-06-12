@@ -1,9 +1,7 @@
-import SlotsHeader from "../components/Slots/slotsheader";
 import {createResource, createSignal, For, Show, createEffect} from "solid-js";
 import {api, favorites} from "../util/api";
 import Loader from "../components/Loader/loader";
 import BlurImage from "../components/UI/BlurImage";
-import FavoriteButton from "../components/UI/FavoriteButton";
 import {A, useSearchParams, useLocation, useNavigate} from "@solidjs/router";
 import Bets from "../components/Home/bets";
 import {useUser} from "../contexts/usercontextprovider";
@@ -582,7 +580,15 @@ function Slots(props) {
 
         <Show when={!networkError()}>
           <div className='slots'>
-            <Show when={!slotsData.loading} fallback={<Loader/>}>
+            <Show when={!slotsData.loading} fallback={
+              <div class="slots-skeleton">
+                <For each={Array(24).fill(0)}>{() =>
+                  <div class="skeleton-slot">
+                    <div class="skeleton-image"></div>
+                  </div>
+                }</For>
+              </div>
+            }>
               <Show when={slots() && slots().length > 0} fallback={
                 <div className='no-slots'>
                   <Show when={isFavoritesPage()} fallback={
@@ -612,24 +618,6 @@ function Slots(props) {
                         </A>
                       </div>
                     </div>
-                    <div class='slot-overlay'>
-                      <div class='favorite-container'>
-                                              <FavoriteButton 
-                        slug={slot.slug}
-                        isAuthenticated={!!user()}
-                        isFavorited={slot.isFavorited}
-                        size={16}
-                        onToggle={(isFavorited) => {
-                          // If we're on favorites page and item was unfavorited, refresh the list
-                          if (isFavoritesPage() && !isFavorited) {
-                            slotsData.refetch();
-                          }
-                        }}
-                      />
-                      </div>
-                    </div>
-                    {slot.isNew && <div class="new-tag">NEW</div>}
-                    {slot.hasJackpot && <div class="jackpot-tag">JACKPOT</div>}
                   </div>
                 }</For>
               </Show>
@@ -896,6 +884,45 @@ function Slots(props) {
           min-height: 195px;
           overflow-x: auto;
           padding: 4px;
+        }
+
+        .slots-skeleton {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+          grid-gap: 10px;
+          padding: 4px;
+        }
+
+        .skeleton-slot {
+          background: rgba(26, 35, 50, 0.4);
+          border-radius: 8px;
+          padding: 3px;
+          border: 1px solid rgba(78, 205, 196, 0.1);
+          backdrop-filter: blur(8px);
+          overflow: hidden;
+        }
+
+        .skeleton-image {
+          width: 100%;
+          aspect-ratio: 427/575;
+          border-radius: 6px;
+          background: linear-gradient(
+            90deg,
+            rgba(45, 75, 105, 0.3) 25%,
+            rgba(78, 205, 196, 0.1) 50%,
+            rgba(45, 75, 105, 0.3) 75%
+          );
+          background-size: 200% 100%;
+          animation: skeleton-shimmer 1.5s ease-in-out infinite;
+        }
+
+        @keyframes skeleton-shimmer {
+          0% {
+            background-position: -200% 0;
+          }
+          100% {
+            background-position: 200% 0;
+          }
         }
 
         .connection-error {
@@ -1323,10 +1350,19 @@ function Slots(props) {
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             grid-gap: 12px;
           }
+          
+          .slots-skeleton {
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            grid-gap: 12px;
+          }
         }
         
         @media only screen and (min-width: 1200px) {
           .slots {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+          }
+          
+          .slots-skeleton {
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
           }
         }

@@ -80,23 +80,22 @@ function Home(props) {
     const [method, setMethod] = createSignal('')
     const [isVisible, setIsVisible] = createSignal(true)
     const [isScrolling, setIsScrolling] = createSignal(false)
-    const [loadPhase, setLoadPhase] = createSignal(0)
     
     let cryptoContainerRef;
 
-    createEffect(() => {
-        // Intersection observer for visibility
+    // Set up observers and handlers only once to prevent flickering
+    onMount(() => {
+        // Set up intersection observer only once
         const observer = new IntersectionObserver(
             ([entry]) => setIsVisible(entry.isIntersecting),
             { threshold: 0.1 }
         )
         
-        // Use ref instead of document.querySelector for better performance
         if (cryptoContainerRef) {
             observer.observe(cryptoContainerRef)
         }
         
-        // Pause animation during page scroll for better performance
+        // Set up scroll handler only once
         let scrollTimeout;
         const handleScroll = () => {
             setIsScrolling(true)
@@ -111,14 +110,6 @@ function Home(props) {
             window.removeEventListener('scroll', handleScroll)
             clearTimeout(scrollTimeout)
         })
-
-        // Load core components first
-        setLoadPhase(1);
-        
-        // Then load slots sections with delays to prevent API rush
-        setTimeout(() => setLoadPhase(2), 100);
-        setTimeout(() => setLoadPhase(3), 300);
-        setTimeout(() => setLoadPhase(4), 600);
     })
 
     const navigate = useNavigate()
@@ -135,78 +126,67 @@ function Home(props) {
                     <RainBanner/>
                 </div> */}
                                  
-  {/* User Favorites - only show if user is logged in */}
-  {props.user && (
-                      <SlotsList 
+                {/* User Favorites - only show if user is logged in */}
+                <Show when={props.user}>
+                    <SlotsList 
                         title="Your Favorites"
                         showFavoritesOnly={true}
                         limit={15}
                         viewAllLink="/favorites"
                         icon="/assets/GameIcons/favourites.svg"
                         user={props.user}
-                      />
-                )}
+                    />
+                </Show>
 
                 <GamesList/>
                 
-                {/* Phase 1: Load featured slots first (most important) */}
-                <Show when={loadPhase() >= 1}>
-                        <SlotsList 
-                          title="Featured Slots"
-                          showFeaturedOnly={true}
-                          limit={15}
-                          viewAllLink="/slots?featured=true"
-                          icon="/assets/GameIcons/favourites.svg"
-                          user={props.user}
-                        />
-                </Show>
+                {/* Load all sections immediately to prevent flickering */}
+                <SlotsList 
+                    title="Featured Slots"
+                    showFeaturedOnly={true}
+                    limit={15}
+                    viewAllLink="/slots?featured=true"
+                    icon="/assets/GameIcons/favourites.svg"
+                    user={props.user}
+                />
 
-                {/* Phase 2: Load popular and new releases */}
-                <Show when={loadPhase() >= 2}>
-                        <SlotsList 
-                          title="Popular Slots"
-                          showPopular={true}
-                          limit={15}
-                          viewAllLink="/slots?popular=true"
-                          icon="/assets/GameIcons/popular.svg"
-                          user={props.user}
-                        />
+                <SlotsList 
+                    title="Popular Slots"
+                    showPopular={true}
+                    limit={15}
+                    viewAllLink="/slots?popular=true"
+                    icon="/assets/GameIcons/popular.svg"
+                    user={props.user}
+                />
 
-                        <SlotsList 
-                          title="New Releases"
-                          showNewOnly={true}
-                          limit={15}
-                          viewAllLink="/slots?new=true"
-                          icon="/assets/GameIcons/new.svg"
-                          user={props.user}
-                        />
-                </Show>
+                <SlotsList 
+                    title="New Releases"
+                    showNewOnly={true}
+                    limit={15}
+                    viewAllLink="/slots?new=true"
+                    icon="/assets/GameIcons/new.svg"
+                    user={props.user}
+                />
 
-                {/* Phase 3: Load providers section */}
-                <Show when={loadPhase() >= 3}>
-                        <ProvidersSection />
-                </Show>
+                <ProvidersSection />
                 
-                {/* Phase 4: Load remaining slot categories */}
-                <Show when={loadPhase() >= 4}>
-                        <SlotsList 
-                          title="Video Slots"
-                          type="video-slots"
-                          limit={15}
-                          viewAllLink="/slots?type=video-slots"
-                          icon="/assets/GameIcons/slot.svg"
-                          user={props.user}
-                        />
-                    
-                        <SlotsList 
-                          title="Game Shows"
-                          type="live"
-                          limit={15}
-                          viewAllLink="/slots?type=live"
-                          icon="/assets/GameIcons/game-shows.svg"
-                          user={props.user}
-                        />
-                </Show>
+                <SlotsList 
+                    title="Video Slots"
+                    type="video-slots"
+                    limit={15}
+                    viewAllLink="/slots?type=video-slots"
+                    icon="/assets/GameIcons/slot.svg"
+                    user={props.user}
+                />
+            
+                <SlotsList 
+                    title="Game Shows"
+                    type="live"
+                    limit={15}
+                    viewAllLink="/slots?type=live"
+                    icon="/assets/GameIcons/game-shows.svg"
+                    user={props.user}
+                />
                 
              
                 
@@ -305,6 +285,16 @@ function Home(props) {
                 /* Mobile scroll optimization */
                 -webkit-overflow-scrolling: touch;
                 overflow-x: hidden;
+                
+                /* Prevent layout shift and flickering */
+                min-height: 80vh;
+                contain: layout style paint;
+              }
+              
+              /* Disable fade-in animation to prevent flicker */
+              .home-container.fadein {
+                animation: none !important;
+                opacity: 1 !important;
               }
 
               .banners {

@@ -127,50 +127,53 @@ function Battles(props) {
             <div class='battles-container fadein'>
                 <div class='battles-header'>
                     <div class='header-section'>
-                        <p class='title'>
-                            <img src='/assets/icons/battles.svg' height='18' alt=''/>
-                            BATTLES
-                        </p>
+                        <div class='page-title'>
+                            <img src='/assets/game-icons/battles.svg' height='24' alt='Battles'/>
+                            <h1>Battles</h1>
+                        </div>
 
-                        <div class='cost'>
-                            <img src='/assets/icons/coin.svg' height='15'/>
-                            <p>
+                        {/* <div class='total-value'>
+                            <img src='/assets/icons/coin.svg' height='16'/>
+                            <span class='amount'>
                                 {Math.floor(totalPriceOfBattles())?.toLocaleString(undefined, { maximumFractionDigits: 0 }) || '0'}
-                                <span class='gray'>
-                                    .{getCents(totalPriceOfBattles())}
-                                </span>
-                            </p>
-                        </div>
+                                <span class='cents'>.{getCents(totalPriceOfBattles())}</span>
+                            </span>
+                        </div> */}
+                    </div>
 
-                        <div class='toggle'>
-                            <p>ALL</p>
-                            <Toggle active={toggle() === 'ALL'} toggle={() => setToggle('ALL')}/>
-                        </div>
-
-                        <div class='toggle'>
-                            <p>JOINABLE</p>
-                            <Toggle active={toggle() === 'JOINABLE'} toggle={() => setToggle('JOINABLE')}/>
-                        </div>
-
-                        <div class='toggle'>
-                            <p>ENDED</p>
-                            <Toggle active={toggle() === 'ENDED'} toggle={() => setToggle('ENDED')}/>
+                    <div class='header-section center'>
+                        <div class='filter-tabs'>
+                            <button 
+                                class={`tab ${toggle() === 'ALL' ? 'active' : ''}`}
+                                onClick={() => setToggle('ALL')}
+                            >
+                                All <span class='count'>{battles()?.length || 0}</span>
+                            </button>
+                            <button 
+                                class={`tab ${toggle() === 'JOINABLE' ? 'active' : ''}`}
+                                onClick={() => setToggle('JOINABLE')}
+                            >
+                                Open <span class='count'>{getJoinable()?.length || 0}</span>
+                            </button>
+                            <button 
+                                class={`tab ${toggle() === 'ENDED' ? 'active' : ''}`}
+                                onClick={() => setToggle('ENDED')}
+                            >
+                                Ended
+                            </button>
                         </div>
                     </div>
 
                     <div class='header-section right'>
-                        <div class='sort'>
-                            <p class={!sortByPrice() ? 'active' : ''}><span class='trim'>SORT BY</span> DATE</p>
+                        <div class='sort-toggle'>
+                            <span class={`sort-option ${!sortByPrice() ? 'active' : ''}`}>Date</span>
                             <Switch active={sortByPrice()} toggle={() => setSortByPrice(!sortByPrice())}/>
-                            <p class={sortByPrice() ? 'active' : ''}><span class='trim'>SORT BY</span> PRICE</p>
+                            <span class={`sort-option ${sortByPrice() ? 'active' : ''}`}>Price</span>
                         </div>
 
-                        <p class='stat'>{battles()?.length || 0}  <span class='green'>GAMES</span></p>
-                        <p class='stat'>{getJoinable()?.length || 0} <span class='green'>JOINABLE</span></p>
-
-                        <button class='bevel-gold create'>
-                            CREATE NEW
+                        <button class='create-battle-btn'>
                             <A href='/battle/create' class='gamemode-link'></A>
+                            <span>Create Battle</span>
                         </button>
                     </div>
                 </div>
@@ -190,149 +193,254 @@ function Battles(props) {
             <style jsx>{`
               .battles-container {
                 width: 100%;
-                max-width: 1175px;
+                max-width: 1200px;
                 height: fit-content;
-
                 box-sizing: border-box;
-                padding: 30px 0;
+                padding: 24px;
                 margin: 0 auto;
               }
               
               .battles-header {
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
+                margin-bottom: 32px;
+                gap: 24px;
               }
               
               .header-section {
                 display: flex;
                 align-items: center;
-                flex-grow: 1;
-                gap: 15px;
+                gap: 20px;
               }
               
-              .right {
+              .header-section.center {
+                flex: 1;
+                justify-content: center;
+              }
+              
+              .header-section.right {
                 justify-content: flex-end;
               }
               
-              .title {
-                color: #FFF;
-                font-size: 18px;
+              .page-title {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+              }
+              
+              .page-title h1 {
+                color: #FFFFFF;
+                font-size: 22px;
                 font-weight: 700;
-                
+                margin: 0;
+                letter-spacing: -0.5px;
+              }
+              
+              .total-value {
                 display: flex;
                 align-items: center;
                 gap: 8px;
-              }
-              
-              .cost {
-                height: 30px;
-                padding: 0 10px;
-                min-width: 100px;
-                gap: 6px;
-              }
-              
-              .cost p {
-                margin-top: -2px;
-              }
-              
-              .toggle {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                
-                color: #ADA3EF;
-                font-size: 12px;
-                font-weight: 700;
-              }
-              
-              .stat {
-                height: 31px;
-                line-height: 31px;
-                
-                color: #FFF;
-                font-size: 13px;
+                padding: 8px 16px;
+                background: rgba(139, 120, 221, 0.15);
+                border: 1px solid rgba(139, 120, 221, 0.3);
+                border-radius: 12px;
+                color: #FFFFFF;
                 font-weight: 600;
-                
-                padding: 0 15px;
-                border-radius: 3px;
-                background: rgba(89, 232, 120, 0.24);
+                min-width: 120px;
               }
               
-              .create {
-                width: 130px;
-                height: 35px;
-                
-                position: relative;
-                
+              .total-value .amount {
                 font-size: 14px;
               }
               
-              .sort {
+              .total-value .cents {
+                color: #ADA3EF;
+              }
+              
+              .filter-tabs {
+                display: flex;
+                background: rgba(24, 20, 52, 0.8);
+                border: 1px solid rgba(139, 120, 221, 0.2);
+                border-radius: 12px;
+                padding: 4px;
+                gap: 2px;
+              }
+              
+              .tab {
                 display: flex;
                 align-items: center;
-                gap: 8px;
-
+                gap: 6px;
+                padding: 10px 16px;
+                background: none;
+                border: none;
+                border-radius: 8px;
                 color: #ADA3EF;
-                font-size: 12px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                white-space: nowrap;
+              }
+              
+              .tab.active {
+                background: rgba(139, 120, 221, 0.25);
+                color: #FFFFFF;
+              }
+              
+              .tab:hover:not(.active) {
+                background: rgba(139, 120, 221, 0.1);
+                color: #FFFFFF;
+              }
+              
+              .tab .count {
+                background: rgba(139, 120, 221, 0.4);
+                color: #FFFFFF;
+                font-size: 11px;
                 font-weight: 700;
+                padding: 2px 6px;
+                border-radius: 6px;
+                min-width: 16px;
+                text-align: center;
               }
               
-              .sort p {
-                transition: color .3s;
+              .tab.active .count {
+                background: rgba(255, 255, 255, 0.2);
               }
               
-              .sort p.active {
-                color: white;
+              .sort-toggle {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                color: #ADA3EF;
+                font-size: 13px;
+                font-weight: 600;
               }
               
-              .bar {
-                flex: 1;
-                height: 1px;
-                background: #5A5499;
-                margin: 25px 0;
+              .sort-option {
+                transition: color 0.2s ease;
+              }
+              
+              .sort-option.active {
+                color: #FFFFFF;
+              }
+              
+              .create-battle-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                padding: 12px 20px;
+                background: linear-gradient(135deg, #8b78dd, #7c6bbf);
+                border: none;
+                border-radius: 12px;
+                color: #FFFFFF;
+                font-size: 14px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+              }
+              
+              .create-battle-btn:hover {
+                background: linear-gradient(135deg, #9d8ae8, #8b78dd);
+                transform: translateY(-1px);
               }
               
               .battles {
                 display: flex;
                 flex-direction: column;
                 width: 100%;
-                gap: 30px;
+                gap: 16px;
               }
 
-              @media only screen and (max-width: 1420px) {
-                .toggle {
-                  display: none;
-                }
-              }
-
-              @media only screen and (max-width: 1180px) {
-                .stat {
-                  display: none;
-                }
-              }
-
-              @media only screen and (max-width: 700px) {
-                .trim {
-                  display: none;
-                }
-              }
-
-              @media only screen and (max-width: 540px) {
+              @media (max-width: 1024px) {
                 .battles-header {
-                  justify-content: center;
                   flex-direction: column;
-                  align-items: center;
-                  gap: 25px;
+                  gap: 16px;
+                  align-items: stretch;
                 }
                 
-                .right {
+                .header-section.center {
+                  order: 2;
+                }
+                
+                .header-section.right {
+                  order: 3;
+                  justify-content: center;
+                }
+                
+                .filter-tabs {
                   justify-content: center;
                 }
               }
-              
-              @media only screen and (max-width: 1000px) {
+
+              @media (max-width: 768px) {
                 .battles-container {
+                  padding: 16px;
                   padding-bottom: 90px;
+                }
+                
+                .page-title h1 {
+                  font-size: 20px;
+                }
+                
+                .total-value {
+                  min-width: auto;
+                  padding: 6px 12px;
+                }
+                
+                .filter-tabs {
+                  width: 100%;
+                }
+                
+                .tab {
+                  flex: 1;
+                  justify-content: center;
+                  padding: 8px 12px;
+                  font-size: 13px;
+                }
+                
+                .sort-toggle {
+                  font-size: 12px;
+                  gap: 8px;
+                }
+                
+                .create-battle-btn {
+                  padding: 10px 16px;
+                  font-size: 13px;
+                }
+              }
+
+              @media (max-width: 480px) {
+                .battles-header {
+                  gap: 12px;
+                }
+                
+                .header-section {
+                  gap: 12px;
+                }
+                
+                .header-section.center {
+                  order: 1;
+                }
+                
+                .header-section:first-child {
+                  order: 2;
+                  justify-content: center;
+                }
+                
+                .header-section.right {
+                  order: 3;
+                }
+                
+                .tab .count {
+                  display: none;
+                }
+                
+                .battles {
+                  gap: 12px;
                 }
               }
             `}</style>
@@ -341,3 +449,4 @@ function Battles(props) {
 }
 
 export default Battles;
+
