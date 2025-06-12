@@ -66,6 +66,28 @@ function Battles(props) {
                 setBattles([...battles().slice(0, battleIndex), {...curBattle}, ...battles().slice(battleIndex + 1)])
             })
 
+            ws().on('battles:round', (id, roundNum) => {
+                let battleIndex = battles()?.findIndex(b => id === b.id)
+                if (battleIndex < 0) return
+
+                let curBattle = battles()[battleIndex]
+                if (id !== curBattle.id) return
+
+                curBattle.round = roundNum
+                setBattles([...battles().slice(0, battleIndex), {...curBattle}, ...battles().slice(battleIndex + 1)])
+            })
+
+            ws().on('battles:commit', (id, blockNumber) => {
+                let battleIndex = battles()?.findIndex(b => id === b.id)
+                if (battleIndex < 0) return
+
+                let curBattle = battles()[battleIndex]
+                if (id !== curBattle.id) return
+
+                curBattle.EOSBlock = blockNumber
+                setBattles([...battles().slice(0, battleIndex), {...curBattle}, ...battles().slice(battleIndex + 1)])
+            })
+
             hasConnected = true
         }
 

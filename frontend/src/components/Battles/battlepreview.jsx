@@ -1,5 +1,5 @@
 import GreenCount from "../Count/greencount";
-import {createEffect, createSignal, For} from "solid-js";
+import {createEffect, createSignal, createMemo, For} from "solid-js";
 import Avatar from "../Level/avatar";
 import {getCents} from "../../util/balance";
 import {A, useNavigate} from "@solidjs/router";
@@ -12,41 +12,118 @@ function BattlePreview(props) {
   const [state, setState] = createSignal('waiting')
   const [isHoveringCases, setIsHoveringCases] = createSignal(false)
   const [needsScrolling, setNeedsScrolling] = createSignal(false)
+  const [currentRound, setCurrentRound] = createSignal(0)
   let casesScrollRef
 
   createEffect(() => {
-    if (state() === 'finished') return
+    const battle = props?.battle
+    if (!battle) return
+    
+    let newState = 'waiting'
     
     // Battle is finished if it has an endedAt timestamp or winnerTeam is set
-    if (props?.battle?.endedAt || props?.battle?.winnerTeam !== null) return setState('finished')
+    if (battle.endedAt || battle.winnerTeam !== null) {
+      newState = 'finished'
+    }
+    // Battle is rolling if it has a round number > 0 and not ended
+    else if (battle.round > 0 && !battle.endedAt) {
+      newState = 'rolling'
+    }
+    // Battle is waiting if it hasn't started yet
+    else if (!battle.startedAt) {
+      newState = 'waiting'
+    }
+
     
-    // Battle is rolling if it has started (startedAt exists) but not ended
-    if (props?.battle?.startedAt && !props?.battle?.endedAt) return setState('rolling')
+    setState(newState)
+  })
+
+  // Track current round changes
+  createEffect(() => {
+    setCurrentRound(props?.battle?.round || 0)
+  })
+
+  // Create reactive round data
+  const roundsWithState = createMemo(() => {
+    const rounds = props?.battle?.rounds || []
+    const battleState = state()
+    const currentRoundNum = currentRound()
     
-    // Battle is waiting if it hasn't started yet (no startedAt)
-    if (!props?.battle?.startedAt) return setState('waiting')
+
     
-    // Default to waiting
-    setState('waiting')
+    return rounds.map((round, index) => {
+      const isCurrentRound = battleState === 'rolling' && (index === (currentRoundNum - 1))
+      const isOpenedRound = battleState === 'finished' || round.round < currentRoundNum
+      
+
+      
+      return {
+        ...round,
+        isCurrentRound,
+        isOpenedRound
+      }
+    })
   })
 
   createEffect(() => {
-    // Check if scrolling is needed after DOM updates
-    if (casesScrollRef) {
-      const checkScrollNeeded = () => {
-        const scrollWidth = casesScrollRef.scrollWidth
-        const clientWidth = casesScrollRef.clientWidth
-        setNeedsScrolling(scrollWidth > clientWidth)
+    // Check if scrolling is needed - if we have more cases than can fit in the container
+    const battle = props?.battle
+    if (casesScrollRef && battle?.rounds?.length > 0) {
+      const containerWidth = casesScrollRef.clientWidth
+      const caseWidth = 92 // 80px case + 12px gap
+      const visibleCases = Math.floor(containerWidth / caseWidth)
+      
+      // Only show navigation if we have more cases than can fit
+      setNeedsScrolling(battle.rounds.length > visibleCases)
+    }
+  })
+
+  // Auto-scroll similar to battle.jsx - show active case in second position
+  const [scrollTransform, setScrollTransform] = createSignal(0)
+  const [isManualScrolling, setIsManualScrolling] = createSignal(false)
+  let lastProcessedRound = 0
+  
+  createEffect(() => {
+    const currentRoundNum = currentRound()
+    const battleState = state()
+    
+    // Only auto-scroll if user hasn't manually scrolled and we have a new round
+    if (!isManualScrolling() && battleState === 'rolling' && currentRoundNum > 0 && currentRoundNum !== lastProcessedRound) {
+      lastProcessedRound = currentRoundNum
+      
+      // Smart scrolling: only scroll when necessary
+      const caseWidth = 92 // 80px case + 12px gap
+      const totalRounds = roundsWithState().length
+      const containerWidth = casesScrollRef?.clientWidth || 400
+      const visibleCases = Math.floor(containerWidth / caseWidth)
+      
+      let transform = 0
+      
+      if (totalRounds <= visibleCases) {
+        // All cases fit in container, no need to scroll at all
+        transform = 0
+      } else {
+        // Check if current round is visible without scrolling
+        const currentRoundIndex = currentRoundNum - 1 // Convert to 0-based
+        const currentTransform = scrollTransform()
+        const firstVisibleIndex = Math.floor(currentTransform / caseWidth)
+        const lastVisibleIndex = firstVisibleIndex + visibleCases - 1
+        
+        if (currentRoundIndex >= firstVisibleIndex && currentRoundIndex <= lastVisibleIndex) {
+          // Current round is already visible, no need to scroll
+          transform = currentTransform
+        } else if (currentRoundIndex < firstVisibleIndex) {
+          // Current round is to the left, scroll to show it in second position
+          transform = Math.max(0, (currentRoundNum - 2) * caseWidth)
+        } else {
+          // Current round is to the right, scroll to show it
+          const maxTransform = (totalRounds - visibleCases) * caseWidth
+          const normalTransform = Math.max(0, (currentRoundNum - 2) * caseWidth)
+          transform = Math.min(normalTransform, maxTransform)
+        }
       }
       
-      // Check immediately
-      checkScrollNeeded()
-      
-      // Also check on resize
-      const resizeObserver = new ResizeObserver(checkScrollNeeded)
-      resizeObserver.observe(casesScrollRef)
-      
-      return () => resizeObserver.disconnect()
+      setScrollTransform(transform)
     }
   })
 
@@ -79,21 +156,33 @@ function BattlePreview(props) {
   }
 
   function scrollCasesLeft() {
-    if (casesScrollRef) {
-      casesScrollRef.scrollBy({
-        left: -200,
-        behavior: 'smooth'
-      })
-    }
+    setIsManualScrolling(true) // Disable auto-scroll when user manually scrolls
+    const currentTransform = scrollTransform()
+    const newTransform = Math.max(0, currentTransform - 92) // Move left by one case
+    setScrollTransform(newTransform)
+    
+    // Re-enable auto-scroll after a delay
+    setTimeout(() => setIsManualScrolling(false), 3000)
   }
 
   function scrollCasesRight() {
-    if (casesScrollRef) {
-      casesScrollRef.scrollBy({
-        left: 200,
-        behavior: 'smooth'
-      })
-    }
+    setIsManualScrolling(true) // Disable auto-scroll when user manually scrolls
+    const currentTransform = scrollTransform()
+    const battle = props?.battle
+    if (!battle?.rounds) return
+    
+    const totalRounds = battle.rounds.length
+    const containerWidth = casesScrollRef?.clientWidth || 400
+    const caseWidth = 92
+    const visibleCases = Math.floor(containerWidth / caseWidth)
+    
+    // Calculate max transform using the same logic as auto-scroll
+    const maxTransform = Math.max(0, (totalRounds - visibleCases) * caseWidth)
+    const newTransform = Math.min(maxTransform, currentTransform + 92) // Move right by one case
+    setScrollTransform(newTransform)
+    
+    // Re-enable auto-scroll after a delay
+    setTimeout(() => setIsManualScrolling(false), 3000)
   }
 
   return (
@@ -187,17 +276,19 @@ function BattlePreview(props) {
               </div>
               
               <div class='cases-scroll' ref={casesScrollRef}>
-                <For each={props?.battle?.rounds}>{(c, index) => (
-                  <div class='case-item'>
-                    <img src={getCase(c?.caseId)?.img} alt=''/>
-                  </div>
-                )}</For>
+                <div class='cases-track' style={`transform: translateX(-${scrollTransform()}px); transition: transform 0.3s ease;`}>
+                  <For each={roundsWithState()}>{(round, index) => (
+                    <div class={`case-item ${round.isCurrentRound ? 'current-round' : ''} ${round.isOpenedRound ? 'opened-round' : ''}`}>
+                      <img src={getCase(round.caseId)?.img} alt=''/>
+                    </div>
+                  )}</For>
+                </div>
               </div>
               
               <div class='round-counter'>
-                <span>{props?.battle?.rounds?.length - props?.battle?.rounds?.filter(r => r?.endedAt).length}</span>
+                <span>{state() === 'finished' ? roundsWithState().length : Math.max(0, currentRound())}</span>
                 <span>/</span>
-                <span>{props?.battle?.rounds?.length}</span>
+                <span>{roundsWithState().length}</span>
               </div>
             </div>
           </div>
@@ -455,18 +546,19 @@ function BattlePreview(props) {
 
         .cases-scroll {
           z-index: 10;
+          height: 100%;
+          overflow: hidden;
+          position: relative;
+        }
+
+        .cases-track {
           display: flex;
           align-items: center;
           gap: 12px;
           height: 100%;
-          overflow-x: auto;
-          overflow-y: hidden;
-          scrollbar-width: none;
-          -ms-overflow-style: none;
-        }
-
-        .cases-scroll::-webkit-scrollbar {
-          display: none;
+          position: absolute;
+          left: 0;
+          top: 0;
         }
 
         .case-item {
@@ -483,6 +575,20 @@ function BattlePreview(props) {
           transition: all 0.5s ease;
           pointer-events: none;
           user-select: none;
+        }
+
+        .case-item.opened-round {
+          opacity: 0.3;
+        }
+
+        .case-item {
+          transition: opacity 0.3s ease;
+        }
+
+                .case-item.current-round {
+          background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.12) 30%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.02) 70%, transparent 100%);
+          border-radius: 10px;
+          padding: 4px;
         }
 
         .round-counter {
