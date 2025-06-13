@@ -16,8 +16,9 @@ const app = express();
 app.disable('x-powered-by');
 
 // --- CORS Configuration ---
+const devOrigins = ['http://localhost:5173', 'http://localhost:3001'];
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : /* Add your production frontend URL here */ true,
+  origin: process.env.NODE_ENV === 'development' ? devOrigins : /* Add your production frontend URL here */ true,
   credentials: true, // Important for cookies/sessions
   optionsSuccessStatus: 200
 };
@@ -171,7 +172,7 @@ async function start() {
     // Set up Socket.IO with proper configuration
     io.attach(serverInstance, { 
         cors: { 
-            origin: process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : true,
+            origin: process.env.NODE_ENV === 'development' ? devOrigins : true,
             methods: ["GET", "POST"],
             credentials: true,
             allowedHeaders: ["X-Requested-With", "Content-Type", "Authorization"]

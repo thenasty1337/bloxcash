@@ -60,37 +60,30 @@ router.get('/', async (req, res) => {
         console.log('Processing callback for username:', username);
         
         // Extract user ID from the SpinShield username format
-        // Format: SS_{userId}_{original username}
+        // Format: SS_{userId}
         let userId = null;
         let baseUsername = username;
         
         // Check if username is in our specific format
         if (username.startsWith('SS_')) {
-            // Extract the ID portion (between SS_ and the next _)
+            // Extract the ID portion (after SS_)
             const parts = username.split('_');
-            if (parts.length >= 3) {
+            if (parts.length >= 2) {
                 userId = parts[1];
-                // Reconstruct original username (everything after SS_{userId}_)
-                baseUsername = username.substring(username.indexOf('_', 3) + 1);
-                console.log('Extracted user ID:', userId, 'Base username:', baseUsername);
+                console.log('Extracted user ID:', userId, 'From username:', username);
             }
         }
         
-        // Try to find the user by ID first (most reliable) then by username as fallback
+        // Try to find the user by ID
         let user;
         
         if (userId) {
-            // First try to find by exact ID
+            // Find by exact ID
             [[user]] = await sql.query('SELECT id, username, xp, role, avatar, balance FROM users WHERE id = ?', [userId]);
         }
         
-        // If no user found by ID, try by username
         if (!user) {
-            [[user]] = await sql.query('SELECT id, username, xp, role, avatar, balance FROM users WHERE username = ?', [baseUsername]);
-        }
-        
-        if (!user) {
-            console.error('User not found:', username, 'Base username:', baseUsername, 'User ID:', userId);
+            console.error('User not found for username:', username, 'Extracted User ID:', userId);
             return res.json({ error: 2, balance: 0 });
         }
         
@@ -198,13 +191,28 @@ router.get('/', async (req, res) => {
                     
                     // If freespins details are provided, update the free spins record
                     if (callbackData.freespins) {
-                        await sql.query(
+                        const performed = parseInt(callbackData.freespins.performed);
+                        const total = parseInt(callbackData.freespins.total);
+                        const isCompleted = performed >= total;
+                        
+                        console.log(`Updating free spins: performed=${performed}, total=${total}, completed=${isCompleted}, userId=${user.id}, gameId=${debitGameId}`);
+                        
+                        // Debug: Check what free spins records exist for this user
+                        const [debugRecords] = await sql.query(
+                            'SELECT id, game_id, freespins_count, freespins_performed, active FROM spinshield_freespins WHERE user_id = ? AND active = 1',
+                            [user.id]
+                        );
+                        console.log('Debug - Active free spins for user:', debugRecords);
+                        
+                        const updateResult = await sql.query(
                             `UPDATE spinshield_freespins 
-                             SET freespins_performed = ?, updated_at = NOW()
+                             SET freespins_performed = ?, freespins_bet = freespins_bet + ?, active = ?, updated_at = NOW()
                              WHERE user_id = ? AND game_id = ? AND active = 1 
                              ORDER BY id DESC LIMIT 1`,
-                            [callbackData.freespins.performed, user.id, debitGameId]
+                            [performed, amount, isCompleted ? 0 : 1, user.id, debitGameId]
                         );
+                        
+                        console.log(`Free spins update result: affected rows = ${updateResult.affectedRows}`);
                     }
                     
                     return res.json({ error: 0, balance: balanceInCents });
@@ -339,13 +347,29 @@ router.get('/', async (req, res) => {
                     
                     // If freespins details are provided, update the free spins wallet
                     if (callbackData.freespins && isFreespin) {
-                        await creditConnection.query(
+                        const performed = parseInt(callbackData.freespins.performed);
+                        const total = parseInt(callbackData.freespins.total);
+                        const isCompleted = performed >= total;
+                        
+                        console.log(`Updating free spins (credit): performed=${performed}, total=${total}, completed=${isCompleted}, winAmount=${amount}, userId=${user.id}, gameId=${game_id}`);
+                        
+                        // Debug: Check what free spins records exist for this user
+                        const [debugRecords] = await creditConnection.query(
+                            'SELECT id, game_id, freespins_count, freespins_performed, active FROM spinshield_freespins WHERE user_id = ? AND active = 1',
+                            [user.id]
+                        );
+                        console.log('Debug - Active free spins for user (credit):', debugRecords);
+                        
+                        // Update free spins (game_id from callback should now match stored game_id_hash)
+                        const updateResult = await creditConnection.query(
                             `UPDATE spinshield_freespins 
-                             SET freespins_performed = ?, freespins_wallet = freespins_wallet + ?, updated_at = NOW()
+                             SET freespins_performed = ?, freespins_wallet = freespins_wallet + ?, active = ?, updated_at = NOW()
                              WHERE user_id = ? AND game_id = ? AND active = 1 
                              ORDER BY id DESC LIMIT 1`,
-                            [callbackData.freespins.performed, amount, user.id, game_id]
+                            [performed, amount, isCompleted ? 0 : 1, user.id, game_id]
                         );
+                        
+                        console.log(`Free spins update result (credit): affected rows = ${updateResult.affectedRows}`);
                     }
                     
                     // If this is the final gameplay (round complete), create a bet entry

@@ -131,21 +131,17 @@ async function createGameSession(userId, gameIdHash, currency = 'USD', isDemo = 
             endpoint: useSettings.endpoint
         });
         
-        // Generate user password (example method - ensure this matches your authentication approach)
-        const userPassword = `user_${userId}_pass`;
+        // Generate standardized username and password for SpinShield
+        const spinshieldUsername = `SS_${userId}`;
+        const spinshieldPassword = `SS_pass_${userId}`;
         
-        // Use a more reliable format for SpinShield username
-        // Format: SS_{userId}_{original username}
-        // This way we can always extract userId reliably from the prefix
-        const userName = `SS_${userId}_${user.username}`;
-        
-        console.log(`Creating SpinShield player: ${userName} (original username: ${user.username}, ID: ${userId})`);
+        console.log(`Creating SpinShield player: ${spinshieldUsername} (original username: ${user.username}, ID: ${userId})`);
         
         // Create or update player in SpinShield
         const createPlayerResponse = await apiClient.createPlayer(
-            userName,
-            userPassword,
-            user.username,
+            spinshieldUsername,
+            spinshieldPassword,
+            user.username, // Use original username as nickname
             currency
         );
         
@@ -158,7 +154,7 @@ async function createGameSession(userId, gameIdHash, currency = 'USD', isDemo = 
         
         // Launch game - Use getGame instead of launchGame
         console.log('Attempting to launch game:', {
-            username: userName,
+            username: spinshieldUsername,
             gameIdHash: gameIdHash,
             currency: currency,
             isDemo: isDemo,
@@ -181,8 +177,8 @@ async function createGameSession(userId, gameIdHash, currency = 'USD', isDemo = 
             } else {
                 // Launch real money game
                 gameResponse = await apiClient.getGame(
-                    userName,
-                    userPassword,
+                    spinshieldUsername,
+                    spinshieldPassword,
                     gameIdHash, // Use the game ID hash (string) 
                     currency,
                     useSettings.callback_url, // homeurl
@@ -230,7 +226,7 @@ async function createGameSession(userId, gameIdHash, currency = 'USD', isDemo = 
                 userId,
                 gameId: gameInfo.game_id,
                 gameIdHash: gameIdHash,
-                username: userName,
+                username: spinshieldUsername,
                 createdAt: Date.now(),
                 isDemo: isDemo
             };
@@ -292,7 +288,7 @@ async function createGameSession(userId, gameIdHash, currency = 'USD', isDemo = 
                         userId,
                         gameId: gameInfo.game_id,
                         gameIdHash: gameIdHash,
-                        username: userName,
+                        username: spinshieldUsername,
                         createdAt: Date.now(),
                         isDemo: true
                     };

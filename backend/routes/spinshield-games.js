@@ -147,15 +147,11 @@ router.get('/play/:gameId', isAuthed, async (req, res) => {
             return res.status(401).json({ error: 'Unauthorized' });
         }
         
-        // Generate secure user password for SpinShield
-        const userPassword = `user_${user.id}_pass`;
+        // Generate standardized username and password for SpinShield
+        const spinshieldUsername = `SS_${user.id}`;
+        const spinshieldPassword = `SS_pass_${user.id}`;
         
-        // Use a more reliable format for SpinShield username
-        // Format: SS_{userId}_{original username}
-        // This way we can always extract userId reliably from the prefix
-        const userName = `SS_${user.id}_${user.username}`;
-        
-        console.log(`Creating SpinShield player: ${userName} (original username: ${user.username}, ID: ${user.id})`);
+        console.log(`Creating SpinShield player: ${spinshieldUsername} (original username: ${user.username}, ID: ${user.id})`);
         
         const apiClient = new ApiClient({
             api_login: settings.api_login,
@@ -166,9 +162,9 @@ router.get('/play/:gameId', isAuthed, async (req, res) => {
         try {
             // First create/ensure player exists in SpinShield
             const createPlayerResponse = await apiClient.createPlayer(
-                userName,
-                userPassword,
-                user.username,
+                spinshieldUsername,
+                spinshieldPassword,
+                user.username, // Use original username as nickname
                 'USD'
             );
             
@@ -185,8 +181,8 @@ router.get('/play/:gameId', isAuthed, async (req, res) => {
             
             // Get real money game URL
             const response = await apiClient.getGame(
-                userName,
-                userPassword,
+                spinshieldUsername,
+                spinshieldPassword,
                 gameId,
                 'USD', // Default currency
                 homeUrl,

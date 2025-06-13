@@ -93,32 +93,98 @@ function generateSMSCode() {
 /**
  * Generate 2FA secret and QR code
  */
-async function generate2FASecret(username) {
-    const secret = speakeasy.generateSecret({
-        name: `Nova Casino (${username})`,
-        issuer: 'Nova Casino',
-        length: 32
-    });
+async function generate2FASecret(username, existingSecret = null) {
+    let secret;
     
-    const qrCodeUrl = await qrcode.toDataURL(secret.otpauth_url);
-    
-    return {
-        secret: secret.base32,
-        qrCode: qrCodeUrl,
-        manualEntryKey: secret.base32
-    };
+    if (existingSecret) {
+        // Use existing secret to generate QR code
+        const otpauthUrl = speakeasy.otpauthURL({
+            secret: existingSecret,
+            label: username,
+            name: `Nova Casino (${username})`,
+            issuer: 'Nova Casino'
+        });
+        
+        const qrCodeUrl = await qrcode.toDataURL(otpauthUrl);
+        
+        return {
+            secret: existingSecret,
+            qrCode: qrCodeUrl,
+            manualEntryKey: existingSecret
+        };
+    } else {
+        // Generate new secret
+        secret = speakeasy.generateSecret({
+            name: `Nova Casino (${username})`,
+            issuer: 'Nova Casino',
+            length: 32
+        });
+        
+        const qrCodeUrl = await qrcode.toDataURL(secret.otpauth_url);
+        
+        return {
+            secret: secret.base32,
+            qrCode: qrCodeUrl,
+            manualEntryKey: secret.base32
+        };
+    }
 }
 
 /**
  * Verify 2FA token
  */
 function verify2FAToken(token, secret) {
-    return speakeasy.totp.verify({
-        secret: secret,
-        encoding: 'base32',
-        token: token,
-        window: 2 // Allow 2 time steps tolerance
-    });
+    const currentTime = Math.floor(Date.now() / 1000);
+    
+    // Try multiple time offsets to account for timezone issues
+    const timeOffsets = [
+        0,      // Current UTC time
+        7200,   // +2 hours (CEST offset)
+        -7200,  // -2 hours
+        3600,   // +1 hour
+        -3600   // -1 hour
+    ];
+    
+    console.log('=== 2FA Verification Debug ===');
+    console.log('Current time UTC:', new Date().toISOString());
+    console.log('Current time Local:', new Date().toString());
+    console.log('Current unix timestamp:', currentTime);
+    console.log('Provided token:', token);
+    console.log('Secret (first 8 chars):', secret ? secret.substring(0, 8) + '...' : 'null');
+    
+    // Try verification with different time offsets
+    for (const offset of timeOffsets) {
+        const adjustedTime = currentTime + offset;
+        
+        // Generate expected token for this time
+        const expectedToken = speakeasy.totp({
+            secret: secret,
+            encoding: 'base32',
+            time: adjustedTime
+        });
+        
+        const result = speakeasy.totp.verify({
+            secret: secret,
+            encoding: 'base32',
+            token: token,
+            window: 2,
+            time: adjustedTime
+        });
+        
+        const offsetHours = offset / 3600;
+        console.log(`Trying offset ${offsetHours}h (time: ${new Date(adjustedTime * 1000).toISOString()}): Expected ${expectedToken}, Got ${token} - ${result ? 'SUCCESS' : 'FAIL'}`);
+        
+        if (result) {
+            console.log(`✅ Token verified with ${offsetHours}h offset`);
+            console.log('=== End Debug ===');
+            return true;
+        }
+    }
+    
+    console.log('❌ Token verification failed with all time offsets');
+    console.log('=== End Debug ===');
+    
+    return false;
 }
 
 /**

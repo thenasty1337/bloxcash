@@ -180,6 +180,35 @@ router.post('/sync-games', async (req, res) => {
     }
 });
 
+// Search games endpoint for freespins dialog
+router.get('/games/search', async (req, res) => {
+    try {
+        const { q, limit = 10 } = req.query;
+        
+        if (!q || typeof q !== 'string' || q.length < 2) {
+            return res.json({ games: [] });
+        }
+        
+        const searchTerm = `%${q.toLowerCase()}%`;
+        const limitNum = Math.min(parseInt(limit) || 10, 50); // Max 50 results
+        
+        const [games] = await sql.query(`
+            SELECT id, game_id, game_name, provider, provider_name, category, image_url, active
+            FROM spinshield_games 
+            WHERE LOWER(game_name) LIKE ? 
+            AND active = 1 
+            AND freerounds_supported = 1
+            ORDER BY game_name ASC 
+            LIMIT ?
+        `, [searchTerm, limitNum]);
+        
+        res.json({ games });
+    } catch (error) {
+        console.error('Error searching games:', error);
+        res.status(500).json({ error: 'INTERNAL_SERVER_ERROR' });
+    }
+});
+
 // Get a single game by ID
 router.get('/games/:id', async (req, res) => {
     try {
@@ -191,7 +220,20 @@ router.get('/games/:id', async (req, res) => {
             return res.status(404).json({ error: 'Game not found' });
         }
         
-        return res.json({ game: game[0] });
+        // Convert boolean fields from 0/1 to true/false
+        const processedGame = {
+            ...game[0],
+            is_new: Boolean(game[0].is_new),
+            is_mobile: Boolean(game[0].is_mobile),
+            freerounds_supported: Boolean(game[0].freerounds_supported),
+            featurebuy_supported: Boolean(game[0].featurebuy_supported),
+            has_jackpot: Boolean(game[0].has_jackpot),
+            play_for_fun_supported: Boolean(game[0].play_for_fun_supported),
+            active: Boolean(game[0].active),
+            rtp: game[0].rtp || null // Convert 0 to null for RTP
+        };
+        
+        return res.json({ game: processedGame });
     } catch (error) {
         console.error('Error fetching SpinShield game:', error);
         return res.status(500).json({ error: 'Internal server error', details: error.message });
@@ -289,11 +331,31 @@ router.get('/games', async (req, res) => {
             search = '',
             provider = '',
             category = '',
-            features = ''
+            features = '',
+            status = 'all',
+            gameType = 'all',
+            newGames = 'false',
+            hasJackpot = 'false',
+            mobileSupported = 'false',
+            freeroundsSupported = 'false',
+            rtpMin = '0',
+            rtpMax = '100'
         } = req.query;
         
-        const offset = parseInt(page) * parseInt(limit);
-        const parsedLimit = parseInt(limit);
+        console.log('Games API called with params:', { page, limit, sort, order, search, provider, category, features });
+        
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
+        const offset = pageNum * limitNum;
+        
+        // Validate pagination parameters
+        if (isNaN(pageNum) || pageNum < 0) {
+            return res.status(400).json({ error: 'Invalid page parameter' });
+        }
+        
+        if (isNaN(limitNum) || limitNum < 1 || limitNum > 100) {
+            return res.status(400).json({ error: 'Invalid limit parameter (must be 1-100)' });
+        }
         
         // Build base query
         let query = `
@@ -304,27 +366,32 @@ router.get('/games', async (req, res) => {
         
         const queryParams = [];
         
-        // Add search condition if provided
-        if (search) {
-            query += ` AND game_name LIKE ? `;
-            queryParams.push(`%${search}%`);
+        // Add search condition if provided (search in multiple fields)
+        if (search && search.trim()) {
+            query += ` AND (
+                game_name LIKE ? OR 
+                provider LIKE ? OR 
+                category LIKE ?
+            )`;
+            const searchTerm = `%${search.trim()}%`;
+            queryParams.push(searchTerm, searchTerm, searchTerm);
         }
         
         // Add provider filter if provided
-        if (provider) {
+        if (provider && provider.trim()) {
             query += ` AND provider = ? `;
-            queryParams.push(provider);
+            queryParams.push(provider.trim());
         }
         
         // Add category filter if provided
-        if (category) {
+        if (category && category.trim()) {
             query += ` AND category = ? `;
-            queryParams.push(category);
+            queryParams.push(category.trim());
         }
         
         // Add features filter if provided
-        if (features) {
-            const featureFilters = features.split(',');
+        if (features && features.trim()) {
+            const featureFilters = features.split(',').map(f => f.trim()).filter(f => f);
             for (const feature of featureFilters) {
                 switch(feature) {
                     case 'mobile':
@@ -342,9 +409,53 @@ router.get('/games', async (req, res) => {
                 }
             }
         }
+
+        // Add advanced filters
+        // Status filter
+        if (status && status !== 'all') {
+            if (status === 'active') {
+                query += ` AND active = 1 `;
+            } else if (status === 'inactive') {
+                query += ` AND active = 0 `;
+            }
+        }
+
+        // Game type filter
+        if (gameType && gameType !== 'all') {
+            query += ` AND type = ? `;
+            queryParams.push(gameType);
+        }
+
+        // New games filter
+        if (newGames === 'true') {
+            query += ` AND is_new = 1 `;
+        }
+
+        // Has jackpot filter
+        if (hasJackpot === 'true') {
+            query += ` AND has_jackpot = 1 `;
+        }
+
+        // Mobile supported filter
+        if (mobileSupported === 'true') {
+            query += ` AND is_mobile = 1 `;
+        }
+
+        // Freerounds supported filter
+        if (freeroundsSupported === 'true') {
+            query += ` AND freerounds_supported = 1 `;
+        }
+
+        // RTP range filter
+        const rtpMinNum = parseInt(rtpMin);
+        const rtpMaxNum = parseInt(rtpMax);
+        if (!isNaN(rtpMinNum) && !isNaN(rtpMaxNum) && (rtpMinNum > 0 || rtpMaxNum < 100)) {
+            query += ` AND rtp >= ? AND rtp <= ? `;
+            queryParams.push(rtpMinNum, rtpMaxNum);
+        }
         
         // Add sorting
-        const validSortFields = ['game_name', 'provider', 'category', 'rtp', 'created_at'];
+        const validSortFields = ['game_name', 'provider', 'category', 'rtp', 'created_at', 'updated_at'];
         const validSortOrders = ['asc', 'desc'];
         
         const sortField = validSortFields.includes(sort) ? sort : 'game_name';
@@ -352,35 +463,65 @@ router.get('/games', async (req, res) => {
         
         query += ` ORDER BY ${sortField} ${sortOrder}`;
         
-        // Count total records for pagination
-        const countQuery = query.replace('SELECT *', 'SELECT COUNT(*) as total');
+        // Count total records for pagination (use same filters)
+        const countQuery = query.replace('SELECT *', 'SELECT COUNT(*) as total').replace(/ORDER BY.*$/, '');
+        console.log('Count query:', countQuery);
+        console.log('Count params:', queryParams);
+        
         const [countResult] = await sql.query(countQuery, queryParams);
         const totalGames = countResult[0].total;
         
-        // Add pagination
+        // Add pagination to main query
         query += ` LIMIT ? OFFSET ?`;
-        queryParams.push(parsedLimit, offset);
+        const finalParams = [...queryParams, limitNum, offset];
+        
+        console.log('Final query:', query);
+        console.log('Final params:', finalParams);
         
         // Execute final query
-        const [games] = await sql.query(query, queryParams);
+        const [games] = await sql.query(query, finalParams);
         
-        // Get unique providers and categories for filters
-        const [providers] = await sql.query('SELECT DISTINCT provider FROM spinshield_games ORDER BY provider');
-        const [categories] = await sql.query('SELECT DISTINCT category FROM spinshield_games ORDER BY category');
+        // Convert boolean fields from 0/1 to true/false
+        const processedGames = games.map(game => ({
+            ...game,
+            is_new: Boolean(game.is_new),
+            is_mobile: Boolean(game.is_mobile),
+            freerounds_supported: Boolean(game.freerounds_supported),
+            featurebuy_supported: Boolean(game.featurebuy_supported),
+            has_jackpot: Boolean(game.has_jackpot),
+            play_for_fun_supported: Boolean(game.play_for_fun_supported),
+            active: Boolean(game.active),
+            rtp: game.rtp || null // Convert 0 to null for RTP
+        }));
         
-        return res.json({ 
-            games,
+        // Get unique providers and categories for filters (only from active games)
+        const [providers] = await sql.query('SELECT DISTINCT provider FROM spinshield_games WHERE provider IS NOT NULL AND provider != "" ORDER BY provider');
+        const [categories] = await sql.query('SELECT DISTINCT category FROM spinshield_games WHERE category IS NOT NULL AND category != "" ORDER BY category');
+        
+        const response = {
+            games: processedGames,
             pagination: {
                 total: totalGames,
-                page: parseInt(page),
-                limit: parsedLimit,
-                pages: Math.ceil(totalGames / parsedLimit)
+                page: pageNum,
+                limit: limitNum,
+                pages: Math.ceil(totalGames / limitNum)
             },
             filters: {
-                providers: providers.map(p => p.provider),
-                categories: categories.map(c => c.category)
+                providers: providers.map(p => p.provider).filter(p => p),
+                categories: categories.map(c => c.category).filter(c => c)
+            }
+        };
+        
+        console.log('Returning response:', {
+            gamesCount: games.length,
+            pagination: response.pagination,
+            filtersCount: {
+                providers: response.filters.providers.length,
+                categories: response.filters.categories.length
             }
         });
+        
+        return res.json(response);
     } catch (error) {
         console.error('Error fetching SpinShield games:', error);
         return res.status(500).json({ error: 'Internal server error', details: error.message });
@@ -391,7 +532,19 @@ router.get('/games', async (req, res) => {
 router.get('/sessions', async (req, res) => {
     try {
         const { page = 0, limit = 20, userId = null } = req.query;
-        const offset = page * limit;
+        
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
+        const offset = pageNum * limitNum;
+        
+        // Validate pagination parameters
+        if (isNaN(pageNum) || pageNum < 0) {
+            return res.status(400).json({ error: 'Invalid page parameter' });
+        }
+        
+        if (isNaN(limitNum) || limitNum < 1 || limitNum > 100) {
+            return res.status(400).json({ error: 'Invalid limit parameter (must be 1-100)' });
+        }
         
         let query = `
             SELECT s.*, u.username, g.game_name
@@ -408,7 +561,7 @@ router.get('/sessions', async (req, res) => {
         }
         
         query += ' ORDER BY s.started_at DESC LIMIT ? OFFSET ?';
-        queryParams.push(Number(limit), Number(offset));
+        queryParams.push(limitNum, offset);
         
         const [sessions] = await sql.query(query, queryParams);
         
@@ -422,8 +575,9 @@ router.get('/sessions', async (req, res) => {
             sessions,
             pagination: {
                 total: countResult[0].total,
-                page: Number(page),
-                limit: Number(limit)
+                page: pageNum,
+                limit: limitNum,
+                pages: Math.ceil(countResult[0].total / limitNum)
             }
         });
     } catch (error) {
@@ -436,7 +590,19 @@ router.get('/sessions', async (req, res) => {
 router.get('/transactions', async (req, res) => {
     try {
         const { page = 0, limit = 20, userId = null, gameId = null, sessionId = null } = req.query;
-        const offset = page * limit;
+        
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
+        const offset = pageNum * limitNum;
+        
+        // Validate pagination parameters
+        if (isNaN(pageNum) || pageNum < 0) {
+            return res.status(400).json({ error: 'Invalid page parameter' });
+        }
+        
+        if (isNaN(limitNum) || limitNum < 1 || limitNum > 100) {
+            return res.status(400).json({ error: 'Invalid limit parameter (must be 1-100)' });
+        }
         
         let query = `
             SELECT t.*, u.username, g.game_name
@@ -464,7 +630,7 @@ router.get('/transactions', async (req, res) => {
         }
         
         query += ' ORDER BY t.created_at DESC LIMIT ? OFFSET ?';
-        queryParams.push(Number(limit), Number(offset));
+        queryParams.push(limitNum, offset);
         
         const [transactions] = await sql.query(query, queryParams);
         
@@ -493,8 +659,9 @@ router.get('/transactions', async (req, res) => {
             transactions,
             pagination: {
                 total: countResult[0].total,
-                page: Number(page),
-                limit: Number(limit)
+                page: pageNum,
+                limit: limitNum,
+                pages: Math.ceil(countResult[0].total / limitNum)
             }
         });
     } catch (error) {
@@ -507,7 +674,19 @@ router.get('/transactions', async (req, res) => {
 router.get('/freespins', async (req, res) => {
     try {
         const { page = 0, limit = 20, userId = null } = req.query;
-        const offset = page * limit;
+        
+        const pageNum = parseInt(page);
+        const limitNum = parseInt(limit);
+        const offset = pageNum * limitNum;
+        
+        // Validate pagination parameters
+        if (isNaN(pageNum) || pageNum < 0) {
+            return res.status(400).json({ error: 'Invalid page parameter' });
+        }
+        
+        if (isNaN(limitNum) || limitNum < 1 || limitNum > 100) {
+            return res.status(400).json({ error: 'Invalid limit parameter (must be 1-100)' });
+        }
         
         let query = `
             SELECT f.*, u.username, g.game_name
@@ -524,7 +703,7 @@ router.get('/freespins', async (req, res) => {
         }
         
         query += ' ORDER BY f.created_at DESC LIMIT ? OFFSET ?';
-        queryParams.push(Number(limit), Number(offset));
+        queryParams.push(limitNum, offset);
         
         const [freespins] = await sql.query(query, queryParams);
         
@@ -538,8 +717,9 @@ router.get('/freespins', async (req, res) => {
             freespins,
             pagination: {
                 total: countResult[0].total,
-                page: Number(page),
-                limit: Number(limit)
+                page: pageNum,
+                limit: limitNum,
+                pages: Math.ceil(countResult[0].total / limitNum)
             }
         });
     } catch (error) {
@@ -558,11 +738,13 @@ router.post('/add-freespins', async (req, res) => {
             return res.status(400).json({ error: 'All fields are required' });
         }
         
-        // Check if game exists
-        const [gameCheck] = await sql.query('SELECT game_id FROM spinshield_games WHERE game_id = ?', [gameId]);
+        // Check if game exists and get the game_id_hash for API and storage
+        const [gameCheck] = await sql.query('SELECT game_id, game_id_hash FROM spinshield_games WHERE game_id = ?', [gameId]);
         if (!gameCheck.length) {
             return res.status(400).json({ error: 'Game not found' });
         }
+        
+        const gameIdHash = gameCheck[0].game_id_hash; // This is what we need for API and storage
         
         // Check if user exists
         const [userCheck] = await sql.query('SELECT id, username FROM users WHERE id = ?', [userId]);
@@ -587,8 +769,9 @@ router.post('/add-freespins', async (req, res) => {
             return res.status(400).json({ error: 'User not found' });
         }
         
-        // Generate user password (this would typically be retrieved from your user authentication system)
-        const userPassword = `user_${userDetails[0].id}_pass`; // Example only - implement your own secure method
+        // Generate standardized username and password for SpinShield
+        const spinshieldUsername = `SS_${userDetails[0].id}`;
+        const spinshieldPassword = `SS_pass_${userDetails[0].id}`;
         
         const config = {
             api_login: settings[0].api_login,
@@ -602,17 +785,17 @@ router.post('/add-freespins', async (req, res) => {
         try {
             // Create player first (required by SpinShield API)
             await apiClient.createPlayer(
-                userDetails[0].username,
-                userPassword,
-                userDetails[0].username,
+                spinshieldUsername,
+                spinshieldPassword,
+                userDetails[0].username, // Use original username as nickname
                 'USD'
             );
             
-            // Add free spins
+            // Add free spins (use game_id_hash for API)
             const response = await apiClient.addFreeRounds(
-                userDetails[0].username,
-                userPassword,
-                gameId,
+                spinshieldUsername,
+                spinshieldPassword,
+                gameIdHash,
                 'USD',
                 Number(freespinsCount),
                 Number(betLevel),
@@ -637,7 +820,7 @@ router.post('/add-freespins', async (req, res) => {
                 ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
                 [
                     userId, 
-                    gameId, 
+                    gameIdHash, // Store game_id_hash so it matches callback game_id
                     freespinsCount, 
                     betLevel, 
                     'USD', 
@@ -844,6 +1027,176 @@ router.post('/sync-popularity', async (req, res) => {
     console.error('Error syncing game popularity:', error);
     res.status(500).json({ success: false, message: 'Failed to sync game popularity', error: error.message });
   }
+});
+
+// Deactivate free spins
+router.post('/freespins/:id/deactivate', async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Check if freespin exists and get all necessary data
+        const [freespinCheck] = await sql.query(
+            'SELECT id, user_id, game_id, active FROM spinshield_freespins WHERE id = ?', 
+            [id]
+        );
+        if (!freespinCheck.length) {
+            return res.status(404).json({ error: 'Free spins not found' });
+        }
+        
+        const freespin = freespinCheck[0];
+        
+        if (!freespin.active) {
+            return res.status(400).json({ error: 'Free spins are already inactive' });
+        }
+        
+        // Get user details needed for API
+        const [userDetails] = await sql.query(
+            'SELECT id, username FROM users WHERE id = ?',
+            [freespin.user_id]
+        );
+        
+        if (!userDetails.length) {
+            return res.status(400).json({ error: 'User not found' });
+        }
+        
+        // Get API credentials
+        const [settings] = await sql.query('SELECT api_login, api_password, endpoint FROM spinshield_settings LIMIT 1');
+        
+        if (!settings.length) {
+            return res.status(400).json({ error: 'SpinShield settings not configured' });
+        }
+        
+        // Generate standardized username and password for SpinShield (same method as used in add freespins)
+        const spinshieldUsername = `SS_${userDetails[0].id}`;
+        const spinshieldPassword = `SS_pass_${userDetails[0].id}`;
+        
+        const config = {
+            api_login: settings[0].api_login,
+            api_password: settings[0].api_password,
+            endpoint: settings[0].endpoint
+        };
+        
+        // Create SpinShield API client
+        const apiClient = new ApiClient(config);
+        
+        try {
+            // Delete free rounds from SpinShield API
+            const response = await apiClient.deleteFreeRounds(
+                freespin.game_id,
+                spinshieldUsername,
+                spinshieldPassword,
+                'USD'
+            );
+            
+            if (response.error !== 0) {
+                return res.status(400).json({ 
+                    error: 'Failed to delete free spins through API',
+                    apiResponse: response
+                });
+            }
+            
+            // Only update local database if API call succeeded
+            await sql.query('UPDATE spinshield_freespins SET active = 0, updated_at = NOW() WHERE id = ?', [id]);
+            
+            sendLog('admin', `[${req.user.id}] ${req.user.username} deactivated free spins (ID: ${id}) for user ${userDetails[0].username} on game ${freespin.game_id}`);
+            
+            return res.json({ 
+                success: true, 
+                message: `Free spins deactivated successfully for ${userDetails[0].username}`,
+                apiResponse: response.response
+            });
+        } catch (error) {
+            console.error('SpinShield API error:', error);
+            return res.status(500).json({ error: 'Error communicating with SpinShield API', details: error.message });
+        }
+    } catch (error) {
+        console.error('Error deactivating free spins:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Delete all free spins for a user
+router.post('/freespins/user/:userId/delete-all', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        
+        // Get user details
+        const [userDetails] = await sql.query(
+            'SELECT id, username FROM users WHERE id = ?',
+            [userId]
+        );
+        
+        if (!userDetails.length) {
+            return res.status(400).json({ error: 'User not found' });
+        }
+        
+        // Check if user has any active free spins
+        const [activeFreespins] = await sql.query(
+            'SELECT COUNT(*) as count FROM spinshield_freespins WHERE user_id = ? AND active = 1',
+            [userId]
+        );
+        
+        if (activeFreespins[0].count === 0) {
+            return res.status(400).json({ error: 'User has no active free spins' });
+        }
+        
+        // Get API credentials
+        const [settings] = await sql.query('SELECT api_login, api_password, endpoint FROM spinshield_settings LIMIT 1');
+        
+        if (!settings.length) {
+            return res.status(400).json({ error: 'SpinShield settings not configured' });
+        }
+        
+        // Generate standardized username and password for SpinShield (same method as used in add freespins)
+        const spinshieldUsername = `SS_${userDetails[0].id}`;
+        const spinshieldPassword = `SS_pass_${userDetails[0].id}`;
+        
+        const config = {
+            api_login: settings[0].api_login,
+            api_password: settings[0].api_password,
+            endpoint: settings[0].endpoint
+        };
+        
+        // Create SpinShield API client
+        const apiClient = new ApiClient(config);
+        
+        try {
+            // Delete all free rounds from SpinShield API
+            const response = await apiClient.deleteAllFreeRounds(
+                spinshieldUsername,
+                spinshieldPassword,
+                'USD'
+            );
+            
+            if (response.error !== 0) {
+                return res.status(400).json({ 
+                    error: 'Failed to delete all free spins through API',
+                    apiResponse: response
+                });
+            }
+            
+            // Only update local database if API call succeeded
+            await sql.query(
+                'UPDATE spinshield_freespins SET active = 0, updated_at = NOW() WHERE user_id = ? AND active = 1', 
+                [userId]
+            );
+            
+            sendLog('admin', `[${req.user.id}] ${req.user.username} deleted all free spins for user ${userDetails[0].username}`);
+            
+            return res.json({ 
+                success: true, 
+                message: `All free spins deleted successfully for ${userDetails[0].username}`,
+                deletedCount: activeFreespins[0].count,
+                apiResponse: response.response
+            });
+        } catch (error) {
+            console.error('SpinShield API error:', error);
+            return res.status(500).json({ error: 'Error communicating with SpinShield API', details: error.message });
+        }
+    } catch (error) {
+        console.error('Error deleting all free spins:', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 module.exports = router;
